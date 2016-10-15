@@ -30,7 +30,9 @@ public class BSCheckerMenu extends MenuBar {
 			public void handle(ActionEvent arg0)
 			{
 				File file = TextImport.chooseFile();
+				if(file == null) return;
 				String text = TextImport.openFile(file);
+				if(text == null) return;
 			}
 		});
 		fileMenu.getItems().add(fileOpen);
