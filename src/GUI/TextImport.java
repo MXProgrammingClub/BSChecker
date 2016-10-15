@@ -1,8 +1,13 @@
 package GUI;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
+
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.usermodel.Range;
 
 import javafx.stage.FileChooser;
 
@@ -64,9 +69,31 @@ public class TextImport
 		return text;
 	}
 	
+	/**
+	 * Takes the selected word 97 document and returns the extracted text.
+	 * @param file The word document selected.
+	 * @return The text in the document.
+	 */
 	public static String importDoc(File file)
 	{
-		return "";
+		HWPFDocument doc = null;
+		try
+		{
+			doc = new HWPFDocument(new FileInputStream(file));
+		}
+		catch (IOException e) //Should never happen
+		{
+			e.printStackTrace();
+			return null;
+		} 
+		
+		String text = "";
+		Range r = doc.getRange();
+		for(int p = 0; p < r.numParagraphs(); p++)
+		{
+			text += r.getParagraph(p).text();
+		}
+		return text;
 	}
 	
 	public static String importDocx(File file)
