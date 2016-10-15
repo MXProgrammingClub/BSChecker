@@ -6,6 +6,8 @@ import java.io.StringReader;
 
 import opennlp.tools.cmdline.PerformanceMonitor;
 import opennlp.tools.cmdline.postag.*;
+import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSSample;
 import opennlp.tools.postag.POSTaggerME;
@@ -17,6 +19,7 @@ public class BSChecker {
 	public static void main(String[] args) throws InvalidFormatException, IOException{ 
 	Tokenize();
 	SentenceDetect();
+	findName();
 	POSTag();
 	}
 public static void Tokenize() throws InvalidFormatException, IOException {
@@ -69,5 +72,27 @@ public static void POSTag() throws IOException {
 		perfMon.incrementCounter();
 	}
 	perfMon.stopAndPrintFinalResult();
+}
+public static void findName() throws IOException {
+	InputStream is = new FileInputStream("lib/en-ner-person.bin");
+ 
+	TokenNameFinderModel model = new TokenNameFinderModel(is);
+	is.close();
+ 
+	NameFinderME nameFinder = new NameFinderME(model);
+ 
+	String []sentence = new String[]{
+		    "Mike",
+		    "Smith",
+		    "is",
+		    "a",
+		    "good",
+		    "person"
+		    };
+ 
+		Span nameSpans[] = nameFinder.find(sentence);
+ 
+		for(Span s: nameSpans)
+			System.out.println(s.toString());			
 }
 }
