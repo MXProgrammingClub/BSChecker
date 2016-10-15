@@ -39,17 +39,17 @@ public class FirstSecondPerson extends Error {
 		
 		for (String tense : tenses) {
 			int index = 0;
-			while (index < text.length()) {
-				int errIndex = text.indexOf(tense, index);
-				int errEndIndex = errIndex + tense.length();
-				if (errIndex < -1) {
-					int[] error = {errIndex, errEndIndex};
+			int textIndex = 0;
+			while (index < tokens.length) {
+				int textIndexEnd = textIndex + tense.length();
+				if ((tokens[index]).equals(tense)) {
+					int[] error = {textIndex, textIndexEnd};
 					errors.add(error);
-					index = errEndIndex;
 				}
+				textIndex = textIndexEnd;
+				index++;
 			}
-		}
-		
+		}		
 		return errors;
 	}
 	
