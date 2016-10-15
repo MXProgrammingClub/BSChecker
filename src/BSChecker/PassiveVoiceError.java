@@ -88,16 +88,6 @@ public class PassiveVoiceError extends Error {
 			return found;
 	}
 
-	private int locationOf(String line, String string, int found) {
-		int loc = 0;
-		for(int i = 0; i <= found; i++){
-			loc = line.indexOf(string,loc) +1;
-		}
-		return loc;
-	}
 	
-	private boolean isToBe(String string) {
-		return string.equalsIgnoreCase("is") || string.equalsIgnoreCase("are");
-	}
 
 }

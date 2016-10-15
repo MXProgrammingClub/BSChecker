@@ -97,14 +97,6 @@ public class VagueThisWhichError extends Error {
 		return true;
 	}
 
-	private int locationOf(String line, String string, int found) {
-		int loc = 0;
-		for(int i = 0; i <= found; i++){
-			loc = line.indexOf(string,loc) +1;
-		}
-		return loc;
-	}
-
 	public static boolean equalsWord(String a, String b){
 		return a.equalsIgnoreCase(b) || (a.substring(0,a.length()-1).equalsIgnoreCase(b) && isPunctuation(a.charAt(a.length()-1)));
 	}
