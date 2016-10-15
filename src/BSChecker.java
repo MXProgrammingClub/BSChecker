@@ -19,8 +19,8 @@ public class BSChecker {
 	public static void main(String[] args) throws InvalidFormatException, IOException{ 
 	Tokenize();
 	SentenceDetect();
-	findName();
 	POSTag();
+	findName();
 	}
 public static void Tokenize() throws InvalidFormatException, IOException {
 	InputStream is = new FileInputStream("lib/en-token.bin");
@@ -73,6 +73,7 @@ public static void POSTag() throws IOException {
 	}
 	perfMon.stopAndPrintFinalResult();
 }
+
 public static void findName() throws IOException {
 	InputStream is = new FileInputStream("lib/en-ner-person.bin");
  
