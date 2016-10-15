@@ -1,0 +1,20 @@
+.root {
+	/*-fx-font-family: Courier;*/
+}
+
+.button {
+	-fx-font-size: 20pt;
+	-fx-text-fill: white;
+	-fx-background-color: blue;
+	-fx-background-radius: 2px;
+}
+
+.button:hover {
+	-fx-background-color: darkblue;
+	-fx-cursor: hand;
+}
+
+.button:pressed {
+	-fx-background-color: black;
+	-fx-cursor: hand;
+}
