@@ -2,6 +2,7 @@ package BSChecker;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -16,16 +17,21 @@ import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.sentdetect.SentenceSampleStream;
+import opennlp.tools.tokenize.Tokenizer;
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.tokenize.WhitespaceTokenizer;
+import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
 public class VagueThisWhichError extends Error {
 
 	public static void main(String[] args){
-		ArrayList<int[]> errs = new VagueThisWhichError().findErrors("Hi, my name is slim shady. Which is fun! I have this.");
+		ArrayList<int[]> errs = new VagueThisWhichError().findErrors("Hi, my name is slim shady. Which is fun! I have this in this.");
 		for(int[] err: errs){
 			System.out.println(err[0] + " " + err[1] );
+			System.out.println("Hi, my name is slim shady. Which is fun! I have this in this.".substring(err[0], err[1]));
 		}
 	}
 	
@@ -35,28 +41,48 @@ public class VagueThisWhichError extends Error {
 		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
 		
+		InputStream is;
+		TokenizerModel tModel;
+		try {
+			is = new FileInputStream("lib/en-token.bin");
+			tModel = new TokenizerModel(is);
+		} catch (FileNotFoundException e1) {
+			return null;
+		} catch (InvalidFormatException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+		
+		
+		Tokenizer tokenizer = new TokenizerME(tModel);
 		POSTaggerME tagger = new POSTaggerME(model);
 		String line;
 		int totLen =0;
 		try {
 			while ((line = lineStream.read()) != null) {
-				String tokens[] = WhitespaceTokenizer.INSTANCE.tokenize(line);
+				
+				String tokens[] = tokenizer.tokenize(line);
 				String[] tags = tagger.tag(tokens);
 				int lineLen = 0;
+				int wFound = 0, tFound = 0;
 				for(int i = 0; i < tokens.length; i++){
-					if(equalsWord(tokens[i],"this")){
+					if(tokens[i].equalsIgnoreCase("this")){
 						if(i == tokens.length-1 || tags[i+1].charAt(0)!='N' || endOfSentence(tokens[i])){
-							int[] err = {totLen+lineLen,totLen+lineLen+tokens[i].length()};
+							int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
+									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1};
 							found.add(err);
+							tFound++;
 						}
 					}
 					if(tokens[i].equalsIgnoreCase("which")){
 						if(i == 0 || tags[i-1].charAt(0)!='N' || endOfSentence(tokens[i-1])){
-							int[] err = {totLen+lineLen,totLen+lineLen+tokens[i].length()};
+							int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
+									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1};
 							found.add(err);
+							wFound++;
 						}
 					}
-					lineLen+=tokens[i].length()+1;
 				}
 				totLen+=line.length();
 			}
@@ -65,6 +91,14 @@ public class VagueThisWhichError extends Error {
 			e.printStackTrace();
 		}
 		return found;
+	}
+
+	private int locationOf(String line, String string, int found) {
+		int loc = 0;
+		for(int i = 0; i <= found; i++){
+			loc = line.indexOf(string,loc) +1;
+		}
+		return loc;
 	}
 
 	public static boolean equalsWord(String a, String b){
