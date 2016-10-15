@@ -22,6 +22,7 @@ public abstract class Error {
 	
 	public static int findWord(String[] tokens, String text, int start){
 		for(int i = start; i < tokens.length; i++){
+			String token = tokens[i];
 			if(tokens[i].equalsIgnoreCase(text)) return i;
 		}
 		return -1;
