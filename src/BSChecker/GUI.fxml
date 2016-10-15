@@ -13,7 +13,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #E1F5FE;" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <JFXButton id="buttonLeft" buttonType="RAISED" layoutX="456.0" layoutY="601.0" style="-fx-background-color: #0277BD;" text="&lt;" textAlignment="CENTER" textFill="WHITE">
+      <JFXButton id="buttonLeft" buttonType="RAISED" layoutX="456.0" layoutY="601.0" onMouseClicked="#leftArrowClick" style="-fx-background-color: #0277BD;" text="&lt;" textAlignment="CENTER" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -21,7 +21,7 @@
             <Font size="18.0" />
          </font>
       </JFXButton>
-      <JFXButton id="buttonRight" buttonType="RAISED" layoutX="505.0" layoutY="601.0" style="-fx-background-color: #0277BD;" text="&gt;" textFill="WHITE">
+      <JFXButton id="buttonRight" buttonType="RAISED" layoutX="505.0" layoutY="601.0" onMouseClicked="#rightArrowClick" style="-fx-background-color: #0277BD;" text="&gt;" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
@@ -29,22 +29,22 @@
       <JFXTextArea id="essayBox" layoutX="14.0" layoutY="42.0" maxWidth="973.0" minWidth="725.0" prefHeight="404.0" prefWidth="972.0" promptText="Type or Import Your Essay" unFocusColor="#81d4fa" />
       <JFXTextArea id="sentenceBox" layoutX="16.0" layoutY="461.0" maxWidth="721.0" minWidth="477.0" prefHeight="126.0" prefWidth="635.0" promptText="No Sentence Currently Selected" unFocusColor="#81d4fa" />
       <JFXTextArea id="errorBox" editable="false" focusTraversable="false" layoutX="665.0" layoutY="461.0" maxWidth="556.0" minWidth="321.0" prefHeight="126.0" prefWidth="321.0" promptText="No Error Selected" unFocusColor="#81d4fa" />
-      <MenuBar prefHeight="29.0" prefWidth="1000.0">
+      <MenuBar id="menuBar" prefHeight="29.0" prefWidth="1000.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Open...">
+                  <MenuItem id="menuOpen" mnemonicParsing="false" onAction="#menuOpenClick" text="Open...">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="O" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Save">
+                  <MenuItem id="menuSave" mnemonicParsing="false" onAction="#menuSaveClick" text="Save">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" text="Save As...">
+                  <MenuItem id="menuSaveAs" mnemonicParsing="false" onAction="#menuSaveAsClick" text="Save As...">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="UP" meta="DOWN" shift="DOWN" shortcut="UP" />
                      </accelerator>
@@ -53,34 +53,34 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Undo">
+              <MenuItem id="menuUndo" mnemonicParsing="false" onAction="#menuUndoClick" text="Undo">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Z" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" text="Redo">
+                  <MenuItem id="menuRedo" mnemonicParsing="false" onAction="#menuRedoClick" text="Redo">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Z" control="UP" meta="DOWN" shift="DOWN" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Cut">
+                  <MenuItem id="menuCut" mnemonicParsing="false" onAction="#menuCutClick" text="Cut">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="X" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" text="Copy">
+                  <MenuItem id="menuCopy" mnemonicParsing="false" onAction="#menuCopyClick" text="Copy">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="C" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" text="Paste">
+                  <MenuItem id="menuPaste" mnemonicParsing="false" onAction="#menuPasteClick" text="Paste">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="V" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Select All">
+                  <MenuItem id="menuSelectAll" mnemonicParsing="false" onAction="#menuSelectAllClick" text="Select All">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                      </accelerator>
@@ -89,12 +89,12 @@
           </Menu>
           <Menu mnemonicParsing="false" text="View">
             <items>
-              <MenuItem mnemonicParsing="false" text="Next Error">
+              <MenuItem id="menuNextError" mnemonicParsing="false" onAction="#menuNextErrorClick" text="Next Error">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="DIGIT1" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" text="Previous Error">
+                  <MenuItem id="menuPreviousError" mnemonicParsing="false" onAction="#menuPreviousErrorClick" text="Previous Error">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="DIGIT2" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                      </accelerator>
@@ -103,7 +103,7 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Help">
               <items>
-                <MenuItem mnemonicParsing="false" text="About" />
+                <MenuItem id="menuAbout" mnemonicParsing="false" onAction="#menuAboutClick" text="About" />
               </items>
             </Menu>
         </menus>
