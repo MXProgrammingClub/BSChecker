@@ -1,7 +1,5 @@
 package BSChecker;
 import java.util.ArrayList;
-
-import opennlp.tools.util.ObjectStream;
 /**
  * 
  * @author tedpyne
@@ -11,9 +9,8 @@ public abstract class Error {
 	/**
 	 * 
 	 * @param text The block of text to find errors in
-	 * @return an ArrayList of int[3] pointers to the line, start and end token of the error
-	 * 			int[0] is the line index,
-	 * 			int[1],int[2] are start and end tokens in error
+	 * @return an ArrayList of int[2] pointers to the start and end token of the error
+	 * 			int[0],int[1] are start and end tokens in error
 	 */
 	
 	public abstract ArrayList<int[]> findErrors(String text);
