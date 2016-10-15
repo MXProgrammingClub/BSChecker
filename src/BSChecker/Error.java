@@ -16,7 +16,9 @@ public abstract class Error {
 	 * 			int[1],int[2] are start and end tokens in error
 	 */
 	
-	public abstract ArrayList<int[]> findErrors(ObjectStream<String> lines);
+	public abstract ArrayList<int[]> findErrors(String text);
+	
+	
 	
 	public static int findWord(String[] tokens, String text, int start){
 		for(int i = start; i < tokens.length; i++){
@@ -24,4 +26,5 @@ public abstract class Error {
 		}
 		return -1;
 	}
+	
 }
