@@ -5,9 +5,14 @@ package BSChecker;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import opennlp.tools.tokenize.Tokenizer;
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
 
 /**
  * @author Dalal
@@ -27,10 +32,10 @@ public class FirstSecondPerson extends Error {
 	 */
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
-		// TODO Auto-generated method stub
+		//check for quotation
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		String[] tenses = {"I","me", "my", "we", "us", "our", "you", "your"};
-		String[] tokens = text.Tokenize();
+		String[] tokens = Tokenize(text);
 		
 		for (String tense : tenses) {
 			int index = 0;
@@ -48,28 +53,20 @@ public class FirstSecondPerson extends Error {
 		return errors;
 	}
 	
-	public static String[] Tokenize() {
-		InputStream is = new FileInputStream("en-token.bin");
-	 
-		TokenizerModel model = new TokenizerModel(is);
-	 
-		Tokenizer tokenizer = new TokenizerME(model);
-	 
-		return tokenizer.tokenize("Hi. How are you? This is Mike.");
-	}
-	
-	public static String[] Tokenize() throws InvalidFormatException, IOException {
-		InputStream is = new FileInputStream("en-token.bin");
-	 
-		TokenizerModel model = new TokenizerModel(is);
-	 
-		Tokenizer tokenizer = new TokenizerME(model);
-	 
-		String[] tokens = tokenizer.tokenize("Hi. How are you? This is Mike.");
-	 
-		is.close();
-		
-		return tokens;
+	public static String[] Tokenize(String text) {
+		try {
+				InputStream is = new FileInputStream("lib/en-token.bin");
+		 
+			TokenizerModel model = new TokenizerModel(is);
+		 
+			Tokenizer tokenizer = new TokenizerME(model);
+		 
+			return tokenizer.tokenize(text);
+		}
+		catch(IOException e)
+		{
+			return null;
+		}
 	}
 
 }
