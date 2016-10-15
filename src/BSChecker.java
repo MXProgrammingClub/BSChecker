@@ -88,7 +88,9 @@ public static void findName() throws IOException {
 		    "is",
 		    "a",
 		    "good",
-		    "person"
+		    "car",
+		    ".",
+		    "he"
 		    };
  
 		Span nameSpans[] = nameFinder.find(sentence);

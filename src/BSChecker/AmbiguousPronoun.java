@@ -13,6 +13,9 @@ import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
+import opennlp.tools.tokenize.Tokenizer;
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.Span;
 
@@ -34,7 +37,7 @@ public class AmbiguousPronoun extends Error {
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		Span[] names = findName(SentenceDetect(text));
+		ArrayList<Span[]> names = findName(Tokenize(SentenceDetect(text)));
 		
 		
 		
@@ -42,9 +45,9 @@ public class AmbiguousPronoun extends Error {
 	}
 	
 	public static String[] SentenceDetect(String text) {
-		try {
+		try {			
 			// always start with a model, a model is learned from training data
-			InputStream is = new FileInputStream("lib/en-sent.bin");
+			InputStream is = new FileInputStream("en-sent.bin");
 			SentenceModel model = new SentenceModel(is);
 			SentenceDetectorME sdetector = new SentenceDetectorME(model);
 			is.close();
@@ -56,7 +59,29 @@ public class AmbiguousPronoun extends Error {
 		}
 	}
 	
-	public static Span[] findName(String[] sentences) {
+	public static ArrayList<String[]> Tokenize(String[] sentences) {
+		try {
+			InputStream is = new FileInputStream("lib/en-token.bin");
+		 
+			TokenizerModel model = new TokenizerModel(is);
+		 
+			Tokenizer tokenizer = new TokenizerME(model);
+			
+			ArrayList<String[]> words = new ArrayList<String[]>();
+			
+			for (String sentence : sentences) {			
+				words.add(tokenizer.tokenize(sentence));
+			}
+			
+			return words;
+		}
+		catch(IOException e) {
+			return null;
+		}
+	}
+	
+	
+	public static ArrayList<Span[]> findName(ArrayList<String[]> sentences) {
 		try {
 			InputStream is = new FileInputStream("lib/en-ner-person.bin");
 		 
@@ -64,8 +89,14 @@ public class AmbiguousPronoun extends Error {
 			is.close();
 		 
 			NameFinderME nameFinder = new NameFinderME(model);
-		 
-			return nameFinder.find(sentences);
+			
+			ArrayList<Span[]> names = new ArrayList<Span[]>();
+			
+			for (String[] sentence : sentences) {
+				names.add(nameFinder.find(sentence));
+			}
+			
+			return names;
 		}
 		catch(IOException e) {
 			return null;
