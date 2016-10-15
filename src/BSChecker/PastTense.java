@@ -15,22 +15,25 @@ import opennlp.tools.util.PlainTextByLineStream;
 
 public class PastTense extends Error{
 	public static void main(String[] args) {
-		String input = "I loved her. She loved me. We were happy. We loved each other. LOL.";
+		String input = "Hamlet walked to the store, I walked to the mall.";
 		Error tester = new PastTense();		
-		tester.findErrors(input);
+		ArrayList<int[]> found = tester.findErrors(input);
+		for(int[] inds: found){
+			System.out.println(inds[0] + " " + inds[1]);
+		}
 	}
 
 
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
 
+		ArrayList<int[]> found = new ArrayList<int[]>();
 		POSModel model = new POSModelLoader()	
 				.load(new File("lib/en-pos-maxent.bin"));
 		POSTaggerME tagger = new POSTaggerME(model);
 
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
 		String line;
-		String output;
 
 		try {
 			while ((line = lineStream.read()) != null) {
@@ -41,19 +44,7 @@ public class PastTense extends Error{
 
 				POSSample sample = new POSSample(whitespaceTokenizerLine, tags);
 
-				for(String s:whitespaceTokenizerLine)
-				{
-					System.out.println(s);
-				}
-				for(String s:tags)
-				{
-					System.out.println(s);
-				}
-
-
 				ArrayList<Integer> index = new ArrayList<Integer>();
-				ArrayList<Integer> errorStart = new ArrayList<Integer>();
-				ArrayList<Integer> errorEnd = new ArrayList<Integer>();
 
 
 				for(int i = 0; i < tags.length; i++)
@@ -68,17 +59,15 @@ public class PastTense extends Error{
 				{
 					int lastError = 0;
 					boolean contains = text.contains(whitespaceTokenizerLine[index.get(j)]);
-					System.out.println(contains);
 					
 					while(contains)
 					{
-						errorStart.add(text.indexOf(whitespaceTokenizerLine[index.get(j)]) + lastError);
-						errorEnd.add(text.indexOf(whitespaceTokenizerLine[index.get(j)]) + lastError + whitespaceTokenizerLine[index.get(j)].length() - 1);
+						int[] err = {text.indexOf(whitespaceTokenizerLine[index.get(j)]) + lastError,
+							text.indexOf(whitespaceTokenizerLine[index.get(j)]) + lastError + whitespaceTokenizerLine[index.get(j)].length() - 1};
+						found.add(err);
 
 						// update last error index
 						lastError = text.indexOf(whitespaceTokenizerLine[index.get(j)]) + whitespaceTokenizerLine[index.get(j)].length() - 1;
-						System.out.print("last error: ");
-						System.out.println(lastError);
 						
 						// trims the text string
 						text = text.substring(lastError);
@@ -86,27 +75,12 @@ public class PastTense extends Error{
 					}
 					
 				}
-				
-				
-				for (int i:errorStart)
-				{
-					System.out.println("Start");
-					System.out.println(i);
-				}
-				
-				for (int i:errorEnd)
-				{
-					System.out.println("End");
-					System.out.println(i);
-				}
-
-				output = sample.toString();
 				//System.out.println(output);	
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		return null;
+		return found;
 	}
 }
