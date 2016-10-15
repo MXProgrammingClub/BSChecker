@@ -13,5 +13,5 @@ public abstract class Error {
 	 * 			int[0] is index of sentences,
 	 * 			int[1],int[2] are start and end of problem in string
 	 */
-	public abstract ArrayList<int[]> findErrors(String[] sentences);
+	public abstract ArrayList<int[]> findErrors(String text);
 }
