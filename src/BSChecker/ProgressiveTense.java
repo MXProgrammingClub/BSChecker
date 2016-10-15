@@ -1,14 +1,19 @@
 package BSChecker;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
-import opennlp.tools.tokenize.WhitespaceTokenizer;
+import opennlp.tools.tokenize.Tokenizer;
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
@@ -25,14 +30,30 @@ public class ProgressiveTense extends Error {
 	 */
 	public static void main(String[] args) {
 		Error testOb = new ProgressiveTense();
-		String testText = "Sensing God's desire to destroy Sodom, Abraham is negotiating for a less apocalyptic punishment\nSensing God's desire to destroy Sodom, Abraham is negotiating for a less apocalyptic punishment";
+		String testText = "Sensing God's desire to destroy Sodom, Abraham is negotiating for a less apocalyptic punishment\nJohn is fighting Harry while eating dougnuts";
 		testOb.findErrors(testText);
 	}
 
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
 		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
+		TokenizerModel tModel = null;
+		
+		InputStream is;
+		try {
+			is = new FileInputStream("lib/en-token.bin");
+			try {
+				tModel = new TokenizerModel(is);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		
+		Tokenizer tokenizer = new TokenizerME(tModel);
 		POSTaggerME tagger = new POSTaggerME(model);
+		
 		ArrayList<ArrayList<int[]>> lineErrors = new ArrayList<ArrayList<int[]>>();
 		String line;
 
@@ -40,11 +61,13 @@ public class ProgressiveTense extends Error {
 
 		try {
 			while ((line = lineStream.read()) != null) {
-				String[] whitespaceTokenizerLine = WhitespaceTokenizer.INSTANCE.tokenize(line);
-				String[] tags = tagger.tag(whitespaceTokenizerLine);
+				String[] tokenizerLine = tokenizer.tokenize(line);
+				String[] tags = tagger.tag(tokenizerLine);
 				
-				ArrayList<Integer> errorIndices = findProgressiveTense(whitespaceTokenizerLine, tags);
-				lineErrors.add(findLoc(errorIndices, text, whitespaceTokenizerLine));
+				ArrayList<Integer> errorIndices = findProgressiveTense(tokenizerLine, tags);
+				System.out.println();
+				lineErrors.add(findLoc(errorIndices, text, tokenizerLine));
+				System.out.println();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -59,7 +82,7 @@ public class ProgressiveTense extends Error {
 	 * @param tags the array of the tag for each token
 	 * @return the indices of each token which is an error
 	 */
-	private ArrayList<Integer> findProgressiveTense(String[] whitespaceTokenizerLine, String[] tags) {
+	private ArrayList<Integer> findProgressiveTense(String[] tokenizerLine, String[] tags) {
 		//finds gerunds and participles
 		ArrayList<Integer> errorIndices = new ArrayList<Integer>();
 		for(int i = 0; i < tags.length; i++)
@@ -69,22 +92,25 @@ public class ProgressiveTense extends Error {
 		}
 		//prints token number with gerund or participle
 		for(int i = 0; i < errorIndices.size(); i++)
-			System.out.println(errorIndices.get(i) + ": " + whitespaceTokenizerLine[errorIndices.get(i)]);
+			System.out.println(errorIndices.get(i) + ": " + tokenizerLine[errorIndices.get(i)]);
 
 		
 		//checks if each gerund or participle has a form of "to be" before it
 		int errorNum = 0;
 		String word = null;
-		boolean isError = false;
+		boolean isError;
 		while(errorNum < errorIndices.size()) {				
 			if(errorIndices.get(errorNum) == 0) {
 				errorIndices.remove(errorNum);
 			} else {
-				word = whitespaceTokenizerLine[errorIndices.get(errorNum) - 1];
-				System.out.println(word);
+				word = tokenizerLine[errorIndices.get(errorNum) - 1];
+				System.out.println((errorIndices.get(errorNum) - 1) + ": " + word);
+				isError = false;
 				for(int i = 0; i < 4; i++)
+				{
 					if(word.equals(TO_BE_CONJ[i]))
 						isError = true;
+				}
 				if(isError)
 					errorNum++;
 				else
@@ -102,17 +128,18 @@ public class ProgressiveTense extends Error {
 	 * @param whitespaceTokenizerLine the tokens of the text
 	 * @return the list of errors for this line
 	 */
-	private ArrayList<int[]> findLoc(ArrayList<Integer> errorIndices, String text, String[] whitespaceTokenizerLine) {
+	private ArrayList<int[]> findLoc(ArrayList<Integer> errorIndices, String text, String[] tokenizerLine) {
 		int[] startIndeces = new int[errorIndices.size()], endIndeces = new int[errorIndices.size()];
 		int cursor = 0, start, end;
 		
 		for(int i = 0; i < errorIndices.size(); i++) {
-			System.out.println("Error Found");
-			System.out.println(whitespaceTokenizerLine[errorIndices.get(i) - 1] + " " + whitespaceTokenizerLine[errorIndices.get(i)]);
-			start = text.indexOf(whitespaceTokenizerLine[errorIndices.get(i) - 1] + " " + whitespaceTokenizerLine[errorIndices.get(i)], cursor);
-			end = start + text.length();
+			System.out.println("Error Found: ");
+			System.out.println(tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)]);
+			start = text.indexOf(tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)], cursor);
+			end = start + (tokenizerLine[errorIndices.get(i) - 1] + tokenizerLine[errorIndices.get(i)]).length();
 			startIndeces[i] = start;
 			endIndeces[i] = end;
+			System.out.println("character indices: " + start + "-" + end);
 		}
 		
 		ArrayList<int[]> result = new ArrayList<int[]>();
@@ -146,6 +173,9 @@ public class ProgressiveTense extends Error {
 		result.add(startIndeces);
 		result.add(endIndeces);
 		
+		for(int i = 0; i < result.get(0).length; i++) {
+			System.out.println(result.get(0)[i] + "-" + result.get(1)[i]);
+		}
 		return result;
 	}
 
