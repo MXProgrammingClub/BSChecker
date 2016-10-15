@@ -14,4 +14,11 @@ public abstract class Error {
 	 * 			int[1],int[2] are start and end of problem in string
 	 */
 	public abstract ArrayList<int[]> findErrors(String text);
+	
+	public static int findWord(String[] tokens, String text, int start){
+		for(int i = start; i < tokens.length; i++){
+			if(tokens[i].equals(text)) return i;
+		}
+		return -1;
+	}
 }

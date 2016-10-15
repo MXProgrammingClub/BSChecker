@@ -16,24 +16,32 @@ import opennlp.tools.util.PlainTextByLineStream;
 
 public class VagueThisWhichError extends Error {
 
-	@Override
-	public ArrayList<int[]> findErrors(String sentences) throws IOException {
+	public static void main(String[] args){
+		System.out.println(new VagueThisWhichError().findErrors("Hi, my name is slim shady. I own a car!"));
+	}
+	public ArrayList<int[]> findErrors(String text){
 		ArrayList<int[]> found = new ArrayList<int[]>();
 		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		POSTaggerME tagger = new POSTaggerME(model);
 
 		String input = "Hi. How are you? This is Mike.";
-		ObjectStream<String> lineStream = new ObjectStream(new StringReader(sentences));
+		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
 
 		String line;
-		while ((line = lineStream.read()) != null) {
+		try {
+			while ((line = lineStream.read()) != null) {
 
-			String whitespaceTokenizerLine[] = WhitespaceTokenizer.INSTANCE
-					.tokenize(line);
-			String[] tags = tagger.tag(whitespaceTokenizerLine);
-
-			POSSample sample = new POSSample(whitespaceTokenizerLine, tags);
-			System.out.println(sample.toString());
+				String tokens[] = WhitespaceTokenizer.INSTANCE.tokenize(line);
+				String[] tags = tagger.tag(tokens);
+				line.indexOf("this")
+				
+				POSSample sample = new POSSample(tokens, tags);
+				sample.
+				System.out.println(sample);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return found;
