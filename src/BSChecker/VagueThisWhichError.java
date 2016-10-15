@@ -26,7 +26,7 @@ import opennlp.tools.util.PlainTextByLineStream;
 public class VagueThisWhichError extends Error {
 
 	public static void main(String[] args){
-		String test = "Hi, my name is slim shady. Which is fun! I have this blue car in this.";
+		String test = "Hi, my name I hate this; cars are fun.";
 		ArrayList<int[]> errs = new VagueThisWhichError().findErrors(test);
 		for(int[] err: errs){
 			System.out.println(err[0] + " " + err[1] );
@@ -94,8 +94,9 @@ public class VagueThisWhichError extends Error {
 	private boolean isVague(String[] tokens, String[] tags, int i) {
 		if(i==tokens.length-1) return true;
 		for(int j = i+1; j < tokens.length; j++){
+			System.out.println(tags[j]);
 			if(tags[j].charAt(0)=='N') return false;
-			if(tags[j].charAt(0)=='V') return true;
+			if(tags[j].charAt(0)=='V' || tags[j].charAt(0)=='.' || tags[j].charAt(0)==':') return true;
 		}
 		return true;
 	}
