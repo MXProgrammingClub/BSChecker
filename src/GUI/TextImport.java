@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.usermodel.Range;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import javafx.stage.FileChooser;
 
@@ -83,7 +86,6 @@ public class TextImport
 		}
 		catch (IOException e) //Should never happen
 		{
-			e.printStackTrace();
 			return null;
 		} 
 		
@@ -96,8 +98,33 @@ public class TextImport
 		return text;
 	}
 	
+	/**
+	 * Takes the selected word 2007 document and returns the extracted text.
+	 * @param file The word document selected.
+	 * @return The text in the document.
+	 */
 	public static String importDocx(File file)
 	{
-		return "";
+		XWPFDocument doc = null;
+		try
+		{
+			doc = new XWPFDocument(new FileInputStream(file));
+		}
+		catch (IOException e) //Should never happen
+		{
+			return null;
+		} 
+		
+		String text = "";
+		List<XWPFParagraph> paragraphs = doc.getParagraphs();
+		for(XWPFParagraph p: paragraphs)
+		{
+			text += p.getText() + "\n";
+		}
+		try
+		{
+			doc.close();
+		} catch (IOException e){} //should never happen
+		return text;
 	}
 }
