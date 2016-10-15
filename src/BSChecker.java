@@ -37,7 +37,7 @@ public static void SentenceDetect() throws InvalidFormatException, IOException {
 	String paragraph = "Hi. How are you? This is Mike.";
 
 	// always start with a model, a model is learned from training data
-	InputStream is = new FileInputStream("en-sent.bin");
+	InputStream is = new FileInputStream("lib/en-sent.bin");
 	SentenceModel model = new SentenceModel(is);
 	SentenceDetectorME sdetector = new SentenceDetectorME(model);
 
@@ -49,7 +49,7 @@ public static void SentenceDetect() throws InvalidFormatException, IOException {
 }
 public static void POSTag() throws IOException {
 	POSModel model = new POSModelLoader()	
-		.load(new File("en-pos-maxent.bin"));
+		.load(new File("lib/en-pos-maxent.bin"));
 	PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "sent");
 	POSTaggerME tagger = new POSTaggerME(model);
  
