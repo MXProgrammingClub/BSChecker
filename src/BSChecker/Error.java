@@ -9,7 +9,9 @@ public abstract class Error {
 	/**
 	 * 
 	 * @param text The block of text to find errors in
-	 * @return an ArrayList of int[2] pointers to the start and end of the error
+	 * @return an ArrayList of int[3] pointers to the sentence and start and end of the error
+	 * 			int[0] is index of sentences,
+	 * 			int[1],int[2] are start and end of problem in string
 	 */
-	public abstract ArrayList<int[]> findErrors(String text);
+	public abstract ArrayList<int[]> findErrors(String[] sentences);
 }
