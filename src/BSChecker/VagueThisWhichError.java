@@ -22,10 +22,11 @@ import opennlp.tools.util.PlainTextByLineStream;
 public class VagueThisWhichError extends Error {
 
 	public static void main(String[] args){
-		ArrayList<int[]> errs = new VagueThisWhichError().findErrors("Hi, my name is slim shady. Which is fun! I have this in this.");
+		String test = "Hi, my name is slim shady. Which is fun! I have this car in this.";
+		ArrayList<int[]> errs = new VagueThisWhichError().findErrors(test);
 		for(int[] err: errs){
 			System.out.println(err[0] + " " + err[1] );
-			System.out.println("Hi, my name is slim shady. Which is fun! I have this in this.".substring(err[0], err[1]));
+			System.out.println(test.substring(err[0], err[1]));
 		}
 	}
 	
@@ -62,20 +63,20 @@ public class VagueThisWhichError extends Error {
 				int wFound = 0, tFound = 0;
 				for(int i = 0; i < tokens.length; i++){
 					if(tokens[i].equalsIgnoreCase("this")){
-						if(i == tokens.length-1 || tags[i+1].charAt(0)!='N' || endOfSentence(tokens[i])){
+						if(i == tokens.length-1 || tags[i+1].charAt(0)!='N'){
 							int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
 									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1};
-							found.add(err);
-							tFound++;
+							found.add(err);	
 						}
+						tFound++;
 					}
 					if(tokens[i].equalsIgnoreCase("which")){
-						if(i == 0 || tags[i-1].charAt(0)!='N' || endOfSentence(tokens[i-1])){
+						if(i == 0 || tags[i-1].charAt(0)!='N'){
 							int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
 									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1};
-							found.add(err);
-							wFound++;
+							found.add(err);	
 						}
+						wFound++;
 					}
 				}
 				totLen+=line.length();
