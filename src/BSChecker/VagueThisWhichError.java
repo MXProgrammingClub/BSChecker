@@ -23,10 +23,9 @@ import opennlp.tools.util.PlainTextByLineStream;
 public class VagueThisWhichError extends Error {
 
 	public static void main(String[] args){
-		ArrayList<int[]> errs = new VagueThisWhichError().findErrors("Hi, my name is slim shady. Which is fun!");
+		ArrayList<int[]> errs = new VagueThisWhichError().findErrors("Hi, my name is slim shady. Which is fun! I have this.");
 		for(int[] err: errs){
 			System.out.println(err[0] + " " + err[1] );
-			System.out.println("Hi, my name is slim shady. Which is fun!".substring(27,32));
 		}
 	}
 	
@@ -45,8 +44,8 @@ public class VagueThisWhichError extends Error {
 				String[] tags = tagger.tag(tokens);
 				int lineLen = 0;
 				for(int i = 0; i < tokens.length; i++){
-					if(tokens[i].equalsIgnoreCase("this")){
-						if(i == tokens.length-1 || tags[i+1].charAt(0)!='N'){
+					if(equalsWord(tokens[i],"this")){
+						if(i == tokens.length-1 || tags[i+1].charAt(0)!='N' || endOfSentence(tokens[i])){
 							int[] err = {totLen+lineLen,totLen+lineLen+tokens[i].length()};
 							found.add(err);
 						}
@@ -67,6 +66,14 @@ public class VagueThisWhichError extends Error {
 		}
 		return found;
 	}
+
+	public static boolean equalsWord(String a, String b){
+		return a.equalsIgnoreCase(b) || (a.substring(0,a.length()-1).equalsIgnoreCase(b) && isPunctuation(a.charAt(a.length()-1)));
+	}
+	private static boolean isPunctuation(char c) {
+		return c=='.'||c=='!'||c=='?'||c==';';
+	}
+
 	public static boolean endOfSentence(String word) {
 		char fChar = word.charAt(word.length()-1);
 		return fChar == ';' || fChar =='.'||fChar=='?'||fChar=='!';
