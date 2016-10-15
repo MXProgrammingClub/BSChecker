@@ -96,16 +96,4 @@ public class VagueThisWhichError extends Error {
 		}
 		return true;
 	}
-
-	public static boolean equalsWord(String a, String b){
-		return a.equalsIgnoreCase(b) || (a.substring(0,a.length()-1).equalsIgnoreCase(b) && isPunctuation(a.charAt(a.length()-1)));
-	}
-	private static boolean isPunctuation(char c) {
-		return c=='.'||c=='!'||c=='?'||c==';';
-	}
-
-	public static boolean endOfSentence(String word) {
-		char fChar = word.charAt(word.length()-1);
-		return fChar == ';' || fChar =='.'||fChar=='?'||fChar=='!';
-	}
 }
