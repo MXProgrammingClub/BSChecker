@@ -22,27 +22,27 @@ public class progressiveTense extends Error {
 	public static void main(String[] args)
 	{
 		Error testOb = new progressiveTense();
-		String testText = "Sensing God's desire to destroy Sodom, Abraham is negotiating for a less apocalyptic punishment";
-		
+		String testText = "are sensing God's desire to destroy Sodom, Abraham is negotiating for a less apocalyptic punishment";
+
 		testOb.findErrors(testText);
 	}
-	
+
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
-		
+
 		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		POSTaggerME tagger = new POSTaggerME(model);
 		String[] toBeConj = {"be", "am", "are", "is"};
 		String line;
-		
+
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
-		
+
 		try {
 			while ((line = lineStream.read()) != null) {
 				String whitespaceTokenizerLine[] = WhitespaceTokenizer.INSTANCE.tokenize(line);
 				String[] tags = tagger.tag(whitespaceTokenizerLine);
 //				POSSample token = new POSSample(whitespaceTokenizerLine, tags);
-				
+
 				ArrayList<Integer> errorIndices = new ArrayList<Integer>();
 				for(int i = 0; i < tags.length; i++)
 				{
@@ -52,30 +52,46 @@ public class progressiveTense extends Error {
 				}
 				for(int i = 0; i < errorIndices.size(); i++)
 				{
-					System.out.println(errorIndices.get(i));
+					System.out.println(errorIndices.get(i) + ": " + whitespaceTokenizerLine[errorIndices.get(i)]);
+				}
+
+				int errorNum = 0;
+				String word = null;
+				boolean isError = false;
+				while(errorNum < errorIndices.size()) {				
+					if(errorIndices.get(errorNum) == 0) {
+						errorIndices.remove(errorNum);
+					}
+					else {
+						word = whitespaceTokenizerLine[errorIndices.get(errorNum) - 1];
+						System.out.println(word);
+						for(int i = 0; i < 4; i++)
+							if(word.equals(toBeConj[i]))
+								isError = true;
+						if(isError)
+							errorNum++;
+						else
+							errorIndices.remove(errorNum);
+					}
 				}
 				
-//				int errorNum = 0;
-//				String word = null;
-//				while(errorNum < errorIndices.size())
-//				{
-//					System.out.println(errorNum);
-//					if(errorIndices.get(errorNum) == 0)
-//						errorIndices.remove(errorNum);
-//					else
-//						word = whitespaceTokenizerLine[errorIndices.get(errorNum) - 1];
-//					if(word != null)
-//					{
-//					System.out.println(word);
-//					for(int i = 0; i < 4; i++)
-//						if(word.equals(toBeConj[i]))
-//							errorNum++;
-//						else
-//							errorIndices.remove(errorNum);
-//					}
-//							
-//				}
-				
+				int[] startIndeces = new int[errorIndices.size()];
+				int[] endIndeces = new int[errorIndices.size()];
+				int cursor = 0, start, end;
+				for(int i = 0; i < errorIndices.size(); i++)
+				{
+					System.out.println("Error Found");
+					System.out.println(whitespaceTokenizerLine[errorIndices.get(i) - 1] + " " + whitespaceTokenizerLine[errorIndices.get(i)]);
+					start = text.indexOf(whitespaceTokenizerLine[errorIndices.get(i) - 1] + " " + whitespaceTokenizerLine[errorIndices.get(i)], cursor);
+					end = start + text.length();
+					startIndeces[i] = start;
+					endIndeces[i] = end;
+				}
+				ArrayList<int[]> result = new ArrayList<int[]>();
+				result.add(startIndeces);
+				result.add(endIndeces);
+				return result;
+
 //				System.out.println(token.toString());
 //				for(String s:whitespaceTokenizerLine)
 //				{
@@ -85,7 +101,7 @@ public class progressiveTense extends Error {
 //				{
 //					System.out.println(s);
 //				}
-//				
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
