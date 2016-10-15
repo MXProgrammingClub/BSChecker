@@ -18,7 +18,11 @@ import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
-
+/**
+ * 
+ * @author tedpyne
+ * Find errors with vague "this" or "which" instances
+ */
 public class VagueThisWhichError extends Error {
 
 	public static void main(String[] args){
@@ -29,7 +33,7 @@ public class VagueThisWhichError extends Error {
 			System.out.println(test.substring(err[0], err[1]));
 		}
 	}
-	
+
 	public ArrayList<int[]> findErrors(String text){
 		
 		ArrayList<int[]> found = new ArrayList<int[]>();

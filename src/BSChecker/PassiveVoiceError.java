@@ -64,7 +64,6 @@ public class PassiveVoiceError extends Error {
 					for(int i = 0; i < tokens.length; i++){
 						if(tokens[i].equalsIgnoreCase("is")){
 							if(i!=tokens.length-1 && tags[i+1].equals("VBN")){
-								System.out.println("PASSIVE VOICE ERR");
 								int[] err = {totLen + locationOf(line," is ",isFound), totLen + locationOf(line," is ",isFound) + tokens[i].length()+1+tokens[i+1].length()};
 								found.add(err);
 							}
@@ -72,7 +71,6 @@ public class PassiveVoiceError extends Error {
 						}
 						if(tokens[i].equalsIgnoreCase("are")){
 							if(i!=tokens.length-1 && tags[i+1].equals("VBN")){
-								System.out.println("PASSIVE VOICE ERR");
 								int[] err = {totLen + locationOf(line," are ",areFound), totLen + locationOf(line," are ",areFound) + tokens[i].length()+1+tokens[i+1].length()};
 								found.add(err);
 							}
