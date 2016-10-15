@@ -23,7 +23,7 @@ public class BSCheckerMenu extends MenuBar {
 	public BSCheckerMenu()  {
 		Menu fileMenu = new Menu("File");
 		MenuItem fileOpen = new MenuItem("Open");
-		fileOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+		fileOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN));
 		fileOpen.setOnAction(new EventHandler<ActionEvent>()
 		{
 			@Override
