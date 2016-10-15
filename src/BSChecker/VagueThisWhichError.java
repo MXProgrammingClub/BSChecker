@@ -22,7 +22,7 @@ import opennlp.tools.util.PlainTextByLineStream;
 public class VagueThisWhichError extends Error {
 
 	public static void main(String[] args){
-		String test = "Hi, my name is slim shady. Which is fun! I have this car in this.";
+		String test = "Hi, my name is slim shady. Which is fun! I have this blue car in this.";
 		ArrayList<int[]> errs = new VagueThisWhichError().findErrors(test);
 		for(int[] err: errs){
 			System.out.println(err[0] + " " + err[1] );
@@ -63,7 +63,7 @@ public class VagueThisWhichError extends Error {
 				int wFound = 0, tFound = 0;
 				for(int i = 0; i < tokens.length; i++){
 					if(tokens[i].equalsIgnoreCase("this")){
-						if(i == tokens.length-1 || tags[i+1].charAt(0)!='N'){
+						if(isVague(tokens,tags,i)){
 							int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
 									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1};
 							found.add(err);	
@@ -86,6 +86,15 @@ public class VagueThisWhichError extends Error {
 			e.printStackTrace();
 		}
 		return found;
+	}
+
+	private boolean isVague(String[] tokens, String[] tags, int i) {
+		if(i==tokens.length-1) return true;
+		for(int j = i+1; j < tokens.length; j++){
+			if(tags[j].charAt(0)=='N') return false;
+			if(tags[j].charAt(0)=='V') return true;
+		}
+		return true;
 	}
 
 	private int locationOf(String line, String string, int found) {
