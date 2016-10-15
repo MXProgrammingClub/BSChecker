@@ -52,28 +52,29 @@ public class progressiveTense extends Error {
 				}
 				for(int i = 0; i < errorIndices.size(); i++)
 				{
+					System.out.println(errorIndices.get(i));
+				}
 				
-				}
-				int errorNum = 0;
-				String word = null;
-				while(errorNum < errorIndices.size())
-				{
-					System.out.println(errorNum);
-					if(errorIndices.get(errorNum) == 0)
-						errorIndices.remove(errorNum);
-					else
-						word = whitespaceTokenizerLine[errorIndices.get(errorNum) - 1];
-					if(word != null)
-					{
-					System.out.println(word);
-					for(int i = 0; i < 4; i++)
-						if(word.equals(toBeConj[i]))
-							errorNum++;
-						else
-							errorIndices.remove(errorNum);
-					}
-							
-				}
+//				int errorNum = 0;
+//				String word = null;
+//				while(errorNum < errorIndices.size())
+//				{
+//					System.out.println(errorNum);
+//					if(errorIndices.get(errorNum) == 0)
+//						errorIndices.remove(errorNum);
+//					else
+//						word = whitespaceTokenizerLine[errorIndices.get(errorNum) - 1];
+//					if(word != null)
+//					{
+//					System.out.println(word);
+//					for(int i = 0; i < 4; i++)
+//						if(word.equals(toBeConj[i]))
+//							errorNum++;
+//						else
+//							errorIndices.remove(errorNum);
+//					}
+//							
+//				}
 				
 //				System.out.println(token.toString());
 //				for(String s:whitespaceTokenizerLine)
