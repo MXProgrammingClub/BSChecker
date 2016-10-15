@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
+import opennlp.tools.sentdetect.SentenceDetectorME;
+import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.Span;
 
@@ -32,16 +34,30 @@ public class AmbiguousPronoun extends Error {
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		Span[] names = findName(text);
+		Span[] names = findName(SentenceDetect(text));
 		
 		
 		
 		return errors;
 	}
 	
-	public static Span[] findName(String text) {
+	public static String[] SentenceDetect(String text) {
 		try {
-			String[] textArr = {text};
+			// always start with a model, a model is learned from training data
+			InputStream is = new FileInputStream("lib/en-sent.bin");
+			SentenceModel model = new SentenceModel(is);
+			SentenceDetectorME sdetector = new SentenceDetectorME(model);
+			is.close();
+			
+			return sdetector.sentDetect(text);
+		}
+		catch(IOException e) {
+			return null;
+		}
+	}
+	
+	public static Span[] findName(String[] sentences) {
+		try {
 			InputStream is = new FileInputStream("lib/en-ner-person.bin");
 		 
 			TokenNameFinderModel model = new TokenNameFinderModel(is);
@@ -49,7 +65,7 @@ public class AmbiguousPronoun extends Error {
 		 
 			NameFinderME nameFinder = new NameFinderME(model);
 		 
-			return nameFinder.find(textArr);
+			return nameFinder.find(sentences);
 		}
 		catch(IOException e) {
 			return null;
