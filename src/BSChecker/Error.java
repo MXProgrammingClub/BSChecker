@@ -1,5 +1,7 @@
 package BSChecker;
 import java.util.ArrayList;
+
+import opennlp.tools.util.ObjectStream;
 /**
  * 
  * @author tedpyne
@@ -13,7 +15,8 @@ public abstract class Error {
 	 * 			int[0] is the line index,
 	 * 			int[1],int[2] are start and end tokens in error
 	 */
-	public abstract ArrayList<int[]> findErrors(String text);
+	
+	public abstract ArrayList<int[]> findErrors(ObjectStream<String> lines);
 	
 	public static int findWord(String[] tokens, String text, int start){
 		for(int i = start; i < tokens.length; i++){
