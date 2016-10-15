@@ -16,5 +16,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/poi-ooxml-schemas-3.14-20160307.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-scratchpad-3.14-20160307.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfoenix.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

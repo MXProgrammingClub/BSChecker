@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #E1F5FE;" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <JFXButton id="buttonLeft" buttonType="RAISED" layoutX="456.0" layoutY="601.0" style="-fx-background-color: #0277BD;" text="&lt;" textAlignment="CENTER" textFill="WHITE">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <font>
+            <Font size="18.0" />
+         </font>
+      </JFXButton>
+      <JFXButton id="buttonRight" buttonType="RAISED" layoutX="505.0" layoutY="601.0" style="-fx-background-color: #0277BD;" text="&gt;" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </JFXButton>
+      <JFXTextArea id="essayBox" layoutX="14.0" layoutY="14.0" maxWidth="973.0" minWidth="725.0" prefHeight="432.0" prefWidth="972.0" promptText="Type or Import Your Essay" unFocusColor="#81d4fa" />
+      <JFXTextArea id="sentenceBox" layoutX="16.0" layoutY="461.0" maxWidth="721.0" minWidth="477.0" prefHeight="126.0" prefWidth="635.0" promptText="No Sentence Currently Selected" unFocusColor="#81d4fa" />
+      <JFXTextArea id="errorBox" editable="false" focusTraversable="false" layoutX="665.0" layoutY="461.0" maxWidth="556.0" minWidth="321.0" prefHeight="126.0" prefWidth="321.0" promptText="No Error Selected" unFocusColor="#81d4fa" />
+   </children>
+   <cursor>
+      <Cursor fx:constant="DEFAULT" />
+   </cursor>
+</Pane>

@@ -1,5 +1,10 @@
+@font-face {
+    /*src: url('/lib/Roboto');*/
+}
+
 .root {
-	/*-fx-font-family: Courier;*/
+	-fx-font-family: Roboto;
+	-fx-background-color: #4FC3F7
 }
 
 .button {
@@ -17,4 +22,13 @@
 .button:pressed {
 	-fx-background-color: black;
 	-fx-cursor: hand;
+}
+
+.menu-bar {
+	-fx-background-color: #B3E5FC;
+	/*-fx-font-weight: bold;*/
+}
+
+.menu {
+	
 }
