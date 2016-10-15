@@ -6,7 +6,7 @@ import opennlp.tools.tokenize.*;
 import opennlp.tools.util.*;
 public class BSChecker {
 	public static void main(String[] args) throws InvalidFormatException, IOException {
-			InputStream is = new FileInputStream("en-token.bin");
+			InputStream is = new FileInputStream("lib/da-token.bin");
 		 
 			TokenizerModel model = new TokenizerModel(is);
 		 
