@@ -48,14 +48,12 @@ public static void SentenceDetect() throws InvalidFormatException, IOException {
 	is.close();
 }
 public static void POSTag() throws IOException {
-	POSModel model = new POSModelLoader()	
-		.load(new File("lib/en-pos-maxent.bin"));
+	POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 	PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "sent");
 	POSTaggerME tagger = new POSTaggerME(model);
  
 	String input = "Hi. How are you? This is Mike.";
-	ObjectStream<String> lineStream = new PlainTextByLineStream(
-			new StringReader(input));
+	ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(input));
  
 	perfMon.start();
 	String line;

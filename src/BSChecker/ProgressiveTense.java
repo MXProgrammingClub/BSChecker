@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSSample;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.tokenize.WhitespaceTokenizer;
 import opennlp.tools.util.ObjectStream;
@@ -17,12 +16,12 @@ import opennlp.tools.util.PlainTextByLineStream;
  * @author JeremiahDeGreeff
  * algorithms for progressive tense (error 12)
  */
-public class progressiveTense extends Error {
+public class ProgressiveTense extends Error {
 
 	public static void main(String[] args)
 	{
-		Error testOb = new progressiveTense();
-		String testText = "are sensing God's desire to destroy Sodom, Abraham is negotiating for a less apocalyptic punishment";
+		Error testOb = new ProgressiveTense();
+		String testText = "Sensing God's desire to destroy Sodom, Abraham is negotiating for a less apocalyptic punishment";
 
 		testOb.findErrors(testText);
 	}
