@@ -7,15 +7,32 @@
 
 package GUI;
 
+import java.io.File;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 
 public class BSCheckerMenu extends MenuBar {
 	
 	public BSCheckerMenu()  {
 		Menu fileMenu = new Menu("File");
 		MenuItem fileOpen = new MenuItem("Open");
+		fileOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+		fileOpen.setOnAction(new EventHandler<ActionEvent>()
+		{
+			@Override
+			public void handle(ActionEvent arg0)
+			{
+				File file = TextImport.chooseFile();
+				String text = TextImport.openFile(file);
+			}
+		});
 		fileMenu.getItems().add(fileOpen);
 		
 		Menu editMenu = new Menu("Edit");
