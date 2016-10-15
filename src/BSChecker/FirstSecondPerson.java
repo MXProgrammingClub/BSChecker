@@ -3,9 +3,7 @@
  */
 package BSChecker;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ import opennlp.tools.tokenize.TokenizerModel;
 
 /**
  * @author Dalal
- * Find (& print out locations of) first & second person -> BS error #3
+ * Finds (& print out locations of) first & second person -> BS error #3
  */
 public class FirstSecondPerson extends Error {
 	
