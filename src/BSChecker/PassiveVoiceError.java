@@ -18,6 +18,11 @@ import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
+/**
+ * 
+ * @author tedpyne
+ * Return instances of present forms of "to be" + past participles
+ */
 public class PassiveVoiceError extends Error {
 	
 	public static void main(String[] args){
