@@ -63,7 +63,6 @@ public class VagueThisWhichError extends Error {
 				
 				String tokens[] = tokenizer.tokenize(line);
 				String[] tags = tagger.tag(tokens);
-				int lineLen = 0;
 				int wFound = 0, tFound = 0;
 				for(int i = 0; i < tokens.length; i++){
 					if(tokens[i].equalsIgnoreCase("this")){
@@ -76,8 +75,8 @@ public class VagueThisWhichError extends Error {
 					}
 					if(tokens[i].equalsIgnoreCase("which")){
 						if(i == 0 || tags[i-1].charAt(0)!='N'){
-							int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
-									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1};
+							int[] err = {totLen+locationOf(line,tokens[i],wFound)-1,
+									totLen+locationOf(line,tokens[i],wFound)+tokens[i].length()-1};
 							found.add(err);	
 						}
 						wFound++;
