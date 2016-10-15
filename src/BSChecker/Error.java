@@ -17,8 +17,8 @@ public abstract class Error {
 	 * 
 	 * @param line The text to search through
 	 * @param string The word to find in the text
-	 * @param found The number of occurrences already found, return the location of the n+1th instance
-	 * @return
+	 * @param found The number of occurrences already found
+	 * @return The location of the n+1th instance
 	 */
 	public static int locationOf(String line, String string, int found) {
 		int loc = 0;
