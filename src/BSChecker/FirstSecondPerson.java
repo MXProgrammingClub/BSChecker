@@ -16,11 +16,14 @@ import opennlp.tools.tokenize.TokenizerModel;
 
 /**
  * @author Dalal
- * Find (& correct?) first/second person -> BS error #3
+ * Find (& print out locations of) first & second person -> BS error #3
  */
 public class FirstSecondPerson extends Error {
 	
-	
+	/*
+	 * main method
+	 * currently testing random String
+	 */
 	public static void main (String[] args) {
 		ArrayList<int[]> errors = new FirstSecondPerson().findErrors("Hi. How are you? This is Mike.");
 		for (int[] error : errors)
@@ -29,6 +32,10 @@ public class FirstSecondPerson extends Error {
 	
 	/* (non-Javadoc)
 	 * @see BSChecker.Error#findErrors(java.lang.String)
+	 * 
+	 * @param text block of text to check
+	 * @return errors ArrayList of beginning & ending indices of errors
+	 * finds all first & second person errors & returns indices
 	 */
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
@@ -53,6 +60,11 @@ public class FirstSecondPerson extends Error {
 		return errors;
 	}
 	
+	/*
+	 * @param text block of text to Tolkenize
+	 * @return String[] array of String tokens
+	 * breaks text into tokens and returns
+	 */
 	public static String[] Tokenize(String text) {
 		try {
 				InputStream is = new FileInputStream("lib/en-token.bin");
