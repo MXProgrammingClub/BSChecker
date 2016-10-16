@@ -172,12 +172,12 @@ public class ProgressiveTense extends Error {
 		if(errorNum > 0) {
 			result.add(startIndeces);
 			result.add(endIndeces);
+			System.out.println("all found errors:");
+			for(int i = 0; i < result.get(0).length; i++) {
+				System.out.println(result.get(0)[i] + "-" + result.get(1)[i]);
+			}
 		}
 		
-		System.out.println("all found errors:");
-		for(int i = 0; i < result.get(0).length; i++) {
-			System.out.println(result.get(0)[i] + "-" + result.get(1)[i]);
-		}
 		return result;
 	}
 
