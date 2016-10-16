@@ -152,6 +152,7 @@ public class GUIController {
 			a.setHeaderText("Search Complete");
 			a.setTitle("No Next Error");
 			a.showAndWait();
+			currError--;
 			return;
 		}
 		displayError();	
@@ -170,6 +171,7 @@ public class GUIController {
 			a.setHeaderText("Search Complete");
 			a.setTitle("No Previous Error");
 			a.showAndWait();
+			currError++;
 			return;
 		}
 		displayError();
