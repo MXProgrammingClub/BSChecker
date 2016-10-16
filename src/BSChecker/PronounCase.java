@@ -1,6 +1,5 @@
 package BSChecker;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,7 +7,6 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 
-import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.tokenize.Tokenizer;
@@ -99,38 +97,8 @@ public class PronounCase extends Error{
 						int index = pnIndex.get(j);
 						if (index != (tokens.length - 1))
 						{
-							if(index > 0 && (tags[index-1].equals("VB") || tags[index-1].equals("VBD") || tags[index-1].equals("VBG") || tags[index-1].equals("VBN") || tags[index-1].equals("VBP") || tags[index-1].equals("VBZ")))
-							{
-								
-								
-//								System.out.println("obj detected");
-								// so the pronoun should be objective
-								boolean objErr = true;
-								for(String s: OBJ)
-								{
-									if(tokens[index].equals(s))
-									{
-										objErr = false;
-									}
-								}
-								if(objErr)
-								{
-									errTokIndex.add(index);
-								}
-								for (int s: errTokIndex)
-								{
-//									System.out.print("poss & sub & obj: ");
-//									System.out.println(s);
-								}
-								
-								
-								
-							}
-							
-							
-							
-						else if(tags[index+1].equals("NN")||tags[index+1].equals("NNS")||tags[index+1].equals("NNP")||tags[index+1].equals("NNPS")
-									|| (((index >= 2) && (tokens[index-1].equals("of")) && (tags[index-2].equals("NN") || tags[index-2].equals("NNS") || tags[index-2].equals("NNP") || tags[index-2].equals("NNPS")))))
+							if(tags[index+1].equals("NN")||tags[index+1].equals("NNS")||tags[index+1].equals("NNP")||tags[index+1].equals("NNPS")
+									|| ((index >= 2) && (tokens[index-1].equals("of")) && (tags[index-2].equals("NN") || tags[index-2].equals("NNS") || tags[index-2].equals("NNP") || tags[index-2].equals("NNPS"))))
 							{
 //								System.out.println("pos detected");
 								// so the pronoun should be possessive
@@ -164,7 +132,6 @@ public class PronounCase extends Error{
 //									System.out.println(s);
 								}
 							}
-							
 							else if(tags[index+1].equals("VB")||tags[index+1].equals("VBD")||tags[index+1].equals("VBG")||tags[index+1].equals("VBN")||tags[index+1].equals("VBP")||tags[index+1].equals("VBZ"))
 							{
 //								System.out.println("sub detected");
@@ -195,7 +162,28 @@ public class PronounCase extends Error{
 //									System.out.println(s);
 								}
 							}
-							
+							else if(index > 0 && (tags[index-1].equals("VB") || tags[index-1].equals("VBD") || tags[index-1].equals("VBG") || tags[index-1].equals("VBN") || tags[index-1].equals("VBP") || tags[index-1].equals("VBZ")))
+							{
+//								System.out.println("obj detected");
+								// so the pronoun should be objective
+								boolean objErr = true;
+								for(String s: OBJ)
+								{
+									if(tokens[index].equals(s))
+									{
+										objErr = false;
+									}
+								}
+								if(objErr)
+								{
+									errTokIndex.add(index);
+								}
+								for (int s: errTokIndex)
+								{
+//									System.out.print("poss & sub & obj: ");
+//									System.out.println(s);
+								}
+							}
 						}
 						else
 						{
@@ -245,11 +233,11 @@ public class PronounCase extends Error{
 								{
 									errTokIndex.add(index);
 								}
-								for (int s: errTokIndex)
-								{
+//								for (int s: errTokIndex)
+//								{
 //									System.out.print("poss + sub + obj: ");
 //									System.out.println(s);
-								}
+//								}
 							}
 
 						}
