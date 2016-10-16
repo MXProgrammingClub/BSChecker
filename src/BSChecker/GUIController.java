@@ -172,7 +172,7 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuSaveAsClick() {
-		/* FILE->SAVEAS ACTION */
+		TextImport.saveAs(essayBox.getText());
 	}
 	
 	/**

@@ -134,6 +134,20 @@ public class TextImport
 		} catch (IOException e){} //should never happen
 		return text;
 	}
+
+	/**
+	 * Allows the user to create a file to save the text.
+	 * @param text The text to save in the new document.
+	 */
+	public static void saveAs(String text)
+	{
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Save Essay");
+		fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Microsof Word 2007", "*.docx"), new FileChooser.ExtensionFilter("Microsoft Word 1997", "*.doc"), 
+				new FileChooser.ExtensionFilter("Text File", "*.txt"));
+		File file = fc.showSaveDialog(null);
+		if(file != null) saveText(file, text);
+	}
 	
 	/**
 	 * Saves the new text to the file.
@@ -274,7 +288,11 @@ public class TextImport
 	
 	public static void main(String[] args)
 	{
+		/*
 		File file = new File("test.doc");
 		saveDoc(file, "yo hi\nno");
+		*/
+		
+		saveAs("Hi, my name is Julia\nnew line");
 	}
 }
