@@ -38,7 +38,7 @@ public class PronounCase extends Error{
 		// initialization: POSTagger and Tokenizer
 		ArrayList<int[]> found = new ArrayList<int[]>();
 		POSTaggerME tagger = new POSTaggerME(model);
-//		System.out.println("HERE");
+		//		System.out.println("HERE");
 		InputStream is;
 		TokenizerModel tModel;
 		try {
@@ -97,7 +97,12 @@ public class PronounCase extends Error{
 						int index = pnIndex.get(j);
 						if (index != (tokens.length - 1))
 						{
-							if(tags[index+1].equals("NN")||tags[index+1].equals("NNS")||tags[index+1].equals("NNP")||tags[index+1].equals("NNPS")
+							int relIndex = index;
+							while(tags[relIndex + 1].equals("JJ") || tags[relIndex + 1].equals("JJR") || tags[relIndex + 1].equals("JJS") || tags[relIndex + 1].equals("RB") || tags[relIndex + 1].equals("RBR")|| tags[relIndex + 1].equals("RBS")){								
+								relIndex++;
+							}
+
+							if(tags[relIndex+1].equals("NN")||tags[relIndex+1].equals("NNS")||tags[relIndex+1].equals("NNP")||tags[relIndex+1].equals("NNPS")
 									|| ((index >= 2) && (tokens[index-1].equals("of")) && (tags[index-2].equals("NN") || tags[index-2].equals("NNS") || tags[index-2].equals("NNP") || tags[index-2].equals("NNPS"))))
 							{
 //								System.out.println("pos detected");
@@ -132,7 +137,7 @@ public class PronounCase extends Error{
 //									System.out.println(s);
 								}
 							}
-							else if(tags[index+1].equals("VB")||tags[index+1].equals("VBD")||tags[index+1].equals("VBG")||tags[index+1].equals("VBN")||tags[index+1].equals("VBP")||tags[index+1].equals("VBZ"))
+							else if(tags[relIndex+1].equals("VB")||tags[relIndex+1].equals("VBD")||tags[relIndex+1].equals("VBG")||tags[relIndex+1].equals("VBN")||tags[relIndex+1].equals("VBP")||tags[relIndex+1].equals("VBZ"))
 							{
 //								System.out.println("sub detected");
 								// so the pronoun should be subjective
@@ -156,11 +161,11 @@ public class PronounCase extends Error{
 										errTokIndex.add(index);
 									}
 								}
-								for (int s: errTokIndex)
-								{
+//								for (int s: errTokIndex)
+//								{
 //									System.out.print("poss & sub: ");
 //									System.out.println(s);
-								}
+//								}
 							}
 							else if(index > 0 && (tags[index-1].equals("VB") || tags[index-1].equals("VBD") || tags[index-1].equals("VBG") || tags[index-1].equals("VBN") || tags[index-1].equals("VBP") || tags[index-1].equals("VBZ")))
 							{
@@ -185,78 +190,75 @@ public class PronounCase extends Error{
 								}
 							}
 						}
-						else
+					else
+					{
+						// special: when pronoun is the last word in the paragraph
+						if(tokens[index-1].equals("of") && (tags[index-2].equals("NN")||tags[index-2].equals("NNS")||tags[index-2].equals("NNP")||tags[index-2].equals("NNPS")))
 						{
-							// special: when pronoun is the last word in the paragraph
-							if(tokens[index-1].equals("of") && (tags[index-2].equals("NN")||tags[index-2].equals("NNS")||tags[index-2].equals("NNP")||tags[index-2].equals("NNPS")))
+							// so the pronoun should be possessive
+							boolean possErr = true;
+							for(String s: POSSES)
 							{
-								// so the pronoun should be possessive
-								boolean possErr = true;
-								for(String s: POSSES)
+								if(tokens[index].equals(s))
 								{
-									if(tokens[index].equals(s))
-									{
-										possErr = false;
-									}
-								}
-								for(String s: POSSESADJ)
-								{
-									if(tokens[index].equals(s))
-									{
-										possErr = false;
-									}
-								}
-
-								if(possErr)
-								{
-									errTokIndex.add(index);
-								}
-
-								for (int s: errTokIndex)
-								{
-//									System.out.print("poss: ");
-//									System.out.println(s);
+									possErr = false;
 								}
 							}
-							else if(tags[index-1].equals("VB")||tags[index-1].equals("VBD")||tags[index-1].equals("VBG")||tags[index-1].equals("VBN")||tags[index-1].equals("VBP")||tags[index-1].equals("VBZ"))
+							for(String s: POSSESADJ)
 							{
-								// so the pronoun should be objective
-								boolean objErr = true;
-								for(String s: OBJ)
+								if(tokens[index].equals(s))
 								{
-									if(tokens[index].equals(s))
-									{
-										objErr = false;
-									}
+									possErr = false;
 								}
-								if(objErr)
-								{
-									errTokIndex.add(index);
-								}
-//								for (int s: errTokIndex)
-//								{
-//									System.out.print("poss + sub + obj: ");
-//									System.out.println(s);
-//								}
 							}
 
+							if(possErr)
+							{
+								errTokIndex.add(index);
+							}
+
+							for (int s: errTokIndex)
+							{
+//								System.out.print("poss: ");
+//								System.out.println(s);
+							}
+						}
+						else if(tags[index-1].equals("VB")||tags[index-1].equals("VBD")||tags[index-1].equals("VBG")||tags[index-1].equals("VBN")||tags[index-1].equals("VBP")||tags[index-1].equals("VBZ"))
+						{
+							// so the pronoun should be objective
+							boolean objErr = true;
+							for(String s: OBJ)
+							{
+								if(tokens[index].equals(s))
+								{
+									objErr = false;
+								}
+							}
+							if(objErr)
+							{
+								errTokIndex.add(index);
+							}
+//							for (int s: errTokIndex)
+//							{
+//								System.out.print("poss + sub + obj: ");
+//								System.out.println(s);
+//							}
 						}
 
 					}
-
 				}
 				String[] nextWord = new String[errTokIndex.size()];
 				for(int i = 0; i < errTokIndex.size(); i++) {
 					nextWord[i] = tokens[errTokIndex.get(i) + 1];
-					System.out.println(tokens[errTokIndex.get(i)]);
-					System.out.println(nextWord[i]);
+//					System.out.println(tokens[errTokIndex.get(i)]);
+//					System.out.println(nextWord[i]);
 				}
 				// here errTokIndex is correct and complete
 				// convert errTokIndex to textIndex
 				int leftValue = 0, startCharIndex, endCharIndex;
 				for(int j = 0; j < errTokIndex.size(); j++)
 				{
-					System.out.println(j);
+//					System.out.println(j);
 					startCharIndex = text.toLowerCase().indexOf(tokens[errTokIndex.get(j)], leftValue);
 					endCharIndex = startCharIndex + tokens[errTokIndex.get(j)].length() - 1;
 
@@ -264,8 +266,8 @@ public class PronounCase extends Error{
 //					System.out.println(endCharIndex);
 //					System.out.println(text.substring(endCharIndex + 2, endCharIndex + nextWord[j].length() + 2));
 //					System.out.println(nextWord[j]);
-					// He, who is big, is dead, killed he, who is small.
-					
+//					He, who is big, is dead, killed he, who is small.
+
 					if((startCharIndex == 0) || (startCharIndex >= 0 && text.toLowerCase().charAt(startCharIndex - 1) == ' ')
 							&& (text.charAt(endCharIndex + 1) != 's' && text.charAt(endCharIndex + 1) != 'm')
 							&& text.substring(endCharIndex + 2, endCharIndex + nextWord[j].length() + 2).equals(nextWord[j]))
@@ -282,23 +284,24 @@ public class PronounCase extends Error{
 						leftValue = endCharIndex;
 						j--;
 					}
-					
+
+				}
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// print final result
-//		for(int i = 0; i < found.size(); i++)
-//		{
-//			System.out.print("Start: ");
-//			System.out.println(found.get(i)[0]);
-//			System.out.print("End: ");
-//			System.out.println(found.get(i)[1]);
-//
-//			System.out.print("Substring: ");
-//			System.out.println(text.toLowerCase().substring(found.get(i)[0], (found.get(i)[1] + 1)));
-//		}
+		//		for(int i = 0; i < found.size(); i++)
+		//		{
+		//			System.out.print("Start: ");
+		//			System.out.println(found.get(i)[0]);
+		//			System.out.print("End: ");
+		//			System.out.println(found.get(i)[1]);
+		//
+		//			System.out.print("Substring: ");
+		//			System.out.println(text.toLowerCase().substring(found.get(i)[0], (found.get(i)[1] + 1)));
+		//		}
 
 		return found;
 	}
