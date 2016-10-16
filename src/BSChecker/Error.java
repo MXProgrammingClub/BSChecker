@@ -1,5 +1,6 @@
 package BSChecker;
 import java.util.ArrayList;
+import java.util.Comparator;
 /**
  * 
  * @author tedpyne
@@ -28,4 +29,20 @@ public abstract class Error {
 		return loc;
 	}
 	
+	/**
+	 * Sorts the list of all errors by location.
+	 * @param list All the located errors 
+	 */
+	public static void sort(ArrayList<int[]> list)
+	{
+		list.sort(new Comparator<int[]>()
+		{
+			public int compare(int[] o1, int[] o2)
+			{
+				if(o1[0] == o2[0]) return 0;
+				else if(o1[0] < o2[0]) return -1;
+				else return 1;
+			}
+		});
+	}
 }
