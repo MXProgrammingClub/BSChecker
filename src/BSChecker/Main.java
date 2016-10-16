@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	public final static Error[] ERROR_LIST = {
-			//new AmbiguousPronoun(),
+			new AmbiguousPronoun(),
 			//new FaultyParallelismError(),
 			new FirstSecondPerson(),
 			new GerundPossesive(),
@@ -24,7 +24,8 @@ public class Main extends Application {
 			new PastTense(),
 			new ProgressiveTense(),
 			new QuotationForm(),
-			new VagueThisWhichError()
+			new VagueThisWhichError(),
+			new PronounCase()
 	};
 
 
@@ -36,7 +37,7 @@ public class Main extends Application {
 			Scene scene = new Scene(root, 1000, 650);
 			scene.getStylesheets().add(this.getClass().getResource("application.css").toExternalForm());
 
-			primaryStage.setTitle("AutoHirsch");
+			primaryStage.setTitle("BSChecker");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
