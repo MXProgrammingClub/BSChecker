@@ -108,7 +108,10 @@ public class GUIController {
 		errors = new ArrayList<>();
 		for(Error e: Main.ERROR_LIST) {
 			//System.out.println(e.getClass().toString());
-		    ArrayList<int[]> temp = e.findErrors(essayBox.getText());
+			String text = essayBox.getText();
+			text = Normalizer.normalize(text, Normalizer.Form.NFD); //normalizes to ASCII
+			essayBox.replaceText(text);
+		    ArrayList<int[]> temp = e.findErrors(text);
 			/*for(int[] i: temp) {
 				System.out.println(Arrays.toString(i));
 			}*/
@@ -201,7 +204,6 @@ public class GUIController {
 		if(file == null) return;
 		String text = TextImport.openFile(file);
 		if(text == null) return;
-		text = Normalizer.normalize(text, Normalizer.Form.NFD); //normalizes to ASCII
 		//essayBox.setText(text);
 		essayBox.replaceText(text);
 	}
