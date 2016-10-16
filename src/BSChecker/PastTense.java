@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSSample;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
@@ -63,8 +62,6 @@ public class PastTense extends Error{
 				String tokens[] = tokenizer.tokenize(line);
 				String[] tags = tagger.tag(tokens);
 
-				POSSample sample = new POSSample(tokens, tags);
-
 				ArrayList<Integer> index = new ArrayList<Integer>();
 
 
@@ -89,7 +86,6 @@ public class PastTense extends Error{
 					
 				}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// print final result
