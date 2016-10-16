@@ -3,15 +3,19 @@ package BSChecker;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Scanner;
 
 import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.usermodel.Paragraph;
+import org.apache.poi.hwpf.usermodel.ParagraphProperties;
 import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import javafx.stage.FileChooser;
 
@@ -122,6 +126,7 @@ public class TextImport
 		{
 			text += p.getText() + "\n";
 		}
+		
 		try
 		{
 			doc.close();
@@ -143,11 +148,11 @@ public class TextImport
 		}
 		else if(extension.equals(".doc"))
 		{
-			
+			saveDoc(file, text);
 		}
 		else if(extension.equals(".docx"))
 		{
-			
+			saveDocx(file, text);
 		}
 		else return; //should never happen
 	}
@@ -157,18 +162,117 @@ public class TextImport
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */
-	private static void saveTxt(File file, String text)
+	private static boolean saveTxt(File file, String text)
 	{
 		PrintWriter output = null;
 		try
 		{
 			output = new PrintWriter(file);
-		} catch (FileNotFoundException e){} //shouldn't happen
+		}
+		catch (FileNotFoundException e)
+		{
+			return false;
+		}
+		
 		String[] paragraphs = text.split("\n");
 		for(String paragraph: paragraphs)
 		{
 			output.println(paragraph);
 		}
 		output.close();
+		return true;
+	}
+	
+	/**
+	 * Saves the new text to the .doc file.
+	 * @param file The file to save to
+	 * @param text The text to save.
+	 */
+	private static boolean saveDoc(File file, String text)
+	{
+		HWPFDocument doc = null;
+		try
+		{
+			doc = new HWPFDocument(new FileInputStream(file));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
+		Range r = doc.getRange();
+		//r.replaceText(r.text(), text);
+		//text.replaceAll("\n", "\r");
+		//r.replaceText(text + " ", false);
+		
+		String[] lines = text.split("\n");
+		for(int index = 0; index < lines.length; index++)
+		{
+			//System.out.println(lines[index]);
+			Paragraph p = r.getParagraph(index);
+			p.replaceText(p.text(), lines[index] + " ");
+		}
+		
+		try
+		{
+			doc.write(new FileOutputStream(file));
+		} 
+		catch(IOException e)
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Saves the new text to the .docx file.
+	 * @param file The file to save to
+	 * @param text The text to save.
+	 */
+	@SuppressWarnings("resource")
+	private static boolean saveDocx(File file, String text)
+	{
+		XWPFDocument doc = null;
+		try
+		{
+			doc = new XWPFDocument(new FileInputStream(file));
+		}
+		catch (IOException e)
+		{
+			return false;
+		}
+		
+		//List<XWPFParagraph> paragraphs = doc.getParagraphs();
+		for(int i = doc.getBodyElements().size() - 1; i >= 0; i--)
+		{
+			doc.removeBodyElement(i);
+		}
+		String[] lines = text.split("\n");
+		for(int i = 0; i < lines.length; i++)
+		{
+			XWPFRun r = doc.createParagraph().createRun();
+			r.setText(lines[i]);
+		}
+		
+		try
+		{
+			doc.write(new FileOutputStream(file));
+		} 
+		catch(IOException e)
+		{
+			return false;
+		}
+		try
+		{
+			doc.close();
+		} catch (IOException e){}
+		return true;
+	}
+	
+	public static void main(String[] args)
+	{
+		File file = new File("test.docx");
+		saveDocx(file, "yo hi\nno");
 	}
 }
