@@ -133,7 +133,7 @@ public class GUIController {
 			}*/
 			
 			//put first error in sentenceBox and corresponding thing in errorBox
-			//System.out.println(essayBox.getText().substring(errors.get(0)[0], errors.get(0)[1]));
+			System.out.println(essayBox.getText().substring(errors.get(0)[0], errors.get(0)[1]));
 			Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(0)[2]);
 			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
 		}
@@ -172,7 +172,7 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuSaveAsClick() {
-		/* FILE->SAVEAS ACTION */
+		TextImport.saveAs(essayBox.getText());
 	}
 	
 	/**
