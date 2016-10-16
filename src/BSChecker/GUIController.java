@@ -7,6 +7,8 @@
 
 package BSChecker;
 
+import java.io.File;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 
@@ -83,11 +85,16 @@ public class GUIController {
 	}
 	
 	/**
-	 * The method that will be called when the File->Open is clicked
+	 * The method that will be called when the File->Open is clicked. It takes the file and puts the contents
+	 * into the essay box.
 	 */
 	@FXML
 	protected void menuOpenClick() {
-		/* FILE->OPEN ACTION */
+		File file = TextImport.chooseFile();
+		if(file == null) return;
+		String text = TextImport.openFile(file);
+		if(text == null) return;
+		essayBox.setText(text);
 	}
 	
 	/**
