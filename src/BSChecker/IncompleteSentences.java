@@ -40,7 +40,7 @@ public class IncompleteSentences extends Error {
 			SentenceDetectorME sdetector = new SentenceDetectorME(model);
 			is.close();
 			
-			return sdetector.sentDetect(paragraph);
+			return sdetector.sentDetect(text);
 		}
 		catch (IOException e) {
 			return null;
