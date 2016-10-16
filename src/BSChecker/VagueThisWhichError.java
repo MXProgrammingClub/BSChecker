@@ -65,7 +65,7 @@ public class VagueThisWhichError extends Error {
 					if(tokens[i].equalsIgnoreCase("this")){
 						if(isVague(tokens,tags,i)){
 							int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
-									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1};
+									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1,4};
 							found.add(err);	
 						}
 						tFound++;
