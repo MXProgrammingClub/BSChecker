@@ -36,7 +36,7 @@ public class TextImport
 		fileChooser.setTitle("Choose Essay");
 		return fileChooser.showOpenDialog(null);
 	}
-	
+
 	/**
 	 * Takes the selected file and returns the extracted text.
 	 * @param file The user selected file.
@@ -50,7 +50,7 @@ public class TextImport
 		else if(extension.equals(".docx")) return importDocx(file);
 		else return null;
 	}
-	
+
 	/**
 	 * Takes the selected text file and returns the extracted text.
 	 * @param file The text file selected.
@@ -67,17 +67,17 @@ public class TextImport
 		{
 			return "";
 		}
-		
+
 		String text = "";
 		while(scan.hasNextLine())
 		{
 			text += scan.nextLine() + "\n";
 		}
-		
+
 		scan.close();
 		return text;
 	}
-	
+
 	/**
 	 * Takes the selected word 97 document and returns the extracted text.
 	 * @param file The word document selected.
@@ -94,7 +94,7 @@ public class TextImport
 		{
 			return null;
 		} 
-		
+
 		String text = "";
 		Range r = doc.getRange();
 		for(int p = 0; p < r.numParagraphs(); p++)
@@ -103,7 +103,7 @@ public class TextImport
 		}
 		return text;
 	}
-	
+
 	/**
 	 * Takes the selected word 2007 document and returns the extracted text.
 	 * @param file The word document selected.
@@ -120,21 +120,21 @@ public class TextImport
 		{
 			return null;
 		} 
-		
+
 		String text = "";
 		List<XWPFParagraph> paragraphs = doc.getParagraphs();
 		for(XWPFParagraph p: paragraphs)
 		{
 			text += p.getText() + "\n";
 		}
-		
+
 		try
 		{
 			doc.close();
 		} catch (IOException e){} //should never happen
 		return text;
 	}
-	
+
 	/**
 	 * Saves the new text to the file.
 	 * @param file The file to save to
@@ -157,7 +157,7 @@ public class TextImport
 		}
 		else return false; //should never happen
 	}
-	
+
 	/**
 	 * Saves the new text to the txt file.
 	 * @param file The file to save to
@@ -174,7 +174,7 @@ public class TextImport
 		{
 			return false;
 		}
-		
+
 		String[] paragraphs = text.split("\n");
 		for(String paragraph: paragraphs)
 		{
@@ -183,7 +183,7 @@ public class TextImport
 		output.close();
 		return true;
 	}
-	
+
 	/**
 	 * Saves the new text to the .doc file.
 	 * @param file The file to save to
@@ -201,13 +201,13 @@ public class TextImport
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		Range r = doc.getRange();
 		for(int i = r.numParagraphs() - 1; i >= 0; i--)
 		{
 			r.getParagraph(i).delete();
 		}
-		
+
 		String[] lines = text.split("\n");
 		for(int i = 0; i < lines.length; i++)
 		{
@@ -215,7 +215,7 @@ public class TextImport
 			if(i == 0) p.insertBefore(lines[i]);
 			else p.insertAfter(lines[i]);
 		}
-		
+
 		try
 		{
 			doc.write(new FileOutputStream(file));
@@ -226,7 +226,7 @@ public class TextImport
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Saves the new text to the .docx file.
 	 * @param file The file to save to
@@ -244,7 +244,7 @@ public class TextImport
 		{
 			return false;
 		}
-		
+
 		//List<XWPFParagraph> paragraphs = doc.getParagraphs();
 		for(int i = doc.getBodyElements().size() - 1; i >= 0; i--)
 		{
@@ -256,7 +256,7 @@ public class TextImport
 			XWPFRun r = doc.createParagraph().createRun();
 			r.setText(lines[i]);
 		}
-		
+
 		try
 		{
 			doc.write(new FileOutputStream(file));
@@ -271,7 +271,7 @@ public class TextImport
 		} catch (IOException e){}
 		return true;
 	}
-	
+
 	public static void main(String[] args)
 	{
 		File file = new File("test.doc");

@@ -24,6 +24,7 @@ import opennlp.tools.util.PlainTextByLineStream;
  * Find errors with vague "this" or "which" instances
  */
 public class VagueThisWhichError extends Error {
+	private static final int ERROR_NUMBER = 4;
 
 	public static void main(String[] args){
 		String test = "Hi, my name I hate this; cars are fun.";
@@ -34,11 +35,11 @@ public class VagueThisWhichError extends Error {
 		}
 	}
 	public ArrayList<int[]> findErrors(String text){
-		
+
 		ArrayList<int[]> found = new ArrayList<int[]>();
 		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
-		
+
 		InputStream is;
 		TokenizerModel tModel;
 		try {
@@ -57,7 +58,7 @@ public class VagueThisWhichError extends Error {
 		int totLen =0;
 		try {
 			while ((line = lineStream.read()) != null) {
-				
+
 				String tokens[] = tokenizer.tokenize(line);
 				String[] tags = tagger.tag(tokens);
 				int wFound = 0, tFound = 0;
@@ -65,7 +66,7 @@ public class VagueThisWhichError extends Error {
 					if(tokens[i].equalsIgnoreCase("this")){
 						if(isVague(tokens,tags,i)){
 							int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
-									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1,4};
+									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1,ERROR_NUMBER};
 							found.add(err);	
 						}
 						tFound++;
@@ -73,7 +74,7 @@ public class VagueThisWhichError extends Error {
 					if(tokens[i].equalsIgnoreCase("which")){
 						if(i == 0 || tags[i-1].charAt(0)!='N'){
 							int[] err = {totLen+locationOf(line,tokens[i],wFound)-1,
-									totLen+locationOf(line,tokens[i],wFound)+tokens[i].length()-1};
+									totLen+locationOf(line,tokens[i],wFound)+tokens[i].length()-1,ERROR_NUMBER};
 							found.add(err);	
 						}
 						wFound++;
@@ -82,7 +83,6 @@ public class VagueThisWhichError extends Error {
 				totLen+=line.length();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return found;

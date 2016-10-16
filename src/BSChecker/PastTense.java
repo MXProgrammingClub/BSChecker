@@ -20,7 +20,7 @@ import opennlp.tools.util.PlainTextByLineStream;
 
 public class PastTense extends Error{
 	private static final int ERROR_NUMBER = 1;
-	
+
 	public static void main(String[] args) {
 		String input = "He walked, I walk, and she ran; therefore, I walked.";
 		Error tester = new PastTense();		
@@ -30,7 +30,6 @@ public class PastTense extends Error{
 		}
 	}
 
-
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
 
@@ -38,7 +37,7 @@ public class PastTense extends Error{
 		POSModel model = new POSModelLoader()	
 				.load(new File("lib/en-pos-maxent.bin"));
 		POSTaggerME tagger = new POSTaggerME(model);
-		
+
 		InputStream is;
 		TokenizerModel tModel;
 		try {
@@ -71,7 +70,7 @@ public class PastTense extends Error{
 						index.add(i);
 					}
 				}
-				
+
 				int leftValue = 0;
 				for(int j = 0; j < index.size(); j++)
 				{
@@ -82,24 +81,24 @@ public class PastTense extends Error{
 
 					// updates starting index
 					leftValue = err[1];
-					}
-					
 				}
+
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// print final result
-				for(int i = 0; i < found.size(); i++)
-				{
-						System.out.print("Start: ");
-						System.out.println(found.get(i)[0]);
-						System.out.print("End: ");
-						System.out.println(found.get(i)[1]);
-						
-						System.out.print("Substring: ");
-						System.out.println(text.substring(found.get(i)[0], (found.get(i)[1] + 1)));
-				}
-		
+		for(int i = 0; i < found.size(); i++)
+		{
+			System.out.print("Start: ");
+			System.out.println(found.get(i)[0]);
+			System.out.print("End: ");
+			System.out.println(found.get(i)[1]);
+
+			System.out.print("Substring: ");
+			System.out.println(text.substring(found.get(i)[0], (found.get(i)[1] + 1)));
+		}
+
 		return found;
 	}
 }

@@ -55,7 +55,7 @@ public static void POSTag() throws IOException {
 	PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "sent");
 	POSTaggerME tagger = new POSTaggerME(model);
  
-	String input = "Hi. How are you? This is Mike.";
+	String input = "it is the friend's ball";
 	ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(input));
  
 	perfMon.start();

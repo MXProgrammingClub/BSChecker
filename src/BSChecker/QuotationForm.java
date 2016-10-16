@@ -23,7 +23,9 @@ public class QuotationForm extends Error
 	private static final String FILE_NAME = "SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
 	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
 	private static final String[] PUNCTUATION = {".", ",", ":", ";", "?", "!"};
-	
+
+	private static final int ERROR_NUMBER = 14;
+
 	/**
 	 * Imports the list of words of saying or thinking.
 	 * @return The set of words.
@@ -36,14 +38,14 @@ public class QuotationForm extends Error
 		{
 			scan = new Scanner(new File(FILE_NAME));
 		} catch (FileNotFoundException e){} //Won't happen
-		
+
 		while(scan.hasNext())
 		{
 			verbs.add(scan.nextLine());
 		}
 		return verbs;
 	}
-	
+
 	@Override
 	public ArrayList<int[]> findErrors(String text)
 	{
@@ -53,10 +55,10 @@ public class QuotationForm extends Error
 		{
 			InputStream is = new FileInputStream("lib/en-token.bin");
 			model = new TokenizerModel(is);
-			
+
 		} catch(IOException e){}
 		Tokenizer tokenizer = new TokenizerME(model);
-	 
+
 		String tokens[] = tokenizer.tokenize(text);
 		System.out.println(Arrays.toString(tokens));
 		for(int i = 0, count = 0; i < tokens.length; i++)
@@ -70,12 +72,12 @@ public class QuotationForm extends Error
 						if(findErrorsFront(tokens, i, j))
 						{
 							int loc = Error.locationOf(text, "\"", count);
-							errors.add(new int[]{loc - 2, loc - 1, 14});
+							errors.add(new int[]{loc - 2, loc - 1, ERROR_NUMBER});
 						}
 						if(findErrorsBack(tokens, i, j))
 						{
 							int loc = Error.locationOf(text, "\"", count + 1);
-							errors.add(new int[]{loc + 1, loc + 2, 14});
+							errors.add(new int[]{loc + 1, loc + 2, ERROR_NUMBER});
 						}
 						i = j;
 						count += 2;
@@ -86,7 +88,7 @@ public class QuotationForm extends Error
 		}
 		return errors;
 	}
-	
+
 	/**
 	 * Finds errors in running in the quotation.
 	 * @param tokens The tokens from the nlp tokenizer.
@@ -108,7 +110,7 @@ public class QuotationForm extends Error
 			else return false;
 		}
 	}
-	
+
 	/**
 	 * Finds errors in citing the quotation.
 	 * @param tokens The tokens from the nlp tokenizer.
@@ -126,7 +128,7 @@ public class QuotationForm extends Error
 		else if(end + 1 < tokens.length && isPunctuation(tokens[end + 1])) return true; //error if not cited and punctuation outside
 		else return false;
 	}
-	
+
 	/**
 	 * Returns whether the given string is in the array.
 	 * @param str The possible punctuation.

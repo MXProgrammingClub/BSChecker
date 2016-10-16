@@ -24,7 +24,6 @@ public class PronounCase extends Error{
 	private static final String[] POSSES = {"hers", "his", "its", "theirs", "ours", "mine", "yours", "whose"};
 	private static final String[] OBJ = {"him", "her", "it", "them", "us", "me", "you", "whom"};
 	private static final String[] SUB = {"he", "she", "it", "they", "we", "I", "you", "who"};
-	private static final String[] REL_PN = {"who", "whom", "whose"};
 	private static final String[] ALLPN = {"he", "she", "it", "they", "we", "you", "his", "him", "her", "hers", "its", "their", "theirs", "them", "us", "our", "ours", "your", "yours", "who", "whose", "whom"};
 
 	private static final int ERROR_NUMBER = 6;
@@ -257,7 +256,7 @@ public class PronounCase extends Error{
 				{
 					startCharIndex = text.toLowerCase().indexOf(tokens[errTokIndex.get(j)], leftValue);
 					endCharIndex = startCharIndex + tokens[errTokIndex.get(j)].length() - 1;
-					
+
 					if((startCharIndex == 0) ||(startCharIndex != 0 && text.toLowerCase().charAt(startCharIndex - 1) == ' ') && (text.charAt(endCharIndex + 1) != 's' && text.charAt(endCharIndex + 1) != 'm'))
 					{
 						int[] err = {startCharIndex, endCharIndex, ERROR_NUMBER};

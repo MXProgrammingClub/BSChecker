@@ -25,7 +25,7 @@ public class ProgressiveTense extends Error {
 
 	private static final String[] TO_BE_CONJ = {"be", "am", "are", "is"};
 	private static final int ERROR_NUMBER = 12;
-	
+
 	/**
 	 * for testing purposes
 	 */
@@ -39,7 +39,7 @@ public class ProgressiveTense extends Error {
 	public ArrayList<int[]> findErrors(String text) {
 		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		TokenizerModel tModel = null;
-		
+
 		InputStream is;
 		try {
 			is = new FileInputStream("lib/en-token.bin");
@@ -51,10 +51,10 @@ public class ProgressiveTense extends Error {
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		Tokenizer tokenizer = new TokenizerME(tModel);
 		POSTaggerME tagger = new POSTaggerME(model);
-		
+
 		ArrayList<ArrayList<int[]>> lineErrors = new ArrayList<ArrayList<int[]>>();
 		String line;
 
@@ -64,7 +64,7 @@ public class ProgressiveTense extends Error {
 			while ((line = lineStream.read()) != null) {
 				String[] tokenizerLine = tokenizer.tokenize(line);
 				String[] tags = tagger.tag(tokenizerLine);
-				
+
 				ArrayList<Integer> errorIndices = findProgressiveTense(tokenizerLine, tags);
 				System.out.println();
 				lineErrors.add(findLoc(errorIndices, text, tokenizerLine));
@@ -73,10 +73,10 @@ public class ProgressiveTense extends Error {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return combineLineErrors(lineErrors);
 	}
-	
+
 	/**
 	 * finds all the progressive tense errors in the given line
 	 * @param tokenizerLine the tokens of the line
@@ -117,10 +117,10 @@ public class ProgressiveTense extends Error {
 					errorIndices.remove(errorNum);
 			}
 		}
-		
+
 		return errorIndices;
 	}
-	
+
 	/**
 	 * finds indices in the original text of each error and updates result to include any new errors
 	 * @param errorIndices the indices of errors that have been found
@@ -131,7 +131,7 @@ public class ProgressiveTense extends Error {
 	private ArrayList<int[]> findLoc(ArrayList<Integer> errorIndices, String text, String[] tokenizerLine) {
 		ArrayList<int[]> result = new ArrayList<int[]>();
 		int cursor = 0, start, end;
-		
+
 		for(int i = 0; i < errorIndices.size(); i++) {
 			System.out.println("error found: ");
 			System.out.println("\"" + tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)] + "\"");
@@ -142,10 +142,10 @@ public class ProgressiveTense extends Error {
 			result.add(error);
 			System.out.println("character indices: " + start + "-" + end);
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * combines the errors of each line into one ArrayList
 	 * @param lineErrors the errors from each line
@@ -155,22 +155,22 @@ public class ProgressiveTense extends Error {
 		int numErrors = 0;
 		for(int line = 0; line < lineErrors.size(); line++)
 			numErrors += lineErrors.get(line).size();
-		
+
 		ArrayList<int[]> result = new ArrayList<int[]>();
-		
+
 		for(int line = 0; line < lineErrors.size(); line++)
 			for(int lineErrorNum = 0; lineErrorNum < lineErrors.get(line).size(); lineErrorNum++) {
 				int[] errorIndices = {lineErrors.get(line).get(lineErrorNum)[0], lineErrors.get(line).get(lineErrorNum)[1], ERROR_NUMBER};
 				result.add(errorIndices);
 			}
-		
+
 		if(numErrors > 0) {
 			System.out.println("all found errors:");
 			for(int i = 0; i < result.size(); i++) {
 				System.out.println(result.get(i)[0] + "-" + result.get(i)[1] + " (error " + result.get(i)[2] + ")");
 			}
 		}
-		
+
 		return result;
 	}
 
