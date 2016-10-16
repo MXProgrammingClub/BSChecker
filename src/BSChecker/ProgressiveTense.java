@@ -137,6 +137,7 @@ public class ProgressiveTense extends Error {
 			System.out.println("\"" + tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)] + "\"");
 			start = text.indexOf(tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)], cursor);
 			end = start + (tokenizerLine[errorIndices.get(i) - 1] + tokenizerLine[errorIndices.get(i)]).length();
+			cursor = end;
 			int[] error = {start, end};
 			result.add(error);
 			System.out.println("character indices: " + start + "-" + end);
