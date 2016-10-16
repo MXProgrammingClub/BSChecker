@@ -26,7 +26,7 @@ public class PastTense extends Error{
 		Error tester = new PastTense();		
 		ArrayList<int[]> found = tester.findErrors(input);
 		for(int[] inds: found){
-			System.out.println(inds[0] + " " + inds[1]);
+//			System.out.println(inds[0] + " " + inds[1]);
 		}
 	}
 
@@ -88,16 +88,16 @@ public class PastTense extends Error{
 			e.printStackTrace();
 		}
 		// print final result
-		for(int i = 0; i < found.size(); i++)
-		{
-			System.out.print("Start: ");
-			System.out.println(found.get(i)[0]);
-			System.out.print("End: ");
-			System.out.println(found.get(i)[1]);
-
-			System.out.print("Substring: ");
-			System.out.println(text.substring(found.get(i)[0], (found.get(i)[1] + 1)));
-		}
+//		for(int i = 0; i < found.size(); i++)
+//		{
+//			System.out.print("Start: ");
+//			System.out.println(found.get(i)[0]);
+//			System.out.print("End: ");
+//			System.out.println(found.get(i)[1]);
+//
+//			System.out.print("Substring: ");
+//			System.out.println(text.substring(found.get(i)[0], (found.get(i)[1] + 1)));
+//		}
 
 		return found;
 	}

@@ -22,9 +22,9 @@ import opennlp.tools.util.PlainTextByLineStream;
  * algorithms for incorrect lack of possessives with gerunds (error 13)
  */
 public class GerundPossesive extends Error {
-	
+
 	private static final int ERROR_NUMBER = 13;
-	
+
 	/**
 	 * for testing purposes
 	 */
@@ -135,7 +135,7 @@ public class GerundPossesive extends Error {
 	private ArrayList<int[]> findLoc(ArrayList<Integer> errorIndices, String text, String[] tokenizerLine) {
 		ArrayList<int[]> result = new ArrayList<int[]>();
 		int cursor = 0, start, end;
-		
+
 		for(int i = 0; i < errorIndices.size(); i++) {
 			//System.out.println("error found: ");
 			//System.out.println("\"" + tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)] + "\"");
@@ -146,35 +146,30 @@ public class GerundPossesive extends Error {
 			result.add(error);
 			//System.out.println("character indices: " + start + "-" + end);
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * combines the errors of each line into one ArrayList
 	 * @param lineErrors the errors from each line
 	 * @return all of the errors in the text
 	 */
 	private ArrayList<int[]> combineLineErrors(ArrayList<ArrayList<int[]>> lineErrors) {
-		int numErrors = 0;
-		for(int line = 0; line < lineErrors.size(); line++)
-			numErrors += lineErrors.get(line).size();
-		
 		ArrayList<int[]> result = new ArrayList<int[]>();
-		
 		for(int line = 0; line < lineErrors.size(); line++)
 			for(int lineErrorNum = 0; lineErrorNum < lineErrors.get(line).size(); lineErrorNum++) {
 				int[] errorIndices = {lineErrors.get(line).get(lineErrorNum)[0], lineErrors.get(line).get(lineErrorNum)[1], ERROR_NUMBER};
 				result.add(errorIndices);
 			}
-		
+
 		//if(numErrors > 0) {
-			//System.out.println("all found errors:");
-			//for(int i = 0; i < result.size(); i++) {
-				//System.out.println(result.get(i)[0] + "-" + result.get(i)[1] + " (error " + result.get(i)[2] + ")");
-			//}
+		//System.out.println("all found errors:");
+		//for(int i = 0; i < result.size(); i++) {
+		//System.out.println(result.get(i)[0] + "-" + result.get(i)[1] + " (error " + result.get(i)[2] + ")");
 		//}
-		
+		//}
+
 		return result;
 	}
 }

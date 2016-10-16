@@ -16,14 +16,11 @@ public class IncompleteSentences extends Error {
 		for (int[] error : errors)
 			System.out.println(error[0] + " " + error[1] + " " + error[2]);
 	}
-	
-	/* (non-Javadoc)
-	 * @see BSChecker.Error#findErrors(java.lang.String)
-	 */
+
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		
+
 		return errors;
 	}
 

@@ -41,7 +41,7 @@ public class VerbAgreementError {
 		return null;
 	}
 	public static ArrayList<int[]> correctParse(Parse p){
-		System.out.println(p);
+//		System.out.println(p);
 		SentenceTree head = new SentenceTree(null,p.getChildren()[0]);
 		SentenceTree tree = head.fix();
 		return new ArrayList<int[]>();

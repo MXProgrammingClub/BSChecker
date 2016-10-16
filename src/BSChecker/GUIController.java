@@ -20,25 +20,25 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 
 public class GUIController {
-	
+
 	@FXML
 	private JFXTextArea essayBox;
-	
+
 	@FXML
 	private JFXTextArea sentenceBox;
-	
+
 	@FXML
 	private JFXTextArea errorBox;
-	
+
 	@FXML
 	private JFXButton buttonLeft;
-	
+
 	@FXML
 	private JFXButton buttonRight;
-	
+
 	@FXML
 	private JFXButton analyzeButton;
-	
+
 	@FXML
 	private MenuItem menuOpen;
 
@@ -47,34 +47,34 @@ public class GUIController {
 
 	@FXML
 	private MenuItem menuSaveAs;
-	
+
 	@FXML
 	private MenuItem menuUndo;
-	
+
 	@FXML
 	private MenuItem menuRedo;
-	
+
 	@FXML
 	private MenuItem menuCut;
-	
+
 	@FXML
 	private MenuItem menuCopy;
-	
+
 	@FXML
 	private MenuItem menuPaste;
-	
+
 	@FXML
 	private MenuItem menuSelectAll;
-	
+
 	@FXML
 	private MenuItem menuNextError;
-	
+
 	@FXML
 	private MenuItem menuPreviousError;
-	
+
 	@FXML
 	private MenuItem menuAbout;
-	
+
 	private int currError = 0;
 	private ArrayList<int[]> errors;
 	private File file;
@@ -90,7 +90,7 @@ public class GUIController {
 			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
 		}
 	}
-	
+
 	/**
 	 * The method that will be called when the right arrow is clicked
 	 */
@@ -102,7 +102,7 @@ public class GUIController {
 			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
 		}
 	}
-	
+
 	/**
 	 * The method that will be called when the analyze button is clicked
 	 */
@@ -117,10 +117,12 @@ public class GUIController {
 			}*/
 			errors.addAll(temp);
 		}
-		System.out.println(errors);
-		
+		for(int i = 0; i < errors.size(); i++) {
+			System.out.println(errors.get(i)[0] + "-" + errors.get(i)[1] + " (Error " + errors.get(i)[2] + ")");
+		}
+
 		Error.sort(errors); //sorts the errors based on starting index
-		
+
 		if(errors.size() == 0) {
 			sentenceBox.setText("No Errors Found!");
 			errorBox.setText("No Error Found!");
@@ -131,14 +133,14 @@ public class GUIController {
 			/*for(int[] location: errors) {
 				essayBox.setStyleClass(location[0], location[1] + 1, "red");
 			}*/
-			
+
 			//put first error in sentenceBox and corresponding thing in errorBox
 			System.out.println(essayBox.getText().substring(errors.get(0)[0], errors.get(0)[1]));
 			Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(0)[2]);
 			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
 		}
 	}
-	
+
 	/**
 	 * The method that will be called when the File->Open is clicked. It takes the file and puts the contents
 	 * into the essay box.
@@ -152,7 +154,7 @@ public class GUIController {
 		essayBox.setText(text);
 		//essayBox.replaceText(text);
 	}
-	
+
 	/**
 	 * The method that will be called when the File->Save is clicked
 	 */
@@ -166,7 +168,7 @@ public class GUIController {
 			}
 		}
 	}
-	
+
 	/**
 	 * The method that will be called when the File->Save As is clicked
 	 */
@@ -174,7 +176,7 @@ public class GUIController {
 	protected void menuSaveAsClick() {
 		TextImport.saveAs(essayBox.getText());
 	}
-	
+
 	/**
 	 * The method that will be called when the Edit->Undo is clicked
 	 */
@@ -182,7 +184,7 @@ public class GUIController {
 	protected void menuUndoClick() {
 		/* EDIT->UNDO ACTION */
 	}
-	
+
 	/**
 	 * The method that will be called when the Edit->Redo is clicked
 	 */
@@ -190,7 +192,7 @@ public class GUIController {
 	protected void menuRedoClick() {
 		/* EDIT->REDO ACTION */
 	}
-	
+
 	/**
 	 * The method that will be called when the Edit->Cut is clicked
 	 */
@@ -198,7 +200,7 @@ public class GUIController {
 	protected void menuCutClick() {
 		/* EDIT->CUT ACTION */
 	}
-	
+
 	/**
 	 * The method that will be called when the Edit->Copy is clicked
 	 */
@@ -206,7 +208,7 @@ public class GUIController {
 	protected void menuCopyClick() {
 		/* EDIT->COPY ACTION */
 	}
-	
+
 	/**
 	 * The method that will be called when the Edit->Paste is clicked
 	 */
@@ -214,7 +216,7 @@ public class GUIController {
 	protected void menuPasteClick() {
 		/* EDIT->PASTE ACTION */
 	}
-	
+
 	/**
 	 * The method that will be called when the Edit->Select All is clicked
 	 */
@@ -222,7 +224,7 @@ public class GUIController {
 	protected void menuSelectAllClick() {
 		/* EDIT->SELECTALL ACTION */
 	}
-	
+
 	/**
 	 * The method that will be called when the View->Next Error is clicked
 	 */
@@ -230,7 +232,7 @@ public class GUIController {
 	protected void menuNextErrorClick() {
 		/* VIEW->NEXTERROR ACTION */
 	}
-	
+
 	/**
 	 * The method that will be called when the View->Previous Error is clicked
 	 */
@@ -238,7 +240,7 @@ public class GUIController {
 	protected void menuPreviousErrorClick() {
 		/* VIEW->PREVIOUSERROR ACTION */
 	}
-	
+
 	/**
 	 * The method that will be called when the Help->About is clicked
 	 */
@@ -246,5 +248,5 @@ public class GUIController {
 	protected void menuAboutClick() {
 		/* HELP->ABOUT ACTION */
 	}
-	
+
 }

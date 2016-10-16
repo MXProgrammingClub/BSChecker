@@ -42,7 +42,7 @@ public class PronounCase extends Error{
 		POSModel model = new POSModelLoader()	
 				.load(new File("lib/en-pos-maxent.bin"));
 		POSTaggerME tagger = new POSTaggerME(model);
-		//System.out.println("HERE");
+//		System.out.println("HERE");
 		InputStream is;
 		TokenizerModel tModel;
 		try {
@@ -75,7 +75,7 @@ public class PronounCase extends Error{
 				for(int i = 0; i < tokens.length; i++)
 				{
 					// check if pronoun exists
-					//System.out.println(tokens[i]);
+//					System.out.println(tokens[i]);
 
 					for(String s: ALLPN)
 					{
@@ -87,11 +87,11 @@ public class PronounCase extends Error{
 					}
 				}
 
-				for(int s: pnIndex)
-				{
-					System.out.print("pnIndex: ");
-					System.out.println(s);
-				}
+//				for(int s: pnIndex)
+//				{
+//					System.out.print("pnIndex: ");
+//					System.out.println(s);
+//				}
 
 				if(hasPn)
 				{
@@ -104,7 +104,7 @@ public class PronounCase extends Error{
 							if(tags[index+1].equals("NN")||tags[index+1].equals("NNS")||tags[index+1].equals("NNP")||tags[index+1].equals("NNPS")
 									|| ((index >= 2) && (tokens[index-1].equals("of")) && (tags[index-2].equals("NN") || tags[index-2].equals("NNS") || tags[index-2].equals("NNP") || tags[index-2].equals("NNPS"))))
 							{
-								System.out.println("pos detected");
+//								System.out.println("pos detected");
 								// so the pronoun should be possessive
 								if(!tokens[index].equals("whom"))
 								{
@@ -132,13 +132,13 @@ public class PronounCase extends Error{
 
 								for (int s: errTokIndex)
 								{
-									System.out.print("pos: ");
-									System.out.println(s);
+//									System.out.print("pos: ");
+//									System.out.println(s);
 								}
 							}
 							else if(tags[index+1].equals("VB")||tags[index+1].equals("VBD")||tags[index+1].equals("VBG")||tags[index+1].equals("VBN")||tags[index+1].equals("VBP")||tags[index+1].equals("VBZ"))
 							{
-								System.out.println("sub detected");
+//								System.out.println("sub detected");
 								// so the pronoun should be subjective
 								if(tokens[index].equals("whose") || tokens[index].equals("whom"))
 								{
@@ -162,13 +162,13 @@ public class PronounCase extends Error{
 								}
 								for (int s: errTokIndex)
 								{
-									System.out.print("poss & sub: ");
-									System.out.println(s);
+//									System.out.print("poss & sub: ");
+//									System.out.println(s);
 								}
 							}
 							else if(index > 0 && (tags[index-1].equals("VB") || tags[index-1].equals("VBD") || tags[index-1].equals("VBG") || tags[index-1].equals("VBN") || tags[index-1].equals("VBP") || tags[index-1].equals("VBZ")))
 							{
-								System.out.println("obj detected");
+//								System.out.println("obj detected");
 								// so the pronoun should be objective
 								boolean objErr = true;
 								for(String s: OBJ)
@@ -184,8 +184,8 @@ public class PronounCase extends Error{
 								}
 								for (int s: errTokIndex)
 								{
-									System.out.print("poss & sub & obj: ");
-									System.out.println(s);
+//									System.out.print("poss & sub & obj: ");
+//									System.out.println(s);
 								}
 							}
 						}
@@ -218,8 +218,8 @@ public class PronounCase extends Error{
 
 								for (int s: errTokIndex)
 								{
-									System.out.print("poss: ");
-									System.out.println(s);
+//									System.out.print("poss: ");
+//									System.out.println(s);
 								}
 							}
 							else if(tags[index-1].equals("VB")||tags[index-1].equals("VBD")||tags[index-1].equals("VBG")||tags[index-1].equals("VBN")||tags[index-1].equals("VBP")||tags[index-1].equals("VBZ"))
@@ -239,8 +239,8 @@ public class PronounCase extends Error{
 								}
 								for (int s: errTokIndex)
 								{
-									System.out.print("poss + sub + obj: ");
-									System.out.println(s);
+//									System.out.print("poss + sub + obj: ");
+//									System.out.println(s);
 								}
 							}
 
@@ -276,16 +276,16 @@ public class PronounCase extends Error{
 			e.printStackTrace();
 		}
 		// print final result
-		for(int i = 0; i < found.size(); i++)
-		{
-			System.out.print("Start: ");
-			System.out.println(found.get(i)[0]);
-			System.out.print("End: ");
-			System.out.println(found.get(i)[1]);
-
-			System.out.print("Substring: ");
-			System.out.println(text.toLowerCase().substring(found.get(i)[0], (found.get(i)[1] + 1)));
-		}
+//		for(int i = 0; i < found.size(); i++)
+//		{
+//			System.out.print("Start: ");
+//			System.out.println(found.get(i)[0]);
+//			System.out.print("End: ");
+//			System.out.println(found.get(i)[1]);
+//
+//			System.out.print("Substring: ");
+//			System.out.println(text.toLowerCase().substring(found.get(i)[0], (found.get(i)[1] + 1)));
+//		}
 
 		return found;
 	}

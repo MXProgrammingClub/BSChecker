@@ -15,18 +15,19 @@ import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.util.InvalidFormatException;
 
 public class FaultyParallelismError extends Error{
+	private static final int ERROR_NUMBER = 11;
+
 	public static void main(String[] args){
 		Scanner scan = new Scanner(System.in);
-		System.out.println("passage: ");
+//		System.out.println("passage: ");
 		String passage = scan.nextLine();
 		scan.close();
-		ArrayList<int[]> errs = new FaultyParallelismError().findErrors(passage);
-		for(int[] arr: errs)
-			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
+		/*ArrayList<int[]> errs =*/ new FaultyParallelismError().findErrors(passage);
+//		for(int[] arr: errs)
+//			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
 	}
 	@Override
 	public ArrayList<int[]> findErrors(String text){
-		// TODO Auto-generated method stub
 		String startText = text;
 		text = text.replace('\u201D', '\"');
 		text = text.replace('\u201C', '\"');
@@ -52,7 +53,7 @@ public class FaultyParallelismError extends Error{
 		ArrayList<int[]> errs = new ArrayList<int[]>();
 		String[] sentences = null;
 		try{
-		sentences = sentenceDetect(text);
+			sentences = sentenceDetect(text);
 		}
 		catch(Exception e){
 			System.out.println("ERROR");
@@ -65,7 +66,7 @@ public class FaultyParallelismError extends Error{
 			ArrayList<int[]> errors = findErrorsInLine(line.substring(0, line.length()));
 			for(int[] err: errors){
 				String conjunction = line.substring(err[0],err[1]);
-				int[] newErr = {startText.indexOf(conjunction,lineShift + shift),startText.indexOf(conjunction, lineShift + shift) + conjunction.length(),11};
+				int[] newErr = {startText.indexOf(conjunction,lineShift + shift),startText.indexOf(conjunction, lineShift + shift) + conjunction.length(),ERROR_NUMBER};
 				errs.add(newErr);
 				lineShift = newErr[1]+1 - shift;
 			}
@@ -74,91 +75,91 @@ public class FaultyParallelismError extends Error{
 		return errs;
 	}
 	public ArrayList<int[]> findErrorsInLine(String text){
-	ArrayList<int[]> errors = new ArrayList<int[]>();
-	String parsedText = null;
-	try{
-		parsedText = parse(text);
-	}
-	catch(Exception e){
+		ArrayList<int[]> errors = new ArrayList<int[]>();
+		String parsedText = null;
+		try{
+			parsedText = parse(text);
+		}
+		catch(Exception e){
 			System.out.println("ERROR");
-	}
-	int index = -1;
-	int textIndex = 0;
-	while(index < parsedText.length() && parsedText.indexOf("CC",index+1) >= 0){
-		index = parsedText.indexOf("CC",index+1);
-		int net = 0;
-		boolean first = true;
-		int i = index-2;
-		boolean passedThing = false,passedV = false;
-		String type1 = "",type2 = "";
-		for(;i>=0 && parsedText.charAt(i) != ')';i--);
-		for(;(i>=0 && !(net == 0 && passedThing)) || first ;i--){
-			
-			if(parsedText.charAt(i) == ')'){
-				net += 1;
-				first = false;
-			}
-			if(parsedText.charAt(i) == '('){
-				net -= 1;
-				first = false;
-			}
-			if(!passedThing && (parsedText.charAt(i) == 'V')){
-				passedThing = true;
-				type1 = parsedText.substring(i,parsedText.indexOf(' ',i));
-			}
 		}
-		int beginIndex = i;
-		if(type1.equals("VP")){
-			int start = parsedText.indexOf("VB",parsedText.indexOf('(',beginIndex)+1);
-			if(start == -1)
-				start = parsedText.indexOf('(',index)+1;
-			type1 = parsedText.substring(start,parsedText.indexOf(' ',start));
-		}
-		i = parsedText.indexOf(')',index)+1;
-		first = true;
-		net = 0;
-		passedThing = false;
-		for(;(i<parsedText.length() && !(net == 0 && passedThing)) || first;i++){
-			if(parsedText.charAt(i) == ')'){
-				net += 1;
-				first = false;
+		int index = -1;
+		int textIndex = 0;
+		while(index < parsedText.length() && parsedText.indexOf("CC",index+1) >= 0){
+			index = parsedText.indexOf("CC",index+1);
+			int net = 0;
+			boolean first = true;
+			int i = index-2;
+			boolean passedThing = false,passedV = false;
+			String type1 = "",type2 = "";
+			for(;i>=0 && parsedText.charAt(i) != ')';i--);
+			for(;(i>=0 && !(net == 0 && passedThing)) || first ;i--){
+
+				if(parsedText.charAt(i) == ')'){
+					net += 1;
+					first = false;
+				}
+				if(parsedText.charAt(i) == '('){
+					net -= 1;
+					first = false;
+				}
+				if(!passedThing && (parsedText.charAt(i) == 'V')){
+					passedThing = true;
+					type1 = parsedText.substring(i,parsedText.indexOf(' ',i));
+				}
 			}
-			if(parsedText.charAt(i) == '('){
-				net -= 1;
-				first = false;
+			int beginIndex = i;
+			if(type1.equals("VP")){
+				int start = parsedText.indexOf("VB",parsedText.indexOf('(',beginIndex)+1);
+				if(start == -1)
+					start = parsedText.indexOf('(',index)+1;
+				type1 = parsedText.substring(start,parsedText.indexOf(' ',start));
 			}
-			if(!passedV && parsedText.charAt(i) == 'V'){
-				passedV = true;
-				passedThing = true;
-				type2 = parsedText.substring(i,parsedText.indexOf(' ',i));
+			i = parsedText.indexOf(')',index)+1;
+			first = true;
+			net = 0;
+			passedThing = false;
+			for(;(i<parsedText.length() && !(net == 0 && passedThing)) || first;i++){
+				if(parsedText.charAt(i) == ')'){
+					net += 1;
+					first = false;
+				}
+				if(parsedText.charAt(i) == '('){
+					net -= 1;
+					first = false;
+				}
+				if(!passedV && parsedText.charAt(i) == 'V'){
+					passedV = true;
+					passedThing = true;
+					type2 = parsedText.substring(i,parsedText.indexOf(' ',i));
+				}
+				if(!passedThing && !passedV && (parsedText.substring(i,i+2).equals("NP") || parsedText.substring(i,i+2).equals("NN"))){
+					passedThing = true;
+					type2 = parsedText.substring(i,parsedText.indexOf(' ',i));
+				}
 			}
-			if(!passedThing && !passedV && (parsedText.substring(i,i+2).equals("NP") || parsedText.substring(i,i+2).equals("NN"))){
-				passedThing = true;
-				type2 = parsedText.substring(i,parsedText.indexOf(' ',i));
+			if(type2.equals("VP")){
+				int start = parsedText.indexOf("VB",parsedText.indexOf('(',index)+1);
+				if(start == -1)
+					start = parsedText.indexOf('(',index)+1;
+				type2 = parsedText.substring(start,parsedText.indexOf(' ',start));
 			}
+			String conjunction = parsedText.substring(parsedText.indexOf(' ',index)+1,parsedText.indexOf(')',index));
+			int newTextIndex = text.indexOf(conjunction,textIndex);
+			int[] err = {newTextIndex,text.indexOf(' ', newTextIndex)};
+			if(!type1.equals(type2)){
+				errors.add(err);
+			}
+			textIndex = err[1];
 		}
-		if(type2.equals("VP")){
-			int start = parsedText.indexOf("VB",parsedText.indexOf('(',index)+1);
-			if(start == -1)
-				start = parsedText.indexOf('(',index)+1;
-			type2 = parsedText.substring(start,parsedText.indexOf(' ',start));
-		}
-		String conjunction = parsedText.substring(parsedText.indexOf(' ',index)+1,parsedText.indexOf(')',index));
-		int newTextIndex = text.indexOf(conjunction,textIndex);
-		int[] err = {newTextIndex,text.indexOf(' ', newTextIndex)};
-		if(!type1.equals(type2)){
-			errors.add(err);
-		}
-		textIndex = err[1];
-	}
-	return errors;
+		return errors;
 	}
 	public static String parse(String input) throws InvalidFormatException, IOException {
 		// http://sourceforge.net/apps/mediawiki/opennlp/index.php?title=Parser#Training_Tool
 		InputStream is = new FileInputStream("lib/en-parser-chunking.bin");
-	 
+
 		ParserModel model = new ParserModel(is);
-	 
+
 		Parser parser = ParserFactory.create(model);
 		Parse topParses[] = ParserTool.parseLine(input, parser, 1);
 		is.close();

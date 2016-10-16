@@ -28,10 +28,10 @@ public class PassiveVoiceError extends Error {
 	public static void main(String[] args){
 		String test = "This terrible Hamlet is destroyed by Claudius.";
 		ArrayList<int[]> errs = new PassiveVoiceError().findErrors(test);
-		for(int[] err: errs){
-			System.out.println(err[0] + " " + err[1] );
-			System.out.println(test.substring(err[0], err[1]));
-		}
+//		for(int[] err: errs){
+//			System.out.println(err[0] + " " + err[1] );
+//			System.out.println(test.substring(err[0], err[1]));
+//		}
 	}
 
 	@Override		//Find forms of "to be" followed by past participle

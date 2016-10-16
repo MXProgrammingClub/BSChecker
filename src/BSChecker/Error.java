@@ -2,7 +2,6 @@ package BSChecker;
 import java.util.ArrayList;
 import java.util.Comparator;
 /**
- * 
  * @author tedpyne
  * Defines abstract class for types of grammatical errors
  */
@@ -13,7 +12,7 @@ public abstract class Error {
 	 * 			int[0],int[1] are start and end tokens in error
 	 */
 	public abstract ArrayList<int[]> findErrors(String text);
-	
+
 	/**
 	 * 
 	 * @param line The text to search through
@@ -28,7 +27,7 @@ public abstract class Error {
 		}
 		return loc;
 	}
-	
+
 	/**
 	 * Sorts the list of all errors by location.
 	 * @param list All the located errors 

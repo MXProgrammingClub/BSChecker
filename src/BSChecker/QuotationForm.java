@@ -60,7 +60,7 @@ public class QuotationForm extends Error
 		Tokenizer tokenizer = new TokenizerME(model);
 
 		String tokens[] = tokenizer.tokenize(text);
-		System.out.println(Arrays.toString(tokens));
+//		System.out.println(Arrays.toString(tokens));
 		for(int i = 0, count = 0; i < tokens.length; i++)
 		{
 			if(tokens[i].contains("\"")) //finds opening quotation

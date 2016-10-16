@@ -6,10 +6,8 @@
 
 package BSChecker;
 
-import java.util.HashMap;
-
 public enum Bluesheet {
-	
+
 	PAST_TENSE ("Past Tense", "Use the present tense in writing about a literary work.", 1),
 	COMPLETE_SENTENCE ("Fragment/Run-On/Comma-Splice", "Write complete, corrext sentences.", 2),
 	FIRST_SECOND_PERSON ("First/Second Person", "Do not use the first or second person (\"I,\" \"me,\" \"my\"; \"we,\" \"us,\" \"our\"; \"you,\" \"your) in critical writing", 3),
@@ -24,29 +22,29 @@ public enum Bluesheet {
 	PROGRESSIVE_TENSE ("Progressive Tense", "Avoid progressive tenses.", 12),
 	GERUNDS ("Incorrect Use of Gerund/Possessive", "Recognize gerunds and use possessives accordingly", 13),
 	QUOTATION ("Quotation Error", "Malformed Quotation and/or Citation", 14);
-	
+
 	private final String name;
 	private final String description;
 	private final int number;
-	
+
 	Bluesheet(String name, String description, int number) {
 		this.name = name;
 		this.description = description;
 		this.number = number;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public int getNumber() {
 		return number;
 	}
-	
+
 	/**
 	 * Based on the number passed in, returns the corresponding bluesheet.
 	 * @param num The number of the bluesheet.
@@ -60,5 +58,5 @@ public enum Bluesheet {
 		}
 		return null;
 	}
-	
+
 }
