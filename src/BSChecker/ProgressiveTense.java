@@ -169,8 +169,10 @@ public class ProgressiveTense extends Error {
 			}
 		
 		ArrayList<int[]> result = new ArrayList<int[]>();
-		result.add(startIndeces);
-		result.add(endIndeces);
+		if(errorNum > 0) {
+			result.add(startIndeces);
+			result.add(endIndeces);
+		}
 		
 		System.out.println("all found errors:");
 		for(int i = 0; i < result.get(0).length; i++) {
