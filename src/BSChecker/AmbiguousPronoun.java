@@ -26,7 +26,7 @@ import opennlp.tools.util.Span;
 public class AmbiguousPronoun extends Error {
 	
 	public static void main (String[] args) {
-		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors("Hi. How are you? This is Mike.");
+		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors("Mike and Bob. He");
 		for (int[] error : errors)
 			System.out.println(error[0] + " " + error[1]);
 	}
@@ -38,8 +38,24 @@ public class AmbiguousPronoun extends Error {
 	public ArrayList<int[]> findErrors(String text) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		ArrayList<Span[]> names = findName(Tokenize(SentenceDetect(text)));
+		String[] sentence = SentenceDetect(text);
 		
-		
+		for (int i = 0; i < names.size(); i++) {
+			Span[] nouns = names.get(i);
+			int length = nouns.length;
+			String[] pronouns = {"she", "her", "he", "him", "it", "they", "them"};
+			if (length > 1) {
+				int endIndex = nouns[length - 1].getEnd();
+				String noun = sentence[endIndex];
+				int nounIndex = text.indexOf(noun);
+				for (String pronoun : pronouns) {
+					int index = text.indexOf(pronoun, nounIndex);
+					if (index > -1) {
+						errors.add(new int[]{index, index + pronoun.length()});
+					}
+				}
+			}
+		}
 		
 		return errors;
 	}
