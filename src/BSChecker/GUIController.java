@@ -8,20 +8,15 @@
 package BSChecker;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextArea;
 
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package BSChecker;
 
 import java.io.FileInputStream;
