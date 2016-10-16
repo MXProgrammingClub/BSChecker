@@ -58,7 +58,7 @@ public class VagueThisWhichError extends Error {
 		int totLen =0;
 		try {
 			while ((line = lineStream.read()) != null) {
-
+				System.out.println("Reading line input");
 				String tokens[] = tokenizer.tokenize(line);
 				String[] tags = tagger.tag(tokens);
 				int wFound = 0, tFound = 0;
@@ -80,7 +80,7 @@ public class VagueThisWhichError extends Error {
 						wFound++;
 					}
 				}
-				totLen+=line.length();
+				totLen+=line.length()+1;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

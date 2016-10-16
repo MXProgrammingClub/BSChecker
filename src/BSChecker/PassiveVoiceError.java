@@ -81,7 +81,7 @@ public class PassiveVoiceError extends Error {
 						areFound++;
 					}
 				}
-				totLen+=line.length();
+				totLen+=line.length()+1;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

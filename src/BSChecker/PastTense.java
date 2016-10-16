@@ -22,16 +22,17 @@ public class PastTense extends Error{
 	private static final int ERROR_NUMBER = 1;
 
 	public static void main(String[] args) {
-		String input = "He walked, I walk, and she ran; therefore, I walked.";
+		String input = "When the cold-weary party sets out to bury the coffin, nature fights back, cutting their faces with a “fine, icy snow which cut [their] faces like a sand blast” (p. 75).";
 		Error tester = new PastTense();		
 		ArrayList<int[]> found = tester.findErrors(input);
 		for(int[] inds: found){
-//			System.out.println(inds[0] + " " + inds[1]);
+		System.out.println(input.substring(inds[0],inds[1]));
 		}
 	}
 
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
+		String lower = text.toLowerCase();
 
 		ArrayList<int[]> found = new ArrayList<int[]>();
 		POSModel model = new POSModelLoader()	
@@ -54,7 +55,6 @@ public class PastTense extends Error{
 		Tokenizer tokenizer = new TokenizerME(tModel);
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
 		String line;
-
 		try {
 			while ((line = lineStream.read()) != null) {
 
@@ -74,8 +74,17 @@ public class PastTense extends Error{
 				int leftValue = 0;
 				for(int j = 0; j < index.size(); j++)
 				{
-					int[] err = {text.indexOf(tokens[index.get(j)], leftValue),
-							text.indexOf(tokens[index.get(j)], leftValue) + tokens[index.get(j)].length() - 1,
+					int len = tokens[index.get(j)].length();
+					int nextInd = lower.indexOf(tokens[index.get(j)].toLowerCase(), leftValue);
+					
+					while((nextInd>0 && Character.isLetter(lower.charAt(nextInd-1))) || 
+							(nextInd -1+len < lower.length() && Character.isLetter(lower.charAt(nextInd+len)))){
+						leftValue = nextInd+1;
+						nextInd = lower.indexOf(tokens[index.get(j)].toLowerCase(), leftValue);
+						//System.out.println(lower.charAt(nextInd-1));
+					}
+					int[] err = {nextInd,
+							nextInd + tokens[index.get(j)].length(),
 							ERROR_NUMBER};
 					found.add(err);
 
