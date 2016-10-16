@@ -22,7 +22,7 @@ public class PastTense extends Error{
 	private static final int ERROR_NUMBER = 1;
 
 	public static void main(String[] args) {
-		String input = "When the cold-weary party sets out to bury the coffin, nature fights back, cutting their faces with a “fine, icy snow which cut [their] faces like a sand blast” (p. 75).";
+		String input = "At Mr Shimerda’s funeral, nature, specifically winter, acts to wear men down.";
 		Error tester = new PastTense();		
 		ArrayList<int[]> found = tester.findErrors(input);
 		for(int[] inds: found){
@@ -32,7 +32,8 @@ public class PastTense extends Error{
 
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
-		String lower = text.toLowerCase();
+		System.out.println("In past tense!");
+		
 
 		ArrayList<int[]> found = new ArrayList<int[]>();
 		POSModel model = new POSModelLoader()	
@@ -56,8 +57,10 @@ public class PastTense extends Error{
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
 		String line;
 		try {
+			int totLen = 0;
 			while ((line = lineStream.read()) != null) {
-
+				System.out.println("Reading line!");
+				String lower = line.toLowerCase();
 				String tokens[] = tokenizer.tokenize(line);
 				String[] tags = tagger.tag(tokens);
 
@@ -66,7 +69,7 @@ public class PastTense extends Error{
 
 				for(int i = 0; i < tags.length; i++)
 				{
-					if(tags[i].equals("VBD")){
+					if(tags[i].equals("VBD")&&(!tokens[i].equals("[")) && (!tokens[i].equals("]"))){
 						index.add(i);
 					}
 				}
@@ -75,22 +78,25 @@ public class PastTense extends Error{
 				for(int j = 0; j < index.size(); j++)
 				{
 					int len = tokens[index.get(j)].length();
+					System.out.println(tokens[86]);
 					int nextInd = lower.indexOf(tokens[index.get(j)].toLowerCase(), leftValue);
 					
 					while((nextInd>0 && Character.isLetter(lower.charAt(nextInd-1))) || 
 							(nextInd -1+len < lower.length() && Character.isLetter(lower.charAt(nextInd+len)))){
 						leftValue = nextInd+1;
 						nextInd = lower.indexOf(tokens[index.get(j)].toLowerCase(), leftValue);
-						//System.out.println(lower.charAt(nextInd-1));
+						System.out.println(lower.charAt(nextInd-1));
 					}
-					int[] err = {nextInd,
-							nextInd + tokens[index.get(j)].length(),
+					System.out.println(lower.charAt(nextInd-1));
+					int[] err = {totLen+nextInd,
+							totLen+ nextInd + tokens[index.get(j)].length(),
 							ERROR_NUMBER};
 					found.add(err);
 
 					// updates starting index
 					leftValue = err[1];
 				}
+				totLen+=line.length()+1;
 
 			}
 		} catch (IOException e) {
