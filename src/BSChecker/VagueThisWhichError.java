@@ -72,7 +72,7 @@ public class VagueThisWhichError extends Error {
 						tFound++;
 					}
 					if(tokens[i].equalsIgnoreCase("which")){
-						if(i == 0 || tags[i-1].charAt(0)!='N'){
+						if(i == 0 || (tags[i-1].charAt(0)!='N' && tags[i-1].charAt(0)!='I')){
 							int[] err = {totLen+locationOf(line,tokens[i],wFound)-1,
 									totLen+locationOf(line,tokens[i],wFound)+tokens[i].length()-1,ERROR_NUMBER};
 							found.add(err);	
