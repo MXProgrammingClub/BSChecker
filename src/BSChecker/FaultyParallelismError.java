@@ -49,7 +49,6 @@ public class FaultyParallelismError extends Error{
 			}
 		}
 		text = buf.toString();
-		System.out.println(text);
 		ArrayList<int[]> errs = new ArrayList<int[]>();
 		String[] sentences = null;
 		try{
@@ -63,14 +62,12 @@ public class FaultyParallelismError extends Error{
 		for(String line: sentences){
 			int lineShift = 0;
 			line.replace(".", "");
-			System.out.println(line);
 			ArrayList<int[]> errors = findErrorsInLine(line.substring(0, line.length()));
 			for(int[] err: errors){
 				String conjunction = line.substring(err[0],err[1]);
 				int[] newErr = {startText.indexOf(conjunction,lineShift + shift),startText.indexOf(conjunction, lineShift + shift) + conjunction.length(),11};
 				errs.add(newErr);
 				lineShift = newErr[1]+1 - shift;
-				System.out.println(startText.substring(newErr[0],newErr[1]));
 			}
 			shift += line.length()+1;
 		}

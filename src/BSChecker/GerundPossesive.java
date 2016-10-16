@@ -65,9 +65,9 @@ public class GerundPossesive extends Error {
 				String[] tags = tagger.tag(tokenizerLine);
 
 				ArrayList<Integer> errorIndices = findGerundPossesive(tokenizerLine, tags);
-				System.out.println();
+				//System.out.println();
 				lineErrors.add(findLoc(errorIndices, text, tokenizerLine));
-				System.out.println();
+				//System.out.println();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -91,8 +91,8 @@ public class GerundPossesive extends Error {
 				errorIndices.add(i);
 		}
 		//prints token number with gerund or participle
-		for(int i = 0; i < errorIndices.size(); i++)
-			System.out.println(errorIndices.get(i) + ": " + tokenizerLine[errorIndices.get(i)]);
+		//for(int i = 0; i < errorIndices.size(); i++)
+		//	System.out.println(errorIndices.get(i) + ": " + tokenizerLine[errorIndices.get(i)]);
 
 		//checks if each gerund or participle has a non possessive noun or pronoun before it
 		int errorNum = 0;
@@ -104,7 +104,7 @@ public class GerundPossesive extends Error {
 			} else {
 				word = tokenizerLine[errorIndices.get(errorNum) - 1];
 				tag = tags[errorIndices.get(errorNum) - 1];
-				System.out.println((errorIndices.get(errorNum) - 1) + ": " + word + " (" + tag + ")");
+				//System.out.println((errorIndices.get(errorNum) - 1) + ": " + word + " (" + tag + ")");
 				isError = false;
 				//Warning: will catch some cases which are not errors
 				for(int i = 0; i < 4; i++)
@@ -137,14 +137,14 @@ public class GerundPossesive extends Error {
 		int cursor = 0, start, end;
 		
 		for(int i = 0; i < errorIndices.size(); i++) {
-			System.out.println("error found: ");
-			System.out.println("\"" + tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)] + "\"");
+			//System.out.println("error found: ");
+			//System.out.println("\"" + tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)] + "\"");
 			start = text.indexOf(tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)], cursor);
 			end = start + (tokenizerLine[errorIndices.get(i) - 1] + tokenizerLine[errorIndices.get(i)]).length();
 			cursor = end;
 			int[] error = {start, end};
 			result.add(error);
-			System.out.println("character indices: " + start + "-" + end);
+			//System.out.println("character indices: " + start + "-" + end);
 		}
 		
 		return result;
@@ -168,12 +168,12 @@ public class GerundPossesive extends Error {
 				result.add(errorIndices);
 			}
 		
-		if(numErrors > 0) {
-			System.out.println("all found errors:");
-			for(int i = 0; i < result.size(); i++) {
-				System.out.println(result.get(i)[0] + "-" + result.get(i)[1] + " (error " + result.get(i)[2] + ")");
-			}
-		}
+		//if(numErrors > 0) {
+			//System.out.println("all found errors:");
+			//for(int i = 0; i < result.size(); i++) {
+				//System.out.println(result.get(i)[0] + "-" + result.get(i)[1] + " (error " + result.get(i)[2] + ")");
+			//}
+		//}
 		
 		return result;
 	}
