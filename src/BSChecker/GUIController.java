@@ -32,7 +32,7 @@ public class GUIController {
 	private StyleClassedTextArea essayBox;
 
 	@FXML
-	private JFXTextArea errorBox;
+	private StyleClassedTextArea errorBox;
 
 	@FXML
 	private JFXButton buttonLeft;
@@ -146,7 +146,7 @@ public class GUIController {
 		Error.sort(errors); //sorts the errors based on starting index
 
 		if(errors.size() == 0) {
-			errorBox.setText("No Error Found!");
+			errorBox.replaceText("No Error Found!");
 		}
 		else {
 			currError = 0;
@@ -206,7 +206,7 @@ public class GUIController {
 		essayBox.positionCaret(errors.get(currError)[0]);
 		essayBox.setStyleClass(errors.get(currError)[0], errors.get(currError)[1] + 1, "dark-red");
 		Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(currError)[2]);
-		errorBox.setText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
+		errorBox.replaceText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
 	}
 	
 	/**
@@ -331,6 +331,14 @@ public class GUIController {
 	@FXML
 	protected void menuAboutClick() {
 		/* HELP->ABOUT ACTION */
+	}
+	
+	/**
+	 * This method sets default "empty" text for the Text Areas
+	 */
+	public void setDefaultText() {
+		essayBox.replaceText("Insert Essay Here");
+		errorBox.replaceText("No Error Selected");
 	}
 
 }

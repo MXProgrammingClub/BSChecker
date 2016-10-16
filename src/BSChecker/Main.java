@@ -32,13 +32,15 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("GUI.fxml"));
-			loader.setController(new GUIController());
+			GUIController controller = new GUIController();
+			loader.setController(controller);
 			Parent root = loader.load();
 			Scene scene = new Scene(root, 1000, 650);
 			scene.getStylesheets().add(this.getClass().getResource("application.css").toExternalForm());
 
 			primaryStage.setTitle("BSChecker");
 			primaryStage.setScene(scene);
+			controller.setDefaultText();
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
