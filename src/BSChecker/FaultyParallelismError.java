@@ -30,27 +30,33 @@ public class FaultyParallelismError extends Error{
 	@Override
 	public ArrayList<int[]> findErrors(String text){
 		// TODO Auto-generated method stub
+		String startText = text;
+		text = text.replace('\u201D', '\"');
+		text = text.replace('\u201C', '\"');
+		text = text.replace('\u2018','\'');
+		text = text.replace('\u2019','\'');
+		text = text.replace(':', '.');
+		text = text.replace(';', '.');
 		StringBuffer buf = new StringBuffer(text);
 		boolean autoRemove = false;
 		for(int i=0;i<buf.length();i++){
-			System.out.println(buf);
 			char c = buf.charAt(i);
-			if(c == '(' || c == ')'){
+			if(c == '(' || c == ')' || c == '\"'){
 				buf.deleteCharAt(i);
 				i--;
 				autoRemove = !autoRemove;
 			}
-			else if(autoRemove || c == '\"'){
+			else if(autoRemove || c == '\'' || (c == ' ' && buf.charAt(i+1) == '(') || (c == '.' && buf.charAt(i-1) == ')')){
 				buf.deleteCharAt(i);
 				i--;
 			}
 		}
 		text = buf.toString();
-		System.out.println("\n" + text);
+		System.out.println(text);
 		ArrayList<int[]> errs = new ArrayList<int[]>();
 		String[] sentences = null;
 		try{
-		sentences = sentenceDetect(text.toLowerCase());
+		sentences = sentenceDetect(text);
 		}
 		catch(Exception e){
 			System.out.println("ERROR");
@@ -58,10 +64,16 @@ public class FaultyParallelismError extends Error{
 		}
 		int shift = 0;
 		for(String line: sentences){
-			ArrayList<int[]> errors = findErrorsInLine(line.substring(0, line.length()-1));
+			int lineShift = 0;
+			line.replace(".", "");
+			System.out.println(line);
+			ArrayList<int[]> errors = findErrorsInLine(line.substring(0, line.length()));
 			for(int[] err: errors){
-				int[] newErr = {err[0]+shift,err[1]+shift,11};
+				String conjunction = line.substring(err[0],err[1]);
+				int[] newErr = {startText.indexOf(conjunction,lineShift + shift),startText.indexOf(conjunction, lineShift + shift) + conjunction.length(),11};
 				errs.add(newErr);
+				lineShift = newErr[1]+1 - shift;
+				System.out.println(startText.substring(newErr[0],newErr[1]));
 			}
 			shift += line.length()+1;
 		}
@@ -79,7 +91,6 @@ public class FaultyParallelismError extends Error{
 	int index = -1;
 	int textIndex = 0;
 	while(index < parsedText.length() && parsedText.indexOf("CC",index+1) >= 0){
-		System.out.println("in");
 		index = parsedText.indexOf("CC",index+1);
 		int net = 0;
 		boolean first = true;
