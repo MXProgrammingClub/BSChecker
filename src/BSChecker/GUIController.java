@@ -10,9 +10,7 @@ package BSChecker;
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 import com.jfoenix.controls.JFXButton;
@@ -77,12 +75,20 @@ public class GUIController {
 	@FXML
 	private MenuItem menuAbout;
 	
+	private int currError = 0;
+	private ArrayList<int[]> errors;
+	
 	/**
 	 * The method that will be called when the left arrow is clicked
 	 */
 	@FXML
 	protected void leftArrowClick() {
-		/* LEFT ARROW ACTION */
+		if(errors.size() != 0) {
+			currError = (currError - 1 + errors.size()) % errors.size();
+			System.out.println(errors.size());
+			Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(currError)[2]);
+			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
+		}
 	}
 	
 	/**
@@ -90,7 +96,11 @@ public class GUIController {
 	 */
 	@FXML
 	protected void rightArrowClick() {
-		/* RIGHT ARROW ACTION */
+		if(errors.size() != 0) {
+			currError = (currError + 1) % errors.size();
+			Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(currError)[2]);
+			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
+		}
 	}
 	
 	/**
@@ -98,7 +108,7 @@ public class GUIController {
 	 */
 	@FXML
 	protected void analyzeButtonClick() {
-		ArrayList<int[]> errors = new ArrayList<>();
+		errors = new ArrayList<>();
 		for(Error e: Main.ERROR_LIST) {
 			//System.out.println(e.getClass().toString());
 			ArrayList<int[]> temp = e.findErrors(essayBox.getText());
@@ -116,9 +126,10 @@ public class GUIController {
 			errorBox.setText("No Error Found!");
 		}
 		else {
+			currError = 0;
 			//highlight all the errors
 			for(int[] location: errors) {
-				essayBox.setStyleClass(location[0], location[1], "red");
+				essayBox.setStyleClass(location[0], location[1] + 1, "red");
 			}
 			
 			//put first error in sentenceBox and corresponding thing in errorBox
