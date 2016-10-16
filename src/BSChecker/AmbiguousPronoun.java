@@ -51,7 +51,7 @@ public class AmbiguousPronoun extends Error {
 				int endIndex = nouns[length - 1].getEnd();
 				
 				//ARRAYINDEXOUTOFBOUNDSEXCEPTION HERE
-				String noun = sentence[endIndex];
+				String noun = sentence[endIndex-1];
 				
 				int nounIndex = text.indexOf(noun);
 				for (String pronoun : pronouns) {
