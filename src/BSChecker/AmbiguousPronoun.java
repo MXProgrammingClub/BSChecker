@@ -25,12 +25,16 @@ import opennlp.tools.util.Span;
  * Finds (& print out locations of) ambiguous pronoun -> BS error #7
  */
 public class AmbiguousPronoun extends Error {
+	final static String[] pronouns = {"she", "her", "he", "him", "it", "they", "them"};
 	
 	public static void main (String[] args) {
-		System.out.println("test");
-		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors("Mike and Bob. He runs.");
-		for (int[] error : errors)
+		String test = "I saw Mike and Bob. I also saw Ted and John, but I beat him.";
+		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors(test);
+		for (int[] error : errors){
+			System.out.println(test.substring(error[0],error[1]));
 			System.out.println(error[0] + " " + error[1] + " " + error[2]);
+		}
+			
 	}
 
 	/* (non-Javadoc)
@@ -40,29 +44,48 @@ public class AmbiguousPronoun extends Error {
 	public ArrayList<int[]> findErrors(String text) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		
-		ArrayList<String[]> names = findName(Tokenize(SentenceDetect(text)));
-		ArrayList<String[]> words = Tokenize(SentenceDetect(text));
 		
-		for (String[] sentenceNouns : names) {
-			String[] pronouns = {"she", "her", "he", "him", "it", "they", "them"};
-			int length = sentenceNouns.length;
-			if (length > 1) {
-				String lastNoun = sentenceNouns[length - 1];
-				int sentenceIndex = 0;
-				int nounIndex = text.indexOf(lastNoun, sentenceIndex);
-				for (String pronoun : pronouns) {
-					int index = text.indexOf(pronoun, nounIndex);
-					if (index > -1) {
-						errors.add(new int[]{index, index + pronoun.length(), 7});
+		String[] sentences = SentenceDetect(text);
+		int prevNouns=0;
+		int totLen = 0;
+		System.out.println(sentences.length);
+		for(int i = 0; i < sentences.length; i++){
+			int curNouns = 0, pnCount=0;
+			int[] pnCounts = new int[pronouns.length];
+			String[] words = Tokenize(sentences[i]);
+			ArrayList<String> names = findName(words);
+			for(String word: words){
+				int pInd = 0;
+				if((pInd = pronounInd(word))!=-1){
+					if(prevNouns+curNouns>1){
+						int[] err = {totLen + locationOf(sentences[i],pronouns[pInd], pnCounts[pInd]),
+							totLen + locationOf(sentences[i],pronouns[pInd], pnCounts[pInd]) + word.length(),
+						7
+						};
+						errors.add(err);
 					}
+					pnCounts[pInd]++;
 				}
-				
-				sentenceIndex = text.indexOf(".", sentenceIndex);
+				if(names.contains(word)){
+					prevNouns=0;
+					curNouns++;
+				}
 			}
+			totLen+=sentences[i].length();
+			prevNouns = curNouns;
 		}
+			
 		
 		return errors;
 	}
+
+	private int pronounInd(String word) {
+		for(int i = 0; i < pronouns.length; i++){
+			if(word.equalsIgnoreCase(pronouns[i])) return i;
+		}
+		return -1;
+	}
+	
 	
 	public static String[] SentenceDetect(String text) {
 		try {			
@@ -79,7 +102,7 @@ public class AmbiguousPronoun extends Error {
 		}
 	}
 	
-	public static ArrayList<String[]> Tokenize(String[] sentences) {
+	public static String[] Tokenize(String sentence) {
 		try {
 			InputStream is = new FileInputStream("lib/en-token.bin");
 		 
@@ -89,11 +112,7 @@ public class AmbiguousPronoun extends Error {
 			
 			ArrayList<String[]> words = new ArrayList<String[]>();
 			
-			for (String sentence : sentences) {
-				words.add(tokenizer.tokenize(sentence));
-			}
-			
-			return words;
+			return tokenizer.tokenize(sentence);
 		}
 		catch(IOException e) {
 			return null;
@@ -101,7 +120,7 @@ public class AmbiguousPronoun extends Error {
 	}
 	
 	
-	public static ArrayList<String[]> findName(ArrayList<String[]> sentences) {
+	public static ArrayList<String> findName(String[] words) {
 		try {
 			InputStream is = new FileInputStream("lib/en-ner-person.bin");
 		 
@@ -109,21 +128,13 @@ public class AmbiguousPronoun extends Error {
 			is.close();
 		 
 			NameFinderME nameFinder = new NameFinderME(model);
+		
+			ArrayList<String> names = new ArrayList<String>();
 			
-			ArrayList<Span[]> names = new ArrayList<Span[]>();
-			
-			ArrayList<String[]> test = new ArrayList<String[]>();
-			
-			for (String[] sentence : sentences) {
-				names.add(nameFinder.find(sentence));
-			}
-			
-			for (Span[] s : names) {
-				String[] bloop = new String[s.length];
-				for (int i = 0; i < s.length; i++) {
-					bloop[i] = s[i].toString();
-				}
-				test.add(bloop);
+			ArrayList<String> test = new ArrayList<String>();
+			Span spans[] = nameFinder.find(words);
+			for(Span span : spans){
+				test.add(words[span.getStart()]);
 			}
 			
 			return test;
