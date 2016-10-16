@@ -18,7 +18,7 @@ import opennlp.tools.tokenize.TokenizerModel;
  * Finds (& print out locations of) first & second person -> BS error #3
  */
 public class FirstSecondPerson extends Error {
-	private static final int ERROR_NUMBER = 11;
+	private static final int ERROR_NUMBER = 3;
 
 	/**
 	 * main method
