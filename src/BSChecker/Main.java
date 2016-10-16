@@ -17,11 +17,15 @@ public class Main extends Application {
 
 	public final static Error[] ERROR_LIST = {
 			new PastTense(),
+//			new IncompleteSentences(),
 			new FirstSecondPerson(),
 			new VagueThisWhichError(),
+//			new NumDisagreement(),
 			new PronounCase(),
 			new AmbiguousPronoun(),
+//			new ApostropheError(),
 			new PassiveVoiceError(),
+//			new DanglingModifiers(),
 //			new FaultyParallelismError(),
 			new ProgressiveTense(),
 			new GerundPossesive(),
