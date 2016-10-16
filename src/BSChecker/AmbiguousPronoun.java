@@ -4,11 +4,9 @@
 package BSChecker;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -17,7 +15,6 @@ import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.Span;
 
 /**
@@ -31,7 +28,6 @@ public class AmbiguousPronoun extends Error {
 		String test = "I saw Mike and Bob. I also saw Ted and John, but I beat him.";
 		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors(test);
 		for (int[] error : errors){
-			System.out.println(test.substring(error[0],error[1]));
 			System.out.println(error[0] + " " + error[1] + " " + error[2]);
 		}
 			
@@ -44,13 +40,11 @@ public class AmbiguousPronoun extends Error {
 	public ArrayList<int[]> findErrors(String text) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		
-		
 		String[] sentences = SentenceDetect(text);
 		int prevNouns=0;
 		int totLen = 0;
-		System.out.println(sentences.length);
 		for(int i = 0; i < sentences.length; i++){
-			int curNouns = 0, pnCount=0;
+			int curNouns = 0;
 			int[] pnCounts = new int[pronouns.length];
 			String[] words = Tokenize(sentences[i]);
 			ArrayList<String> names = findName(words);
@@ -110,8 +104,6 @@ public class AmbiguousPronoun extends Error {
 		 
 			Tokenizer tokenizer = new TokenizerME(model);
 			
-			ArrayList<String[]> words = new ArrayList<String[]>();
-			
 			return tokenizer.tokenize(sentence);
 		}
 		catch(IOException e) {
@@ -128,8 +120,6 @@ public class AmbiguousPronoun extends Error {
 			is.close();
 		 
 			NameFinderME nameFinder = new NameFinderME(model);
-		
-			ArrayList<String> names = new ArrayList<String>();
 			
 			ArrayList<String> test = new ArrayList<String>();
 			Span spans[] = nameFinder.find(words);
