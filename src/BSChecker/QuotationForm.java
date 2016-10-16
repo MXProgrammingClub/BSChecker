@@ -70,12 +70,12 @@ public class QuotationForm extends Error
 						if(findErrorsFront(tokens, i, j))
 						{
 							int loc = Error.locationOf(text, "\"", count);
-							errors.add(new int[]{loc - 2, loc - 1});
+							errors.add(new int[]{loc - 2, loc - 1, 14});
 						}
 						if(findErrorsBack(tokens, i, j))
 						{
 							int loc = Error.locationOf(text, "\"", count + 1);
-							errors.add(new int[]{loc + 1, loc + 2});
+							errors.add(new int[]{loc + 1, loc + 2, 14});
 						}
 						i = j;
 						count += 2;
