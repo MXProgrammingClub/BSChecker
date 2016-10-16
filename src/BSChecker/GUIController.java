@@ -78,6 +78,8 @@ public class GUIController {
 	private int currError = 0;
 	private ArrayList<int[]> errors;
 	private File file;
+	private String clipboard = "";
+	
 	/**
 	 * The method that will be called when the left arrow is clicked
 	 */
@@ -198,7 +200,12 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuCutClick() {
-		/* EDIT->CUT ACTION */
+		String temp = essayBox.getSelectedText();
+		if(!temp.equals(""))
+		{
+			clipboard = temp;
+			essayBox.deleteText(essayBox.getSelection());
+		}
 	}
 
 	/**
@@ -206,7 +213,8 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuCopyClick() {
-		/* EDIT->COPY ACTION */
+		String temp = essayBox.getSelectedText();
+		if(!temp.equals("")) clipboard = temp;
 	}
 
 	/**
@@ -214,7 +222,7 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuPasteClick() {
-		/* EDIT->PASTE ACTION */
+		essayBox.insertText(essayBox.getSelection().getEnd(), clipboard);
 	}
 
 	/**
@@ -222,7 +230,7 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuSelectAllClick() {
-		/* EDIT->SELECTALL ACTION */
+		essayBox.selectAll();
 	}
 
 	/**
