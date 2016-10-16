@@ -35,6 +35,9 @@ public class TextImport
 	{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Choose Essay");
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Formats", "*.docx", "*.doc", "*.txt"), 
+				new FileChooser.ExtensionFilter("Microsoft Word 2007", "*.docx"), new FileChooser.ExtensionFilter("Microsoft Word 1997", "*.doc"), 
+				new FileChooser.ExtensionFilter("Text File", "*.txt"));
 		return fileChooser.showOpenDialog(null);
 	}
 	
