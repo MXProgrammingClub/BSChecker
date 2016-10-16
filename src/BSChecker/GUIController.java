@@ -119,25 +119,17 @@ public class GUIController {
 	         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
 	    }
 		essayBox.replaceText(text);
-		for(Error e: Main.ERROR_LIST) {
-			//System.out.println(e.getClass().toString());
+		Dialog<ButtonType> d = new Dialog<ButtonType>();
+		d.setTitle("Analyzing");
+		d.setContentText("BSChecker is analyzing your essay.");
+		d.show();
 		
-			Dialog<ButtonType> d = new Dialog<ButtonType>();
-			d.setTitle("Analyzing");
-			d.setContentText("BSChecker is analyzing your essay.");
-			d.show();
+		for(Error e: Main.ERROR_LIST) {
 			ArrayList<int[]> temp = e.findErrors(text,model);
-			d.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-			d.close();
-			/*for(int[] i: temp) {
-				System.out.println(Arrays.toString(i));
-			}*/
 			errors.addAll(temp);
-		}/*
-		for(int i = 0; i < errors.size(); i++) {
-			System.out.println(errors.get(i)[0] + "-" + errors.get(i)[1] + " (Error " + errors.get(i)[2] + ")");
 		}
-		*/
+		d.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+			d.close();
 		Error.sort(errors); //sorts the errors based on starting index
 
 		if(errors.size() == 0) {
