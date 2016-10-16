@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
@@ -109,7 +110,18 @@ public class GUIController {
 		for(Error e: Main.ERROR_LIST) {
 			//System.out.println(e.getClass().toString());
 			String text = essayBox.getText();
-			text = Normalizer.normalize(text, Normalizer.Form.NFD); //normalizes to ASCII
+			//text = Normalizer.normalize(text, Normalizer.Form.NFD); //normalizes to ASCII
+			ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
+			
+			// double quotation (")
+		    replacements.add(new Replacement(Pattern.compile("[\u201c\u201d\u201e\u201f\u275d\u275e]"), "\""));
+
+		    // single quotation (')
+		    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201a\u201b\u275b\u275c]"), "'"));
+		   
+		    for (Replacement replacement : replacements) {
+		         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
+		    }
 			essayBox.replaceText(text);
 		    ArrayList<int[]> temp = e.findErrors(text);
 			/*for(int[] i: temp) {
