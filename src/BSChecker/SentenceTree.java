@@ -31,26 +31,34 @@ public class SentenceTree {
 		if(children.size() == 1)
 			return children.get(0).fix();
 		ArrayList<SentenceTree> arr = new ArrayList<SentenceTree>();
-		for(SentenceTree st: children)
-			arr.add(st.fix());
+		for(SentenceTree st: children){
+			SentenceTree fixed = st.fix();
+			if(fixed != null){
+				arr.add(fixed);
+				System.out.println(fixed.getTag() + ":" + fixed.getLabel());
+			}
+		}
 		SentenceTree verb = null;
 		SentenceTree subject = null;
 		for(SentenceTree st: arr){
-			if(verb != null && st.getTag().charAt(1) == 'V')
+			if(verb == null && st.getTag().charAt(0) == 'V')
 				verb = st;
-			if(subject != null && st.getTag().substring(0,2).equals("NN"))
+			if(subject == null && (st.getTag().substring(0,2).equals("NN") || st.getTag().substring(0,2).equals("NP")))
 				subject = st;
 		}
-		boolean nounIsSing = subject.getTag().charAt(subject.getTag().length()-1) != 'S', verbIsSing = verb.getTag().equals("VBZ");
+		boolean nounIsSing = false, verbIsSing = false;
+		if(verb != null && subject != null){
+			System.out.println("in");
+			nounIsSing = subject.getTag().charAt(subject.getTag().length()-1) != 'S'; verbIsSing = verb.getTag().equals("VBZ");}
 		if(nounIsSing != verbIsSing){
-			if(!severTie()){
-				System.out.println("ERROR: COULD NOT REMOVE");
-				return null;
-			}
-			else{
 				System.out.println("Not the same");
-			}
+				return this;
 		}
-		return null;
+		else if(verb == null && subject != null)
+			return subject;
+		else if(subject == null && verb != null)
+			return verb;
+		else
+			return this;
 	}
 }

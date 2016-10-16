@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.util.Scanner;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.ArrayList;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
@@ -14,8 +13,6 @@ import opennlp.tools.parser.ParserModel;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.util.InvalidFormatException;
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.PlainTextByLineStream;
 
 public class FaultyParallelismError extends Error{
 	public static void main(String[] args){
@@ -143,13 +140,11 @@ public class FaultyParallelismError extends Error{
 				type2 = parsedText.substring(i,parsedText.indexOf(' ',i));
 			}
 		}
-		int endIndex = i;
 		if(type2.equals("VP")){
 			int start = parsedText.indexOf("VB",parsedText.indexOf('(',index)+1);
 			if(start == -1)
 				start = parsedText.indexOf('(',index)+1;
 			type2 = parsedText.substring(start,parsedText.indexOf(' ',start));
-			endIndex = parsedText.indexOf(')',start)+1;
 		}
 		String conjunction = parsedText.substring(parsedText.indexOf(' ',index)+1,parsedText.indexOf(')',index));
 		int newTextIndex = text.indexOf(conjunction,textIndex);

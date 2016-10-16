@@ -29,17 +29,19 @@ public class VerbAgreementError {
 			ArrayList<int[]> arr = new ArrayList<int[]>();
 			for(String s: sentences){
 				ParserTool.parseLine(s.substring(0, s.length()-1), parser, 1)[0].show();
-				arr.addAll(correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), parser, 1)[0]));
+				correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), parser, 1)[0]);
+				//arr.addAll(correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), parser, 1)[0]));
 			}
 		is.close();
 		}
 		catch(Exception e){
-			System.out.println("ERROR");
+			e.printStackTrace();
 			return null;
 		}
 		return null;
 	}
 	public static ArrayList<int[]> correctParse(Parse p){
+		System.out.println(p);
 		SentenceTree head = new SentenceTree(null,p.getChildren()[0]);
 		SentenceTree tree = head.fix();
 		return new ArrayList<int[]>();
