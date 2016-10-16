@@ -88,10 +88,7 @@ public class GUIController {
 	@FXML
 	protected void leftArrowClick() {
 		if(errors.size() != 0) {
-			currError = (currError - 1 + errors.size()) % errors.size();
-			System.out.println(errors.size());
-			Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(currError)[2]);
-			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
+			previousError();
 		}
 	}
 
@@ -101,9 +98,7 @@ public class GUIController {
 	@FXML
 	protected void rightArrowClick() {
 		if(errors.size() != 0) {
-			currError = (currError + 1) % errors.size();
-			Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(currError)[2]);
-			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
+			nextError();
 		}
 	}
 
@@ -120,11 +115,11 @@ public class GUIController {
 				System.out.println(Arrays.toString(i));
 			}*/
 			errors.addAll(temp);
-		}
+		}/*
 		for(int i = 0; i < errors.size(); i++) {
 			System.out.println(errors.get(i)[0] + "-" + errors.get(i)[1] + " (Error " + errors.get(i)[2] + ")");
 		}
-
+		*/
 		Error.sort(errors); //sorts the errors based on starting index
 
 		if(errors.size() == 0) {
@@ -139,10 +134,55 @@ public class GUIController {
 			}*/
 
 			//put first error in sentenceBox and corresponding thing in errorBox
-			System.out.println(essayBox.getText().substring(errors.get(0)[0], errors.get(0)[1]));
-			Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(0)[2]);
-			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
+			//System.out.println(essayBox.getText().substring(errors.get(0)[0], errors.get(0)[1]));
+			displayError();
 		}
+	}
+	
+	/**
+	 * Updates the selected text to the next error.
+	 */
+	private void nextError()
+	{
+		currError++;
+		if(currError >= errors.size())
+		{
+			Alert a = new Alert(Alert.AlertType.INFORMATION);
+			a.setContentText("You have gone through all your errors.");
+			a.setHeaderText("Search Complete");
+			a.setTitle("No Next Error");
+			a.showAndWait();
+			return;
+		}
+		displayError();	
+	}
+	
+	/**
+	 * Updates the selected text to the previous error.
+	 */
+	private void previousError()
+	{
+		currError--;
+		if(currError < 0)
+		{
+			Alert a = new Alert(Alert.AlertType.INFORMATION);
+			a.setContentText("You have gone through all your errors.");
+			a.setHeaderText("Search Complete");
+			a.setTitle("No Previous Error");
+			a.showAndWait();
+			return;
+		}
+		displayError();
+	}
+	
+	/**
+	 * Displays the current error.
+	 */
+	public void displayError()
+	{
+		essayBox.selectRange(errors.get(currError)[0], errors.get(currError)[1] + 1);
+		Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(currError)[2]);
+		errorBox.setText(b.getName() + "\n\n" + b.getDescription());
 	}
 
 	/**
@@ -243,7 +283,7 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuNextErrorClick() {
-		/* VIEW->NEXTERROR ACTION */
+		rightArrowClick();
 	}
 
 	/**
@@ -251,7 +291,7 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuPreviousErrorClick() {
-		/* VIEW->PREVIOUSERROR ACTION */
+		leftArrowClick();
 	}
 
 	/**
