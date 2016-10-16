@@ -73,7 +73,8 @@ public class QuotationForm extends Error
 						if(findErrorsFront(tokens, i, j))
 						{
 							int loc = Error.locationOf(text, "\"", count);
-							errors.add(new int[]{loc - 3, loc - 3, ERROR_NUMBER});
+							if(text.charAt(loc - 3) == ',') errors.add(new int[]{loc - 3, loc - 3, ERROR_NUMBER});
+							else errors.add(new int[]{text.lastIndexOf(' ', loc - 3) + 1, loc - 1, ERROR_NUMBER});
 						}
 						if(findErrorsBack(tokens, i, j))
 						{
