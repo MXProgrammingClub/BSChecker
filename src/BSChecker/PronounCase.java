@@ -15,7 +15,6 @@ import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.tokenize.WhitespaceTokenizer;
 import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
@@ -28,9 +27,11 @@ public class PronounCase extends Error{
 	private static final String[] SUB = {"he", "she", "it", "they", "we", "I", "you", "who"};
 	private static final String[] ALLPN = {"he", "she", "it", "they", "we", "you", "his", "him", "her", "hers", "its", "their", "theirs", "them", "us", "our", "ours", "your", "yours", "who", "whose", "whom"};
 
+	private static final int ERROR_NUMBER = 6;
+	
 	public static void main(String[] args) {
-		String input = "he box is bigger than she box, but him loves its shirt";
-		Error tester = new PronounCase();		
+		String input = "he box is big. she is happy. he friend is bad";
+		Error tester = new PronounCase();
 		ArrayList<int[]> found = tester.findErrors(input);
 		//		for(int[] inds: found){
 		//			System.out.println(inds[0] + " " + inds[1]);
@@ -256,27 +257,25 @@ public class PronounCase extends Error{
 				}
 				// here errTokIndex is correct and complete
 				// convert errTokIndex to textIndex
-				ArrayList<Integer> index = new ArrayList<Integer>();
-				
-				for(int j = 0; j < index.size(); j++)
+				int leftValue = 0, startCharIndex, endCharIndex;
+				for(int j = 0; j < errTokIndex.size(); j++)
 				{
-					int lastError = 0;
-					boolean contains = text.contains(tokens[index.get(j)]);
-					
-					while(contains)
-					{
-						int[] err = {text.indexOf(tokens[index.get(j)]) + lastError,
-							text.indexOf(tokens[index.get(j)]) + lastError + tokens[index.get(j)].length() - 1};
+					startCharIndex = text.indexOf(tokens[errTokIndex.get(j)], leftValue);
+					endCharIndex = startCharIndex + tokens[errTokIndex.get(j)].length() - 1;
+					System.out.println("test");
+					if(startCharIndex != 0)
+						System.out.println(text.charAt(startCharIndex - 1));
+					if((startCharIndex == 0) ||(startCharIndex != 0 && text.charAt(startCharIndex - 1) == ' ') && (text.charAt(endCharIndex + 1) != 's' && text.charAt(endCharIndex + 1) != 'm')) {
+						int[] err = {startCharIndex, endCharIndex, ERROR_NUMBER};
 						found.add(err);
-
-						// update last error index
-						lastError = text.indexOf(tokens[index.get(j)]) + tokens[index.get(j)].length() - 1;
-						
-						// trims the text string
-						text = text.substring(lastError);
-						contains = text.contains(tokens[index.get(j)]);
+	
+						// updates starting index
+						leftValue = err[1];
+						}
+					else {
+						leftValue = endCharIndex;
+						j--;
 					}
-					
 				}
 			}
 
@@ -287,9 +286,19 @@ public class PronounCase extends Error{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		// print final result
+		for(int i = 0; i < found.size(); i++)
+		{
+				System.out.print("Start: ");
+				System.out.println(found.get(i)[0]);
+				System.out.print("End: ");
+				System.out.println(found.get(i)[1]);
+				
+				System.out.print("Substring: ");
+				System.out.println(text.substring(found.get(i)[0], (found.get(i)[1] + 1)));
+		}
 
-
-		return null;
+		return found;
 
 
 

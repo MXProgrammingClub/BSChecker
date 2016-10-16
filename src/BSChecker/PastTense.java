@@ -15,7 +15,6 @@ import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.tokenize.WhitespaceTokenizer;
 import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
@@ -24,7 +23,7 @@ public class PastTense extends Error{
 	private static final int ERROR_NUMBER = 1;
 	
 	public static void main(String[] args) {
-		String input = "Hamlet walked.";
+		String input = "He walked, I walk, and she ran; therefore, I walked.";
 		Error tester = new PastTense();		
 		ArrayList<int[]> found = tester.findErrors(input);
 		for(int[] inds: found){
@@ -76,34 +75,35 @@ public class PastTense extends Error{
 					}
 				}
 				
-				
+				int leftValue = 0;
 				for(int j = 0; j < index.size(); j++)
 				{
-					int lastError = 0;
-					boolean contains = text.contains(tokens[index.get(j)]);
-					
-					while(contains)
-					{
-						int[] err = {text.indexOf(tokens[index.get(j)]) + lastError,
-							text.indexOf(tokens[index.get(j)]) + lastError + tokens[index.get(j)].length() - 1,
+					int[] err = {text.indexOf(tokens[index.get(j)], leftValue),
+							text.indexOf(tokens[index.get(j)], leftValue) + tokens[index.get(j)].length() - 1,
 							ERROR_NUMBER};
-						found.add(err);
+					found.add(err);
 
-						// update last error index
-						lastError = text.indexOf(tokens[index.get(j)]) + tokens[index.get(j)].length() - 1;
-						
-						// trims the text string
-						text = text.substring(lastError);
-						contains = text.contains(tokens[index.get(j)]);
+					// updates starting index
+					leftValue = err[1];
 					}
 					
 				}
-				//System.out.println(output);	
-			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
+		// print final result
+				for(int i = 0; i < found.size(); i++)
+				{
+						System.out.print("Start: ");
+						System.out.println(found.get(i)[0]);
+						System.out.print("End: ");
+						System.out.println(found.get(i)[1]);
+						
+						System.out.print("Substring: ");
+						System.out.println(text.substring(found.get(i)[0], (found.get(i)[1] + 1)));
+				}
+		
 		return found;
 	}
 }
