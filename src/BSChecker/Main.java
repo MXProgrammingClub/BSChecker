@@ -16,16 +16,16 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	public final static Error[] ERROR_LIST = {
-			new AmbiguousPronoun(),
-			//new FaultyParallelismError(),
-			new FirstSecondPerson(),
-			new GerundPossesive(),
-			new PassiveVoiceError(),
 			new PastTense(),
-			new ProgressiveTense(),
-			new QuotationForm(),
+			new FirstSecondPerson(),
 			new VagueThisWhichError(),
-			new PronounCase()
+			new PronounCase(),
+			new AmbiguousPronoun(),
+			new PassiveVoiceError(),
+//			new FaultyParallelismError(),
+			new ProgressiveTense(),
+			new GerundPossesive(),
+			new QuotationForm()
 	};
 
 

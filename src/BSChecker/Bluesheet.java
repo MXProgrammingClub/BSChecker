@@ -20,7 +20,7 @@ public enum Bluesheet {
 	DANGLING_PARTICIPLE ("Dangling Participle", "Avoid dangling modifiers.", 10),
 	FAULTY_PARALLELISM ("Faulty Parallelism", "Use identical grammatical forms to coordinate parallel ideas.", 11),
 	PROGRESSIVE_TENSE ("Progressive Tense", "Avoid progressive tenses.", 12),
-	GERUNDS ("Incorrect Use of Gerund/Possessive", "Recognize gerunds and use possessives accordingly", 13),
+	GERUNDS ("Incorrect Use of Gerund/Possessive", "Recognize gerunds and use possessives accordingly - WARNING this may catch some false \"errors\"", 13),
 	QUOTATION ("Quotation Error", "Malformed Quotation and/or Citation", 14);
 
 	private final String name;

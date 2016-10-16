@@ -8,8 +8,10 @@
 package BSChecker;
 
 import java.io.File;
-
+import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
@@ -25,9 +27,6 @@ public class GUIController {
 
 	@FXML
 	private StyleClassedTextArea essayBox;
-
-	@FXML
-	private JFXTextArea sentenceBox;
 
 	@FXML
 	private JFXTextArea errorBox;
@@ -110,7 +109,21 @@ public class GUIController {
 		errors = new ArrayList<>();
 		for(Error e: Main.ERROR_LIST) {
 			//System.out.println(e.getClass().toString());
-			ArrayList<int[]> temp = e.findErrors(essayBox.getText());
+			String text = essayBox.getText();
+			//text = Normalizer.normalize(text, Normalizer.Form.NFD); //normalizes to ASCII
+			ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
+			
+			// double quotation (")
+		    replacements.add(new Replacement(Pattern.compile("[\u201c\u201d\u201e\u201f\u275d\u275e]"), "\""));
+
+		    // single quotation (')
+		    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201a\u201b\u275b\u275c]"), "'"));
+		   
+		    for (Replacement replacement : replacements) {
+		         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
+		    }
+			essayBox.replaceText(text);
+		    ArrayList<int[]> temp = e.findErrors(text);
 			/*for(int[] i: temp) {
 				System.out.println(Arrays.toString(i));
 			}*/
@@ -123,7 +136,6 @@ public class GUIController {
 		Error.sort(errors); //sorts the errors based on starting index
 
 		if(errors.size() == 0) {
-			sentenceBox.setText("No Errors Found!");
 			errorBox.setText("No Error Found!");
 		}
 		else {
