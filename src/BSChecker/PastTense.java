@@ -65,9 +65,8 @@ public class PastTense extends Error{
 
 				for(int i = 0; i < tags.length; i++)
 				{
-					if(tags[i].equals("VBD")&&(!tokens[i].equals("[")) && (!tokens[i].equals("]") && (!tokens[i].equals("’s")) && (!tokens[i].equals("…")))){
+					if(tags[i].equals("VBD")) {	
 						index.add(i);
-						System.out.println(tokens[i]);
 					}
 				}
 
