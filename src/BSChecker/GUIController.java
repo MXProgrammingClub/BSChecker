@@ -21,6 +21,7 @@ import com.jfoenix.controls.JFXTextArea;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 
 public class GUIController {
@@ -123,7 +124,12 @@ public class GUIController {
 		         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
 		    }
 			essayBox.replaceText(text);
-		    ArrayList<int[]> temp = e.findErrors(text);
+		    
+			Alert a = new Alert(Alert.AlertType.INFORMATION);
+			a.show();
+			ArrayList<int[]> temp = e.findErrors(text);
+			Button cancelButton = (Button) a.getDialogPane().lookupButton(a.getDialogPane().getButtonTypes().get(0));
+			cancelButton.fire();
 			/*for(int[] i: temp) {
 				System.out.println(Arrays.toString(i));
 			}*/
