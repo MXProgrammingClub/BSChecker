@@ -37,7 +37,7 @@ public class Main extends Application {
 			Scene scene = new Scene(root, 1000, 650);
 			scene.getStylesheets().add(this.getClass().getResource("application.css").toExternalForm());
 
-			primaryStage.setTitle("AutoHirsch");
+			primaryStage.setTitle("BSChecker");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
