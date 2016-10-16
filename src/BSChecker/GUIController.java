@@ -17,6 +17,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 
 public class GUIController {
@@ -166,7 +168,10 @@ public class GUIController {
 		{
 			if(!TextImport.saveText(file, essayBox.getText()))
 			{
-				//popup error message
+				Alert a = new Alert(Alert.AlertType.ERROR);
+				a.setTitle("Saving Error");
+				a.setContentText("There was an error in saving your file. It may be in use or moved from its original location.");
+				a.showAndWait();
 			}
 		}
 	}
