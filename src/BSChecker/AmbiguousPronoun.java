@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -26,7 +27,8 @@ import opennlp.tools.util.Span;
 public class AmbiguousPronoun extends Error {
 	
 	public static void main (String[] args) {
-		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors("Mike and Bob. He");
+		System.out.println("test");
+		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors("Mike and Bob. He runs.");
 		for (int[] error : errors)
 			System.out.println(error[0] + " " + error[1]);
 	}
@@ -38,15 +40,19 @@ public class AmbiguousPronoun extends Error {
 	public ArrayList<int[]> findErrors(String text) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		ArrayList<Span[]> names = findName(Tokenize(SentenceDetect(text)));
-		String[] sentence = SentenceDetect(text);
+		ArrayList<String[]> words = Tokenize(SentenceDetect(text));
 		
 		for (int i = 0; i < names.size(); i++) {
+			String[] sentence = words.get(i);
 			Span[] nouns = names.get(i);
 			int length = nouns.length;
 			String[] pronouns = {"she", "her", "he", "him", "it", "they", "them"};
 			if (length > 1) {
 				int endIndex = nouns[length - 1].getEnd();
+				
+				//ARRAYINDEXOUTOFBOUNDSEXCEPTION HERE
 				String noun = sentence[endIndex];
+				
 				int nounIndex = text.indexOf(noun);
 				for (String pronoun : pronouns) {
 					int index = text.indexOf(pronoun, nounIndex);
@@ -63,7 +69,7 @@ public class AmbiguousPronoun extends Error {
 	public static String[] SentenceDetect(String text) {
 		try {			
 			// always start with a model, a model is learned from training data
-			InputStream is = new FileInputStream("en-sent.bin");
+			InputStream is = new FileInputStream("lib/en-sent.bin");
 			SentenceModel model = new SentenceModel(is);
 			SentenceDetectorME sdetector = new SentenceDetectorME(model);
 			is.close();
@@ -118,5 +124,4 @@ public class AmbiguousPronoun extends Error {
 			return null;
 		}
 	}
-
 }
