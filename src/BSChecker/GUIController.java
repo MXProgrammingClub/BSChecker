@@ -184,7 +184,7 @@ public class GUIController {
 		essayBox.positionCaret(errors.get(currError)[0]);
 		essayBox.setStyleClass(errors.get(currError)[0], errors.get(currError)[1] + 1, "dark-red");
 		Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(currError)[2]);
-		errorBox.setText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
+		errorBox.setText(b.getName() + "\n\n" + b.getDescription());
 	}
 	
 	/**
