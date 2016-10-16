@@ -19,10 +19,12 @@ import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author JeremiahDeGreeff
- * algorithms for incorrect lack of possessives with gerunds (error 12)
+ * algorithms for incorrect lack of possessives with gerunds (error 13)
  */
 public class GerundPossesive extends Error {
-
+	
+	private static final int ERROR_NUMBER = 13;
+	
 	/**
 	 * for testing purposes
 	 */
@@ -131,26 +133,22 @@ public class GerundPossesive extends Error {
 	 * @return the list of errors for this line
 	 */
 	private ArrayList<int[]> findLoc(ArrayList<Integer> errorIndices, String text, String[] tokenizerLine) {
-		int[] startIndeces = new int[errorIndices.size()], endIndeces = new int[errorIndices.size()];
+		ArrayList<int[]> result = new ArrayList<int[]>();
 		int cursor = 0, start, end;
-
+		
 		for(int i = 0; i < errorIndices.size(); i++) {
 			System.out.println("error found: ");
 			System.out.println("\"" + tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)] + "\"");
 			start = text.indexOf(tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)], cursor);
 			end = start + (tokenizerLine[errorIndices.get(i) - 1] + tokenizerLine[errorIndices.get(i)]).length();
-			startIndeces[i] = start;
-			endIndeces[i] = end;
+			int[] error = {start, end};
+			result.add(error);
 			System.out.println("character indices: " + start + "-" + end);
 		}
-
-		ArrayList<int[]> result = new ArrayList<int[]>();
-		result.add(startIndeces);
-		result.add(endIndeces);
-
+		
 		return result;
 	}
-
+	
 	/**
 	 * combines the errors of each line into one ArrayList
 	 * @param lineErrors the errors from each line
@@ -159,28 +157,23 @@ public class GerundPossesive extends Error {
 	private ArrayList<int[]> combineLineErrors(ArrayList<ArrayList<int[]>> lineErrors) {
 		int numErrors = 0;
 		for(int line = 0; line < lineErrors.size(); line++)
-			numErrors += lineErrors.get(line).get(0).length;
-
-		int[] startIndeces = new int[numErrors], endIndeces = new int[numErrors];
-
-		int errorNum = 0;
-		for(int line = 0; line < lineErrors.size(); line++)
-			for(int lineErrorNum = 0; lineErrorNum < lineErrors.get(line).get(0).length; lineErrorNum++) {
-				startIndeces[errorNum] = lineErrors.get(line).get(0)[lineErrorNum];
-				endIndeces[errorNum] = lineErrors.get(line).get(1)[lineErrorNum];
-				errorNum++;
-			}
-
+			numErrors += lineErrors.get(line).size();
+		
 		ArrayList<int[]> result = new ArrayList<int[]>();
-		if(errorNum > 0) {
-			result.add(startIndeces);
-			result.add(endIndeces);
+		
+		for(int line = 0; line < lineErrors.size(); line++)
+			for(int lineErrorNum = 0; lineErrorNum < lineErrors.get(line).size(); lineErrorNum++) {
+				int[] errorIndices = {lineErrors.get(line).get(lineErrorNum)[0], lineErrors.get(line).get(lineErrorNum)[1], ERROR_NUMBER};
+				result.add(errorIndices);
+			}
+		
+		if(numErrors > 0) {
 			System.out.println("all found errors:");
-			for(int i = 0; i < result.get(0).length; i++) {
-				System.out.println(result.get(0)[i] + "-" + result.get(1)[i]);
+			for(int i = 0; i < result.size(); i++) {
+				System.out.println(result.get(i)[0] + "-" + result.get(i)[1] + " (error " + result.get(i)[2] + ")");
 			}
 		}
-
+		
 		return result;
 	}
 }
