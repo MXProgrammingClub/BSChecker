@@ -31,16 +31,14 @@ public class PronounCase extends Error{
 	public static void main(String[] args) {
 		String input = "However, instead of adapting political systems from their homeland";
 		Error tester = new PronounCase();
-		tester.findErrors(input);
+		tester.findErrors(input,null);
 	}
 
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String text,POSModel model) {
 		// initialization: POSTagger and Tokenizer
 		ArrayList<int[]> found = new ArrayList<int[]>();
-		POSModel model = new POSModelLoader()	
-				.load(new File("lib/en-pos-maxent.bin"));
 		POSTaggerME tagger = new POSTaggerME(model);
 //		System.out.println("HERE");
 		InputStream is;

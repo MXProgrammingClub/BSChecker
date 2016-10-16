@@ -19,7 +19,7 @@ import opennlp.tools.sentdetect.SentenceModel;
 public class IncompleteSentences extends Error {
 
 	public static void main (String[] args) {
-		ArrayList<int[]> errors = new IncompleteSentences().findErrors("Hi. How are. you? This is Mike.");
+		ArrayList<int[]> errors = new IncompleteSentences().findErrors("Hi. How are. you? This is Mike.",null);
 		for (int[] error : errors)
 			System.out.println(error[0] + " " + error[1] + " " + error[2]);
 	}
