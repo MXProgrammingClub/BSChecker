@@ -22,7 +22,7 @@ import javafx.scene.control.MenuItem;
 public class GUIController {
 	
 	@FXML
-	private StyleClassedTextArea essayBox;
+	private JFXTextArea essayBox;
 	
 	@FXML
 	private JFXTextArea sentenceBox;
@@ -128,9 +128,9 @@ public class GUIController {
 		else {
 			currError = 0;
 			//highlight all the errors
-			for(int[] location: errors) {
+			/*for(int[] location: errors) {
 				essayBox.setStyleClass(location[0], location[1] + 1, "red");
-			}
+			}*/
 			
 			//put first error in sentenceBox and corresponding thing in errorBox
 			//System.out.println(essayBox.getText().substring(errors.get(0)[0], errors.get(0)[1]));
@@ -149,8 +149,8 @@ public class GUIController {
 		if(file == null) return;
 		String text = TextImport.openFile(file);
 		if(text == null) return;
-		//essayBox.setText(text);
-		essayBox.replaceText(text);
+		essayBox.setText(text);
+		//essayBox.replaceText(text);
 	}
 	
 	/**
