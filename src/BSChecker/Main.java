@@ -16,8 +16,8 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	
 	public final static Error[] ERROR_LIST = {
-			new AmbiguousPronoun(),
-			new FaultyParallelismError(),
+			//new AmbiguousPronoun(),
+			//new FaultyParallelismError(),
 			new FirstSecondPerson(),
 			new GerundPossesive(),
 			new PassiveVoiceError(),
@@ -34,6 +34,7 @@ public class Main extends Application {
 			loader.setController(new GUIController());
 			Parent root = loader.load();
 	        Scene scene = new Scene(root, 1000, 650);
+	        scene.getStylesheets().add(this.getClass().getResource("application.css").toExternalForm());
 	    
 	        primaryStage.setTitle("AutoHirsch");
 	        primaryStage.setScene(scene);

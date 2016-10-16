@@ -9,6 +9,12 @@ package BSChecker;
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.StyleClassedTextArea;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 
@@ -18,7 +24,7 @@ import javafx.scene.control.MenuItem;
 public class GUIController {
 	
 	@FXML
-	private JFXTextArea essayBox;
+	private StyleClassedTextArea essayBox;
 	
 	@FXML
 	private JFXTextArea sentenceBox;
@@ -31,6 +37,9 @@ public class GUIController {
 	
 	@FXML
 	private JFXButton buttonRight;
+	
+	@FXML
+	private JFXButton analyzeButton;
 	
 	@FXML
 	private MenuItem menuOpen;
@@ -85,6 +94,41 @@ public class GUIController {
 	}
 	
 	/**
+	 * The method that will be called when the analyze button is clicked
+	 */
+	@FXML
+	protected void analyzeButtonClick() {
+		ArrayList<int[]> errors = new ArrayList<>();
+		for(Error e: Main.ERROR_LIST) {
+			//System.out.println(e.getClass().toString());
+			ArrayList<int[]> temp = e.findErrors(essayBox.getText());
+			/*for(int[] i: temp) {
+				System.out.println(Arrays.toString(i));
+			}*/
+			errors.addAll(temp);
+		}
+		System.out.println(errors);
+		
+		Error.sort(errors); //sorts the errors based on starting index
+		
+		if(errors.size() == 0) {
+			sentenceBox.setText("No Errors Found!");
+			errorBox.setText("No Error Found!");
+		}
+		else {
+			//highlight all the errors
+			for(int[] location: errors) {
+				essayBox.setStyleClass(location[0], location[1], "red");
+			}
+			
+			//put first error in sentenceBox and corresponding thing in errorBox
+			//System.out.println(essayBox.getText().substring(errors.get(0)[0], errors.get(0)[1]));
+			Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(0)[2]);
+			errorBox.setText(b.getName() + "\n\n" + b.getDescription());
+		}
+	}
+	
+	/**
 	 * The method that will be called when the File->Open is clicked. It takes the file and puts the contents
 	 * into the essay box.
 	 */
@@ -94,7 +138,8 @@ public class GUIController {
 		if(file == null) return;
 		String text = TextImport.openFile(file);
 		if(text == null) return;
-		essayBox.setText(text);
+		//essayBox.setText(text);
+		essayBox.replaceText(text);
 	}
 	
 	/**

@@ -2,7 +2,7 @@
     /*src: url('/lib/Roboto');*/
 }
 
-.root {
+/*.root {
 	-fx-font-family: Roboto;
 	-fx-background-color: #4FC3F7
 }
@@ -26,9 +26,13 @@
 
 .menu-bar {
 	-fx-background-color: #B3E5FC;
-	/*-fx-font-weight: bold;*/
+	/*-fx-font-weight: bold;*//*
 }
 
 .menu {
 	
+}*/
+
+.red {
+	-fx-background-fill: red;
 }

@@ -108,6 +108,11 @@
             </Menu>
         </menus>
       </MenuBar>
+      <JFXButton fx:id="analyzeButton" buttonType="RAISED" layoutX="16.0" layoutY="601.0" onMouseClicked="#analyzeButtonClick" style="-fx-background-color: #0277BD;" text="Analyze" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </JFXButton>
    </children>
    <cursor>
       <Cursor fx:constant="DEFAULT" />
