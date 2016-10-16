@@ -77,7 +77,7 @@ public class GUIController {
 	
 	private int currError = 0;
 	private ArrayList<int[]> errors;
-	
+	private File file;
 	/**
 	 * The method that will be called when the left arrow is clicked
 	 */
@@ -145,7 +145,7 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuOpenClick() {
-		File file = TextImport.chooseFile();
+		file = TextImport.chooseFile();
 		if(file == null) return;
 		String text = TextImport.openFile(file);
 		if(text == null) return;
@@ -158,7 +158,13 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuSaveClick() {
-		/* FILE->SAVE ACTION */
+		if(file != null)
+		{
+			if(!TextImport.saveText(file, essayBox.getText()))
+			{
+				//popup error message
+			}
+		}
 	}
 	
 	/**

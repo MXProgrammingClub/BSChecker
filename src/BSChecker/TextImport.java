@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.model.PAPX;
+import org.apache.poi.hwpf.sprm.SprmBuffer;
 import org.apache.poi.hwpf.usermodel.Paragraph;
-import org.apache.poi.hwpf.usermodel.ParagraphProperties;
 import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -139,22 +140,22 @@ public class TextImport
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */
-	public static void saveText(File file, String text)
+	public static boolean saveText(File file, String text)
 	{
 		String extension = file.getName().substring(file.getName().indexOf('.'));
 		if(extension.equals(".txt"))
 		{
-			saveTxt(file, text);
+			return saveTxt(file, text);
 		}
 		else if(extension.equals(".doc"))
 		{
-			saveDoc(file, text);
+			return saveDoc(file, text);
 		}
 		else if(extension.equals(".docx"))
 		{
-			saveDocx(file, text);
+			return saveDocx(file, text);
 		}
-		else return; //should never happen
+		else return false; //should never happen
 	}
 	
 	/**
@@ -202,16 +203,17 @@ public class TextImport
 		}
 		
 		Range r = doc.getRange();
-		//r.replaceText(r.text(), text);
-		//text.replaceAll("\n", "\r");
-		//r.replaceText(text + " ", false);
+		for(int i = r.numParagraphs() - 1; i >= 0; i--)
+		{
+			r.getParagraph(i).delete();
+		}
 		
 		String[] lines = text.split("\n");
-		for(int index = 0; index < lines.length; index++)
+		for(int i = 0; i < lines.length; i++)
 		{
-			//System.out.println(lines[index]);
-			Paragraph p = r.getParagraph(index);
-			p.replaceText(p.text(), lines[index] + " ");
+			Paragraph p = Paragraph.newParagraph(r, new PAPX(0, lines[i].length(), new SprmBuffer(0)));
+			if(i == 0) p.insertBefore(lines[i]);
+			else p.insertAfter(lines[i]);
 		}
 		
 		try
@@ -272,7 +274,7 @@ public class TextImport
 	
 	public static void main(String[] args)
 	{
-		File file = new File("test.docx");
-		saveDocx(file, "yo hi\nno");
+		File file = new File("test.doc");
+		saveDoc(file, "yo hi\nno");
 	}
 }
