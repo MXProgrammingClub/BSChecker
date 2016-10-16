@@ -1,10 +1,12 @@
 package BSChecker;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
@@ -22,9 +24,10 @@ public class FirstSecondPerson extends Error {
 	 * currently testing random String
 	 */
 	public static void main (String[] args) {
-		ArrayList<int[]> errors = new FirstSecondPerson().findErrors("Hi. How are you? This is Mike.", null);
-//		for (int[] error : errors)
-//			System.out.println(error[0] + " " + error[1] + " " + error[2]);
+		String test = "Hi. How are you? This my car.";
+		ArrayList<int[]> errors = new FirstSecondPerson().findErrors(test, new POSModelLoader().load(new File("lib/en-pos-maxent.bin")));
+		for (int[] error : errors)
+			System.out.println(test.substring(error[0], error[1]));//error[0] + " " + error[1] + " " + error[2]);
 	}
 
 	/**
@@ -38,21 +41,25 @@ public class FirstSecondPerson extends Error {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		String[] tenses = {"I","me", "my", "we", "us", "our", "you", "your"};
 		String[] tokens = Tokenize(text);
-
-		for (String tense : tenses) {
-			int index = 0;
-			int textIndex = 0;
-			while (index < tokens.length) {
-				int textIndexEnd = textIndex + tense.length();
-				if ((tokens[index]).equals(tense)) {
-					int[] error = {textIndex, textIndexEnd, ERROR_NUMBER};
-					errors.add(error);
-				}
-				textIndex = textIndexEnd;
-				index++;
+		
+		int curPos=0;
+		for(String token: tokens){
+			if(contains(tenses,token)){
+				int[] err = {text.indexOf(token,curPos),
+						text.indexOf(token,curPos) + token.length(),
+				3};
+				errors.add(err);
 			}
-		}		
+			curPos = text.indexOf(token,curPos) + token.length();
+		}	
 		return errors;
+	}
+
+	private boolean contains(String[] tenses, String token) {
+		for(String tense: tenses){
+			if(tense.equalsIgnoreCase(token)) return true;
+		}
+		return false;
 	}
 
 	/**
