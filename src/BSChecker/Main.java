@@ -14,7 +14,20 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	@Override
+	
+	public final static Error[] ERROR_LIST = {
+			new AmbiguousPronoun(),
+			new FaultyParallelismError(),
+			new FirstSecondPerson(),
+			new GerundPossesive(),
+			new PassiveVoiceError(),
+			new PastTense(),
+			new ProgressiveTense(),
+			new QuotationForm(),
+			new VagueThisWhichError()
+	};
+			
+	
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("GUI.fxml"));
