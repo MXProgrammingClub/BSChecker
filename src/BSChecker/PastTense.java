@@ -66,8 +66,9 @@ public class PastTense extends Error{
 
 				for(int i = 0; i < tags.length; i++)
 				{
-					if(tags[i].equals("VBD")&&(!tokens[i].equals("[")) && (!tokens[i].equals("]") && (!tokens[i].equals("'s")))){
+					if(tags[i].equals("VBD")&&(!tokens[i].equals("[")) && (!tokens[i].equals("]") && (!tokens[i].equals("’s")) && (!tokens[i].equals("…")))){
 						index.add(i);
+						System.out.println(tokens[i]);
 					}
 				}
 
@@ -81,6 +82,7 @@ public class PastTense extends Error{
 							(nextInd -1+len < lower.length() && Character.isLetter(lower.charAt(nextInd+len)))){
 						leftValue = nextInd+1;
 						nextInd = lower.indexOf(tokens[index.get(j)].toLowerCase(), leftValue);
+						//System.out.println(leftValue);
 					}
 					int[] err = {totLen+nextInd,
 							totLen+ nextInd + tokens[index.get(j)].length(),
