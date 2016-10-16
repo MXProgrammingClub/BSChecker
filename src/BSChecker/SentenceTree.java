@@ -23,4 +23,5 @@ public class SentenceTree {
 	public String getTag(){return tag;}
 	public boolean hasChildren(){return children.size()==0;}
 	public ArrayList<SentenceTree> getChildren(){return children;}
+	public SentenceTree getParent(){return parent;}
 }
