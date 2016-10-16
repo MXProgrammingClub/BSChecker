@@ -30,7 +30,7 @@ public class AmbiguousPronoun extends Error {
 		System.out.println("test");
 		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors("Mike and Bob. He runs.");
 		for (int[] error : errors)
-			System.out.println(error[0] + " " + error[1]);
+			System.out.println(error[0] + " " + error[1] + " " + error[2]);
 	}
 
 	/* (non-Javadoc)
@@ -39,27 +39,25 @@ public class AmbiguousPronoun extends Error {
 	@Override
 	public ArrayList<int[]> findErrors(String text) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		ArrayList<Span[]> names = findName(Tokenize(SentenceDetect(text)));
+		
+		ArrayList<String[]> names = findName(Tokenize(SentenceDetect(text)));
 		ArrayList<String[]> words = Tokenize(SentenceDetect(text));
 		
-		for (int i = 0; i < names.size(); i++) {
-			String[] sentence = words.get(i);
-			Span[] nouns = names.get(i);
-			int length = nouns.length;
+		for (String[] sentenceNouns : names) {
 			String[] pronouns = {"she", "her", "he", "him", "it", "they", "them"};
+			int length = sentenceNouns.length;
 			if (length > 1) {
-				int endIndex = nouns[length - 1].getEnd();
-				
-				//ARRAYINDEXOUTOFBOUNDSEXCEPTION HERE
-				String noun = sentence[endIndex-1];
-				
-				int nounIndex = text.indexOf(noun);
+				String lastNoun = sentenceNouns[length - 1];
+				int sentenceIndex = 0;
+				int nounIndex = text.indexOf(lastNoun, sentenceIndex);
 				for (String pronoun : pronouns) {
 					int index = text.indexOf(pronoun, nounIndex);
 					if (index > -1) {
-						errors.add(new int[]{index, index + pronoun.length()});
+						errors.add(new int[]{index, index + pronoun.length(), 7});
 					}
 				}
+				
+				sentenceIndex = text.indexOf(".", sentenceIndex);
 			}
 		}
 		
@@ -91,7 +89,7 @@ public class AmbiguousPronoun extends Error {
 			
 			ArrayList<String[]> words = new ArrayList<String[]>();
 			
-			for (String sentence : sentences) {			
+			for (String sentence : sentences) {
 				words.add(tokenizer.tokenize(sentence));
 			}
 			
@@ -103,7 +101,7 @@ public class AmbiguousPronoun extends Error {
 	}
 	
 	
-	public static ArrayList<Span[]> findName(ArrayList<String[]> sentences) {
+	public static ArrayList<String[]> findName(ArrayList<String[]> sentences) {
 		try {
 			InputStream is = new FileInputStream("lib/en-ner-person.bin");
 		 
@@ -114,11 +112,21 @@ public class AmbiguousPronoun extends Error {
 			
 			ArrayList<Span[]> names = new ArrayList<Span[]>();
 			
+			ArrayList<String[]> test = new ArrayList<String[]>();
+			
 			for (String[] sentence : sentences) {
 				names.add(nameFinder.find(sentence));
 			}
 			
-			return names;
+			for (Span[] s : names) {
+				String[] bloop = new String[s.length];
+				for (int i = 0; i < s.length; i++) {
+					bloop[i] = s[i].toString();
+				}
+				test.add(bloop);
+			}
+			
+			return test;
 		}
 		catch(IOException e) {
 			return null;

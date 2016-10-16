@@ -25,7 +25,7 @@ public class FirstSecondPerson extends Error {
 	public static void main (String[] args) {
 		ArrayList<int[]> errors = new FirstSecondPerson().findErrors("Hi. How are you? This is Mike.");
 		for (int[] error : errors)
-			System.out.println(error[0] + " " + error[1]);
+			System.out.println(error[0] + " " + error[1] + " " + error[2]);
 	}
 	
 	/* (non-Javadoc)
@@ -48,7 +48,7 @@ public class FirstSecondPerson extends Error {
 			while (index < tokens.length) {
 				int textIndexEnd = textIndex + tense.length();
 				if ((tokens[index]).equals(tense)) {
-					int[] error = {textIndex, textIndexEnd};
+					int[] error = {textIndex, textIndexEnd, 3};
 					errors.add(error);
 				}
 				textIndex = textIndexEnd;
