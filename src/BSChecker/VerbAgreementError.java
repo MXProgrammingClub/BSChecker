@@ -14,7 +14,7 @@ import opennlp.tools.sentdetect.SentenceModel;
 
 public class VerbAgreementError {
 	public static void main(String[] args){
-		ArrayList<int[]> errs = findErrors("Because I was walking, the bird ate me");
+		ArrayList<int[]> errs = findErrors("They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.");
 	}
 	public static ArrayList<int[]> findErrors(String text){
 		try{
@@ -26,21 +26,22 @@ public class VerbAgreementError {
 			ParserModel parseModel = new ParserModel(is);
 			Parser parser = ParserFactory.create(parseModel);
 			ArrayList<Parse> parses = new ArrayList<Parse>();
-			for(String s: sentences)
-				 parses.add(ParserTool.parseLine(s, parser, 1)[0]);
-			for(Parse p: parses)
-				correctParse(p);
+			ArrayList<int[]> arr = new ArrayList<int[]>();
+			for(String s: sentences){
+				ParserTool.parseLine(s.substring(0, s.length()-1), parser, 1)[0].show();
+				arr.addAll(correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), parser, 1)[0]));
+			}
 		is.close();
 		}
 		catch(Exception e){
 			System.out.println("ERROR");
 			return null;
 		}
-		
 		return null;
 	}
 	public static ArrayList<int[]> correctParse(Parse p){
-		
-		return null;
+		SentenceTree head = new SentenceTree(null,p.getChildren()[0]);
+		SentenceTree tree = head.fix();
+		return new ArrayList<int[]>();
 	}
 }

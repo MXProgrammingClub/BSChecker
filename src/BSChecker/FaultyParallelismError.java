@@ -1,6 +1,7 @@
 package BSChecker;
 
 import java.io.FileInputStream;
+import java.util.Scanner;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -18,7 +19,10 @@ import opennlp.tools.util.PlainTextByLineStream;
 
 public class FaultyParallelismError extends Error{
 	public static void main(String[] args){
-		String passage = "She spent the day visiting all the tourist shops and watched the children on the beach, and then she went back to the hotel for a late lunch. Mr. Hirsch hates children and eating french fries.";
+		Scanner scan = new Scanner(System.in);
+		System.out.println("passage: ");
+		String passage = scan.nextLine();
+		scan.close();
 		ArrayList<int[]> errs = new FaultyParallelismError().findErrors(passage);
 		for(int[] arr: errs)
 			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
@@ -26,6 +30,23 @@ public class FaultyParallelismError extends Error{
 	@Override
 	public ArrayList<int[]> findErrors(String text){
 		// TODO Auto-generated method stub
+		StringBuffer buf = new StringBuffer(text);
+		boolean autoRemove = false;
+		for(int i=0;i<buf.length();i++){
+			System.out.println(buf);
+			char c = buf.charAt(i);
+			if(c == '(' || c == ')'){
+				buf.deleteCharAt(i);
+				i--;
+				autoRemove = !autoRemove;
+			}
+			else if(autoRemove || c == '\"'){
+				buf.deleteCharAt(i);
+				i--;
+			}
+		}
+		text = buf.toString();
+		System.out.println("\n" + text);
 		ArrayList<int[]> errs = new ArrayList<int[]>();
 		String[] sentences = null;
 		try{
@@ -39,7 +60,7 @@ public class FaultyParallelismError extends Error{
 		for(String line: sentences){
 			ArrayList<int[]> errors = findErrorsInLine(line.substring(0, line.length()-1));
 			for(int[] err: errors){
-				int[] newErr = {err[0]+shift,err[1]+shift};
+				int[] newErr = {err[0]+shift,err[1]+shift,11};
 				errs.add(newErr);
 			}
 			shift += line.length()+1;
@@ -58,6 +79,7 @@ public class FaultyParallelismError extends Error{
 	int index = -1;
 	int textIndex = 0;
 	while(index < parsedText.length() && parsedText.indexOf("CC",index+1) >= 0){
+		System.out.println("in");
 		index = parsedText.indexOf("CC",index+1);
 		int net = 0;
 		boolean first = true;

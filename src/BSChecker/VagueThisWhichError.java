@@ -33,7 +33,6 @@ public class VagueThisWhichError extends Error {
 			System.out.println(test.substring(err[0], err[1]));
 		}
 	}
-
 	public ArrayList<int[]> findErrors(String text){
 		
 		ArrayList<int[]> found = new ArrayList<int[]>();
@@ -52,8 +51,6 @@ public class VagueThisWhichError extends Error {
 		} catch (IOException e) {
 			return null;
 		}
-		
-		
 		Tokenizer tokenizer = new TokenizerME(tModel);
 		POSTaggerME tagger = new POSTaggerME(model);
 		String line;
