@@ -8,7 +8,8 @@
 package BSChecker;
 
 import java.io.File;
-
+import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -25,9 +26,6 @@ public class GUIController {
 
 	@FXML
 	private StyleClassedTextArea essayBox;
-
-	@FXML
-	private JFXTextArea sentenceBox;
 
 	@FXML
 	private JFXTextArea errorBox;
@@ -110,7 +108,9 @@ public class GUIController {
 		errors = new ArrayList<>();
 		for(Error e: Main.ERROR_LIST) {
 			//System.out.println(e.getClass().toString());
-			ArrayList<int[]> temp = e.findErrors(essayBox.getText());
+			String text = essayBox.getText();
+			text = Normalizer.normalize(text, Normalizer.Form.NFD); //normalizes to ASCII
+		    ArrayList<int[]> temp = e.findErrors(text);
 			/*for(int[] i: temp) {
 				System.out.println(Arrays.toString(i));
 			}*/
@@ -123,7 +123,6 @@ public class GUIController {
 		Error.sort(errors); //sorts the errors based on starting index
 
 		if(errors.size() == 0) {
-			sentenceBox.setText("No Errors Found!");
 			errorBox.setText("No Error Found!");
 		}
 		else {
