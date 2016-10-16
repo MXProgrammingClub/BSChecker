@@ -21,6 +21,8 @@ import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
 public class PastTense extends Error{
+	private static final int ERROR_NUMBER = 1;
+	
 	public static void main(String[] args) {
 		String input = "Hamlet walked.";
 		Error tester = new PastTense();		
@@ -83,7 +85,8 @@ public class PastTense extends Error{
 					while(contains)
 					{
 						int[] err = {text.indexOf(tokens[index.get(j)]) + lastError,
-							text.indexOf(tokens[index.get(j)]) + lastError + tokens[index.get(j)].length() - 1};
+							text.indexOf(tokens[index.get(j)]) + lastError + tokens[index.get(j)].length() - 1,
+							ERROR_NUMBER};
 						found.add(err);
 
 						// update last error index
