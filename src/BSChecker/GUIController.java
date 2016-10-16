@@ -17,14 +17,14 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 
 public class GUIController {
 
 	@FXML
-	private JFXTextArea essayBox;
+	private StyleClassedTextArea essayBox;
 
 	@FXML
 	private JFXTextArea sentenceBox;
@@ -129,9 +129,9 @@ public class GUIController {
 		else {
 			currError = 0;
 			//highlight all the errors
-			/*for(int[] location: errors) {
-				essayBox.setStyleClass(location[0], location[1] + 1, "red");
-			}*/
+			for(int[] location: errors) {
+				essayBox.setStyleClass(location[0], location[1] + 1, "light-red");
+			}
 
 			//put first error in sentenceBox and corresponding thing in errorBox
 			//System.out.println(essayBox.getText().substring(errors.get(0)[0], errors.get(0)[1]));
@@ -144,16 +144,16 @@ public class GUIController {
 	 */
 	private void nextError()
 	{
+		resetCurrentColor();
 		currError++;
 		if(currError >= errors.size())
 		{
 			Alert a = new Alert(Alert.AlertType.INFORMATION);
-			a.setContentText("You have gone through all your errors.");
+			a.setContentText("Searching from beginning of passage.");
 			a.setHeaderText("Search Complete");
-			a.setTitle("No Next Error");
+			a.setTitle("Notice");
 			a.showAndWait();
-			currError--;
-			return;
+			currError = 0;
 		}
 		displayError();	
 	}
@@ -163,16 +163,16 @@ public class GUIController {
 	 */
 	private void previousError()
 	{
+		resetCurrentColor();
 		currError--;
 		if(currError < 0)
 		{
 			Alert a = new Alert(Alert.AlertType.INFORMATION);
-			a.setContentText("You have gone through all your errors.");
+			a.setContentText("Searching from end of passage.");
 			a.setHeaderText("Search Complete");
-			a.setTitle("No Previous Error");
+			a.setTitle("Notice");
 			a.showAndWait();
-			currError++;
-			return;
+			currError = errors.size() - 1;
 		}
 		displayError();
 	}
@@ -180,11 +180,18 @@ public class GUIController {
 	/**
 	 * Displays the current error.
 	 */
-	public void displayError()
-	{
-		essayBox.selectRange(errors.get(currError)[0], errors.get(currError)[1] + 1);
+	private void displayError() {
+		essayBox.positionCaret(errors.get(currError)[0]);
+		essayBox.setStyleClass(errors.get(currError)[0], errors.get(currError)[1] + 1, "dark-red");
 		Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(currError)[2]);
 		errorBox.setText(b.getName() + "\n\n" + b.getDescription());
+	}
+	
+	/**
+	 * Resets the color of the current error to the lighter color
+	 */
+	private void resetCurrentColor() {
+		essayBox.setStyleClass(errors.get(currError)[0], errors.get(currError)[1] + 1, "light-red");
 	}
 
 	/**
@@ -197,8 +204,8 @@ public class GUIController {
 		if(file == null) return;
 		String text = TextImport.openFile(file);
 		if(text == null) return;
-		essayBox.setText(text);
-		//essayBox.replaceText(text);
+		//essayBox.setText(text);
+		essayBox.replaceText(text);
 	}
 
 	/**

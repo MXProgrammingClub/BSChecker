@@ -10,6 +10,7 @@
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import org.fxmisc.richtext.StyleClassedTextArea?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #E1F5FE;" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -26,7 +27,7 @@
             <Font size="18.0" />
          </font>
       </JFXButton>
-      <JFXTextArea fx:id="essayBox" layoutX="14.0" layoutY="42.0" maxWidth="973.0" minWidth="725.0" prefHeight="404.0" prefWidth="972.0" promptText="Type or Import Your Essay" unFocusColor="#81d4fa" />
+      <StyleClassedTextArea fx:id="essayBox" layoutX="16.0" layoutY="45.0" prefHeight="402.0" prefWidth="968.0" wrapText="true"/>
       <JFXTextArea fx:id="sentenceBox" layoutX="16.0" layoutY="461.0" maxWidth="721.0" minWidth="477.0" prefHeight="126.0" prefWidth="635.0" promptText="No Sentence Currently Selected" unFocusColor="#81d4fa" />
       <JFXTextArea fx:id="errorBox" editable="false" focusTraversable="false" layoutX="665.0" layoutY="461.0" maxWidth="556.0" minWidth="321.0" prefHeight="126.0" prefWidth="321.0" promptText="No Error Selected" unFocusColor="#81d4fa" />
       <MenuBar prefHeight="29.0" prefWidth="1000.0">

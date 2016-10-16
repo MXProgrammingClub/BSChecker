@@ -33,6 +33,10 @@
 	
 }*/
 
-.red {
-	-fx-background-fill: red;
+.light-red {
+	-fx-background-fill: #FFCDD2;
+}
+
+.dark-red {
+	-fx-background-fill: #F44336;
 }
