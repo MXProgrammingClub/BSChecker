@@ -718,7 +718,7 @@ mumble
 murmur
 mutter
 nag
-not
+note
 object
 observe
 offer
