@@ -2,6 +2,10 @@ body {
   background-color: #b3e5fc;
   font-family: "Cormorant Garamond", serif;
 }
-.list {
-  text-align: center;
+p {
+  font-size: 30px
+  line-height: 10em
+}
+.latvia{
+  font-weight: bold;
 }

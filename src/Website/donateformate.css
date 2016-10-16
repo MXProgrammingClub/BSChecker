@@ -3,10 +3,9 @@ body {
   font-family: "Cormorant Garamond", serif;
 }
 
-h6 {
-  font-size: 20px;
-}
-
-.hirschy {
+.zimbabwe{
   text-align: center;
+}
+.input-field label {
+     color: #000;
 }
