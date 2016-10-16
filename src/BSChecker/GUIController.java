@@ -25,6 +25,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
+import opennlp.tools.cmdline.postag.POSModelLoader;
+import opennlp.tools.postag.POSModel;
 
 public class GUIController {
 
@@ -110,28 +112,26 @@ public class GUIController {
 	@FXML
 	protected void analyzeButtonClick() {
 		errors = new ArrayList<>();
+		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
+		String text = essayBox.getText();
+		ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
+		// double quotation (")
+	    replacements.add(new Replacement(Pattern.compile("[\u201c\u201d\u201e\u201f\u275d\u275e]"), "\""));
+	    // single quotation (')
+	    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201a\u201b\u275b\u275c]"), "'"));
+	   
+	    for (Replacement replacement : replacements) {
+	         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
+	    }
+		essayBox.replaceText(text);
 		for(Error e: Main.ERROR_LIST) {
 			//System.out.println(e.getClass().toString());
-			String text = essayBox.getText();
-			//text = Normalizer.normalize(text, Normalizer.Form.NFD); //normalizes to ASCII
-			ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
-			
-			// double quotation (")
-		    replacements.add(new Replacement(Pattern.compile("[\u201c\u201d\u201e\u201f\u275d\u275e]"), "\""));
-
-		    // single quotation (')
-		    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201a\u201b\u275b\u275c]"), "'"));
-		   
-		    for (Replacement replacement : replacements) {
-		         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
-		    }
-			essayBox.replaceText(text);
-		    
+		
 			Dialog<ButtonType> d = new Dialog<ButtonType>();
 			d.setTitle("Analyzing");
 			d.setContentText("BSChecker is analyzing your essay.");
 			d.show();
-			ArrayList<int[]> temp = e.findErrors(text);
+			ArrayList<int[]> temp = e.findErrors(text,model);
 			d.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
 			d.close();
 			/*for(int[] i: temp) {

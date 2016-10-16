@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import opennlp.tools.postag.POSModel;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
@@ -24,7 +25,7 @@ public class FirstSecondPerson extends Error {
 	 * currently testing random String
 	 */
 	public static void main (String[] args) {
-		ArrayList<int[]> errors = new FirstSecondPerson().findErrors("Hi. How are you? This is Mike.");
+		ArrayList<int[]> errors = new FirstSecondPerson().findErrors("Hi. How are you? This is Mike.", null);
 //		for (int[] error : errors)
 //			System.out.println(error[0] + " " + error[1] + " " + error[2]);
 	}
@@ -35,7 +36,7 @@ public class FirstSecondPerson extends Error {
 	 * @return ArrayList of beginning & ending indices of errors
 	 */
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String text, POSModel model) {
 		//check for quotation
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		String[] tenses = {"I","me", "my", "we", "us", "our", "you", "your"};

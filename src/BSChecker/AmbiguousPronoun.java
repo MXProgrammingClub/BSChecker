@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
+import opennlp.tools.postag.POSModel;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.Tokenizer;
@@ -36,7 +37,7 @@ public class AmbiguousPronoun extends Error {
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String text,POSModel model) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 
 		String[] sentences = SentenceDetect(text);

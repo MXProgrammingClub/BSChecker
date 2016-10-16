@@ -31,12 +31,11 @@ public class GerundPossesive extends Error {
 	public static void main(String[] args) {
 		Error testOb = new GerundPossesive();
 		String testText = "I saw the boy, running from danger";
-		testOb.findErrors(testText);
+		testOb.findErrors(testText,null);
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
-		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
+	public ArrayList<int[]> findErrors(String text,POSModel model) {
 		TokenizerModel tModel = null;
 
 		InputStream is;

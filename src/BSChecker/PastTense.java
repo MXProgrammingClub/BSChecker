@@ -24,18 +24,17 @@ public class PastTense extends Error{
 	public static void main(String[] args) {
 		String input = "At Mr Shimerda’s funeral, nature, specifically winter, acted to wear men down.";
 		Error tester = new PastTense();		
-		ArrayList<int[]> found = tester.findErrors(input);
+		ArrayList<int[]> found = tester.findErrors(input,null);
 		for(int[] inds: found){
 		System.out.println(input.substring(inds[0],inds[1]));
 		}
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String text,POSModel model) {
 		
 		ArrayList<int[]> found = new ArrayList<int[]>();
-		POSModel model = new POSModelLoader()	
-				.load(new File("lib/en-pos-maxent.bin"));
+		//POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		POSTaggerME tagger = new POSTaggerME(model);
 
 		InputStream is;

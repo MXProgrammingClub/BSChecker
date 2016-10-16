@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import opennlp.tools.postag.POSModel;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 
@@ -24,7 +25,7 @@ public class IncompleteSentences extends Error {
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String text,POSModel model) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		
 		

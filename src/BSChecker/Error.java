@@ -1,6 +1,8 @@
 package BSChecker;
 import java.util.ArrayList;
 import java.util.Comparator;
+
+import opennlp.tools.postag.POSModel;
 /**
  * @author tedpyne
  * Defines abstract class for types of grammatical errors
@@ -11,7 +13,7 @@ public abstract class Error {
 	 * @return an ArrayList of int[2] pointers to the start and end indices of the roor in the submitted text
 	 * 			int[0],int[1] are start and end tokens in error
 	 */
-	public abstract ArrayList<int[]> findErrors(String text);
+	public abstract ArrayList<int[]> findErrors(String text, POSModel model);
 
 	/**
 	 * 

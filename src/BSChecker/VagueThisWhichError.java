@@ -28,16 +28,16 @@ public class VagueThisWhichError extends Error {
 
 	public static void main(String[] args){
 		String test = "Hi, my name I hate this; cars are fun.";
-		ArrayList<int[]> errs = new VagueThisWhichError().findErrors(test);
+		ArrayList<int[]> errs = new VagueThisWhichError().findErrors(test,null);
 //		for(int[] err: errs){
 //			System.out.println(err[0] + " " + err[1] );
 //			System.out.println(test.substring(err[0], err[1]));
 //		}
 	}
-	public ArrayList<int[]> findErrors(String text){
+	public ArrayList<int[]> findErrors(String text, POSModel model){
 
 		ArrayList<int[]> found = new ArrayList<int[]>();
-		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
+		//model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
 
 		InputStream is;

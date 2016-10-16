@@ -10,6 +10,7 @@ import opennlp.tools.parser.Parse;
 import opennlp.tools.parser.Parser;
 import opennlp.tools.parser.ParserFactory;
 import opennlp.tools.parser.ParserModel;
+import opennlp.tools.postag.POSModel;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.util.InvalidFormatException;
@@ -22,12 +23,12 @@ public class FaultyParallelismError extends Error{
 //		System.out.println("passage: ");
 		String passage = scan.nextLine();
 		scan.close();
-		/*ArrayList<int[]> errs =*/ new FaultyParallelismError().findErrors(passage);
+		/*ArrayList<int[]> errs =*/ new FaultyParallelismError().findErrors(passage,null);
 //		for(int[] arr: errs)
 //			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
 	}
 	@Override
-	public ArrayList<int[]> findErrors(String text){
+	public ArrayList<int[]> findErrors(String text,POSModel model){
 		String startText = text;
 		text = text.replace('\u201D', '\"');
 		text = text.replace('\u201C', '\"');

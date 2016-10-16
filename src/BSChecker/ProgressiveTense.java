@@ -32,12 +32,12 @@ public class ProgressiveTense extends Error {
 	public static void main(String[] args) {
 		Error testOb = new ProgressiveTense();
 		String testText = "Sensing God's desire to destroy Sodom, Abraham is negotiating for a less apocalyptic punishment\nJohn is fighting Harry while eating dougnuts";
-		testOb.findErrors(testText);
+		testOb.findErrors(testText,null);
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
-		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
+	public ArrayList<int[]> findErrors(String text,POSModel model) {
+		//POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		TokenizerModel tModel = null;
 
 		InputStream is;

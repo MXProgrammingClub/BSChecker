@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import opennlp.tools.postag.POSModel;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
@@ -47,17 +48,17 @@ public class QuotationForm extends Error
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text)
+	public ArrayList<int[]> findErrors(String text,POSModel model)
 	{
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		TokenizerModel model = null;
+		TokenizerModel tmodel = null;
 		try
 		{
 			InputStream is = new FileInputStream("lib/en-token.bin");
-			model = new TokenizerModel(is);
+			tmodel = new TokenizerModel(is);
 
 		} catch(IOException e){}
-		Tokenizer tokenizer = new TokenizerME(model);
+		Tokenizer tokenizer = new TokenizerME(tmodel);
 
 		String tokens[] = tokenizer.tokenize(text);
 //		System.out.println(Arrays.toString(tokens));
