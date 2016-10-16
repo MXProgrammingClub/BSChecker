@@ -29,7 +29,7 @@ public class AmbiguousPronoun extends Error {
 
 	public static void main (String[] args) {
 		String test = "I saw Mike and Bob. I also saw Ted and John, but I beat him.";
-		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors(test);
+		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors(test,null);
 //		for (int[] error : errors){
 //			System.out.println(error[0] + " " + error[1] + " " + error[2]);
 //		}
