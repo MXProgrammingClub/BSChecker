@@ -22,6 +22,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 
 public class GUIController {
@@ -125,11 +127,13 @@ public class GUIController {
 		    }
 			essayBox.replaceText(text);
 		    
-			Alert a = new Alert(Alert.AlertType.INFORMATION);
-			a.show();
+			Dialog<ButtonType> d = new Dialog<ButtonType>();
+			d.setTitle("Analyzing");
+			d.setContentText("BSChecker is analyzing your essay.");
+			d.show();
 			ArrayList<int[]> temp = e.findErrors(text);
-			Button cancelButton = (Button) a.getDialogPane().lookupButton(a.getDialogPane().getButtonTypes().get(0));
-			cancelButton.fire();
+			d.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+			d.close();
 			/*for(int[] i: temp) {
 				System.out.println(Arrays.toString(i));
 			}*/
