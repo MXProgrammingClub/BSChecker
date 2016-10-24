@@ -1,6 +1,6 @@
-package BSChecker;
+package bsChecker;
 
-//import java.util.Scanner;
+import java.util.Scanner;
 import java.util.ArrayList;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
@@ -8,23 +8,23 @@ import opennlp.tools.parser.Parse;
 /**
  * WIP
  * @author
- * 
+ * Finds errors in Parallelism. (11)
  */
 public class ErrorFaultyParallelism extends Error{
 	private static final int ERROR_NUMBER = 11;
-//	/**
-//	 * for testing purposes
-//	 */
-//	public static void main(String[] args){
-//		Error.setupOpenNLP();
-//		Scanner scan = new Scanner(System.in);
-//		System.out.println("passage: ");
-//		String passage = scan.nextLine();
-//		scan.close();
-//		/*ArrayList<int[]> errs =*/ new ErrorFaultyParallelism().findErrors(passage);
-//		for(int[] arr: errs)
-//			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
-//	}
+	/**
+	 * for testing purposes
+	 */
+	public static void main(String[] args){
+		Error.setupOpenNLP();
+		Scanner scan = new Scanner(System.in);
+		System.out.println("passage: ");
+		String passage = scan.nextLine();
+		scan.close();
+		ArrayList<int[]> errs = new ErrorFaultyParallelism().findErrors(passage);
+		for(int[] arr: errs)
+			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
+	}
 	@Override
 	public ArrayList<int[]> findErrors(String text){
 		String startText = text;

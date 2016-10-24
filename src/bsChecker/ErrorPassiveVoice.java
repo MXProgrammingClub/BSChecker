@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -9,23 +9,19 @@ import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author tedpyne
- * Return instances of present forms of "to be" + past participles
+ * Finds verbs in the passive voice. (9)
  */
 public class ErrorPassiveVoice extends Error {
 	private static final int ERROR_NUMBER = 9;
 
-//	/**
-//	 * for testing purposes
-//	 */
-//	public static void main(String[] args){
-//		Error.setupOpenNLP();
-//		String test = "This terrible Hamlet is destroyed by Claudius.";
-//		ArrayList<int[]> errs = new ErrorPassiveVoice().findErrors(test);
-//		for(int[] err: errs){
-//			System.out.println(err[0] + " " + err[1] );
-//			System.out.println(test.substring(err[0], err[1]));
-//		}
-//	}
+	/**
+	 * for testing purposes
+	 */
+	public static void main(String[] args){
+		Error.setupOpenNLP();
+		String input = "This terrible Hamlet is destroyed by Claudius.";
+		printErrors(new ErrorPassiveVoice().findErrors(input), input);
+	}
 
 	@Override
 	public ArrayList<int[]> findErrors(String text) {

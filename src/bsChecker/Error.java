@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -128,4 +128,17 @@ public abstract class Error {
 		});
 	}
 
+	/**
+	 * prints all errors to console in a way that is easy to understand for testing purposes
+	 * @param errors list of errors to be printed
+	 */
+	public static void printErrors(ArrayList<int[]> errors, String text)
+	{
+		if(errors.size() > 0) {
+			System.out.println("all found errors:");
+			for(int i = 0; i < errors.size(); i++) {
+				System.out.println(errors.get(i)[0] + "-" + errors.get(i)[1] + ": \"" + text.substring(errors.get(i)[0], errors.get(i)[1] + 1) + "\" (error " + errors.get(i)[2] + ")");
+			}
+		}
+	}
 }

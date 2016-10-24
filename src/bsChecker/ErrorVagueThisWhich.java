@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -9,20 +9,19 @@ import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author tedpyne
- * Find errors with vague "this" or "which" instances
+ * Finds errors with vague use of this or which. (4)
  */
 public class ErrorVagueThisWhich extends Error {
 	private static final int ERROR_NUMBER = 4;
 
-//	public static void main(String[] args){
-//		Error.setupOpenNLP();
-//		String test = "Hi, my name I hate this; cars are fun.";
-//		ArrayList<int[]> errs = new ErrorVagueThisWhich().findErrors(test,null);
-//		for(int[] err: errs){
-//			System.out.println(err[0] + " " + err[1] );
-//			System.out.println(test.substring(err[0], err[1]));
-//		}
-//	}
+	/**
+	 * for testing purposes
+	 */
+	public static void main(String[] args){
+		Error.setupOpenNLP();
+		String input = "Hi, my name I hate this; cars are fun.";
+		printErrors(new ErrorVagueThisWhich().findErrors(input), input);
+	}
 	
 	public ArrayList<int[]> findErrors(String text){
 		ArrayList<int[]> found = new ArrayList<int[]>();

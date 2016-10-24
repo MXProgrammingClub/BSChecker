@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -9,9 +9,11 @@ import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author
- *
+ * Finds errors in pronoun case. (6)
  */
 public class ErrorPronounCase extends Error{
+	private static final int ERROR_NUMBER = 6;
+	
 	// pronoun cases
 	private static final String[] POSSESADJ = {"her", "his", "its", "their", "our", "my", "your", "whose"};
 	private static final String[] POSSES = {"hers", "his", "its", "theirs", "ours", "mine", "yours", "whose"};
@@ -19,12 +21,13 @@ public class ErrorPronounCase extends Error{
 	private static final String[] SUB = {"he", "she", "it", "they", "we", "I", "you", "who"};
 	private static final String[] ALLPN = {"he", "she", "it", "they", "we", "you", "his", "him", "her", "hers", "its", "their", "theirs", "them", "us", "our", "ours", "your", "yours", "who", "whose", "whom"};
 
-	private static final int ERROR_NUMBER = 6;
-
+	/**
+	 * for testing purposes
+	 */
 	public static void main(String[] args) {
+		Error.setupOpenNLP();
 		String input = "However, instead of adapting political systems from their homeland";
-		Error tester = new ErrorPronounCase();
-		tester.findErrors(input);
+		printErrors(new ErrorPronounCase().findErrors(input), input);
 	}
 
 

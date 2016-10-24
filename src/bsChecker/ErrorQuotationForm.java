@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,10 +8,9 @@ import java.util.Scanner;
 
 /**
  * @author Julia
- * Finds errors in quotation form.
+ * Finds errors in quotation form. (14)
  */
-public class ErrorQuotationForm extends Error
-{
+public class ErrorQuotationForm extends Error {
 	private static final int ERROR_NUMBER = 14;
 	
 	private static final String FILE_NAME = "SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
@@ -36,6 +35,15 @@ public class ErrorQuotationForm extends Error
 			verbs.add(scan.nextLine());
 		}
 		return verbs;
+	}
+	
+	/**
+	 * for testing purposes
+	 */
+	public static void main (String[] args) {
+		Error.setupOpenNLP();
+		String input = "";
+		printErrors(new ErrorQuotationForm().findErrors(input), input);
 	}
 
 	@Override

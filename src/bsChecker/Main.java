@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

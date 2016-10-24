@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import java.util.regex.Pattern;
 

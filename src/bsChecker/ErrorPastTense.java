@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -9,23 +9,19 @@ import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author
- *
+ * Finds verbs in the past tense. (1)
  */
 public class ErrorPastTense extends Error{
 	private static final int ERROR_NUMBER = 1;
 
-//	/**
-//	 * for testing purposes
-//	 */
-//	public static void main(String[] args) {
-//		Error.setupOpenNLP();
-//		String input = "At Mr Shimerda’s funeral, nature, specifically winter, acted to wear men down.";
-//		Error tester = new ErrorPastTense();		
-//		ArrayList<int[]> found = tester.findErrors(input);
-//		for(int[] inds: found){
-//			System.out.println(input.substring(inds[0],inds[1]));
-//		}
-//	}
+	/**
+	 * for testing purposes
+	 */
+	public static void main(String[] args) {
+		Error.setupOpenNLP();
+		String input = "At Mr Shimerda’s funeral, nature, specifically winter, acted to wear men down.";
+		printErrors(new ErrorPastTense().findErrors(input), input);
+	}
 
 	@Override
 	public ArrayList<int[]> findErrors(String text) {

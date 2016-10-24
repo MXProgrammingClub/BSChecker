@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import java.util.ArrayList;
 
@@ -6,25 +6,21 @@ import opennlp.tools.util.Span;
 
 /**
  * @author Dalal
- * Finds (& print out locations of) ambiguous pronoun -> BS error #7
+ * Finds ambiguous pronoun references. (7)
  */
 public class ErrorAmbiguousPronoun extends Error {
 	private static final int ERROR_NUMBER = 7;
 
 	private final static String[] PRONOUNS = {"she", "her", "he", "him", "it", "they", "them"};
 
-//	/**
-//	 * for testing purposes
-//	 */
-//	public static void main (String[] args) {
-//		Error.setupOpenNLP();
-//		String test = "I saw Mike and Bob. I also saw Ted and John, but I beat him.";
-//		ArrayList<int[]> errors = new ErrorAmbiguousPronoun().findErrors(test);
-//		for (int[] error : errors){
-//			System.out.println(error[0] + " " + error[1] + " " + error[2]);
-//		}
-//
-//	}
+	/**
+	 * for testing purposes
+	 */
+	public static void main (String[] args) {
+		Error.setupOpenNLP();
+		String input = "I saw Mike and Bob. I also saw Ted and John, but I beat him.";
+		printErrors(new ErrorAmbiguousPronoun().findErrors(input), input);
+	}
 
 	@Override
 	public ArrayList<int[]> findErrors(String text) {

@@ -1,4 +1,4 @@
-package BSChecker;
+package bsChecker;
 
 import java.util.ArrayList;
 
@@ -8,13 +8,16 @@ import opennlp.tools.parser.Parse;
 /**
  * WIP
  * @author
- * 
+ * Finds errors with verbs which don't agree in number with their subjects
+ * and pronouns which don't agree in number with their antecedents. (5)
  */
 public class ErrorNumberDisagreement extends Error{
 	private final int ERROR_NUMBER = 5;
 	
 	public static void main(String[] args){
-		ArrayList<int[]> errs = new ErrorNumberDisagreement().findErrors("They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.");
+		Error.setupOpenNLP();
+		String input = "They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.";
+		printErrors(new ErrorNumberDisagreement().findErrors(input), input);
 	}
 	public ArrayList<int[]> findErrors(String text){
 		String sentences[] = sentenceDetector.sentDetect(text);
