@@ -1,30 +1,22 @@
 package BSChecker;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.tokenize.Tokenizer;
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
-
 /**
- * Finds errors in quotation form. Code for opennlp from http://www.programcreek.com/2012/05/opennlp-tutorial/
  * @author Julia
+ * Finds errors in quotation form.
  */
-public class QuotationForm extends Error
+public class ErrorQuotationForm extends Error
 {
+	private static final int ERROR_NUMBER = 14;
+	
 	private static final String FILE_NAME = "SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
 	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
 	private static final String[] PUNCTUATION = {".", ",", ":", ";", "?", "!"};
-
-	private static final int ERROR_NUMBER = 14;
 
 	/**
 	 * Imports the list of words of saying or thinking.
@@ -47,17 +39,9 @@ public class QuotationForm extends Error
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text,POSModel model)
+	public ArrayList<int[]> findErrors(String text)
 	{
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		TokenizerModel tmodel = null;
-		try
-		{
-			InputStream is = new FileInputStream("lib/en-token.bin");
-			tmodel = new TokenizerModel(is);
-
-		} catch(IOException e){}
-		Tokenizer tokenizer = new TokenizerME(tmodel);
 
 		String tokens[] = tokenizer.tokenize(text);
 //		System.out.println(Arrays.toString(tokens));

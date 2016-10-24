@@ -1,23 +1,18 @@
 package BSChecker;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSTaggerME;
-import opennlp.tools.tokenize.Tokenizer;
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
-public class PronounCase extends Error{
-	// pronoun case
+/**
+ * @author
+ *
+ */
+public class ErrorPronounCase extends Error{
+	// pronoun cases
 	private static final String[] POSSESADJ = {"her", "his", "its", "their", "our", "my", "your", "whose"};
 	private static final String[] POSSES = {"hers", "his", "its", "theirs", "ours", "mine", "yours", "whose"};
 	private static final String[] OBJ = {"him", "her", "it", "them", "us", "me", "you", "whom"};
@@ -28,31 +23,15 @@ public class PronounCase extends Error{
 
 	public static void main(String[] args) {
 		String input = "However, instead of adapting political systems from their homeland";
-		Error tester = new PronounCase();
-		tester.findErrors(input,null);
+		Error tester = new ErrorPronounCase();
+		tester.findErrors(input);
 	}
 
 
 	@Override
-	public ArrayList<int[]> findErrors(String text,POSModel model) {
-		// initialization: POSTagger and Tokenizer
+	public ArrayList<int[]> findErrors(String text) {
 		ArrayList<int[]> found = new ArrayList<int[]>();
-		POSTaggerME tagger = new POSTaggerME(model);
-		//		System.out.println("HERE");
-		InputStream is;
-		TokenizerModel tModel;
-		try {
-			is = new FileInputStream("lib/en-token.bin");
-			tModel = new TokenizerModel(is);
-		} catch (FileNotFoundException e1) {
-			return null;
-		} catch (InvalidFormatException e) {
-			return null;
-		} catch (IOException e) {
-			return null;
-		}
-
-		Tokenizer tokenizer = new TokenizerME(tModel);
+		
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text.toLowerCase()));
 		String line;
 
@@ -61,7 +40,7 @@ public class PronounCase extends Error{
 			while ((line = lineStream.read()) != null) 
 			{
 				String tokens[] = tokenizer.tokenize(line);
-				String[] tags = tagger.tag(tokens);
+				String[] tags = posTagger.tag(tokens);
 
 				// ArrayList<Integer> index = new ArrayList<Integer>();
 				ArrayList<Integer> pnIndex = new ArrayList<Integer>();
@@ -131,11 +110,11 @@ public class PronounCase extends Error{
 									}
 								}
 
-								for (int s: errTokIndex)
-								{
+//								for (int s: errTokIndex)
+//								{
 //									System.out.print("pos: ");
 //									System.out.println(s);
-								}
+//								}
 							}
 							else if(tags[relIndex+1].equals("VB")||tags[relIndex+1].equals("VBD")||tags[relIndex+1].equals("VBG")||tags[relIndex+1].equals("VBN")||tags[relIndex+1].equals("VBP")||tags[relIndex+1].equals("VBZ"))
 							{
@@ -183,11 +162,11 @@ public class PronounCase extends Error{
 								{
 									errTokIndex.add(index);
 								}
-								for (int s: errTokIndex)
-								{
+//								for (int s: errTokIndex)
+//								{
 //									System.out.print("poss & sub & obj: ");
 //									System.out.println(s);
-								}
+//								}
 							}
 						}
 					else
@@ -217,11 +196,11 @@ public class PronounCase extends Error{
 								errTokIndex.add(index);
 							}
 
-							for (int s: errTokIndex)
-							{
+//							for (int s: errTokIndex)
+//							{
 //								System.out.print("poss: ");
 //								System.out.println(s);
-							}
+//							}
 						}
 						else if(tags[index-1].equals("VB")||tags[index-1].equals("VBD")||tags[index-1].equals("VBG")||tags[index-1].equals("VBN")||tags[index-1].equals("VBP")||tags[index-1].equals("VBZ"))
 						{

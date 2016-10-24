@@ -1,10 +1,3 @@
-/**
- * This is the class that connects the GUI with the rest of the program.
- * 
- * @author Luke Giacalone
- * @version 10/15/2016
- */
-
 package BSChecker;
 
 import java.io.File;
@@ -20,8 +13,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
-import opennlp.tools.cmdline.postag.POSModelLoader;
-import opennlp.tools.postag.POSModel;
+
+/**
+ * This is the class that connects the GUI with the rest of the program.
+ * 
+ * @author Luke Giacalone
+ * @version 10/15/2016
+ */
 
 public class GUIController {
 
@@ -106,26 +104,30 @@ public class GUIController {
 	 */
 	@FXML
 	protected void analyzeButtonClick() {
+		Error.setupOpenNLP();
 		errors = new ArrayList<>();
-		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
+		
 		String text = essayBox.getText();
 		ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
 		// double quotation (")
-	    replacements.add(new Replacement(Pattern.compile("[\u201c\u201d\u201e\u201f\u275d\u275e]"), "\""));
+	    replacements.add(new Replacement(Pattern.compile("[\u201C\u201D\u201E\u201F\u275D\u275E]"), "\""));
 	    // single quotation (')
-	    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201a\u201b\u275b\u275c]"), "'"));
+	    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201A\u201B\u275B\u275C]"), "\'"));
+	    // ellipsis (...)
+	    replacements.add(new Replacement(Pattern.compile("[\u2026]"), "..."));
 	   
 	    for (Replacement replacement : replacements) {
 	         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
 	    }
 		essayBox.replaceText(text);
+		
 		Dialog<ButtonType> d = new Dialog<ButtonType>();
 		d.setTitle("Analyzing");
 		d.setContentText("BSChecker is analyzing your essay.");
 		d.show();
 		
 		for(Error e: Main.ERROR_LIST) {
-			ArrayList<int[]> temp = e.findErrors(text,model);
+			ArrayList<int[]> temp = e.findErrors(text);
 			errors.addAll(temp);
 		}
 		d.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);

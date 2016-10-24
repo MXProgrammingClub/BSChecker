@@ -1,11 +1,10 @@
-/**
- * This enum represents the bluesheet errors.
- * @author Luke Giacalone
- * @version 10/16/2016
- */
-
 package BSChecker;
 
+/**
+* This enum represents the bluesheet errors.
+* @author Luke Giacalone
+* @version 10/16/2016
+*/
 public enum Bluesheet {
 
 	PAST_TENSE ("Past Tense", "Use the present tense in writing about a literary work.", "(Incorrect) Macbeth hastened home to tell his wife of the king's approach.\n(Correct) Macbeth hastens home to tell his wife of the king's approach.", 1),

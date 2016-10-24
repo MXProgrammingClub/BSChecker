@@ -1,10 +1,3 @@
-/**
- * The main class for the BSChecker/AutoHirsch
- * 
- * @author MX Programming Club 2016
- * @version 10/15/2016
- */
-
 package BSChecker;
 
 import javafx.application.Application;
@@ -13,23 +6,29 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * The main class for the BSChecker
+ * 
+ * @author MX Programming Club 2016
+ * @version 10/15/2016
+ */
 public class Main extends Application {
 
 	public final static Error[] ERROR_LIST = {
-			new PastTense(),
-//			new IncompleteSentences(),
-			new FirstSecondPerson(),
-			new VagueThisWhichError(),
-//			new NumDisagreement(),
-			new PronounCase(),
-			new AmbiguousPronoun(),
-//			new ApostropheError(),
-			new PassiveVoiceError(),
-//			new DanglingModifiers(),
-//			new FaultyParallelismError(),
-			new ProgressiveTense(),
-			new GerundPossesive(),
-			new QuotationForm()
+			new ErrorPastTense(),
+//			new ErrorIncompleteSentence(),
+			new ErrorFirstSecondPerson(),
+			new ErrorVagueThisWhich(),
+//			new ErrorNumberDisagreement(),
+			new ErrorPronounCase(),
+			new ErrorAmbiguousPronoun(),
+//			new ErrorApostrophe(),
+			new ErrorPassiveVoice(),
+//			new ErrorDanglingModifier(),
+//			new ErrorFaultyParallelism(),
+			new ErrorProgressiveTense(),
+			new ErrorGerundPossesive(),
+			new ErrorQuotationForm()
 	};
 
 

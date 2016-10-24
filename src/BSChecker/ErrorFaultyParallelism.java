@@ -1,34 +1,32 @@
 package BSChecker;
 
-import java.io.FileInputStream;
-import java.util.Scanner;
-import java.io.IOException;
-import java.io.InputStream;
+//import java.util.Scanner;
 import java.util.ArrayList;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
-import opennlp.tools.parser.Parser;
-import opennlp.tools.parser.ParserFactory;
-import opennlp.tools.parser.ParserModel;
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.sentdetect.SentenceDetectorME;
-import opennlp.tools.sentdetect.SentenceModel;
-import opennlp.tools.util.InvalidFormatException;
 
-public class FaultyParallelismError extends Error{
+/**
+ * WIP
+ * @author
+ * 
+ */
+public class ErrorFaultyParallelism extends Error{
 	private static final int ERROR_NUMBER = 11;
-
-	public static void main(String[] args){
-		Scanner scan = new Scanner(System.in);
+//	/**
+//	 * for testing purposes
+//	 */
+//	public static void main(String[] args){
+//		Error.setupOpenNLP();
+//		Scanner scan = new Scanner(System.in);
 //		System.out.println("passage: ");
-		String passage = scan.nextLine();
-		scan.close();
-		/*ArrayList<int[]> errs =*/ new FaultyParallelismError().findErrors(passage,null);
+//		String passage = scan.nextLine();
+//		scan.close();
+//		/*ArrayList<int[]> errs =*/ new ErrorFaultyParallelism().findErrors(passage);
 //		for(int[] arr: errs)
 //			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
-	}
+//	}
 	@Override
-	public ArrayList<int[]> findErrors(String text,POSModel model){
+	public ArrayList<int[]> findErrors(String text){
 		String startText = text;
 		text = text.replace('\u201D', '\"');
 		text = text.replace('\u201C', '\"');
@@ -52,14 +50,7 @@ public class FaultyParallelismError extends Error{
 		}
 		text = buf.toString();
 		ArrayList<int[]> errs = new ArrayList<int[]>();
-		String[] sentences = null;
-		try{
-			sentences = sentenceDetect(text);
-		}
-		catch(Exception e){
-			System.out.println("ERROR");
-			return null;
-		}
+		String[] sentences = sentenceDetector.sentDetect(text);
 		int shift = 0;
 		for(String line: sentences){
 			int lineShift = 0;
@@ -77,13 +68,7 @@ public class FaultyParallelismError extends Error{
 	}
 	public ArrayList<int[]> findErrorsInLine(String text){
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		String parsedText = null;
-		try{
-			parsedText = parse(text);
-		}
-		catch(Exception e){
-			System.out.println("ERROR");
-		}
+		String parsedText = parse(text);
 		int index = -1;
 		int textIndex = 0;
 		while(index < parsedText.length() && parsedText.indexOf("CC",index+1) >= 0){
@@ -155,30 +140,10 @@ public class FaultyParallelismError extends Error{
 		}
 		return errors;
 	}
-	public static String parse(String input) throws InvalidFormatException, IOException {
-		// http://sourceforge.net/apps/mediawiki/opennlp/index.php?title=Parser#Training_Tool
-		InputStream is = new FileInputStream("lib/en-parser-chunking.bin");
-
-		ParserModel model = new ParserModel(is);
-
-		Parser parser = ParserFactory.create(model);
+	public static String parse(String input){
 		Parse topParses[] = ParserTool.parseLine(input, parser, 1);
-		is.close();
 		StringBuffer sb = new StringBuffer(input.length()*4);
 		topParses[0].show(sb);
 		return sb.toString();
-		/*
-		 * (TOP (S (NP (NN Programcreek) ) (VP (VBZ is) (NP (DT a) (ADJP (RB
-		 * very) (JJ huge) (CC and) (JJ useful) ) ) ) (. website.) ) )
-		 */
-	}
-	public static String[] sentenceDetect(String text) throws InvalidFormatException, IOException {
-		// always start with a model, a model is learned from training data
-		InputStream is = new FileInputStream("lib/en-sent.bin");
-		SentenceModel model = new SentenceModel(is);
-		SentenceDetectorME sdetector = new SentenceDetectorME(model);
-		String sentences[] = sdetector.sentDetect(text);
-		is.close();
-		return sentences;
 	}
 }
