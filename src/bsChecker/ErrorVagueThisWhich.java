@@ -31,7 +31,7 @@ public class ErrorVagueThisWhich extends Error {
 		int totLen = 0;
 		try {
 			while ((line = lineStream.read()) != null) {
-				System.out.println("Reading line input");
+//				System.out.println("Reading line input");
 				String tokens[] = tokenizer.tokenize(line);
 				String[] tags = posTagger.tag(tokens);
 				int wFound = 0, tFound = 0;
