@@ -47,11 +47,11 @@ public class ErrorQuotationForm extends Error {
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text)
+	public ArrayList<int[]> findErrors(String line)
 	{
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 
-		String tokens[] = tokenizer.tokenize(text);
+		String tokens[] = tokenizer.tokenize(line);
 //		System.out.println(Arrays.toString(tokens));
 		for(int i = 0, count = 0; i < tokens.length; i++)
 		{
@@ -63,13 +63,13 @@ public class ErrorQuotationForm extends Error {
 					{
 						if(findErrorsFront(tokens, i, j))
 						{
-							int loc = Error.locationOf(text, "\"", count);
-							if(text.charAt(loc - 3) == ',') errors.add(new int[]{loc - 3, loc - 3, ERROR_NUMBER});
-							else errors.add(new int[]{text.lastIndexOf(' ', loc - 3) + 1, loc - 1, ERROR_NUMBER});
+							int loc = Error.locationOf(line, "\"", count);
+							if(line.charAt(loc - 3) == ',') errors.add(new int[]{loc - 3, loc - 3, ERROR_NUMBER});
+							else errors.add(new int[]{line.lastIndexOf(' ', loc - 3) + 1, loc - 1, ERROR_NUMBER});
 						}
 						if(findErrorsBack(tokens, i, j))
 						{
-							int loc = Error.locationOf(text, "\"", count + 1);
+							int loc = Error.locationOf(line, "\"", count + 1);
 							errors.add(new int[]{loc, loc, ERROR_NUMBER});
 						}
 						i = j;

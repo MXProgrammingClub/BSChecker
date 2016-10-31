@@ -1,11 +1,6 @@
 package bsChecker;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
-
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author
@@ -24,14 +19,9 @@ public class ErrorPastTense extends Error{
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String line) {
 		ArrayList<int[]> found = new ArrayList<int[]>();
-		
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
-		String line;
-		try {
 			int totLen = 0;
-			while ((line = lineStream.read()) != null) {
 				String lower = line.toLowerCase();
 				String tokens[] = tokenizer.tokenize(line);
 				String[] tags = posTagger.tag(tokens);
@@ -65,11 +55,6 @@ public class ErrorPastTense extends Error{
 					leftValue = err[1];
 				}
 				totLen+=line.length()+1;
-
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 //		for(int i = 0; i < found.size(); i++)
 //		{

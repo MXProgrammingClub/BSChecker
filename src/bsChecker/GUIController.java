@@ -1,6 +1,8 @@
 package bsChecker;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -13,6 +15,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
+import opennlp.tools.util.ObjectStream;
+import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * This is the class that connects the GUI with the rest of the program.
@@ -104,7 +108,6 @@ public class GUIController {
 	 */
 	@FXML
 	protected void analyzeButtonClick() {
-		Error.setupOpenNLP();
 		errors = new ArrayList<>();
 		
 		String text = essayBox.getText();
@@ -126,18 +129,43 @@ public class GUIController {
 		d.setContentText("BSChecker is analyzing your essay.");
 		d.show();
 		
-		for(Error e: Main.ERROR_LIST) {
-			ArrayList<int[]> temp = e.findErrors(text);
-			errors.addAll(temp);
-		}
+		System.out.println("openNLP setting up");
+		Error.setupOpenNLP();
+		
+		int lineNum = 1;
+		//temporary
+		int charOffset = 0;
+		String line;
+		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
+		try {
+			while ((line = lineStream.read()) != null) {
+				System.out.println("\nAnalysing line " + lineNum + ":");
+				for(Error e: Main.ERROR_LIST) {
+					System.out.println("looking for: " + e.getClass());
+					ArrayList<int[]> temp = e.findErrors(line);
+					//temporary
+					for(int i = 0; i < temp.size(); i++) {
+						temp.get(i)[0] += charOffset;
+						temp.get(i)[1] += charOffset;
+					}
+					errors.addAll(temp);
+				}
+				lineNum++;
+				//temporary
+				charOffset += line.length() + 1;
+			}
+		} catch (IOException e) {e.printStackTrace();}
+		
 		d.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
 			d.close();
 		Error.sort(errors); //sorts the errors based on starting index
 
+		System.out.println();
+		Error.printErrors(errors, text);
+		
 		if(errors.size() == 0) {
 			errorBox.replaceText("No Error Found!");
-		}
-		else {
+		} else {
 			currError = 0;
 			//highlight all the errors
 			for(int[] location: errors) {

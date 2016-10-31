@@ -1,11 +1,6 @@
 package bsChecker;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
-
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author tedpyne
@@ -23,41 +18,33 @@ public class ErrorVagueThisWhich extends Error {
 		printErrors(new ErrorVagueThisWhich().findErrors(input), input);
 	}
 	
-	public ArrayList<int[]> findErrors(String text){
+	@Override
+	public ArrayList<int[]> findErrors(String line){
 		ArrayList<int[]> found = new ArrayList<int[]>();
-		
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
-		String line;
 		int totLen = 0;
-		try {
-			while ((line = lineStream.read()) != null) {
-//				System.out.println("Reading line input");
-				String tokens[] = tokenizer.tokenize(line);
-				String[] tags = posTagger.tag(tokens);
-				int wFound = 0, tFound = 0;
-				for(int i = 0; i < tokens.length; i++){
-					if(tokens[i].equalsIgnoreCase("this")){
-						if(isVague(tokens,tags,i)){
-							int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
-									totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1,ERROR_NUMBER};
-							found.add(err);	
-						}
-						tFound++;
-					}
-					if(tokens[i].equalsIgnoreCase("which")){
-						if(i == 0 || (tags[i-1].charAt(0)!='N' && tags[i-1].charAt(0)!='I')){
-							int[] err = {totLen+locationOf(line,tokens[i],wFound)-1,
-									totLen+locationOf(line,tokens[i],wFound)+tokens[i].length()-1,ERROR_NUMBER};
-							found.add(err);	
-						}
-						wFound++;
-					}
+		String tokens[] = tokenizer.tokenize(line);
+		String[] tags = posTagger.tag(tokens);
+		int wFound = 0, tFound = 0;
+		for(int i = 0; i < tokens.length; i++){
+			if(tokens[i].equalsIgnoreCase("this")){
+				if(isVague(tokens,tags,i)){
+					int[] err = {totLen+locationOf(line,tokens[i],tFound)-1,
+							totLen+locationOf(line,tokens[i],tFound)+tokens[i].length()-1,ERROR_NUMBER};
+					found.add(err);	
 				}
-				totLen+=line.length()+1;
+				tFound++;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			if(tokens[i].equalsIgnoreCase("which")){
+				if(i == 0 || (tags[i-1].charAt(0)!='N' && tags[i-1].charAt(0)!='I')){
+					int[] err = {totLen+locationOf(line,tokens[i],wFound)-1,
+							totLen+locationOf(line,tokens[i],wFound)+tokens[i].length()-1,ERROR_NUMBER};
+					found.add(err);	
+				}
+				wFound++;
+			}
 		}
+		totLen+=line.length()+1;
+
 		return found;
 	}
 

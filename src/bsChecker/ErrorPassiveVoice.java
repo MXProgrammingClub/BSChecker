@@ -1,11 +1,6 @@
 package bsChecker;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
-
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author tedpyne
@@ -24,38 +19,29 @@ public class ErrorPassiveVoice extends Error {
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String line) {
 		ArrayList<int[]> found = new ArrayList<int[]>();
 		int totLen = 0;
-		
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
-		String line;
-		try {
-			while ((line = lineStream.read()) != null) {
-				String tokens[] = tokenizer.tokenize(line);
-				String[] tags = posTagger.tag(tokens);
-				int isFound = 0, areFound=0;
-				for(int i = 0; i < tokens.length; i++){
-					if(tokens[i].equalsIgnoreCase("is")){
-						if(i!=tokens.length-1 && tags[i+1].equals("VBN")){
-							int[] err = {totLen + locationOf(line," is ",isFound), totLen + locationOf(line," is ",isFound) + tokens[i].length()+1+tokens[i+1].length(),ERROR_NUMBER};
-							found.add(err);
-						}
-						isFound++;
-					}
-					if(tokens[i].equalsIgnoreCase("are")){
-						if(i!=tokens.length-1 && tags[i+1].equals("VBN")){
-							int[] err = {totLen + locationOf(line," are ",areFound), totLen + locationOf(line," are ",areFound) + tokens[i].length()+1+tokens[i+1].length(),ERROR_NUMBER};
-							found.add(err);
-						}
-						areFound++;
-					}
+		String tokens[] = tokenizer.tokenize(line);
+		String[] tags = posTagger.tag(tokens);
+		int isFound = 0, areFound=0;
+		for(int i = 0; i < tokens.length; i++){
+			if(tokens[i].equalsIgnoreCase("is")){
+				if(i!=tokens.length-1 && tags[i+1].equals("VBN")){
+					int[] err = {totLen + locationOf(line," is ",isFound), totLen + locationOf(line," is ",isFound) + tokens[i].length()+1+tokens[i+1].length(),ERROR_NUMBER};
+					found.add(err);
 				}
-				totLen+=line.length()+1;
+				isFound++;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			if(tokens[i].equalsIgnoreCase("are")){
+				if(i!=tokens.length-1 && tags[i+1].equals("VBN")){
+					int[] err = {totLen + locationOf(line," are ",areFound), totLen + locationOf(line," are ",areFound) + tokens[i].length()+1+tokens[i+1].length(),ERROR_NUMBER};
+					found.add(err);
+				}
+				areFound++;
+			}
 		}
+		totLen+=line.length()+1;
 		return found;
 	}
 }

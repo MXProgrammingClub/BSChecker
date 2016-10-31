@@ -1,11 +1,6 @@
 package bsChecker;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
-
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author JeremiahDeGreeff
@@ -26,42 +21,32 @@ public class ErrorProgressiveTense extends Error {
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String line) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		String line;
+		String[] tokens = tokenizer.tokenize(line);
+		String[] tags = posTagger.tag(tokens);
 
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
-
-		try {
-			while ((line = lineStream.read()) != null) {
-				String[] tokenizerLine = tokenizer.tokenize(line);
-				String[] tags = posTagger.tag(tokenizerLine);
-
-				ArrayList<Integer> errorIndices = findProgressiveTense(tokenizerLine, tags);
-				//				System.out.println();
-				errors.addAll(findLoc(errorIndices, text, tokenizerLine));
-				//				System.out.println();
-			}
-		} catch (IOException e) {e.printStackTrace();}
+		ArrayList<Integer> errorTokenIndices = findProgressiveTense(tokens, tags);
+		errors = findLoc(errorTokenIndices, line, tokens);
 		
 //		printErrors(errors, text);
-		
+
 		return errors;
 	}
 
 	/**
 	 * finds all the progressive tense errors in the given line
-	 * @param tokenizerLine the tokens of the line
+	 * @param tokens the tokens of the line
 	 * @param tags the array of the tag for each token
 	 * @return the indices of each token which is an error
 	 */
-	private ArrayList<Integer> findProgressiveTense(String[] tokenizerLine, String[] tags) {
+	private ArrayList<Integer> findProgressiveTense(String[] tokens, String[] tags) {
 		//finds gerunds and participles
-		ArrayList<Integer> errorIndices = new ArrayList<Integer>();
+		ArrayList<Integer> errorTokenIndices = new ArrayList<Integer>();
 		for(int i = 0; i < tags.length; i++)
 		{
 			if(tags[i].equals("VBG"))
-				errorIndices.add(i);
+				errorTokenIndices.add(i);
 		}
 		
 //		for(int i = 0; i < errorIndices.size(); i++)
@@ -71,11 +56,11 @@ public class ErrorProgressiveTense extends Error {
 		int errorNum = 0;
 		String word = null;
 		boolean isError;
-		while(errorNum < errorIndices.size()) {				
-			if(errorIndices.get(errorNum) == 0) {
-				errorIndices.remove(errorNum);
+		while(errorNum < errorTokenIndices.size()) {				
+			if(errorTokenIndices.get(errorNum) == 0) {
+				errorTokenIndices.remove(errorNum);
 			} else {
-				word = tokenizerLine[errorIndices.get(errorNum) - 1];
+				word = tokens[errorTokenIndices.get(errorNum) - 1];
 //				System.out.println((errorIndices.get(errorNum) - 1) + ": " + word);
 				isError = false;
 				for(int i = 0; i < 4; i++)
@@ -86,29 +71,28 @@ public class ErrorProgressiveTense extends Error {
 				if(isError)
 					errorNum++;
 				else
-					errorIndices.remove(errorNum);
+					errorTokenIndices.remove(errorNum);
 			}
 		}
-
-		return errorIndices;
+		return errorTokenIndices;
 	}
 
 	/**
 	 * finds indices in the original text of each error and updates result to include any new errors
-	 * @param errorIndices the indices of errors that have been found
-	 * @param text the original text
-	 * @param tokenizerLine the tokens of the text
+	 * @param errorTokenIndices the indices of the tokens of the errors that have been found
+	 * @param line the original paragraph
+	 * @param tokens the tokens of the paragraph
 	 * @return the list of errors for this line
 	 */
-	private ArrayList<int[]> findLoc(ArrayList<Integer> errorIndices, String text, String[] tokenizerLine) {
+	private ArrayList<int[]> findLoc(ArrayList<Integer> errorTokenIndices, String line, String[] tokens) {
 		ArrayList<int[]> result = new ArrayList<int[]>();
 		int cursor = 0, start, end;
 
-		for(int i = 0; i < errorIndices.size(); i++) {
+		for(int i = 0; i < errorTokenIndices.size(); i++) {
 //			System.out.println("error found: ");
 //			System.out.println("\"" + tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)] + "\"");
-			start = text.indexOf(tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)], cursor);
-			end = start + (tokenizerLine[errorIndices.get(i) - 1] + tokenizerLine[errorIndices.get(i)]).length();
+			start = line.indexOf(tokens[errorTokenIndices.get(i) - 1] + " " + tokens[errorTokenIndices.get(i)], cursor);
+			end = start + (tokens[errorTokenIndices.get(i) - 1] + tokens[errorTokenIndices.get(i)]).length();
 			cursor = end;
 			int[] error = {start, end, ERROR_NUMBER};
 			result.add(error);

@@ -23,10 +23,10 @@ public class ErrorAmbiguousPronoun extends Error {
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String line) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 
-		String[] sentences = sentenceDetector.sentDetect(text);
+		String[] sentences = sentenceDetector.sentDetect(line);
 		int prevNouns=0;
 		int totLen = 0;
 		for(int i = 0; i < sentences.length; i++){

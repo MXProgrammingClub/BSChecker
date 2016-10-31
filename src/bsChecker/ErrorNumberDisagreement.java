@@ -19,8 +19,8 @@ public class ErrorNumberDisagreement extends Error{
 		String input = "They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.";
 		printErrors(new ErrorNumberDisagreement().findErrors(input), input);
 	}
-	public ArrayList<int[]> findErrors(String text){
-		String sentences[] = sentenceDetector.sentDetect(text);
+	public ArrayList<int[]> findErrors(String line){
+		String sentences[] = sentenceDetector.sentDetect(line);
 		ArrayList<Parse> parses = new ArrayList<Parse>();
 		ArrayList<int[]> arr = new ArrayList<int[]>();
 		for(String s: sentences){

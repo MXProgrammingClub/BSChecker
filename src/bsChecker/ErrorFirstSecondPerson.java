@@ -23,20 +23,20 @@ public class ErrorFirstSecondPerson extends Error {
 	/**
 	 * finds all first & second person errors & returns indices
 	 * note: does not yet check for if the pronoun is in quotations
-	 * @param text block of text to check
+	 * @param line paragraph to check
 	 * @return ArrayList of beginning & ending indices of errors
 	 */
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String line) {
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		String[] tokens = tokenizer.tokenize(text);
+		String[] tokens = tokenizer.tokenize(line);
 		int curPos=0;
 		for(String token: tokens){
 			if(contains(PRONOUNS,token)){
-				int[] err = {text.indexOf(token,curPos), text.indexOf(token,curPos) + token.length(), ERROR_NUMBER};
+				int[] err = {line.indexOf(token,curPos), line.indexOf(token,curPos) + token.length(), ERROR_NUMBER};
 				errors.add(err);
 			}
-			curPos = text.indexOf(token,curPos) + token.length();
+			curPos = line.indexOf(token,curPos) + token.length();
 		}	
 		return errors;
 	}

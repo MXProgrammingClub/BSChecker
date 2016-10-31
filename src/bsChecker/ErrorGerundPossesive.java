@@ -1,11 +1,6 @@
 package bsChecker;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
-
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * @author JeremiahDeGreeff
@@ -24,41 +19,26 @@ public class ErrorGerundPossesive extends Error {
 	}
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
-		ArrayList<int[]> Errors = new ArrayList<int[]>();
-		String line;
+	public ArrayList<int[]> findErrors(String line) {
+		ArrayList<int[]> errors = new ArrayList<int[]>();
+		String[] tokens = tokenizer.tokenize(line);
+		String[] tags = posTagger.tag(tokens);
 
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
+		ArrayList<Integer> errorTokenIndices = findGerundPossesive(tokens, tags);
+		errors = findLoc(errorTokenIndices, line, tokens);
 
-		try {
-			while ((line = lineStream.read()) != null) {
-				String[] tokenizerLine = tokenizer.tokenize(line);
-				String[] tags = posTagger.tag(tokenizerLine);
-
-				ArrayList<Integer> errorIndices = findGerundPossesive(tokenizerLine, tags);
-				//System.out.println();
-				Errors.addAll(findLoc(errorIndices, text, tokenizerLine));
-				//System.out.println();
-			}
-		} catch (IOException e) {e.printStackTrace();}
-
-//		if(Errors.size() > 0) {
-//			System.out.println("all found errors:");
-//			for(int i = 0; i < Errors.size(); i++) {
-//				System.out.println(Errors.get(i)[0] + "-" + Errors.get(i)[1] + " (error " + Errors.get(i)[2] + ")");
-//			}
-//		}
+//		printErrors(errors, text);
 		
-		return Errors;
+		return errors;
 	}
 
 	/**
 	 * finds all the gerunds without possessives where there should be
-	 * @param tokenizerLine the tokens of the line
+	 * @param tokens the tokens of the line
 	 * @param tags the array of the tag for each token
 	 * @return the indices of each token which is an error
 	 */
-	private ArrayList<Integer> findGerundPossesive(String[] tokenizerLine, String[] tags) {
+	private ArrayList<Integer> findGerundPossesive(String[] tokens, String[] tags) {
 		//finds gerunds and participles
 		ArrayList<Integer> errorIndices = new ArrayList<Integer>();
 		for(int i = 0; i < tags.length; i++)
@@ -78,7 +58,7 @@ public class ErrorGerundPossesive extends Error {
 			if(errorIndices.get(errorNum) == 0) {
 				errorIndices.remove(errorNum);
 			} else {
-				word = tokenizerLine[errorIndices.get(errorNum) - 1];
+				word = tokens[errorIndices.get(errorNum) - 1];
 				tag = tags[errorIndices.get(errorNum) - 1];
 				//System.out.println((errorIndices.get(errorNum) - 1) + ": " + word + " (" + tag + ")");
 				isError = false;
@@ -103,20 +83,20 @@ public class ErrorGerundPossesive extends Error {
 
 	/**
 	 * finds indices in the original text of each error and updates result to include any new errors
-	 * @param errorIndices the indices of errors that have been found
-	 * @param text the original text
-	 * @param tokenizerLine the tokens of the text
+	 * @param errorTokenIndices the indices of errors that have been found
+	 * @param line the original paragraph
+	 * @param tokens the tokens of the paragraph
 	 * @return the list of errors for this line
 	 */
-	private ArrayList<int[]> findLoc(ArrayList<Integer> errorIndices, String text, String[] tokenizerLine) {
+	private ArrayList<int[]> findLoc(ArrayList<Integer> errorTokenIndices, String line, String[] tokens) {
 		ArrayList<int[]> result = new ArrayList<int[]>();
 		int cursor = 0, start, end;
 
-		for(int i = 0; i < errorIndices.size(); i++) {
+		for(int i = 0; i < errorTokenIndices.size(); i++) {
 			//System.out.println("error found: ");
 			//System.out.println("\"" + tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)] + "\"");
-			start = text.indexOf(tokenizerLine[errorIndices.get(i) - 1] + " " + tokenizerLine[errorIndices.get(i)], cursor);
-			end = start + (tokenizerLine[errorIndices.get(i) - 1] + tokenizerLine[errorIndices.get(i)]).length();
+			start = line.indexOf(tokens[errorTokenIndices.get(i) - 1] + " " + tokens[errorTokenIndices.get(i)], cursor);
+			end = start + (tokens[errorTokenIndices.get(i) - 1] + tokens[errorTokenIndices.get(i)]).length();
 			cursor = end;
 			int[] error = {start, end, ERROR_NUMBER};
 			result.add(error);

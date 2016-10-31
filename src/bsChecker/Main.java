@@ -20,7 +20,7 @@ public class Main extends Application {
 			new ErrorFirstSecondPerson(),
 			new ErrorVagueThisWhich(),
 //			new ErrorNumberDisagreement(),
-			new ErrorPronounCase(),
+//			new ErrorPronounCase(),
 			new ErrorAmbiguousPronoun(),
 //			new ErrorApostrophe(),
 			new ErrorPassiveVoice(),
