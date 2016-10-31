@@ -34,7 +34,10 @@ public abstract class Error {
 	public static NameFinderME nameFinder;
 	public static POSTaggerME posTagger;
 	public static Parser parser;
-
+	
+	/**
+	 * for testing purposes
+	 */
 	public static void main(String[] args) {
 		setupOpenNLP();
 		String input = "I walk. The ball is round. He says: \"Hello!\"";
