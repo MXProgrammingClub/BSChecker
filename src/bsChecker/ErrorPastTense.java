@@ -31,7 +31,7 @@ public class ErrorPastTense extends Error{
 
 				for(int i = 0; i < tags.length; i++)
 				{
-					if(tags[i].equals("VBD")) {
+					if(tags[i].equals("VBD") || tags[i].equals("VBN")) {
 						index.add(i);
 					}
 				}
