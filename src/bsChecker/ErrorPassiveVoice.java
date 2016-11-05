@@ -4,44 +4,41 @@ import java.util.ArrayList;
 
 /**
  * @author tedpyne
+ * @author JeremiahDeGreeff
  * Finds verbs in the passive voice. (9)
  */
 public class ErrorPassiveVoice extends Error {
 	private static final int ERROR_NUMBER = 9;
-
+	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been", "being"};
+	
 	/**
 	 * for testing purposes
 	 */
 	public static void main(String[] args){
 		Error.setupOpenNLP();
 		String input = "This terrible Hamlet is destroyed by Claudius.";
-		printErrors(new ErrorPassiveVoice().findErrors(input), input);
+		System.out.println("\ninput: " + input + "\n");
+		ArrayList<int[]> errors = new ErrorPassiveVoice().findErrors(input);
+		sort(errors);
+		printErrors(tokensToChars(input, errors, 0), input);
 	}
 
+	/**
+	 * finds all instances of passive voice in the given paragraph
+	 * note: does not catch cases with intermediary adverbs
+	 * @param line paragraph to check
+	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (9)
+	 */
 	@Override
 	public ArrayList<int[]> findErrors(String line) {
-		ArrayList<int[]> found = new ArrayList<int[]>();
-		int totLen = 0;
 		String tokens[] = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
-		int isFound = 0, areFound=0;
-		for(int i = 0; i < tokens.length; i++){
-			if(tokens[i].equalsIgnoreCase("is")){
-				if(i!=tokens.length-1 && tags[i+1].equals("VBN")){
-					int[] err = {totLen + locationOf(line," is ",isFound), totLen + locationOf(line," is ",isFound) + tokens[i].length()+1+tokens[i+1].length(),ERROR_NUMBER};
-					found.add(err);
-				}
-				isFound++;
-			}
-			if(tokens[i].equalsIgnoreCase("are")){
-				if(i!=tokens.length-1 && tags[i+1].equals("VBN")){
-					int[] err = {totLen + locationOf(line," are ",areFound), totLen + locationOf(line," are ",areFound) + tokens[i].length()+1+tokens[i+1].length(),ERROR_NUMBER};
-					found.add(err);
-				}
-				areFound++;
-			}
-		}
-		totLen+=line.length()+1;
-		return found;
+		
+		ArrayList<int[]> errors = new ArrayList<int[]>();
+		for(int i = 1; i < tokens.length; i++)
+			if(tags[i].equals("VBN") && arrayContains(TO_BE_CONJ, tokens[i - 1]))
+					errors.add(new int[]{i - 1, i, ERROR_NUMBER});
+		
+		return errors;
 	}
 }

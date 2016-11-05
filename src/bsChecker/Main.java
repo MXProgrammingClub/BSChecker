@@ -21,14 +21,14 @@ public class Main extends Application {
 			new ErrorVagueThisWhich(),
 //			new ErrorNumberDisagreement(),
 //			new ErrorPronounCase(),
-			new ErrorAmbiguousPronoun(),
+			//new ErrorAmbiguousPronoun(),
 //			new ErrorApostrophe(),
 			new ErrorPassiveVoice(),
 //			new ErrorDanglingModifier(),
 //			new ErrorFaultyParallelism(),
 			new ErrorProgressiveTense(),
-			new ErrorGerundPossesive(),
-			new ErrorQuotationForm()
+			new ErrorGerundPossessive(),
+			//new ErrorQuotationForm()
 	};
 
 
@@ -45,13 +45,10 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			controller.setDefaultText();
 			primaryStage.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch(Exception e) {e.printStackTrace();}
 	}
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 }
-

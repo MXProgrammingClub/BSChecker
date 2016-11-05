@@ -17,8 +17,12 @@ public class ErrorNumberDisagreement extends Error{
 	public static void main(String[] args){
 		Error.setupOpenNLP();
 		String input = "They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.";
-		printErrors(new ErrorNumberDisagreement().findErrors(input), input);
+		System.out.println("\ninput: " + input + "\n");
+		ArrayList<int[]> errors = new ErrorNumberDisagreement().findErrors(input);
+		sort(errors);
+		printErrors(tokensToChars(input, errors, 0), input);
 	}
+	@Override
 	public ArrayList<int[]> findErrors(String line){
 		String sentences[] = sentenceDetector.sentDetect(line);
 		ArrayList<Parse> parses = new ArrayList<Parse>();

@@ -82,6 +82,7 @@ public class GUIController {
 	private ArrayList<int[]> errors;
 	private File file;
 	private String clipboard = "";
+	private boolean opennlpIsSetUp = false;
 	
 	/**
 	 * The method that will be called when the left arrow is clicked
@@ -108,7 +109,11 @@ public class GUIController {
 	 */
 	@FXML
 	protected void analyzeButtonClick() {
-		errors = new ArrayList<>();
+		Dialog<ButtonType> d = new Dialog<ButtonType>();
+		d.setTitle("Analyzing");
+		d.setContentText("BSChecker is analyzing your essay.");
+		d.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+		d.show();
 		
 		String text = essayBox.getText();
 		ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
@@ -117,51 +122,48 @@ public class GUIController {
 	    // single quotation (')
 	    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201A\u201B\u275B\u275C]"), "\'"));
 	    // ellipsis (...)
-	    replacements.add(new Replacement(Pattern.compile("[\u2026]"), "..."));
-	   
+	    replacements.add(new Replacement(Pattern.compile("[\u2026]"), "..."));	   
 	    for (Replacement replacement : replacements) {
 	         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
 	    }
 		essayBox.replaceText(text);
 		
-		Dialog<ButtonType> d = new Dialog<ButtonType>();
-		d.setTitle("Analyzing");
-		d.setContentText("BSChecker is analyzing your essay.");
-		d.show();
+		if(opennlpIsSetUp == false) {
+			System.out.println("setting up opennlp");
+			Error.setupOpenNLP();
+			opennlpIsSetUp = true;
+		} else {
+			System.out.println("opennlp already set up - skipping");
+		}
 		
-		System.out.println("openNLP setting up");
-		Error.setupOpenNLP();
-		
+		errors = new ArrayList<int[]>();
 		int lineNum = 1;
-		//temporary
 		int charOffset = 0;
 		String line;
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
 		try {
 			while ((line = lineStream.read()) != null) {
 				System.out.println("\nAnalysing line " + lineNum + ":");
+				ArrayList<int[]> lineErrors = new ArrayList<int[]>();
+				
 				for(Error e: Main.ERROR_LIST) {
 					System.out.println("looking for: " + e.getClass());
 					ArrayList<int[]> temp = e.findErrors(line);
-					//temporary
-					for(int i = 0; i < temp.size(); i++) {
-						temp.get(i)[0] += charOffset;
-						temp.get(i)[1] += charOffset;
-					}
-					errors.addAll(temp);
+					lineErrors.addAll(temp);
 				}
+				Error.sort(lineErrors);
+				lineErrors = Error.tokensToChars(line, lineErrors, charOffset);
+				errors.addAll(lineErrors);
+				
 				lineNum++;
-				//temporary
 				charOffset += line.length() + 1;
 			}
 		} catch (IOException e) {e.printStackTrace();}
 		
-		d.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-			d.close();
-		Error.sort(errors); //sorts the errors based on starting index
-
 		System.out.println();
 		Error.printErrors(errors, text);
+		
+		d.close();
 		
 		if(errors.size() == 0) {
 			errorBox.replaceText("No Error Found!");

@@ -3,70 +3,42 @@ package bsChecker;
 import java.util.ArrayList;
 
 /**
- * @author
+ * @author Leo
+ * @author tedpyne
+ * @author JeremiahDeGreeff
  * Finds verbs in the past tense. (1)
  */
 public class ErrorPastTense extends Error{
 	private static final int ERROR_NUMBER = 1;
-
+	private static final String[] TO_HAVE_CONJ = {"have", "has", "had", "having"};
+	
 	/**
 	 * for testing purposes
 	 */
 	public static void main(String[] args) {
 		Error.setupOpenNLP();
-		String input = "At Mr Shimerda’s funeral, nature, specifically winter, acted to wear men down.";
-		printErrors(new ErrorPastTense().findErrors(input), input);
+		String input = "he has died";
+		System.out.println("\ninput: " + input + "\n");
+		ArrayList<int[]> errors = new ErrorPastTense().findErrors(input);
+		sort(errors);
+		printErrors(tokensToChars(input, errors, 0), input);
 	}
 
+	/**
+	 * finds all instances of past tense in the given paragraph
+	 * @param line paragraph to check
+	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (1)
+	 */
 	@Override
 	public ArrayList<int[]> findErrors(String line) {
-		ArrayList<int[]> found = new ArrayList<int[]>();
-			int totLen = 0;
-				String lower = line.toLowerCase();
-				String tokens[] = tokenizer.tokenize(line);
-				String[] tags = posTagger.tag(tokens);
+		String tokens[] = tokenizer.tokenize(line);
+		String[] tags = posTagger.tag(tokens);
 
-				ArrayList<Integer> index = new ArrayList<Integer>();
-
-
-				for(int i = 0; i < tags.length; i++)
-				{
-					if(tags[i].equals("VBD") || tags[i].equals("VBN")) {
-						index.add(i);
-					}
-				}
-
-				int leftValue = 0;
-				for(int j = 0; j < index.size(); j++)
-				{
-					int len = tokens[index.get(j)].length();
-					int nextInd = lower.indexOf(tokens[index.get(j)].toLowerCase(), leftValue);
-					
-					while((nextInd>0 && Character.isLetter(lower.charAt(nextInd-1))) || 
-							(nextInd -1+len < lower.length() && Character.isLetter(lower.charAt(nextInd+len)))){
-						leftValue = nextInd+1;
-						nextInd = lower.indexOf(tokens[index.get(j)].toLowerCase(), leftValue);
-						//System.out.println(leftValue);
-					}
-					int[] err = {totLen+nextInd, totLen+ nextInd + tokens[index.get(j)].length(), ERROR_NUMBER};
-					found.add(err);
-
-					// updates starting index
-					leftValue = err[1];
-				}
-				totLen+=line.length()+1;
+		ArrayList<int[]> errors = new ArrayList<int[]>();
+		for(int i = 0; i < tags.length; i++)
+			if(tags[i].equals("VBD") || (tags[i].equals("VBN") && i > 0 && arrayContains(TO_HAVE_CONJ, tokens[i - 1])))
+				errors.add(new int[] {i, i, ERROR_NUMBER});
 		
-//		for(int i = 0; i < found.size(); i++)
-//		{
-//			System.out.print("Start: ");
-//			System.out.println(found.get(i)[0]);
-//			System.out.print("End: ");
-//			System.out.println(found.get(i)[1]);
-//
-//			System.out.print("Substring: ");
-//			System.out.println(text.substring(found.get(i)[0], (found.get(i)[1] + 1)));
-//		}
-
-		return found;
+		return errors;
 	}
 }

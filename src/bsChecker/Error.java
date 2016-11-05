@@ -12,8 +12,8 @@ import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.parser.Parser;
-import opennlp.tools.parser.ParserFactory;
-import opennlp.tools.parser.ParserModel;
+//import opennlp.tools.parser.ParserFactory;
+//import opennlp.tools.parser.ParserModel;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -86,18 +86,18 @@ public abstract class Error {
 		POSModel posModel = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 
 		//Parser
-		ParserModel pModel = null;
-		try {is = new FileInputStream("lib/en-parser-chunking.bin");}
-		catch (FileNotFoundException e1) {e1.printStackTrace();}
-		try {pModel = new ParserModel(is); }
-		catch (InvalidFormatException e1) {e1.printStackTrace();}
-		catch (IOException e1) {e1.printStackTrace();}
+//		ParserModel pModel = null;
+//		try {is = new FileInputStream("lib/en-parser-chunking.bin");}
+//		catch (FileNotFoundException e1) {e1.printStackTrace();}
+//		try {pModel = new ParserModel(is); }
+//		catch (InvalidFormatException e1) {e1.printStackTrace();}
+//		catch (IOException e1) {e1.printStackTrace();}
 
 		sentenceDetector = new SentenceDetectorME(sModel);
 		nameFinder = new NameFinderME(nModel);
 		tokenizer = new TokenizerME(tModel);
 		posTagger = new POSTaggerME(posModel);
-		parser = ParserFactory.create(pModel);
+//		parser = ParserFactory.create(pModel);
 
 		try {is.close();}
 		catch (IOException e) {e.printStackTrace();}
@@ -154,6 +154,8 @@ public abstract class Error {
 			for(int i = 0; i < errors.size(); i++) {
 				System.out.println(errors.get(i)[0] + "-" + errors.get(i)[1] + ": \"" + text.substring(errors.get(i)[0], errors.get(i)[1] + 1) + "\" (error " + errors.get(i)[2] + ")");
 			}
+		} else {
+			System.out.println("no errors foud!");
 		}
 	}
 	
@@ -200,9 +202,6 @@ public abstract class Error {
 					curErrorChars[1] = charIndex + errorLength - 1 + startChar;
 					errorChars.add(curErrorChars);
 
-					tokenIndex += curErrorTokens[1] - curErrorTokens[0] + 1;
-					charIndex += errorLength;
-
 					errorProcessed = true;
 				} else {
 					charIndex += tokens[tokenIndex].length();
@@ -211,5 +210,18 @@ public abstract class Error {
 			}
 		}
 		return errorChars;
+	}
+	
+	/**
+	 * utility method that returns whether or not a string can be found in an array of strings
+	 * @param array the array to check
+	 * @param word the string to look for
+	 * @return true if found, false otherwise
+	 */
+	public static boolean arrayContains(String[] array, String word) {
+		for(String item : array)
+			if(word.equalsIgnoreCase(item))
+				return true;
+		return false;
 	}
 }

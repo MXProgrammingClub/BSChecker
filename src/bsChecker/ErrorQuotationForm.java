@@ -11,8 +11,7 @@ import java.util.Scanner;
  * Finds errors in quotation form. (14)
  */
 public class ErrorQuotationForm extends Error {
-	private static final int ERROR_NUMBER = 14;
-	
+	private static final int ERROR_NUMBER = 14;	
 	private static final String FILE_NAME = "SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
 	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
 	private static final String[] PUNCTUATION = {".", ",", ":", ";", "?", "!"};
@@ -43,16 +42,23 @@ public class ErrorQuotationForm extends Error {
 	public static void main (String[] args) {
 		Error.setupOpenNLP();
 		String input = "";
-		printErrors(new ErrorQuotationForm().findErrors(input), input);
+		System.out.println("\ninput: " + input + "\n");
+		ArrayList<int[]> errors = new ErrorQuotationForm().findErrors(input);
+		sort(errors);
+		printErrors(tokensToChars(input, errors, 0), input);
 	}
 
+	/**
+	 * finds all errors with quotation form in the given paragraph
+	 * @param line paragraph to check
+	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (9)
+	 */
 	@Override
 	public ArrayList<int[]> findErrors(String line)
 	{
-		ArrayList<int[]> errors = new ArrayList<int[]>();
-
 		String tokens[] = tokenizer.tokenize(line);
-//		System.out.println(Arrays.toString(tokens));
+		
+		ArrayList<int[]> errors = new ArrayList<int[]>();
 		for(int i = 0, count = 0; i < tokens.length; i++)
 		{
 			if(tokens[i].contains("\"")) //finds opening quotation

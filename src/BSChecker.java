@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -22,10 +23,10 @@ import opennlp.tools.util.*;
  */
 public class BSChecker {
 	public static void main(String[] args) throws InvalidFormatException, IOException{ 
-		Tokenize();
-		SentenceDetect();
+//		Tokenize();
+//		SentenceDetect();
 		POSTag();
-		findName();
+//		findName();
 	}
 
 	public static void Tokenize() throws InvalidFormatException, IOException {
@@ -62,19 +63,27 @@ public class BSChecker {
 		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "sent");
 		POSTaggerME tagger = new POSTaggerME(model);
+		
+		InputStream is = null;
+		TokenizerModel tModel = null;
+		try {is = new FileInputStream("lib/en-token.bin");}
+		catch (FileNotFoundException e1) {e1.printStackTrace();}
+		try {tModel = new TokenizerModel(is); }
+		catch (InvalidFormatException e1) {e1.printStackTrace();}
+		catch (IOException e1) {e1.printStackTrace();}
+		Tokenizer tokenizer = new TokenizerME(tModel);
 
-		String input = "it is the friend's ball";
+		String input = "The added benefits of love include";
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(input));
 
 		perfMon.start();
 		String line;
 		while ((line = lineStream.read()) != null) {
 
-			String whitespaceTokenizerLine[] = WhitespaceTokenizer.INSTANCE
-					.tokenize(line);
-			String[] tags = tagger.tag(whitespaceTokenizerLine);
+			String TokenizerLine[] = tokenizer.tokenize(line);
+			String[] tags = tagger.tag(TokenizerLine);
 
-			POSSample sample = new POSSample(whitespaceTokenizerLine, tags);
+			POSSample sample = new POSSample(TokenizerLine, tags);
 			System.out.println(sample.toString());
 
 			perfMon.incrementCounter();
