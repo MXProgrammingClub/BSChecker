@@ -155,7 +155,7 @@ public abstract class Error {
 				System.out.println(errors.get(i)[0] + "-" + errors.get(i)[1] + ": \"" + text.substring(errors.get(i)[0], errors.get(i)[1] + 1) + "\" (error " + errors.get(i)[2] + ")");
 			}
 		} else {
-			System.out.println("no errors foud!");
+			System.out.println("no errors found!");
 		}
 	}
 	

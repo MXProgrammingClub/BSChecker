@@ -23,7 +23,7 @@ public class ErrorGerundPossessive extends Error {
 
 	/**
 	 * finds all errors where gerunds are not preceded by a possessive when they should be in the given paragraph
-	 * note: catches many cases which are not errors
+	 * known issues: catches cases where the supposed gerund is in fact a participle and is thus not an error
 	 * @param line paragraph to check
 	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (13)
 	 */

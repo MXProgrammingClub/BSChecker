@@ -23,6 +23,7 @@ public class ErrorVagueThisWhich extends Error {
 	
 	/**
 	 * finds any vague which or this in the given paragraph
+	 * known issues: none
 	 * @param line paragraph to check
 	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (4)
 	 */

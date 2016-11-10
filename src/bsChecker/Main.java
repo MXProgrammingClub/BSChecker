@@ -20,7 +20,7 @@ public class Main extends Application {
 			new ErrorFirstSecondPerson(),
 			new ErrorVagueThisWhich(),
 //			new ErrorNumberDisagreement(),
-//			new ErrorPronounCase(),
+			//new ErrorPronounCase(),
 			//new ErrorAmbiguousPronoun(),
 //			new ErrorApostrophe(),
 			new ErrorPassiveVoice(),
@@ -28,9 +28,8 @@ public class Main extends Application {
 //			new ErrorFaultyParallelism(),
 			new ErrorProgressiveTense(),
 			new ErrorGerundPossessive(),
-			//new ErrorQuotationForm()
+			new ErrorQuotationForm()
 	};
-
 
 	public void start(Stage primaryStage) {
 		try {

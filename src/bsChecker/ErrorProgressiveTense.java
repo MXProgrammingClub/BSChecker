@@ -24,7 +24,7 @@ public class ErrorProgressiveTense extends Error {
 
 	/**
 	 * finds all instances of progressive tense in the given paragraph
-	 * note: does not catch cases with intermediary adverbs
+	 * known issues: does not catch cases with intermediary adverbs
 	 * @param line paragraph to check
 	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (12)
 	 */
@@ -35,7 +35,7 @@ public class ErrorProgressiveTense extends Error {
 		
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		for(int i = 1; i < tokens.length; i++)
-			if(tags[i].equals("VBG") && arrayContains(TO_BE_CONJ, tokens[i - 1]))
+			if(tags[i].equals("VBG") && tokens[i].charAt(0) != '\"' &&arrayContains(TO_BE_CONJ, tokens[i - 1]))
 					errors.add(new int[]{i - 1, i, ERROR_NUMBER});
 		
 		return errors;
