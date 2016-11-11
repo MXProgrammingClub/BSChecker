@@ -25,13 +25,9 @@ public class ErrorQuotationForm extends Error {
 	{
 		HashSet<String> verbs = new HashSet<String>();
 		Scanner scan = null;
-		try
-		{
-			scan = new Scanner(new File(FILE_NAME));
-		} catch (FileNotFoundException e){} //Won't happen
-
-		while(scan.hasNext())
-		{
+			try {scan = new Scanner(new File(FILE_NAME));}
+			catch (FileNotFoundException e) {e.printStackTrace();}
+		while(scan.hasNext()) {
 			verbs.add(scan.nextLine());
 		}
 		return verbs;
@@ -42,7 +38,7 @@ public class ErrorQuotationForm extends Error {
 	 */
 	public static void main (String[] args) {
 		Error.setupOpenNLP();
-		String input = "he says \"hi there.\" he says, \"hi there.\" he says: \"hi there.\"";
+		String input = "he says \"hi\"; he says, \"hi\"(1), he says: \"hi\".";
 		System.out.println("\ninput: " + input + "\n");
 		ArrayList<int[]> errors = new ErrorQuotationForm().findErrors(input);
 		sort(errors);
@@ -51,7 +47,7 @@ public class ErrorQuotationForm extends Error {
 
 	/**
 	 * finds all errors with quotation form in the given paragraph
-	 * known issues: doesn't see a preceding verb if other words between it and the quote, doesn't work with single word quotes
+	 * known issues: none
 	 * @param line paragraph to check
 	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (9)
 	 */
@@ -61,9 +57,12 @@ public class ErrorQuotationForm extends Error {
 		String tokens[] = tokenizer.tokenize(line);
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		for(int i = 0; i < tokens.length; i++)
-			if(tokens[i].contains("\"")) //finds opening quotation
-				for(int j = i + 1; j < tokens.length; j++)
-					if(tokens[j].contains("\"")) { //finds ending quotation
+			if(tokens[i].contains("\"")) { //finds opening quotation
+				int start = i + 1;
+				if(tokens[i].substring(tokens[i].indexOf("\"") + 1).contains("\"")) //checks if opening and closing quotations are on the same token
+					start = i;
+				for(int j = start; j < tokens.length; j++)
+					if(tokens[j].contains("\"")) { //finds closing quotation
 						int errorFront = findErrorsFront(tokens, i, j);
 						int errorBack = findErrorsBack(tokens, i, j);
 						if(errorFront == 1 || errorFront == 2 || errorFront == 3)
@@ -72,11 +71,10 @@ public class ErrorQuotationForm extends Error {
 							errors.add(new int[] {j - 1, j - 1, ERROR_NUMBER});
 						if(errorBack == 2)
 							errors.add(new int[] {j + 1, j + 1, ERROR_NUMBER});
-						
 						i = j;
 						break;
 					}
-		
+			}
 		return errors;
 	}
 
@@ -89,14 +87,14 @@ public class ErrorQuotationForm extends Error {
 	 */
 	private int findErrorsFront(String[] tokens, int start, int end)
 	{
-		if(tokens[start - 1].equals(":")) {
-			if(VERB_SET.contains(tokens[start - 2]))
+		if(start > 0 && tokens[start - 1].equals(":")) {
+			if(start > 1 && VERB_SET.contains(tokens[start - 2]))
 				return 1; //error if there is a semicolon before and the word before it is a verb
-		} else if(tokens[start - 1].equals(",")) {
-			if(!VERB_SET.contains(tokens[start - 2]))
+		} else if(start > 0 && tokens[start - 1].equals(",")) {
+			if(start > 1 && !VERB_SET.contains(tokens[start - 2]))
 				return 2; //error if there is a comma before and the word before it is not a verb
 		} else {
-			if(VERB_SET.contains(tokens[start - 1]))
+			if(start > 0 && VERB_SET.contains(tokens[start - 1]))
 				return 3; //error if there is a not punctuation before and the word before is a verb
 		} return 0;
 	}
@@ -110,12 +108,12 @@ public class ErrorQuotationForm extends Error {
 	 */
 	private int findErrorsBack(String[] tokens, int start, int end) {
 		if(tokens[end].contains("(") || end + 1 < tokens.length && tokens[end + 1].contains("(")) {
-			if(arrayContains(PUNCTUATION1, tokens[end - 1]) || arrayContains(PUNCTUATION2, tokens[end - 1]))
+			if(end > start && arrayContains(PUNCTUATION1, tokens[end - 1]) || arrayContains(PUNCTUATION2, tokens[end - 1]))
 				return 1; //error if cited and punctuation inside
 		} else {
 			if(end + 1 < tokens.length && arrayContains(PUNCTUATION1, tokens[end + 1]))
 				return 2; //error if not cited and period/comma outside
-			if(arrayContains(PUNCTUATION2, tokens[end - 1]))
+			if(end > start && arrayContains(PUNCTUATION2, tokens[end - 1]))
 				return 3; //error if not cited and colon/semicolon inside
 		} return 0;
 	}
