@@ -82,7 +82,6 @@ public class GUIController {
 	private ArrayList<int[]> errors;
 	private File file;
 	private String clipboard = "";
-	private boolean opennlpIsSetUp = false;
 	
 	/**
 	 * The method that will be called when the left arrow is clicked
@@ -128,17 +127,8 @@ public class GUIController {
 	    }
 		essayBox.replaceText(text);
 		
-		if(opennlpIsSetUp == false) {
-			System.out.println("setting up opennlp");
-			Error.setupOpenNLP();
-			opennlpIsSetUp = true;
-		} else {
-			System.out.println("opennlp already set up - skipping");
-		}
-		
 		errors = new ArrayList<int[]>();
-		int lineNum = 1;
-		int charOffset = 0;
+		int lineNum = 1, charOffset = 0;
 		String line;
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
 		try {
@@ -175,7 +165,6 @@ public class GUIController {
 			}
 
 			//put first error in sentenceBox and corresponding thing in errorBox
-			//System.out.println(essayBox.getText().substring(errors.get(0)[0], errors.get(0)[1]));
 			displayError();
 		}
 	}

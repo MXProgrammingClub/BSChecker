@@ -45,6 +45,10 @@ public class Main extends Application {
 			controller.setDefaultText();
 			primaryStage.show();
 		} catch(Exception e) {e.printStackTrace();}
+		
+		System.out.println("\nSetting up opennlp.");
+		Error.setupOpenNLP();
+		System.out.println("Set up complete!\n");
 	}
 
 	public static void main(String[] args) {
