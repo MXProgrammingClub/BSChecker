@@ -25,7 +25,7 @@ public class ErrorPassiveVoice extends Error {
 
 	/**
 	 * finds all instances of passive voice in the given paragraph
-	 * known issues: does not catch cases with intermediary adverbs
+	 * 
 	 * @param line paragraph to check
 	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (9)
 	 */
