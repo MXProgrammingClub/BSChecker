@@ -21,7 +21,7 @@ public class Main extends Application {
 			new ErrorVagueThisWhich(),
 //			new ErrorNumberDisagreement(),
 			//new ErrorPronounCase(),
-			//new ErrorAmbiguousPronoun(),
+			new ErrorAmbiguousPronoun(),
 //			new ErrorApostrophe(),
 			new ErrorPassiveVoice(),
 //			new ErrorDanglingModifier(),
