@@ -15,7 +15,7 @@ public class ErrorProgressiveTense extends Error {
 	 */
 	public static void main(String[] args) {
 		Error.setupOpenNLP();
-		String input = "Sensing God's desire to destroy Sodom, Abraham is quickly negotiating for a less apocalyptic punishment";
+		String input = "Sensing God's desire to destroy Sodom, Abraham is quickly negotiating for a less apocalyptic punishment, he is.";
 		System.out.println("\ninput: " + input + "\n");
 		ArrayList<int[]> errors = new ErrorProgressiveTense().findErrors(input);
 		sort(errors);
@@ -35,9 +35,9 @@ public class ErrorProgressiveTense extends Error {
 		
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		for(int i = 1; i < tokens.length; i++)
-			if(arrayContains(TO_BE_CONJ, tokens[i])){
+			if(arrayContains(TO_BE_CONJ, tokens[i]) && i != tokens.length-1){
 				int j = i+1;
-				while(tags[j].equals("RB")) j++;
+				while(tags[j].equals("RB") && j < tokens.length) j++;
 				if(tags[j].equals("VBG")){
 					errors.add(new int[]{i, j, ERROR_NUMBER});
 				}

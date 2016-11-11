@@ -36,8 +36,16 @@ public class ErrorPassiveVoice extends Error {
 		
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		for(int i = 1; i < tokens.length; i++)
+			if(arrayContains(TO_BE_CONJ, tokens[i]) && i < tokens.length-1){
+				int j = i+1;
+				while(tags[j].equals("RB") && j < tokens.length) j++;
+				if(tags[j].equals("VBN")){
+					errors.add(new int[]{i, j, ERROR_NUMBER});
+				}
+			}
+		/*
 			if(tags[i].equals("VBN") && arrayContains(TO_BE_CONJ, tokens[i - 1]))
-					errors.add(new int[]{i - 1, i, ERROR_NUMBER});
+					errors.add(new int[]{i - 1, i, ERROR_NUMBER});*/
 		
 		return errors;
 	}
