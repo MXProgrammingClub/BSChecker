@@ -31,6 +31,10 @@ public class Main extends Application {
 			new ErrorQuotationForm()
 	};
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+	
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("GUI.fxml"));
@@ -49,9 +53,5 @@ public class Main extends Application {
 		System.out.println("\nSetting up opennlp.");
 		Error.setupOpenNLP();
 		System.out.println("Set up complete!\n");
-	}
-
-	public static void main(String[] args) {
-		launch(args);
 	}
 }

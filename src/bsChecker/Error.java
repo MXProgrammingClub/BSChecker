@@ -113,21 +113,6 @@ public abstract class Error {
 	public abstract ArrayList<int[]> findErrors(String line);
 
 	/**
-	 * 
-	 * @param line The text to search through
-	 * @param string The word to find in the text
-	 * @param found The number of occurrences already found
-	 * @return The location of the n+1th instance
-	 */
-	public static int locationOf(String line, String string, int found) {
-		int loc = 0;
-		for(int i = 0; i <= found; i++){
-			loc = line.indexOf(string,loc) +1;
-		}
-		return loc;
-	}
-
-	/**
 	 * Sorts the list of all errors by location.
 	 * @param list All the located errors 
 	 */
