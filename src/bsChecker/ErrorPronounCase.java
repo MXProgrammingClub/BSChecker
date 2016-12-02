@@ -8,7 +8,8 @@ import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
 /**
- * @author
+ * 
+ * @author Leo
  * Finds errors in pronoun case. (6)
  */
 public class ErrorPronounCase extends Error{
@@ -18,7 +19,7 @@ public class ErrorPronounCase extends Error{
 	private static final String[] POSSESADJ = {"her", "his", "its", "their", "our", "my", "your", "whose"};
 	private static final String[] POSSES = {"hers", "his", "its", "theirs", "ours", "mine", "yours", "whose"};
 	private static final String[] OBJ = {"him", "her", "it", "them", "us", "me", "you", "whom"};
-	private static final String[] SUB = {"he", "she", "it", "they", "we", "I", "you", "who"};
+	private static final String[] SUBJ = {"he", "she", "it", "they", "we", "I", "you", "who"};
 	private static final String[] ALLPN = {"he", "she", "it", "they", "we", "you", "his", "him", "her", "hers", "its", "their", "theirs", "them", "us", "our", "ours", "your", "yours", "who", "whose", "whom"};
 
 	/**
@@ -26,13 +27,187 @@ public class ErrorPronounCase extends Error{
 	 */
 	public static void main(String[] args) {
 		Error.setupOpenNLP();
-		String input = "However, instead of adapting political systems from their homeland";
-		printErrors(new ErrorPronounCase().findErrors(input), input);
+		String input = "However, he died and instead of adapting political systems from he apple, he died.";
+		System.out.println("\ninput: " + input + "\n");
+		ArrayList<int[]> errors = new ErrorPronounCase().findErrors(input);
+		sort(errors);
+		printErrors(tokensToChars(input, errors, 0), input);
 	}
 
 
 	@Override
-	public ArrayList<int[]> findErrors(String text) {
+	public ArrayList<int[]> findErrors(String line) {
+		String[] tokens = tokenizer.tokenize(line);
+		String[] tags = posTagger.tag(tokens);
+		ArrayList<Integer> pronounIndices = new ArrayList<Integer>();
+		for(int i = 0; i < tokens.length; i++)
+		{
+			String word = tokens[i];
+			if(arrayContains(ALLPN, word))
+				pronounIndices.add(i);
+		}
+		ArrayList<int[]> errors = new ArrayList<int[]>();
+		possesPronoun(pronounIndices, tokens, tags, errors);
+		//subjPronoun(pronounIndices, tokens, tags, errors);
+		//objPronoun(pronounIndices, tokens, tags, errors);	
+		
+		return errors;
+	}
+	
+	
+	private void possesPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices)
+	{
+		System.out.println("Running");
+		System.out.println(pronounIndices);
+		for(int element = 0; element < pronounIndices.size(); element++)
+		{
+			int index = pronounIndices.get(element);
+			System.out.println("This is index");
+			System.out.println(index);
+			int nextWordIndex = index + 1;
+			while(tagList[nextWordIndex].equals("JJ") || tagList[nextWordIndex].equals("JJR") || tagList[nextWordIndex].equals("JJS") || tagList[nextWordIndex].equals("RB") || tagList[nextWordIndex].equals("RBR")|| tagList[nextWordIndex].equals("RBS"))
+			{								
+				nextWordIndex++;
+			}
+			
+			if(tagList[nextWordIndex].equals("NN")
+			|| tagList[nextWordIndex].equals("NNS")
+			|| tagList[nextWordIndex].equals("NNP")
+			|| tagList[nextWordIndex].equals("NNPS")
+			|| ((index >= 2) && (tagList[index-1].equals("of")) && (tagList[index-2].equals("NN") || tagList[index-2].equals("NNS") || tagList[index-2].equals("NNP") || tagList[index-2].equals("NNPS"))))
+			// e.g. friend (noun) of his (possessive pronoun)
+			{
+	  			System.out.println("Possessive pronoun detected");
+				// so the pronoun should be possessive
+				if(!tokenList[index].equals("whom"))
+				{
+					boolean possErr = true;
+					for(String pronoun: POSSES)
+					{
+						if(tokenList[index].equals(pronoun))
+						{
+							possErr = false;
+						}
+					}
+					for(String pronoun: POSSESADJ)
+					{
+						if(tokenList[index].equals(pronoun))
+						{
+							possErr = false;
+						}
+					}
+					if(possErr)
+					{
+						errorIndices.add(new int[] {index, index, ERROR_NUMBER});
+					}
+				}
+
+				
+			}
+			for (int[] s: errorIndices)
+			{
+				System.out.print("pos: ");
+				System.out.println(s[0]);
+			}
+		}
+	}
+	
+	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices)
+	{
+		System.out.println("Running");
+		System.out.println(pronounIndices);
+		for(int element = 0; element < pronounIndices.size(); element++)
+		{
+			int index = pronounIndices.get(element);
+			System.out.println("This is index ");
+			System.out.println(index);
+			if (index - 1 >= 0)
+			{
+				int previousWordIndex = index - 1;
+				
+				if(tagList[previousWordIndex].equals("VB")
+				|| tagList[previousWordIndex].equals("VBD")
+				|| tagList[previousWordIndex].equals("VBG")
+				|| tagList[previousWordIndex].equals("VBN")
+				|| tagList[previousWordIndex].equals("VBP")
+				|| tagList[previousWordIndex].equals("VBZ"))
+				// checking for a verb before the pronoun
+				{
+		  			System.out.println("Subjective pronoun detected");
+					// so the pronoun should be subjective
+					
+						boolean subjErr = true;
+						for(String pronoun: SUBJ)
+						{
+							if(tokenList[index].equals(pronoun))
+							{
+								subjErr = false;
+							}
+						}
+						if(subjErr)
+						{
+							errorIndices.add(new int[] {index, index, ERROR_NUMBER});
+						}
+					}
+			}
+			for (int[] s: errorIndices)
+			{
+				System.out.print("subj: ");
+				System.out.println(s[0]);
+			}
+		}
+	}
+	
+	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices)
+	{
+		System.out.println("Running");
+		System.out.println(pronounIndices);
+		for(int element = 0; element < pronounIndices.size(); element++)
+		{
+			int index = pronounIndices.get(element);
+			System.out.println("This is index ");
+			System.out.println(index);
+			if (index + 1 < tokenList.length)
+			{
+				int nextWordIndex = index - 1;
+				
+				if(tagList[nextWordIndex].equals("VB")
+				|| tagList[nextWordIndex].equals("VBD")
+				|| tagList[nextWordIndex].equals("VBG")
+				|| tagList[nextWordIndex].equals("VBN")
+				|| tagList[nextWordIndex].equals("VBP")
+				|| tagList[nextWordIndex].equals("VBZ"))
+				// checking for a verb after the pronoun
+				{
+		  			System.out.println("Objective pronoun detected");
+					// so the pronoun should be objective
+					
+						boolean objErr = true;
+						for(String pronoun: SUBJ)
+						{
+							if(tokenList[index].equals(pronoun))
+							{
+								objErr = false;
+							}
+						}
+						if(objErr)
+						{
+							errorIndices.add(new int[] {index, index, ERROR_NUMBER});
+						}
+					}
+			}
+			for (int[] s: errorIndices)
+			{
+				System.out.print("obj: ");
+				System.out.println(s[0]);
+			}
+		}
+	}
+	
+	
+	
+	
+	public ArrayList<int[]> findErrorsOld(String text) {
 		ArrayList<int[]> found = new ArrayList<int[]>();
 		
 		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text.toLowerCase()));
@@ -42,7 +217,7 @@ public class ErrorPronounCase extends Error{
 		try {
 			while ((line = lineStream.read()) != null) 
 			{
-				String tokens[] = tokenizer.tokenize(line);
+				String[] tokens = tokenizer.tokenize(line);
 				String[] tags = posTagger.tag(tokens);
 
 				// ArrayList<Integer> index = new ArrayList<Integer>();
