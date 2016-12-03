@@ -5,3 +5,13 @@
 .dark-red {
 	-fx-background-fill: #F44336;
 }
+
+.white {
+	-fx-background-fill: ##FDFDFD;
+}
+
+.blue {
+	-fx-background-fill: #0000FF;
+}
+
+

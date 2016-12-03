@@ -23,7 +23,7 @@ import opennlp.tools.util.PlainTextByLineStream;
  * 
  * @author Luke Giacalone
  * @version 10/15/2016
- */
+*/
 
 public class GUIController {
 
@@ -115,6 +115,8 @@ public class GUIController {
 		d.show();
 		
 		String text = essayBox.getText();
+		essayBox.setStyleClass(0, essayBox.getLength(), null);
+		
 		ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
 		// double quotation (")
 	    replacements.add(new Replacement(Pattern.compile("[\u201C\u201D\u201E\u201F\u275D\u275E]"), "\""));
@@ -167,6 +169,7 @@ public class GUIController {
 			//put first error in sentenceBox and corresponding thing in errorBox
 			displayError();
 		}
+		
 	}
 	
 	/**
