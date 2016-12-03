@@ -16,7 +16,8 @@ import opennlp.tools.util.PlainTextByLineStream;
 import util.UtilityMethods;
 
 /**
- * Defines abstract class for types of grammatical errors and provides static utility methods
+ * Defines abstract class for types of grammatical errors
+ * Provides static utility methods for manipulatng arrays of errors
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
