@@ -1,8 +1,6 @@
-package bsChecker;
+package gui;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -10,13 +8,12 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 
 import com.jfoenix.controls.JFXButton;
 
+import errors.Error;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.PlainTextByLineStream;
 
 /**
  * This is the class that connects the GUI with the rest of the program.
@@ -129,31 +126,7 @@ public class GUIController {
 	    }
 		essayBox.replaceText(text);
 		
-		errors = new ArrayList<int[]>();
-		int lineNum = 1, charOffset = 0;
-		String line;
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
-		try {
-			while ((line = lineStream.read()) != null) {
-				System.out.println("\nAnalysing line " + lineNum + ":");
-				ArrayList<int[]> lineErrors = new ArrayList<int[]>();
-				
-				for(Error e: Main.ERROR_LIST) {
-					System.out.println("looking for: " + e.getClass());
-					ArrayList<int[]> temp = e.findErrors(line);
-					lineErrors.addAll(temp);
-				}
-				Error.sort(lineErrors);
-				lineErrors = Error.tokensToChars(line, lineErrors, charOffset);
-				errors.addAll(lineErrors);
-				
-				lineNum++;
-				charOffset += line.length() + 1;
-			}
-		} catch (IOException e) {e.printStackTrace();}
-		
-		System.out.println();
-		Error.printErrors(errors, text);
+		errors = Error.findAllErrors(text);
 		
 		d.close();
 		

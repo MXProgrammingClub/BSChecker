@@ -1,4 +1,4 @@
-package bsChecker;
+package gui;
 
 /**
 * This enum represents the bluesheet errors.

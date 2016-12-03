@@ -1,4 +1,4 @@
-package bsChecker;
+package errors;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import util.UtilityMethods;
+
 /**
  * Finds errors in quotation form. (14)
  * @author Julia
  * @author JeremiahDeGreeff
  */
-public class ErrorQuotationForm extends Error {
+public class QuotationForm extends Error {
 	private static final String FILE_NAME = "SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
 	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
 	private static final String[] PUNCTUATION1 = {".", ","};
@@ -37,10 +39,10 @@ public class ErrorQuotationForm extends Error {
 	 * for testing purposes
 	 */
 	public static void main (String[] args) {
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "he says \"hi\"; he says, \"hi\"(1), he says: \"hi\".";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new ErrorQuotationForm().findErrors(input);
+		ArrayList<int[]> errors = new QuotationForm().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
@@ -48,7 +50,7 @@ public class ErrorQuotationForm extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorQuotationForm() {
+	public QuotationForm() {
 		super(14);
 	}
 
@@ -115,12 +117,12 @@ public class ErrorQuotationForm extends Error {
 	 */
 	private int findErrorsBack(String[] tokens, int start, int end) {
 		if(tokens[end].contains("(") || end + 1 < tokens.length && tokens[end + 1].contains("(")) {
-			if(end > start && arrayContains(PUNCTUATION1, tokens[end - 1]) || arrayContains(PUNCTUATION2, tokens[end - 1]))
+			if(end > start && UtilityMethods.arrayContains(PUNCTUATION1, tokens[end - 1]) || UtilityMethods.arrayContains(PUNCTUATION2, tokens[end - 1]))
 				return 1; //error if cited and punctuation inside
 		} else {
-			if(end + 1 < tokens.length && arrayContains(PUNCTUATION1, tokens[end + 1]))
+			if(end + 1 < tokens.length && UtilityMethods.arrayContains(PUNCTUATION1, tokens[end + 1]))
 				return 2; //error if not cited and period/comma outside
-			if(end > start && arrayContains(PUNCTUATION2, tokens[end - 1]))
+			if(end > start && UtilityMethods.arrayContains(PUNCTUATION2, tokens[end - 1]))
 				return 3; //error if not cited and colon/semicolon inside
 		} return 0;
 	}

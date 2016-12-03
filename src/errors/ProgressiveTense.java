@@ -1,22 +1,24 @@
-package bsChecker;
+package errors;
 
 import java.util.ArrayList;
+
+import util.UtilityMethods;
 
 /**
  * Finds verbs in progressive tense. (12)
  * @author JeremiahDeGreeff
  */
-public class ErrorProgressiveTense extends Error {
+public class ProgressiveTense extends Error {
 	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been"};
 
 	/**
 	 * for testing purposes
 	 */
 	public static void main(String[] args) {
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "Sensing God's desire to destroy Sodom, Abraham is quickly negotiating for a less apocalyptic punishment, he is.";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new ErrorProgressiveTense().findErrors(input);
+		ArrayList<int[]> errors = new ProgressiveTense().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
@@ -24,7 +26,7 @@ public class ErrorProgressiveTense extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorProgressiveTense() {
+	public ProgressiveTense() {
 		super(12);
 	}
 
@@ -40,7 +42,7 @@ public class ErrorProgressiveTense extends Error {
 		
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		for(int i = 1; i < tokens.length; i++)
-			if(arrayContains(TO_BE_CONJ, tokens[i]) && i != tokens.length-1){
+			if(UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i != tokens.length-1){
 				int j = i+1;
 				while(tags[j].equals("RB") && j < tokens.length) j++;
 				if(tags[j].equals("VBG")){

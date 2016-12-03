@@ -1,6 +1,8 @@
-package bsChecker;
+package errors;
 
 import java.util.ArrayList;
+
+import util.UtilityMethods;
 
 /**
  * Finds verbs in the past tense. (1)
@@ -8,17 +10,17 @@ import java.util.ArrayList;
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
-public class ErrorPastTense extends Error {
+public class PastTense extends Error {
 	//private static final String[] TO_HAVE_CONJ = {"have", "has", "had", "having"};
 	
 	/**
 	 * for testing purposes
 	 */
 	public static void main(String[] args) {
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "he has died";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new ErrorPastTense().findErrors(input);
+		ArrayList<int[]> errors = new PastTense().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
@@ -26,7 +28,7 @@ public class ErrorPastTense extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorPastTense() {
+	public PastTense() {
 		super(1);
 	}
 	

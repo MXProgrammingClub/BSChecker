@@ -1,27 +1,28 @@
-package bsChecker;
+package errors;
 
 import java.util.Scanner;
 import java.util.ArrayList;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
+import util.UtilityMethods;
 
 /**
  * WIP
  * Finds errors in Parallelism. (11)
  * @author
  */
-public class ErrorFaultyParallelism extends Error {
+public class FaultyParallelism extends Error {
 	private static final int ERROR_NUMBER = 11;
 	/**
 	 * for testing purposes
 	 */
 	public static void main(String[] args){
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		Scanner scan = new Scanner(System.in);
 		System.out.println("passage: ");
 		String passage = scan.nextLine();
 		scan.close();
-		ArrayList<int[]> errs = new ErrorFaultyParallelism().findErrors(passage);
+		ArrayList<int[]> errs = new FaultyParallelism().findErrors(passage);
 		for(int[] arr: errs)
 			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
 	}
@@ -29,7 +30,7 @@ public class ErrorFaultyParallelism extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorFaultyParallelism() {
+	public FaultyParallelism() {
 		super(11);
 	}
 	

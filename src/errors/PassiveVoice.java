@@ -1,23 +1,25 @@
-package bsChecker;
+package errors;
 
 import java.util.ArrayList;
+
+import util.UtilityMethods;
 
 /**
  * Finds verbs in the passive voice. (9)
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
-public class ErrorPassiveVoice extends Error {
+public class PassiveVoice extends Error {
 	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been", "being"};
 	
 	/**
 	 * for testing purposes
 	 */
 	public static void main(String[] args){
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "This terrible Hamlet is destroyed by Claudius.";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new ErrorPassiveVoice().findErrors(input);
+		ArrayList<int[]> errors = new PassiveVoice().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
@@ -25,7 +27,7 @@ public class ErrorPassiveVoice extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorPassiveVoice() {
+	public PassiveVoice() {
 		super(9);
 	}
 
@@ -41,7 +43,7 @@ public class ErrorPassiveVoice extends Error {
 		
 		ArrayList<int[]> errors = new ArrayList<int[]>();
 		for(int i = 1; i < tokens.length; i++)
-			if(arrayContains(TO_BE_CONJ, tokens[i]) && i < tokens.length-1){
+			if(UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i < tokens.length-1){
 				int j = i+1;
 				while(tags[j].equals("RB") && j < tokens.length) j++;
 				if(tags[j].equals("VBN")){

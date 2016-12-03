@@ -1,9 +1,11 @@
-package bsChecker;
+package errors;
 
 import java.util.ArrayList;
 
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
+import util.SentenceTree;
+import util.UtilityMethods;
 
 /**
  * WIP
@@ -12,15 +14,15 @@ import opennlp.tools.parser.Parse;
  * @author
  */
 @SuppressWarnings("unused")
-public class ErrorNumberDisagreement extends Error {
+public class NumberDisagreement extends Error {
 	/**
 	 * for testing purposes
 	 */
 	public static void main(String[] args){
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new ErrorNumberDisagreement().findErrors(input);
+		ArrayList<int[]> errors = new NumberDisagreement().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
@@ -28,7 +30,7 @@ public class ErrorNumberDisagreement extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorNumberDisagreement() {
+	public NumberDisagreement() {
 		super(5);
 	}
 	

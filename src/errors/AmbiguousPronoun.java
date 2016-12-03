@@ -1,24 +1,25 @@
-package bsChecker;
+package errors;
 
 import java.util.ArrayList;
 
 import opennlp.tools.util.Span;
+import util.UtilityMethods;
 
 /**
  * Finds ambiguous pronoun references. (7)
  * @author Dalal
  */
-public class ErrorAmbiguousPronoun extends Error {
+public class AmbiguousPronoun extends Error {
 	private static final String[] PRONOUNS = {"she", "her", "hers", "herself", "he", "him", "his", "himself", "they", "them", "their", "theirs", "themselves"};
 
 	/**
 	 * for testing purposes
 	 */
 	public static void main (String[] args) {
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "Consequently, Bob threw the ball to himself";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new ErrorAmbiguousPronoun().findErrors(input);
+		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
@@ -26,7 +27,7 @@ public class ErrorAmbiguousPronoun extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorAmbiguousPronoun() {
+	public AmbiguousPronoun() {
 		super(7);
 	}
 
@@ -47,7 +48,7 @@ public class ErrorAmbiguousPronoun extends Error {
 			curSentenceNouns = 0;
 			ArrayList<String> names = findName(words);
 			for(int j = 0; j < words.length; j++)
-				if(arrayContains(PRONOUNS, words[j]) && prevSentenceNouns + curSentenceNouns >= 2)
+				if(UtilityMethods.arrayContains(PRONOUNS, words[j]) && prevSentenceNouns + curSentenceNouns >= 2)
 						errors.add(new int[] {tokenOffset + j, tokenOffset + j, ERROR_NUMBER});	
 				else if((index = names.indexOf(words[j])) >= 0) {
 					prevSentenceNouns = 0;

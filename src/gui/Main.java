@@ -1,10 +1,13 @@
-package bsChecker;
+package gui;
 
+import errors.*;
+import errors.Error;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import util.UtilityMethods;
 
 /**
  * The main class for the BSChecker
@@ -15,20 +18,20 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	public final static Error[] ERROR_LIST = {
-			new ErrorPastTense(),
-//			new ErrorIncompleteSentence(),
-			new ErrorFirstSecondPerson(),
-			new ErrorVagueThisWhich(),
-//			new ErrorNumberDisagreement(),
-			new ErrorPronounCase(),
-			new ErrorAmbiguousPronoun(),
-//			new ErrorApostrophe(),
-			new ErrorPassiveVoice(),
-//			new ErrorDanglingModifier(),
-//			new ErrorFaultyParallelism(),
-			new ErrorProgressiveTense(),
-			new ErrorGerundPossessive(),
-			new ErrorQuotationForm()
+			new PastTense(),
+//			new IncompleteSentence(),
+			new FirstSecondPerson(),
+			new VagueThisWhich(),
+//			new NumberDisagreement(),
+			new PronounCase(),
+			new AmbiguousPronoun(),
+//			new Apostrophe(),
+			new PassiveVoice(),
+//			new DanglingModifier(),
+//			new FaultyParallelism(),
+			new ProgressiveTense(),
+			new GerundPossessive(),
+			new QuotationForm()
 	};
 
 	public static void main(String[] args) {
@@ -50,8 +53,6 @@ public class Main extends Application {
 			primaryStage.show();
 		} catch(Exception e) {e.printStackTrace();}
 		
-		System.out.println("\nSetting up opennlp.");
-		Error.setupOpenNLP();
-		System.out.println("Set up complete!\n");
+		UtilityMethods.setupOpenNLP();
 	}
 }

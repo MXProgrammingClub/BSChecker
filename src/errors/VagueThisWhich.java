@@ -1,20 +1,22 @@
-package bsChecker;
+package errors;
 
 import java.util.ArrayList;
+
+import util.UtilityMethods;
 
 /**
  * Finds errors with vague use of this or which. (4)
  * @author tedpyne
  */
-public class ErrorVagueThisWhich extends Error {
+public class VagueThisWhich extends Error {
 	/**
 	 * for testing purposes
 	 */
 	public static void main(String[] args){
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "Hi, my name I hate this; cars are fun.";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new ErrorVagueThisWhich().findErrors(input);
+		ArrayList<int[]> errors = new VagueThisWhich().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
@@ -22,7 +24,7 @@ public class ErrorVagueThisWhich extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorVagueThisWhich() {
+	public VagueThisWhich() {
 		super(4);
 	}
 	

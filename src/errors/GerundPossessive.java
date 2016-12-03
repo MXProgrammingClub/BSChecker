@@ -1,20 +1,22 @@
-package bsChecker;
+package errors;
 
 import java.util.ArrayList;
+
+import util.UtilityMethods;
 
 /**
  * Finds errors where gerunds incorrectly lack a possessive. (13)
  * @author JeremiahDeGreeff
  */
-public class ErrorGerundPossessive extends Error {
+public class GerundPossessive extends Error {
 	/**
 	 * for testing purposes
 	 */
 	public static void main(String[] args) {
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "Elizabeth is grateful for him loving her so well.";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new ErrorGerundPossessive().findErrors(input);
+		ArrayList<int[]> errors = new GerundPossessive().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
@@ -22,7 +24,7 @@ public class ErrorGerundPossessive extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorGerundPossessive() {
+	public GerundPossessive() {
 		super(13);
 	}
 

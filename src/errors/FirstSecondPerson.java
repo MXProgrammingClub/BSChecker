@@ -1,23 +1,25 @@
-package bsChecker;
+package errors;
 
 import java.util.ArrayList;
+
+import util.UtilityMethods;
 
 /**
  * Finds uses of first and second person. (3)
  * @author Dalal
  * @author JeremiahDeGreeff
  */
-public class ErrorFirstSecondPerson extends Error {
+public class FirstSecondPerson extends Error {
 	private static final String[] PRONOUNS = {"I","me", "my", "we", "us", "our", "you", "your"};
 
 	/**
 	 * for testing purposes
 	 */
 	public static void main (String[] args) {
-		Error.setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "He said, \"I am happy.\"";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new ErrorFirstSecondPerson().findErrors(input);
+		ArrayList<int[]> errors = new FirstSecondPerson().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
@@ -25,7 +27,7 @@ public class ErrorFirstSecondPerson extends Error {
 	/**
 	 * constructor
 	 */
-	public ErrorFirstSecondPerson() {
+	public FirstSecondPerson() {
 		super(3);
 	}
 
@@ -48,7 +50,7 @@ public class ErrorFirstSecondPerson extends Error {
 					inIntroducedQuote = false;
 				inQuote = !inQuote;
 			}
-			if(!inIntroducedQuote && arrayContains(PRONOUNS, tokens[i]))
+			if(!inIntroducedQuote && UtilityMethods.arrayContains(PRONOUNS, tokens[i]))
 				errors.add(new int[]{i, i, ERROR_NUMBER});
 		}
 		

@@ -1,36 +1,27 @@
-package bsChecker;
+package errors;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import opennlp.tools.cmdline.postag.POSModelLoader;
+import gui.Main;
 import opennlp.tools.namefind.NameFinderME;
-import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.parser.Parser;
-//import opennlp.tools.parser.ParserFactory;
-//import opennlp.tools.parser.ParserModel;
-import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
-import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.Tokenizer;
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.util.InvalidFormatException;
+import opennlp.tools.util.ObjectStream;
+import opennlp.tools.util.PlainTextByLineStream;
+import util.UtilityMethods;
 
 /**
- * Defines abstract class for types of grammatical errors and provides static methods
+ * Defines abstract class for types of grammatical errors and provides static utility methods
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
 public abstract class Error {
 	public final int ERROR_NUMBER;
-	
 	public static SentenceDetectorME sentenceDetector;
 	public static Tokenizer tokenizer;
 	public static NameFinderME nameFinder;
@@ -41,7 +32,7 @@ public abstract class Error {
 	 * for testing purposes
 	 */
 	public static void main(String[] args) {
-		setupOpenNLP();
+		UtilityMethods.setupOpenNLP();
 		String input = "I walk. The ball is round. He says: \"Hello!\"";
 		ArrayList<int[]> errorTokens = new ArrayList<int[]>();
 		int[] error1 = {6, 12, 1};
@@ -68,57 +59,6 @@ public abstract class Error {
 	public Error(int errorNum) {
 		ERROR_NUMBER = errorNum;
 	}
-	
-	/**
-	 * Initializes all the necessary OpenNLP tools
-	 */
-	public static void setupOpenNLP() {
-		InputStream is = null;
-
-		//SentenceDetector
-		SentenceModel sModel = null;
-		try {is = new FileInputStream("lib/en-sent.bin");}
-		catch (FileNotFoundException e1) {e1.printStackTrace();}
-		try {sModel = new SentenceModel(is);}
-		catch (InvalidFormatException e1) {e1.printStackTrace();}
-		catch (IOException e1) {e1.printStackTrace();}
-
-		//NameFinder
-		TokenNameFinderModel nModel = null;
-		try {is = new FileInputStream("lib/en-ner-person.bin");}
-		catch (FileNotFoundException e1) {e1.printStackTrace();}
-		try {nModel = new TokenNameFinderModel(is);}
-		catch (InvalidFormatException e1) {e1.printStackTrace();}
-		catch (IOException e1) {e1.printStackTrace();}
-
-		//Tokenizer
-		TokenizerModel tModel = null;
-		try {is = new FileInputStream("lib/en-token.bin");}
-		catch (FileNotFoundException e1) {e1.printStackTrace();}
-		try {tModel = new TokenizerModel(is); }
-		catch (InvalidFormatException e1) {e1.printStackTrace();}
-		catch (IOException e1) {e1.printStackTrace();}
-
-		//POSTagger
-		POSModel posModel = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
-
-		//Parser
-//		ParserModel pModel = null;
-//		try {is = new FileInputStream("lib/en-parser-chunking.bin");}
-//		catch (FileNotFoundException e1) {e1.printStackTrace();}
-//		try {pModel = new ParserModel(is); }
-//		catch (InvalidFormatException e1) {e1.printStackTrace();}
-//		catch (IOException e1) {e1.printStackTrace();}
-
-		sentenceDetector = new SentenceDetectorME(sModel);
-		nameFinder = new NameFinderME(nModel);
-		tokenizer = new TokenizerME(tModel);
-		posTagger = new POSTaggerME(posModel);
-//		parser = ParserFactory.create(pModel);
-
-		try {is.close();}
-		catch (IOException e) {e.printStackTrace();}
-	}
 
 	/**
 	 * Finds errors of a specific type in the submitted text
@@ -128,9 +68,39 @@ public abstract class Error {
 	 * 			int[2] is the error number (1 - 14)
 	 */
 	public abstract ArrayList<int[]> findErrors(String line);
+	
+	public static ArrayList<int[]> findAllErrors(String text) {
+		ArrayList<int[]> errors = new ArrayList<int[]>();
+		int lineNum = 1, charOffset = 0;
+		String line;
+		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
+		try {
+			while ((line = lineStream.read()) != null) {
+				System.out.println("\nAnalysing line " + lineNum + ":");
+				ArrayList<int[]> lineErrors = new ArrayList<int[]>();
+				
+				for(Error e: Main.ERROR_LIST) {
+					System.out.println("looking for: " + e.getClass());
+					ArrayList<int[]> temp = e.findErrors(line);
+					lineErrors.addAll(temp);
+				}
+				sort(lineErrors);
+				lineErrors = tokensToChars(line, lineErrors, charOffset);
+				errors.addAll(lineErrors);
+				
+				lineNum++;
+				charOffset += line.length() + 1;
+			}
+		} catch (IOException e) {e.printStackTrace();}
+		
+		System.out.println();
+		printErrors(errors, text);
+		
+		return errors;
+	}
 
 	/**
-	 * Sorts the list of all errors by location.
+	 * Sorts a list of all errors by location.
 	 * @param list All the located errors 
 	 */
 	public static void sort(ArrayList<int[]> list) {
@@ -212,18 +182,5 @@ public abstract class Error {
 			}
 		}
 		return errorChars;
-	}
-	
-	/**
-	 * utility method that returns whether or not a string can be found in an array of strings
-	 * @param array the array to check
-	 * @param word the string to look for
-	 * @return true if found, false otherwise
-	 */
-	public static boolean arrayContains(String[] array, String word) {
-		for(String item : array)
-			if(word.equalsIgnoreCase(item))
-				return true;
-		return false;
 	}
 }

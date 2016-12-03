@@ -1,4 +1,4 @@
-package bsChecker;
+package util;
 
 import java.util.ArrayList;
 
