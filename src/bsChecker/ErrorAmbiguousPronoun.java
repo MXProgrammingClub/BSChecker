@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import opennlp.tools.util.Span;
 
 /**
- * @author Dalal
  * Finds ambiguous pronoun references. (7)
+ * @author Dalal
  */
 public class ErrorAmbiguousPronoun extends Error {
-	private static final int ERROR_NUMBER = 7;
 	private static final String[] PRONOUNS = {"she", "her", "hers", "herself", "he", "him", "his", "himself", "they", "them", "their", "theirs", "themselves"};
 
 	/**
@@ -22,6 +21,13 @@ public class ErrorAmbiguousPronoun extends Error {
 		ArrayList<int[]> errors = new ErrorAmbiguousPronoun().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
+	}
+	
+	/**
+	 * constructor
+	 */
+	public ErrorAmbiguousPronoun() {
+		super(7);
 	}
 
 	/**

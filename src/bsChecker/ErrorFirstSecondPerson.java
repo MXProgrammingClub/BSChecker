@@ -3,12 +3,11 @@ package bsChecker;
 import java.util.ArrayList;
 
 /**
+ * Finds uses of first and second person. (3)
  * @author Dalal
  * @author JeremiahDeGreeff
- * Finds uses of first and second person. (3)
  */
 public class ErrorFirstSecondPerson extends Error {
-	private static final int ERROR_NUMBER = 3;
 	private static final String[] PRONOUNS = {"I","me", "my", "we", "us", "our", "you", "your"};
 
 	/**
@@ -22,10 +21,16 @@ public class ErrorFirstSecondPerson extends Error {
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
+	
+	/**
+	 * constructor
+	 */
+	public ErrorFirstSecondPerson() {
+		super(3);
+	}
 
 	/**
 	 * finds all instances of first or second person in the given paragraph
-	 * known issues: none
 	 * @param line paragraph to check
 	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (3)
 	 */

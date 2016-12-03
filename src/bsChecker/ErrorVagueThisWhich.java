@@ -3,12 +3,10 @@ package bsChecker;
 import java.util.ArrayList;
 
 /**
- * @author tedpyne
  * Finds errors with vague use of this or which. (4)
+ * @author tedpyne
  */
 public class ErrorVagueThisWhich extends Error {
-	private static final int ERROR_NUMBER = 4;
-
 	/**
 	 * for testing purposes
 	 */
@@ -22,8 +20,14 @@ public class ErrorVagueThisWhich extends Error {
 	}
 	
 	/**
+	 * constructor
+	 */
+	public ErrorVagueThisWhich() {
+		super(4);
+	}
+	
+	/**
 	 * finds any vague which or this in the given paragraph
-	 * known issues: none
 	 * @param line paragraph to check
 	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (4)
 	 */

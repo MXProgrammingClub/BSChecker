@@ -3,12 +3,10 @@ package bsChecker;
 import java.util.ArrayList;
 
 /**
- * @author JeremiahDeGreeff
  * Finds errors where gerunds incorrectly lack a possessive. (13)
+ * @author JeremiahDeGreeff
  */
 public class ErrorGerundPossessive extends Error {
-	private static final int ERROR_NUMBER = 13;
-
 	/**
 	 * for testing purposes
 	 */
@@ -19,6 +17,13 @@ public class ErrorGerundPossessive extends Error {
 		ArrayList<int[]> errors = new ErrorGerundPossessive().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
+	}
+	
+	/**
+	 * constructor
+	 */
+	public ErrorGerundPossessive() {
+		super(13);
 	}
 
 	/**

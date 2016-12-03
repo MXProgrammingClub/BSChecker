@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 /**
- * @author Julia
  * Finds errors in quotation form. (14)
+ * @author Julia
+ * @author JeremiahDeGreeff
  */
 public class ErrorQuotationForm extends Error {
-	private static final int ERROR_NUMBER = 14;	
 	private static final String FILE_NAME = "SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
 	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
 	private static final String[] PUNCTUATION1 = {".", ","};
@@ -43,6 +43,13 @@ public class ErrorQuotationForm extends Error {
 		ArrayList<int[]> errors = new ErrorQuotationForm().findErrors(input);
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
+	}
+	
+	/**
+	 * constructor
+	 */
+	public ErrorQuotationForm() {
+		super(14);
 	}
 
 	/**

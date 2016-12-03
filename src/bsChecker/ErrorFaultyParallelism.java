@@ -7,10 +7,10 @@ import opennlp.tools.parser.Parse;
 
 /**
  * WIP
- * @author
  * Finds errors in Parallelism. (11)
+ * @author
  */
-public class ErrorFaultyParallelism extends Error{
+public class ErrorFaultyParallelism extends Error {
 	private static final int ERROR_NUMBER = 11;
 	/**
 	 * for testing purposes
@@ -25,6 +25,14 @@ public class ErrorFaultyParallelism extends Error{
 		for(int[] arr: errs)
 			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
 	}
+	
+	/**
+	 * constructor
+	 */
+	public ErrorFaultyParallelism() {
+		super(11);
+	}
+	
 	@Override
 	public ArrayList<int[]> findErrors(String text){
 		String startText = text;

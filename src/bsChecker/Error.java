@@ -24,11 +24,13 @@ import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.InvalidFormatException;
 
 /**
+ * Defines abstract class for types of grammatical errors and provides static methods
  * @author tedpyne
  * @author JeremiahDeGreeff
- * Defines abstract class for types of grammatical errors
  */
 public abstract class Error {
+	public final int ERROR_NUMBER;
+	
 	public static SentenceDetectorME sentenceDetector;
 	public static Tokenizer tokenizer;
 	public static NameFinderME nameFinder;
@@ -50,6 +52,21 @@ public abstract class Error {
 		errorTokens.add(error3);
 		sort(errorTokens);
 		printErrors(tokensToChars(input, errorTokens, 0), input);
+	}
+	
+	/**
+	 * default constructor which should not be called
+	 */
+	public Error() {
+		this(0);
+	}
+	
+	/**
+	 * creates a new Error object with the given error number
+	 * @param errorNum the number (1 - 14) which represents this error. 0 is invalid error
+	 */
+	public Error(int errorNum) {
+		ERROR_NUMBER = errorNum;
 	}
 	
 	/**

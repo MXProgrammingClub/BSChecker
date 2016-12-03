@@ -3,13 +3,12 @@ package bsChecker;
 import java.util.ArrayList;
 
 /**
+ * Finds verbs in the past tense. (1)
  * @author Leo
  * @author tedpyne
  * @author JeremiahDeGreeff
- * Finds verbs in the past tense. (1)
  */
-public class ErrorPastTense extends Error{
-	private static final int ERROR_NUMBER = 1;
+public class ErrorPastTense extends Error {
 	//private static final String[] TO_HAVE_CONJ = {"have", "has", "had", "having"};
 	
 	/**
@@ -24,6 +23,13 @@ public class ErrorPastTense extends Error{
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
 
+	/**
+	 * constructor
+	 */
+	public ErrorPastTense() {
+		super(1);
+	}
+	
 	/**
 	 * finds all instances of past tense in the given paragraph
 	 * known issues: runs into problems with ']' being interpreted as a past tense verb

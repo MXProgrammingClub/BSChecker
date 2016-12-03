@@ -1,11 +1,8 @@
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 
-import opennlp.tools.cmdline.PerformanceMonitor;
 import opennlp.tools.cmdline.postag.*;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -22,95 +19,66 @@ import opennlp.tools.util.*;
  * @author tedpyne
  */
 public class BSChecker {
-	public static void main(String[] args) throws InvalidFormatException, IOException{ 
-//		Tokenize();
-//		SentenceDetect();
-		POSTag();
-//		findName();
+	public static void main(String[] args) throws InvalidFormatException, IOException{
+		String input = "";
+		Tokenize(input);
+		SentenceDetect(input);
+		POSTag(input);
+		findName(input);
 	}
 
-	public static void Tokenize() throws InvalidFormatException, IOException {
+	public static void Tokenize(String input) throws InvalidFormatException, IOException {
 		InputStream is = new FileInputStream("lib/en-token.bin");
-
 		TokenizerModel model = new TokenizerModel(is);
-
+		is.close();
 		Tokenizer tokenizer = new TokenizerME(model);
-
-		String tokens[] = tokenizer.tokenize("Hi. How are you? This is Mike.");
-
+		
+		String tokens[] = tokenizer.tokenize(input);
+		
 		for (String a : tokens)
 			System.out.println(a);
-
-		is.close();
 	}
 
-	public static void SentenceDetect() throws InvalidFormatException, IOException {
-		String paragraph = "Hi. How are you? This is Mike.";
-
-		// always start with a model, a model is learned from training data
+	public static void SentenceDetect(String paragraph) throws InvalidFormatException, IOException {
 		InputStream is = new FileInputStream("lib/en-sent.bin");
 		SentenceModel model = new SentenceModel(is);
+		is.close();
 		SentenceDetectorME sdetector = new SentenceDetectorME(model);
 
 		String sentences[] = sdetector.sentDetect(paragraph);
 
 		System.out.println(sentences[0]);
 		System.out.println(sentences[1]);
+	}
+
+	public static void POSTag(String input) throws IOException {
+		InputStream is = new FileInputStream("lib/en-token.bin");
+		TokenizerModel tModel = new TokenizerModel(is);
 		is.close();
-	}
-
-	public static void POSTag() throws IOException {
-		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
-		PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "sent");
-		POSTaggerME tagger = new POSTaggerME(model);
-		
-		InputStream is = null;
-		TokenizerModel tModel = null;
-		try {is = new FileInputStream("lib/en-token.bin");}
-		catch (FileNotFoundException e1) {e1.printStackTrace();}
-		try {tModel = new TokenizerModel(is); }
-		catch (InvalidFormatException e1) {e1.printStackTrace();}
-		catch (IOException e1) {e1.printStackTrace();}
 		Tokenizer tokenizer = new TokenizerME(tModel);
+		
+		POSModel model = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
+		POSTaggerME tagger = new POSTaggerME(model);
 
-		String input = "The added benefits of love include";
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(input));
+		String[] tokens = tokenizer.tokenize(input);
+		String[] tags = tagger.tag(tokens);
 
-		perfMon.start();
-		String line;
-		while ((line = lineStream.read()) != null) {
-
-			String TokenizerLine[] = tokenizer.tokenize(line);
-			String[] tags = tagger.tag(TokenizerLine);
-
-			POSSample sample = new POSSample(TokenizerLine, tags);
-			System.out.println(sample.toString());
-
-			perfMon.incrementCounter();
-		}
-		perfMon.stopAndPrintFinalResult();
+		POSSample sample = new POSSample(tokens, tags);
+		System.out.println(sample.toString());
 	}
 
-	public static void findName() throws IOException {
-		InputStream is = new FileInputStream("lib/en-ner-person.bin");
-
+	public static void findName(String input) throws IOException {
+		InputStream is = new FileInputStream("lib/en-token.bin");
+		TokenizerModel tModel = new TokenizerModel(is);
+		Tokenizer tokenizer = new TokenizerME(tModel);
+		
+		is = new FileInputStream("lib/en-ner-person.bin");
 		TokenNameFinderModel model = new TokenNameFinderModel(is);
 		is.close();
-
 		NameFinderME nameFinder = new NameFinderME(model);
 
-		String []sentence = new String[]{
-				"Mike",
-				"Smith",
-				"is",
-				"a",
-				"good",
-				"car",
-				".",
-				"he"
-		};
-
-		Span nameSpans[] = nameFinder.find(sentence);
+		String[] tokens = tokenizer.tokenize(input);
+		Span nameSpans[] = nameFinder.find(tokens);
 
 		for(Span s: nameSpans)
 			System.out.println(s.toString());			

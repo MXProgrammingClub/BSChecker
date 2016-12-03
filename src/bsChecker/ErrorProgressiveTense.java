@@ -3,11 +3,10 @@ package bsChecker;
 import java.util.ArrayList;
 
 /**
- * @author JeremiahDeGreeff
  * Finds verbs in progressive tense. (12)
+ * @author JeremiahDeGreeff
  */
 public class ErrorProgressiveTense extends Error {
-	private static final int ERROR_NUMBER = 12;
 	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been"};
 
 	/**
@@ -21,10 +20,16 @@ public class ErrorProgressiveTense extends Error {
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
+	
+	/**
+	 * constructor
+	 */
+	public ErrorProgressiveTense() {
+		super(12);
+	}
 
 	/**
 	 * finds all instances of progressive tense in the given paragraph
-	 * 
 	 * @param line paragraph to check
 	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (12)
 	 */
@@ -42,9 +47,6 @@ public class ErrorProgressiveTense extends Error {
 					errors.add(new int[]{i, j, ERROR_NUMBER});
 				}
 			}
-			/*if(tags[i].equals("VBG") && tokens[i].charAt(0) != '\"' &&arrayContains(TO_BE_CONJ, tokens[i - 1]))
-					errors.add(new int[]{i - 1, i, ERROR_NUMBER});*/
-		
 		return errors;
 	}
 }

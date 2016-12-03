@@ -8,12 +8,10 @@ import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
 
 /**
- * @author Leo
  * Finds errors in pronoun case. (6)
+ * @author Leo
  */
-public class ErrorPronounCase extends Error{
-	private static final int ERROR_NUMBER = 6;
-	
+public class ErrorPronounCase extends Error {
 	// pronoun cases
 	private static final String[] POSSESADJ = {"her", "his", "its", "their", "our", "my", "your", "whose"};
 	private static final String[] POSSES = {"hers", "his", "its", "theirs", "ours", "mine", "yours", "whose"};
@@ -33,7 +31,18 @@ public class ErrorPronounCase extends Error{
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
 
+	/**
+	 * constructor
+	 */
+	public ErrorPronounCase() {
+		super(6);
+	}
 
+	/**
+	 * finds all errors in pronoun case within the paragraph
+	 * @param line paragraph to check
+	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (12)
+	 */
 	@Override
 	public ArrayList<int[]> findErrors(String line) {
 		String[] tokens = tokenizer.tokenize(line);
@@ -45,117 +54,99 @@ public class ErrorPronounCase extends Error{
 				pronounIndices.add(i);
 		}
 		ArrayList<int[]> errors = new ArrayList<int[]>();
-		possesPronoun(pronounIndices, tokens, tags, errors);
+		posPronoun(pronounIndices, tokens, tags, errors);
 		subjPronoun(pronounIndices, tokens, tags, errors);
 		objPronoun(pronounIndices, tokens, tags, errors);	
 		
 		return errors;
 	}
 	
-	
-	private void possesPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices)
-	{
-//		System.out.println("Running");
-//		System.out.println(pronounIndices);
+	/**
+	 * A method that looks at pronouns that should be possessive and returns the indices of any of those that are not
+	 * @param pronounIndices the indices of all pronouns to be checked
+	 * @param tokenList the tokens of the paragraph
+	 * @param tagList the parts of speech of those tokens
+	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
+	 */
+	private void posPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices) {
+		System.out.println("Looking for Possesives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);
-//			System.out.println("This is index");
-//			System.out.println(index);
-			int nextWordIndex = index + 1;
-			//pass over adjectives and adverbs
-			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R') {
-				nextWordIndex++;
-			}
-			
-			if(tagList[nextWordIndex].charAt(0) == 'N' || ((index >= 2) && (tagList[index-1].equals("of")) && tagList[index-2].charAt(0) == 'N')) {
-			// e.g. friend (noun) of his (possessive pronoun)
-//	  			System.out.println("Possessive pronoun detected");
-				// so the pronoun should be possessive
-				boolean possErr = true;
-				for(String pronoun: POSSES)
-					if(tokenList[index].equals(pronoun))
-						possErr = false;
-				for(String pronoun: POSSESADJ)
-					if(tokenList[index].equals(pronoun))
-						possErr = false;
-				if(possErr)
-					errorIndices.add(new int[] {index, index, ERROR_NUMBER});
-				pronounIndices.remove(element);
-				element--;
-			}
-//			for (int[] s: errorIndices)
-//			{
-//				System.out.print("pos: ");
-//				System.out.println(s[0]);
-//			}
-		}
-	}
-	
-	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices)
-	{
-//		System.out.println("Running");
-//		System.out.println(pronounIndices);
-		for(int element = 0; element < pronounIndices.size(); element++) {
-			int index = pronounIndices.get(element);
-//			System.out.println("This is index ");
-//			System.out.println(index);
-			if (index - 1 >= 0) {
-				int previousWordIndex = index - 1;
-				
-				// checking for a verb before the pronoun
-				if(tagList[previousWordIndex].charAt(0) == 'V') {
-					// so the pronoun should be subjective
-//		  			System.out.println("Subjective pronoun detected");
-						boolean subjErr = true;
-						for(String pronoun: SUBJ)
-							if(tokenList[index].equals(pronoun))
-								subjErr = false;
-						if(subjErr)
-							errorIndices.add(new int[] {index, index, ERROR_NUMBER});
-						pronounIndices.remove(element);
-						element--;
-					}
-			}
-//			for (int[] s: errorIndices)
-//			{
-//				System.out.print("subj: ");
-//				System.out.println(s[0]);
-//			}
-		}
-	}
-	
-	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices)
-	{
-//		System.out.println("Running");
-//		System.out.println(pronounIndices);
-		for(int element = 0; element < pronounIndices.size(); element++)
-		{
-			int index = pronounIndices.get(element);
-//			System.out.println("This is index ");
-//			System.out.println(index);
-			if (index + 1 < tokenList.length)
-			{
+			if(index + 1 < tokenList.length) {
 				int nextWordIndex = index + 1;
-
-				// checking for a verb after the pronoun
-				if(tagList[nextWordIndex].charAt(0) == 'V') {
-					// so the pronoun should be objective
-//		  			System.out.println("Objective pronoun detected");
-					boolean objErr = true;
-					for(String pronoun: SUBJ)
-						if(tokenList[index].equals(pronoun))
-							objErr = false;
-					if(objErr)
+				//pass over adjectives and adverbs
+				while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R') {
+					nextWordIndex++;
+				}
+				//checking for a noun after the pronoun or the use of "of" as a possessive e.g. friend (noun) of his (possessive pronoun)
+				if(tagList[nextWordIndex].charAt(0) == 'N' || ((index >= 2) && (tagList[index - 1].equals("of")) && tagList[index - 2].charAt(0) == 'N')) {
+					// so the pronoun should be possessive
+					if(!(arrayContains(POSSES, tokenList[index]) || arrayContains(POSSESADJ, tokenList[index]))) {
 						errorIndices.add(new int[] {index, index, ERROR_NUMBER});
+						System.out.println("possesive error: " + tokenList[index]);
+					}
 					pronounIndices.remove(element);
 					element--;
 				}
 			}
-//			for (int[] s: errorIndices)
-//			{
-//				System.out.print("obj: ");
-//				System.out.println(s[0]);
-//			}
+		}
+	}
+	
+	/**
+	 * A method that looks at pronouns that should be subjective and returns the indices of any of those that are not
+	 * @param pronounIndices the indices of all pronouns to be checked
+	 * @param tokenList the tokens of the paragraph
+	 * @param tagList the parts of speech of those tokens
+	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
+	 */
+	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices) {
+		System.out.println("Looking for Subjectives in: " + pronounIndices);
+		for(int element = 0; element < pronounIndices.size(); element++) {
+			int index = pronounIndices.get(element);
+			if(index + 1 < tokenList.length) {
+				int nextWordIndex = index + 1;
+				//pass over adverbs
+				while(tagList[nextWordIndex].charAt(0) == 'R' || tagList[nextWordIndex].equals("MD")) {
+					nextWordIndex++;
+				}
+				// checking for a verb before the pronoun
+				if(tagList[nextWordIndex].charAt(0) == 'V') {
+					// so the pronoun should be subjective
+					if(!arrayContains(SUBJ, tokenList[index])) {
+						errorIndices.add(new int[] {index, index, ERROR_NUMBER});
+						System.out.println("subjective error: " + tokenList[index]);
+					}
+					pronounIndices.remove(element);
+					element--;
+				}
+			}	
+		}
+	}
+	
+	/**
+	 * A method that looks at pronouns that should be objective and returns the indices of any of those that are not
+	 * @param pronounIndices the indices of all pronouns to be checked
+	 * @param tokenList the tokens of the paragraph
+	 * @param tagList the parts of speech of those tokens
+	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
+	 */
+	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices) {
+		System.out.println("Looking for Objectives in: " + pronounIndices);
+		for(int element = 0; element < pronounIndices.size(); element++) {
+			int index = pronounIndices.get(element);
+			if (index > 0) {
+				int previousWordIndex = index - 1;
+				// checking for a verb before the pronoun
+				if(tagList[previousWordIndex].charAt(0) == 'V') {
+					// so the pronoun should be objective
+					if(!arrayContains(OBJ, tokenList[index])) {
+						errorIndices.add(new int[] {index, index, ERROR_NUMBER});
+						System.out.println("subjective error: " + tokenList[index]);
+					}
+					pronounIndices.remove(element);
+					element--;
+				}
+			}
 		}
 	}
 	

@@ -7,13 +7,15 @@ import opennlp.tools.parser.Parse;
 
 /**
  * WIP
- * @author
  * Finds errors with verbs which don't agree in number with their subjects
  * and pronouns which don't agree in number with their antecedents. (5)
+ * @author
  */
-public class ErrorNumberDisagreement extends Error{
-	private final int ERROR_NUMBER = 5;
-	
+@SuppressWarnings("unused")
+public class ErrorNumberDisagreement extends Error {
+	/**
+	 * for testing purposes
+	 */
 	public static void main(String[] args){
 		Error.setupOpenNLP();
 		String input = "They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.";
@@ -22,6 +24,14 @@ public class ErrorNumberDisagreement extends Error{
 		sort(errors);
 		printErrors(tokensToChars(input, errors, 0), input);
 	}
+	
+	/**
+	 * constructor
+	 */
+	public ErrorNumberDisagreement() {
+		super(5);
+	}
+	
 	@Override
 	public ArrayList<int[]> findErrors(String line){
 		String sentences[] = sentenceDetector.sentDetect(line);
