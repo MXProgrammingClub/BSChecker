@@ -30,11 +30,20 @@ public class NumberDisagreement extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public NumberDisagreement() {
-		super(5);
+		this(true);
 	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public NumberDisagreement(boolean isChecked) {
+		super(5, isChecked);
+	}
+	
 	/**
 	 * finds errors in number disagreement in the given paragraph
 	 * @param line the paragraph in which to find errors

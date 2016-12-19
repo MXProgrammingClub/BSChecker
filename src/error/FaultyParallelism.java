@@ -29,11 +29,20 @@ public class FaultyParallelism extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public FaultyParallelism() {
-		super(11);
+		this(true);
 	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public FaultyParallelism(boolean isChecked) {
+		super(11, isChecked);
+	}
+	
 	/**
 	 * finds instances of faulty parallelism in the given paragraph
 	 * @param line the paragraph in which to find errors

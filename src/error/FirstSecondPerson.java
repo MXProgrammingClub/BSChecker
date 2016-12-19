@@ -25,10 +25,18 @@ public class FirstSecondPerson extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public FirstSecondPerson() {
-		super(3);
+		this(true);
+	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public FirstSecondPerson(boolean isChecked) {
+		super(3, isChecked);
 	}
 
 	/**

@@ -22,10 +22,18 @@ public class GerundPossessive extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public GerundPossessive() {
-		super(13);
+		this(true);
+	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public GerundPossessive(boolean isChecked) {
+		super(13, isChecked);
 	}
 
 	/**

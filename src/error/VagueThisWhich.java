@@ -22,10 +22,18 @@ public class VagueThisWhich extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public VagueThisWhich() {
-		super(4);
+		this(true);
+	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public VagueThisWhich(boolean isChecked) {
+		super(4, isChecked);
 	}
 	
 	/**

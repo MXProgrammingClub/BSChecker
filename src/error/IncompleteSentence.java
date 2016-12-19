@@ -23,10 +23,18 @@ public class IncompleteSentence extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public IncompleteSentence() {
-		super(2);
+		this(true);
+	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public IncompleteSentence(boolean isChecked) {
+		super(2, isChecked);
 	}
 
 	/**

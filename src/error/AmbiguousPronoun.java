@@ -27,10 +27,18 @@ public class AmbiguousPronoun extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public AmbiguousPronoun() {
-		super(7);
+		this(true);
+	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public AmbiguousPronoun(boolean isChecked) {
+		super(7, isChecked);
 	}
 
 	/**

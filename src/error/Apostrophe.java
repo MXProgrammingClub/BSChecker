@@ -23,10 +23,18 @@ public class Apostrophe extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public Apostrophe() {
-		super(8);
+		this(true);
+	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public Apostrophe(boolean isChecked) {
+		super(8, isChecked);
 	}
 
 	/**

@@ -29,12 +29,20 @@ public class PronounCase extends Error {
 		errors.tokensToChars(0);
 		System.out.println(errors);
 	}
+	
+	/**
+	 * default constructor
+	 */
+	public PronounCase() {
+		this(true);
+	}
 
 	/**
 	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public PronounCase() {
-		super(6);
+	public PronounCase(boolean isChecked) {
+		super(6, isChecked);
 	}
 
 	/**

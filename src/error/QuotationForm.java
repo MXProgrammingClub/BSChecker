@@ -48,10 +48,18 @@ public class QuotationForm extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public QuotationForm() {
-		super(14);
+		this(true);
+	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public QuotationForm(boolean isChecked) {
+		super(14, isChecked);
 	}
 
 	/**

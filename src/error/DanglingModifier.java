@@ -23,10 +23,18 @@ public class DanglingModifier extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public DanglingModifier() {
-		super(10);
+		this(true);
+	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public DanglingModifier(boolean isChecked) {
+		super(10, isChecked);
 	}
 
 	/**

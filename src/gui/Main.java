@@ -18,20 +18,20 @@ import util.UtilityMethods;
 public class Main extends Application {
 
 	public final static Error[] ERROR_LIST = {
-			new PastTense(),
-//			new IncompleteSentence(),
-			new FirstSecondPerson(),
-			new VagueThisWhich(),
-//			new NumberDisagreement(),
-			new PronounCase(),
-			new AmbiguousPronoun(),
-//			new Apostrophe(),
-			new PassiveVoice(),
-//			new DanglingModifier(),
-//			new FaultyParallelism(),
-			new ProgressiveTense(),
-			new GerundPossessive(),
-			new QuotationForm()
+			new PastTense(true),
+			new IncompleteSentence(false), //unimplemented
+			new FirstSecondPerson(true),
+			new VagueThisWhich(true),
+			new NumberDisagreement(false), //nonfunctional
+			new PronounCase(true),
+			new AmbiguousPronoun(true),
+			new Apostrophe(false), //unimplemented
+			new PassiveVoice(true),
+			new DanglingModifier(false), //unimplemented
+			new FaultyParallelism(false), //nonfunctional
+			new ProgressiveTense(true),
+			new GerundPossessive(true),
+			new QuotationForm(true)
 	};
 
 	public static void main(String[] args) {

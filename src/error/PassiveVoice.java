@@ -25,10 +25,18 @@ public class PassiveVoice extends Error {
 	}
 	
 	/**
-	 * constructor
+	 * default constructor
 	 */
 	public PassiveVoice() {
-		super(9);
+		this(true);
+	}
+	
+	/**
+	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 */
+	public PassiveVoice(boolean isChecked) {
+		super(9, isChecked);
 	}
 
 	/**

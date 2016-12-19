@@ -24,12 +24,20 @@ public class PastTense extends Error {
 		errors.tokensToChars(0);
 		System.out.println(errors);
 	}
+	
+	/**
+	 * default constructor
+	 */
+	public PastTense() {
+		this(true);
+	}
 
 	/**
 	 * constructor
+	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public PastTense() {
-		super(1);
+	public PastTense(boolean isChecked) {
+		super(1, isChecked);
 	}
 	
 	/**

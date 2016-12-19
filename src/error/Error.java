@@ -21,6 +21,7 @@ import util.UtilityMethods;
  */
 public abstract class Error {
 	public final int ERROR_NUMBER;
+	public boolean isChecked;
 	public static SentenceDetectorME sentenceDetector;
 	public static Tokenizer tokenizer;
 	public static NameFinderME nameFinder;
@@ -34,6 +35,7 @@ public abstract class Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "I walk. The ball is round. He says: \"Hello!\"";
 		ErrorList errors = new ErrorList(input, false);
+		//not real errors - just for testing
 		int[] error1 = {6, 12, 1};
 		int[] error2 = {2, 4, 2};
 		int[] error3 = {0, 1, 3};
@@ -47,18 +49,13 @@ public abstract class Error {
 	}
 	
 	/**
-	 * default constructor which should not be called
-	 */
-	public Error() {
-		this(0);
-	}
-	
-	/**
 	 * creates a new Error object with the given error number
-	 * @param errorNum the number (1 - 14) which represents this error. 0 is invalid error
+	 * @param errorNum the number (1 - 14) which represents this error
+	 * @param isChecked true if errors of the given type should be looked for when the text is analyzed, false otherwise
 	 */
-	public Error(int errorNum) {
+	public Error(int errorNum, boolean isChecked) {
 		ERROR_NUMBER = errorNum;
+		this.isChecked = isChecked;
 	}
 
 	/**
@@ -70,6 +67,19 @@ public abstract class Error {
 	 */
 	public abstract ErrorList findErrors(String line);
 	
+	/**
+	 * changes the value of isChecked
+	 */
+	public void setIsChecked() {
+		isChecked = !isChecked;
+	}
+	
+	/**
+	 * finds all errors within the given text
+	 * all types included in ERROR_LIST who have an isChecked value of true will be checked
+	 * @param text the text to search
+	 * @return an ErrorList which contains all the errors in the passage
+	 */
 	public static ErrorList findAllErrors(String text) {
 		ErrorList errors = new ErrorList(text, true);
 		int lineNum = 1, charOffset = 0;
@@ -81,9 +91,11 @@ public abstract class Error {
 				ErrorList lineErrors = new ErrorList(line, false);
 				
 				for(Error e: Main.ERROR_LIST) {
-					System.out.println("looking for: " + e.getClass());
-					ErrorList temp = e.findErrors(line);
-					lineErrors.addAll(temp);
+					if(e.isChecked){
+						System.out.println("looking for: " + e.getClass());
+						ErrorList temp = e.findErrors(line);
+						lineErrors.addAll(temp);
+					}
 				}
 				lineErrors.sort();
 				lineErrors.tokensToChars(charOffset);

@@ -32,7 +32,7 @@ public class ErrorList extends ArrayList<int[]>{
 		if(isEmpty())
 			return "No errors found!";
 		
-		String errors = "All found errors:\n";
+		String errors = "All found errors (" + size() + " total):\n";
 		if(isCharList) {
 			for(int[] error : this)
 				errors += "Characters " + error[0] + "-" + error[1] + ": \"" + TEXT.substring(error[0], error[1] + 1) + "\" (error " + error[2] + ")\n";
