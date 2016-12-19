@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import error.Error;
+import opennlp.tools.cmdline.PerformanceMonitor;
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -26,11 +27,20 @@ import opennlp.tools.util.InvalidFormatException;
  */
 public class UtilityMethods {
 	/**
+	 * for testing purposes
+	 */
+	public static void main(String[] args) {
+		setupOpenNLP();
+	}
+	
+	/**
 	 * Initializes all the necessary OpenNLP tools
 	 */
 	public static void setupOpenNLP() {
-		System.out.println("\nSetting up opennlp:");
+		PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "tools");
 		InputStream is = null;
+		System.out.println("Setting up opennlp:\n");
+		perfMon.start();
 
 		System.out.println("Setting up the Sentence Detector");
 		SentenceModel sModel = null;
@@ -39,7 +49,8 @@ public class UtilityMethods {
 		try {sModel = new SentenceModel(is);}
 		catch (InvalidFormatException e1) {e1.printStackTrace();}
 		catch (IOException e1) {e1.printStackTrace();}
-
+		perfMon.incrementCounter();
+		
 		System.out.println("Setting up the Name Finder");
 		TokenNameFinderModel nModel = null;
 		try {is = new FileInputStream("lib/en-ner-person.bin");}
@@ -47,7 +58,8 @@ public class UtilityMethods {
 		try {nModel = new TokenNameFinderModel(is);}
 		catch (InvalidFormatException e1) {e1.printStackTrace();}
 		catch (IOException e1) {e1.printStackTrace();}
-
+		perfMon.incrementCounter();
+		
 		System.out.println("Setting up the Tokenizer");
 		TokenizerModel tModel = null;
 		try {is = new FileInputStream("lib/en-token.bin");}
@@ -55,9 +67,11 @@ public class UtilityMethods {
 		try {tModel = new TokenizerModel(is); }
 		catch (InvalidFormatException e1) {e1.printStackTrace();}
 		catch (IOException e1) {e1.printStackTrace();}
-
+		perfMon.incrementCounter();
+		
 		System.out.println("Setting up the Part of Speech Tagger");
 		POSModel posModel = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
+		perfMon.incrementCounter();
 
 //		System.out.println("Setting up the Parser");
 //		ParserModel pModel = null;
@@ -66,6 +80,7 @@ public class UtilityMethods {
 //		try {pModel = new ParserModel(is); }
 //		catch (InvalidFormatException e1) {e1.printStackTrace();}
 //		catch (IOException e1) {e1.printStackTrace();}
+//		perfMon.incrementCounter();
 
 		Error.sentenceDetector = new SentenceDetectorME(sModel);
 		Error.nameFinder = new NameFinderME(nModel);
@@ -75,6 +90,7 @@ public class UtilityMethods {
 
 		try {is.close();}
 		catch (IOException e) {e.printStackTrace();}
+		perfMon.stopAndPrintFinalResult();
 		System.out.println("Set up complete!\n");
 	}
 	
