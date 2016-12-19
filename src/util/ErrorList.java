@@ -3,7 +3,7 @@ package util;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import errors.Error;
+import error.Error;
 
 /**
  * Represents a list of errors and provides methods to manipulate the list

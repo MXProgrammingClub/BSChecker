@@ -1,4 +1,4 @@
-package errors;
+package error;
 
 import java.util.Scanner;
 import java.util.ArrayList;

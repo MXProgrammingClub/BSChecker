@@ -1,4 +1,4 @@
-package errors;
+package error;
 
 import util.ErrorList;
 import util.UtilityMethods;

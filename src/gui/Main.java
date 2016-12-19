@@ -1,7 +1,7 @@
 package gui;
 
-import errors.*;
-import errors.Error;
+import error.*;
+import error.Error;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
