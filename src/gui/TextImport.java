@@ -25,14 +25,12 @@ import javafx.stage.FileChooser;
  * Methods for the user to select an essay and to import the text from that file.
  * @author Julia
  */
-public class TextImport
-{
+public class TextImport {
 	/**
 	 * Creates a file chooser for the user to select which file to open. Must be called from an event handler.
 	 * @return The selected file (null if no file is chosen).
 	 */
-	public static File chooseFile()
-	{
+	public static File chooseFile() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Choose Essay");
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Formats", "*.docx", "*.doc", "*.txt"), 
@@ -46,8 +44,7 @@ public class TextImport
 	 * @param file The user selected file.
 	 * @return The text contained in the file, or null if the file is not one of the accepted types.
 	 */
-	public static String openFile(File file)
-	{
+	public static String openFile(File file) {
 		String extension = file.getName().substring(file.getName().indexOf('.'));
 		if(extension.equals(".txt")) return importTxt(file);
 		else if(extension.equals(".doc")) return importDoc(file);
@@ -60,23 +57,15 @@ public class TextImport
 	 * @param file The text file selected.
 	 * @return The text in the text file.
 	 */
-	private static String importTxt(File file)
-	{
+	private static String importTxt(File file) {
 		Scanner scan = null;
-		try
-		{
+		try {
 			scan = new Scanner(file);
-		}
-		catch(FileNotFoundException e)
-		{
-			return "";
-		}
+		} catch(FileNotFoundException e) {return "";}
 		
 		String text = "";
 		while(scan.hasNextLine())
-		{
 			text += scan.nextLine() + "\n";
-		}
 		
 		scan.close();
 		return text;
@@ -87,24 +76,16 @@ public class TextImport
 	 * @param file The word document selected.
 	 * @return The text in the document.
 	 */
-	private static String importDoc(File file)
-	{
+	private static String importDoc(File file) {
 		HWPFDocument doc = null;
-		try
-		{
+		try {
 			doc = new HWPFDocument(new FileInputStream(file));
-		}
-		catch (IOException e) //Should never happen
-		{
-			return null;
-		} 
+		} catch (IOException e) {return null;} //Should never happen
 		
 		String text = "";
 		Range r = doc.getRange();
 		for(int p = 0; p < r.numParagraphs(); p++)
-		{
 			text += r.getParagraph(p).text();
-		}
 		return text;
 	}
 	
@@ -113,29 +94,20 @@ public class TextImport
 	 * @param file The word document selected.
 	 * @return The text in the document.
 	 */
-	private static String importDocx(File file)
-	{
+	private static String importDocx(File file) {
 		XWPFDocument doc = null;
-		try
-		{
+		try {
 			doc = new XWPFDocument(new FileInputStream(file));
-		}
-		catch (IOException e) //Should never happen
-		{
-			return null;
-		} 
+		} catch (IOException e) {return null;} //Should never happen
 		
 		String text = "";
 		List<XWPFParagraph> paragraphs = doc.getParagraphs();
 		for(XWPFParagraph p: paragraphs)
-		{
 			text += p.getText() + "\n";
-		}
 		
-		try
-		{
+		try {
 			doc.close();
-		} catch (IOException e){} //should never happen
+		} catch (IOException e){} //Should never happen
 		return text;
 	}
 	
@@ -144,41 +116,31 @@ public class TextImport
 	 * @param text The text to save in the new document.
 	 */
 	@SuppressWarnings({ "unused", "resource" })
-	public static void saveAs(String text)
-	{
+	public static void saveAs(String text) {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Save Essay");
 		fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Microsoft Word 2007", "*.docx"), new FileChooser.ExtensionFilter("Microsoft Word 1997", "*.doc"), 
 				new FileChooser.ExtensionFilter("Text File", "*.txt"));
 		File file = fc.showSaveDialog(null);
-		if(file != null)
-		{
+		if(file != null) {
 			String extension = file.getName().substring(file.getName().indexOf('.'));
 			if(extension.equals(".txt"))
-			{
 				saveTxt(file, text);
-			}
 			else if(extension.equals(".doc"))
-			{
-				try
-				{
+				try {
 					FileOutputStream f= new FileOutputStream(file); 
 					POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
 					HWPFDocument doc = new HWPFDocument(fs);
 					saveDoc(file, text);
 				} catch (IOException e) {e.printStackTrace();}
-			}
 			else if(extension.equals(".docx"))
-			{
-				try
-				{
+				try {
 					XWPFDocument document= new XWPFDocument(); 
 					FileOutputStream f= new FileOutputStream(file);  
 					document.write(f);
 					f.close();
 					saveDocx(file, text);
 				} catch (IOException e){}
-			}
 		}
 	}
 	
@@ -187,21 +149,14 @@ public class TextImport
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */
-	public static boolean saveText(File file, String text)
-	{
+	public static boolean saveText(File file, String text) {
 		String extension = file.getName().substring(file.getName().indexOf('.'));
 		if(extension.equals(".txt"))
-		{
 			return saveTxt(file, text);
-		}
 		else if(extension.equals(".doc"))
-		{
 			return saveDoc(file, text);
-		}
 		else if(extension.equals(".docx"))
-		{
 			return saveDocx(file, text);
-		}
 		else return false; //should never happen
 	}
 	
@@ -210,23 +165,15 @@ public class TextImport
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */
-	private static boolean saveTxt(File file, String text)
-	{
+	private static boolean saveTxt(File file, String text) {
 		PrintWriter output = null;
-		try
-		{
+		try {
 			output = new PrintWriter(file);
-		}
-		catch (FileNotFoundException e)
-		{
-			return false;
-		}
+		} catch (FileNotFoundException e) {return false;}
 		
 		String[] paragraphs = text.split("\n");
 		for(String paragraph: paragraphs)
-		{
 			output.println(paragraph);
-		}
 		output.close();
 		return true;
 	}
@@ -236,41 +183,32 @@ public class TextImport
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */
-	private static boolean saveDoc(File file, String text)
-	{
+	private static boolean saveDoc(File file, String text) {
 		HWPFDocument doc = null;
-		try
-		{
+		try {
 			doc = new HWPFDocument(new FileInputStream(file));
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
 		
 		Range r = doc.getRange();
 		for(int i = r.numParagraphs() - 1; i >= 0; i--)
-		{
 			r.getParagraph(i).delete();
-		}
 		
 		String[] lines = text.split("\n");
 		for(int i = 0; i < lines.length; i++)
 		{
 			Paragraph p = Paragraph.newParagraph(r, new PAPX(0, lines[i].length(), new SprmBuffer(0)));
-			if(i == 0) p.insertBefore(lines[i]);
-			else p.insertAfter(lines[i]);
+			if(i == 0)
+				p.insertBefore(lines[i]);
+			else
+				p.insertAfter(lines[i]);
 		}
 		
-		try
-		{
+		try {
 			doc.write(new FileOutputStream(file));
-		} 
-		catch(IOException e)
-		{
-			return false;
-		}
+		} catch(IOException e) {return false;}
 		return true;
 	}
 	
@@ -280,41 +218,28 @@ public class TextImport
 	 * @param text The text to save.
 	 */
 	@SuppressWarnings("resource")
-	private static boolean saveDocx(File file, String text)
-	{
+	private static boolean saveDocx(File file, String text) {
 		XWPFDocument doc = null;
-		try
-		{
+		try {
 			doc = new XWPFDocument(new FileInputStream(file));
-		}
-		catch (IOException e)
-		{
+		}catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
 		
 		//List<XWPFParagraph> paragraphs = doc.getParagraphs();
 		for(int i = doc.getBodyElements().size() - 1; i >= 0; i--)
-		{
 			doc.removeBodyElement(i);
-		}
 		String[] lines = text.split("\n");
-		for(int i = 0; i < lines.length; i++)
-		{
+		for(int i = 0; i < lines.length; i++) {
 			XWPFRun r = doc.createParagraph().createRun();
 			r.setText(lines[i]);
 		}
 		
-		try
-		{
+		try {
 			doc.write(new FileOutputStream(file));
-		} 
-		catch(IOException e)
-		{
-			return false;
-		}
-		try
-		{
+		} catch(IOException e) {return false;}
+		try {
 			doc.close();
 		} catch (IOException e){}
 		return true;

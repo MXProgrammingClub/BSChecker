@@ -1,16 +1,11 @@
 package error;
 
-import java.io.IOException;
-import java.io.StringReader;
-
 import gui.Main;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.parser.Parser;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.tokenize.Tokenizer;
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.PlainTextByLineStream;
 import util.ErrorList;
 import util.UtilityMethods;
 
@@ -84,30 +79,31 @@ public abstract class Error {
 		ErrorList errors = new ErrorList(text, true);
 		int lineNum = 1, charOffset = 0;
 		String line;
-		ObjectStream<String> lineStream = new PlainTextByLineStream(new StringReader(text));
-		try {
-			while ((line = lineStream.read()) != null) {
-				System.out.println("\nAnalysing line " + lineNum + ":");
-				ErrorList lineErrors = new ErrorList(line, false);
-				
-				for(Error e: Main.ERROR_LIST) {
-					if(e.isChecked){
-						System.out.println("looking for: " + e.getClass());
-						ErrorList temp = e.findErrors(line);
-						lineErrors.addAll(temp);
-					}
+		while (charOffset < text.length()) {
+			if(text.substring(charOffset).indexOf('\n') != -1)
+				line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
+			else
+				line = text.substring(charOffset);
+			System.out.println("\nAnalysing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
+			ErrorList lineErrors = new ErrorList(line, false);
+
+			for(Error e: Main.ERROR_LIST) {
+				if(e.isChecked) {
+					System.out.println("looking for: " + e.getClass());
+					ErrorList temp = e.findErrors(line);
+					lineErrors.addAll(temp);
 				}
-				lineErrors.sort();
-				lineErrors.tokensToChars(charOffset);
-				errors.addAll(lineErrors);
-				
-				lineNum++;
-				charOffset += line.length() + 1;
 			}
-		} catch (IOException e) {e.printStackTrace();}
-		
+			lineErrors.sort();
+			lineErrors.tokensToChars(charOffset);
+			errors.addAll(lineErrors);
+
+			lineNum++;
+			charOffset += line.length() + 1;
+		}
+
 		System.out.println("\n" + errors);
-		
+
 		return errors;
 	}
 }

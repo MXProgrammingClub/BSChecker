@@ -29,7 +29,7 @@ public class UtilityMethods {
 	 * Initializes all the necessary OpenNLP tools
 	 */
 	public static void setupOpenNLP() {
-		System.out.println("\nSetting up opennlp.");
+		System.out.println("\nSetting up opennlp:");
 		InputStream is = null;
 
 		System.out.println("Setting up the Sentence Detector");
