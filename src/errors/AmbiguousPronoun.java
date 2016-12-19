@@ -19,9 +19,10 @@ public class AmbiguousPronoun extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "Consequently, Bob threw the ball to himself";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new AmbiguousPronoun().findErrors(input);
-		sort(errors);
-		printErrors(tokensToChars(input, errors, 0), input);
+		ErrorList errors = new AmbiguousPronoun().findErrors(input);
+		errors.sort();
+		errors.tokensToChars(0);
+		System.out.println(errors);
 	}
 	
 	/**
@@ -34,13 +35,15 @@ public class AmbiguousPronoun extends Error {
 	/**
 	 * finds all ambiguous pronoun references in the given paragraph
 	 * known issues: does not distinguish between genders, does not look for anything other than names
-	 * @param line paragraph to check
-	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (7)
+	 * @param line the paragraph in which to find errors
+	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
+	 * 			int[0], int[1] are start and end tokens of the error
+	 * 			int[2] is the error number (7)
 	 */
 	@Override
-	public ArrayList<int[]> findErrors(String line) {
+	public ErrorList findErrors(String line) {
 		String[] sentences = sentenceDetector.sentDetect(line);
-		ArrayList<int[]> errors = new ArrayList<int[]>();
+		ErrorList errors = new ErrorList(line, false);
 		int prevSentenceNouns, curSentenceNouns = 0, tokenOffset = 0, index;
 		for(int i = 0; i < sentences.length; i++) {
 			String[] words = tokenizer.tokenize(sentences[i]);

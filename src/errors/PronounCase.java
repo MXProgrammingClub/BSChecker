@@ -23,9 +23,10 @@ public class PronounCase extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "However, he died and instead of adapting political systems from he apple, he died.";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new PronounCase().findErrors(input);
-		sort(errors);
-		printErrors(tokensToChars(input, errors, 0), input);
+		ErrorList errors = new PronounCase().findErrors(input);
+		errors.sort();
+		errors.tokensToChars(0);
+		System.out.println(errors);
 	}
 
 	/**
@@ -37,11 +38,13 @@ public class PronounCase extends Error {
 
 	/**
 	 * finds all errors in pronoun case within the paragraph
-	 * @param line paragraph to check
-	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (12)
+	 * @param line the paragraph in which to find errors
+	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
+	 * 			int[0], int[1] are start and end tokens of the error
+	 * 			int[2] is the error number (6)
 	 */
 	@Override
-	public ArrayList<int[]> findErrors(String line) {
+	public ErrorList findErrors(String line) {
 		String[] tokens = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
 		ArrayList<Integer> pronounIndices = new ArrayList<Integer>();
@@ -50,7 +53,7 @@ public class PronounCase extends Error {
 			if(UtilityMethods.arrayContains(ALLPN, word))
 				pronounIndices.add(i);
 		}
-		ArrayList<int[]> errors = new ArrayList<int[]>();
+		ErrorList errors = new ErrorList(line, false);
 		posPronoun(pronounIndices, tokens, tags, errors);
 		subjPronoun(pronounIndices, tokens, tags, errors);
 		objPronoun(pronounIndices, tokens, tags, errors);	
@@ -65,7 +68,7 @@ public class PronounCase extends Error {
 	 * @param tagList the parts of speech of those tokens
 	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
 	 */
-	private void posPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices) {
+	private void posPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorIndices) {
 //		System.out.println("Looking for Possesives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);
@@ -96,7 +99,7 @@ public class PronounCase extends Error {
 	 * @param tagList the parts of speech of those tokens
 	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
 	 */
-	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices) {
+	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorIndices) {
 //		System.out.println("Looking for Subjectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);
@@ -127,7 +130,7 @@ public class PronounCase extends Error {
 	 * @param tagList the parts of speech of those tokens
 	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
 	 */
-	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ArrayList<int[]> errorIndices) {
+	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorIndices) {
 //		System.out.println("Looking for Objectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);

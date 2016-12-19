@@ -1,7 +1,5 @@
 package errors;
 
-import java.util.ArrayList;
-
 import util.UtilityMethods;
 
 /**
@@ -16,9 +14,10 @@ public class VagueThisWhich extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "Hi, my name I hate this; cars are fun.";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new VagueThisWhich().findErrors(input);
-		sort(errors);
-		printErrors(tokensToChars(input, errors, 0), input);
+		ErrorList errors = new VagueThisWhich().findErrors(input);
+		errors.sort();
+		errors.tokensToChars(0);
+		System.out.println(errors);
 	}
 	
 	/**
@@ -30,15 +29,17 @@ public class VagueThisWhich extends Error {
 	
 	/**
 	 * finds any vague which or this in the given paragraph
-	 * @param line paragraph to check
-	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (4)
+	 * @param line the paragraph in which to find errors
+	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
+	 * 			int[0], int[1] are start and end tokens of the error
+	 * 			int[2] is the error number (4)
 	 */
 	@Override
-	public ArrayList<int[]> findErrors(String line){
+	public ErrorList findErrors(String line){
 		String tokens[] = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
 		
-		ArrayList<int[]> errors = new ArrayList<int[]>();
+		ErrorList errors = new ErrorList(line, false);
 		for(int i = 0; i < tokens.length; i++)
 			if(	(tokens[i].equalsIgnoreCase("this") && isVagueThis(tokens,tags,i)) ||
 				(tokens[i].equalsIgnoreCase("which") && (i == 0 || (tags[i-1].charAt(0)!='N' && tags[i-1].charAt(0)!='I'))))

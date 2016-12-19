@@ -9,6 +9,7 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import com.jfoenix.controls.JFXButton;
 
 import errors.Error;
+import errors.ErrorList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -76,7 +77,7 @@ public class GUIController {
 	private MenuItem menuAbout;
 
 	private int currError = 0;
-	private ArrayList<int[]> errors;
+	private ErrorList errors;
 	private File file;
 	private String clipboard = "";
 	
@@ -138,7 +139,6 @@ public class GUIController {
 			for(int[] location: errors) {
 				essayBox.setStyleClass(location[0], location[1] + 1, "light-red");
 			}
-
 			//put first error in sentenceBox and corresponding thing in errorBox
 			displayError();
 		}
@@ -148,12 +148,10 @@ public class GUIController {
 	/**
 	 * Updates the selected text to the next error.
 	 */
-	private void nextError()
-	{
+	private void nextError() {
 		resetCurrentColor();
 		currError++;
-		if(currError >= errors.size())
-		{
+		if(currError >= errors.size()) {
 			Alert a = new Alert(Alert.AlertType.INFORMATION);
 			a.setContentText("Searching from beginning of passage.");
 			a.setHeaderText("Search Complete");
@@ -167,12 +165,10 @@ public class GUIController {
 	/**
 	 * Updates the selected text to the previous error.
 	 */
-	private void previousError()
-	{
+	private void previousError() {
 		resetCurrentColor();
 		currError--;
-		if(currError < 0)
-		{
+		if(currError < 0) {
 			Alert a = new Alert(Alert.AlertType.INFORMATION);
 			a.setContentText("Searching from end of passage.");
 			a.setHeaderText("Search Complete");
@@ -219,15 +215,11 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuSaveClick() {
-		if(file != null)
-		{
-			if(!TextImport.saveText(file, essayBox.getText()))
-			{
-				Alert a = new Alert(Alert.AlertType.ERROR);
-				a.setTitle("Saving Error");
-				a.setContentText("There was an error in saving your file. It may be in use or moved from its original location.");
-				a.showAndWait();
-			}
+		if(file != null && !TextImport.saveText(file, essayBox.getText())) {
+			Alert a = new Alert(Alert.AlertType.ERROR);
+			a.setTitle("Saving Error");
+			a.setContentText("There was an error in saving your file. It may be in use or moved from its original location.");
+			a.showAndWait();
 		}
 	}
 
@@ -261,8 +253,7 @@ public class GUIController {
 	@FXML
 	protected void menuCutClick() {
 		String temp = essayBox.getSelectedText();
-		if(!temp.equals(""))
-		{
+		if(!temp.equals("")) {
 			clipboard = temp;
 			essayBox.deleteText(essayBox.getSelection());
 		}

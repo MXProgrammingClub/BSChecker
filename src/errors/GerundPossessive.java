@@ -1,7 +1,5 @@
 package errors;
 
-import java.util.ArrayList;
-
 import util.UtilityMethods;
 
 /**
@@ -16,9 +14,10 @@ public class GerundPossessive extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "Elizabeth is grateful for him loving her so well.";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new GerundPossessive().findErrors(input);
-		sort(errors);
-		printErrors(tokensToChars(input, errors, 0), input);
+		ErrorList errors = new GerundPossessive().findErrors(input);
+		errors.sort();
+		errors.tokensToChars(0);
+		System.out.println(errors);
 	}
 	
 	/**
@@ -31,15 +30,17 @@ public class GerundPossessive extends Error {
 	/**
 	 * finds all errors where gerunds are not preceded by a possessive when they should be in the given paragraph
 	 * known issues: catches cases where the supposed gerund is in fact a participle and is thus not an error
-	 * @param line paragraph to check
-	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (13)
+	 * @param line the paragraph in which to find errors
+	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
+	 * 			int[0], int[1] are start and end tokens of the error
+	 * 			int[2] is the error number (13)
 	 */
 	@Override
-	public ArrayList<int[]> findErrors(String line) {
+	public ErrorList findErrors(String line) {
 		String[] tokens = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
 		
-		ArrayList<int[]> errors = new ArrayList<int[]>();
+		ErrorList errors = new ErrorList(line, false);
 		for(int i = 1; i < tokens.length; i++)
 			if(tags[i].equals("VBG") && (tags[i - 1].equals("PRP") || ((tags[i - 1].equals("NN") || tags[i - 1].equals("NNS") || tags[i - 1].equals("NNP") || tags[i - 1].equals("NNPS")) && tokens[i - 1].indexOf('\'') == -1)))
 					errors.add(new int[]{i - 1, i, ERROR_NUMBER});

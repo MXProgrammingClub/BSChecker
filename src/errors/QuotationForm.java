@@ -2,7 +2,6 @@ package errors;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -23,8 +22,7 @@ public class QuotationForm extends Error {
 	 * Imports the list of words of saying or thinking.
 	 * @return The set of words.
 	 */
-	private static HashSet<String> importVerbs()
-	{
+	private static HashSet<String> importVerbs() {
 		HashSet<String> verbs = new HashSet<String>();
 		Scanner scan = null;
 			try {scan = new Scanner(new File(FILE_NAME));}
@@ -42,9 +40,10 @@ public class QuotationForm extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "he says \"hi\"; he says, \"hi\"(1), he says: \"hi\".";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new QuotationForm().findErrors(input);
-		sort(errors);
-		printErrors(tokensToChars(input, errors, 0), input);
+		ErrorList errors = new QuotationForm().findErrors(input);
+		errors.sort();
+		errors.tokensToChars(0);
+		System.out.println(errors);
 	}
 	
 	/**
@@ -57,14 +56,15 @@ public class QuotationForm extends Error {
 	/**
 	 * finds all errors with quotation form in the given paragraph
 	 * known issues: doesn't see a preceding verb if other words between it and the quote
-	 * @param line paragraph to check
-	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (9)
+	 * @param line the paragraph in which to find errors
+	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
+	 * 			int[0], int[1] are start and end tokens of the error
+	 * 			int[2] is the error number (14)
 	 */
 	@Override
-	public ArrayList<int[]> findErrors(String line)
-	{
+	public ErrorList findErrors(String line) {
 		String tokens[] = tokenizer.tokenize(line);
-		ArrayList<int[]> errors = new ArrayList<int[]>();
+		ErrorList errors = new ErrorList(line, false);
 		for(int i = 0; i < tokens.length; i++)
 			if(tokens[i].contains("\"")) { //finds opening quotation
 				int start = i + 1;

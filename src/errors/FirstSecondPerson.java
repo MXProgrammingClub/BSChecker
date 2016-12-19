@@ -1,7 +1,5 @@
 package errors;
 
-import java.util.ArrayList;
-
 import util.UtilityMethods;
 
 /**
@@ -19,9 +17,10 @@ public class FirstSecondPerson extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "He said, \"I am happy.\"";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new FirstSecondPerson().findErrors(input);
-		sort(errors);
-		printErrors(tokensToChars(input, errors, 0), input);
+		ErrorList errors = new FirstSecondPerson().findErrors(input);
+		errors.sort();
+		errors.tokensToChars(0);
+		System.out.println(errors);
 	}
 	
 	/**
@@ -33,15 +32,17 @@ public class FirstSecondPerson extends Error {
 
 	/**
 	 * finds all instances of first or second person in the given paragraph
-	 * @param line paragraph to check
-	 * @return ArrayList int[3] representing errors where [0] is the beginning token index, [1] is ending token index, [2] is the type of error (3)
+	 * @param line the paragraph in which to find errors
+	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
+	 * 			int[0], int[1] are start and end tokens of the error
+	 * 			int[2] is the error number (3)
 	 */
 	@Override
-	public ArrayList<int[]> findErrors(String line) {
+	public ErrorList findErrors(String line) {
 		String[] tokens = tokenizer.tokenize(line);
 		
 		boolean inQuote = false, inIntroducedQuote = false;
-		ArrayList<int[]> errors = new ArrayList<int[]>();
+		ErrorList errors = new ErrorList(line, false);
 		for(int i = 0; i < tokens.length; i++) {
 			if(tokens[i].contains("\"")) {
 				if(!inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":")))

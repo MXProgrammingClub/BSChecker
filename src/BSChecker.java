@@ -17,6 +17,7 @@ import opennlp.tools.util.*;
 /**
  * this class contains examples of how to use openNLP and can be used for testing purposes
  * @author tedpyne
+ * @author JeremiahDeGreeff
  */
 public class BSChecker {
 	public static void main(String[] args) throws InvalidFormatException, IOException{

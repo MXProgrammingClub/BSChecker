@@ -22,9 +22,10 @@ public class NumberDisagreement extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.";
 		System.out.println("\ninput: " + input + "\n");
-		ArrayList<int[]> errors = new NumberDisagreement().findErrors(input);
-		sort(errors);
-		printErrors(tokensToChars(input, errors, 0), input);
+		ErrorList errors = new NumberDisagreement().findErrors(input);
+		errors.sort();
+		errors.tokensToChars(0);
+		System.out.println(errors);
 	}
 	
 	/**
@@ -33,9 +34,15 @@ public class NumberDisagreement extends Error {
 	public NumberDisagreement() {
 		super(5);
 	}
-	
+	/**
+	 * finds errors in number disagreement in the given paragraph
+	 * @param line the paragraph in which to find errors
+	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
+	 * 			int[0], int[1] are start and end tokens of the error
+	 * 			int[2] is the error number (1 - 14)
+	 */
 	@Override
-	public ArrayList<int[]> findErrors(String line){
+	public ErrorList findErrors(String line){
 		String sentences[] = sentenceDetector.sentDetect(line);
 		ArrayList<Parse> parses = new ArrayList<Parse>();
 		ArrayList<int[]> arr = new ArrayList<int[]>();

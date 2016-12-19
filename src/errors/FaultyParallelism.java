@@ -12,7 +12,7 @@ import util.UtilityMethods;
  * @author
  */
 public class FaultyParallelism extends Error {
-	private static final int ERROR_NUMBER = 11;
+	
 	/**
 	 * for testing purposes
 	 */
@@ -33,17 +33,23 @@ public class FaultyParallelism extends Error {
 	public FaultyParallelism() {
 		super(11);
 	}
-	
+	/**
+	 * finds instances of faulty parallelism in the given paragraph
+	 * @param line the paragraph in which to find errors
+	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
+	 * 			int[0], int[1] are start and end tokens of the error
+	 * 			int[2] is the error number (11)
+	 */
 	@Override
-	public ArrayList<int[]> findErrors(String text){
-		String startText = text;
-		text = text.replace('\u201D', '\"');
-		text = text.replace('\u201C', '\"');
-		text = text.replace('\u2018','\'');
-		text = text.replace('\u2019','\'');
-		text = text.replace(':', '.');
-		text = text.replace(';', '.');
-		StringBuffer buf = new StringBuffer(text);
+	public ErrorList findErrors(String line){
+		String startText = line;
+		line = line.replace('\u201D', '\"');
+		line = line.replace('\u201C', '\"');
+		line = line.replace('\u2018','\'');
+		line = line.replace('\u2019','\'');
+		line = line.replace(':', '.');
+		line = line.replace(';', '.');
+		StringBuffer buf = new StringBuffer(line);
 		boolean autoRemove = false;
 		for(int i=0;i<buf.length();i++){
 			char c = buf.charAt(i);
@@ -57,26 +63,26 @@ public class FaultyParallelism extends Error {
 				i--;
 			}
 		}
-		text = buf.toString();
-		ArrayList<int[]> errs = new ArrayList<int[]>();
-		String[] sentences = sentenceDetector.sentDetect(text);
+		line = buf.toString();
+		ErrorList errs = new ErrorList(line, false);
+		String[] sentences = sentenceDetector.sentDetect(line);
 		int shift = 0;
-		for(String line: sentences){
+		for(String sentence : sentences){
 			int lineShift = 0;
-			line.replace(".", "");
-			ArrayList<int[]> errors = findErrorsInLine(line.substring(0, line.length()));
+			sentence.replace(".", "");
+			ErrorList errors = findErrorsInLine(sentence.substring(0, sentence.length()));
 			for(int[] err: errors){
-				String conjunction = line.substring(err[0],err[1]);
+				String conjunction = sentence.substring(err[0],err[1]);
 				int[] newErr = {startText.indexOf(conjunction,lineShift + shift),startText.indexOf(conjunction, lineShift + shift) + conjunction.length(),ERROR_NUMBER};
 				errs.add(newErr);
 				lineShift = newErr[1]+1 - shift;
 			}
-			shift += line.length()+1;
+			shift += sentence.length()+1;
 		}
 		return errs;
 	}
-	public ArrayList<int[]> findErrorsInLine(String text){
-		ArrayList<int[]> errors = new ArrayList<int[]>();
+	public ErrorList findErrorsInLine(String text){
+		ErrorList errors = new ErrorList(text, false);
 		String parsedText = parse(text);
 		int index = -1;
 		int textIndex = 0;
