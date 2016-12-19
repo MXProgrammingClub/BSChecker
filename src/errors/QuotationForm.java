@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import util.ErrorList;
 import util.UtilityMethods;
 
 /**

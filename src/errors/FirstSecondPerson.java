@@ -1,5 +1,6 @@
 package errors;
 
+import util.ErrorList;
 import util.UtilityMethods;
 
 /**

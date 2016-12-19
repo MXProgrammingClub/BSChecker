@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
+import util.ErrorList;
 import util.UtilityMethods;
 
 /**

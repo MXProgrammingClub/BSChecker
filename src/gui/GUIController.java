@@ -9,12 +9,12 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import com.jfoenix.controls.JFXButton;
 
 import errors.Error;
-import errors.ErrorList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
+import util.ErrorList;
 
 /**
  * This is the class that connects the GUI with the rest of the program.

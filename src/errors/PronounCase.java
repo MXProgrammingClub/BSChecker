@@ -2,6 +2,7 @@ package errors;
 
 import java.util.ArrayList;
 
+import util.ErrorList;
 import util.UtilityMethods;
 
 /**

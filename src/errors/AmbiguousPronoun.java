@@ -3,6 +3,7 @@ package errors;
 import java.util.ArrayList;
 
 import opennlp.tools.util.Span;
+import util.ErrorList;
 import util.UtilityMethods;
 
 /**

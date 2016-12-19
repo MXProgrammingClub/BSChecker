@@ -11,6 +11,7 @@ import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
+import util.ErrorList;
 import util.UtilityMethods;
 
 /**

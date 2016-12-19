@@ -1,7 +1,9 @@
-package errors;
+package util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+
+import errors.Error;
 
 /**
  * Represents a list of errors and provides methods to manipulate the list
