@@ -75,6 +75,9 @@ public class GUIController {
 
 	@FXML
 	private MenuItem menuAbout;
+	
+	@FXML
+	private MenuItem menuChooseErrors;
 
 	private int currError = 0;
 	private ErrorList errors;
@@ -306,6 +309,14 @@ public class GUIController {
 	@FXML
 	protected void menuAboutClick() {
 		/* HELP->ABOUT ACTION */
+	}
+	
+	/**
+	 * The method that will be called when the Settings->Choose Errors is clicked
+	 */
+	@FXML
+	protected void menuChooseErrorsClick() {
+		//Present a radio button file w/ errors to enable disable
 	}
 	
 	/**
