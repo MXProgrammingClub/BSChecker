@@ -16,7 +16,7 @@ public class FirstSecondPerson extends Error {
 	 */
 	public static void main (String[] args) {
 		UtilityMethods.setupOpenNLP();
-		String input = "He said, \"I am happy.\"";
+		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		ErrorList errors = new FirstSecondPerson().findErrors(input);
 		errors.sort();
@@ -47,7 +47,7 @@ public class FirstSecondPerson extends Error {
 	 * 			int[2] is the error number (3)
 	 */
 	@Override
-	public ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String[] tokens = tokenizer.tokenize(line);
 		
 		boolean inQuote = false, inIntroducedQuote = false;

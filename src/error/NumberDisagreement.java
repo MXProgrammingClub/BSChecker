@@ -52,7 +52,7 @@ public class NumberDisagreement extends Error {
 	 * 			int[2] is the error number (1 - 14)
 	 */
 	@Override
-	public ErrorList findErrors(String line){
+	protected ErrorList findErrors(String line){
 		String sentences[] = sentenceDetector.sentDetect(line);
 		ArrayList<Parse> parses = new ArrayList<Parse>();
 		ArrayList<int[]> arr = new ArrayList<int[]>();

@@ -45,7 +45,7 @@ public class Apostrophe extends Error {
 	 * 			int[2] is the error number (8)
 	 */
 	@Override
-	public ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		ErrorList errors = new ErrorList(line, false);
 		return errors;
 	}

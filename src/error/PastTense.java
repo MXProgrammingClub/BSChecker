@@ -17,7 +17,7 @@ public class PastTense extends Error {
 	 */
 	public static void main(String[] args) {
 		UtilityMethods.setupOpenNLP();
-		String input = "he has died";
+		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		ErrorList errors = new PastTense().findErrors(input);
 		errors.sort();
@@ -42,14 +42,13 @@ public class PastTense extends Error {
 	
 	/**
 	 * finds all instances of past tense in the given paragraph
-	 * known issues: runs into problems with ']' being interpreted as a past tense verb
 	 * @param line the paragraph in which to find errors
 	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
 	 * 			int[0], int[1] are start and end tokens of the error
 	 * 			int[2] is the error number (1)
 	 */
 	@Override
-	public ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String tokens[] = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
 

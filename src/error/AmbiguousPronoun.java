@@ -18,7 +18,7 @@ public class AmbiguousPronoun extends Error {
 	 */
 	public static void main (String[] args) {
 		UtilityMethods.setupOpenNLP();
-		String input = "Consequently, Bob threw the ball to himself";
+		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		ErrorList errors = new AmbiguousPronoun().findErrors(input);
 		errors.sort();
@@ -50,7 +50,7 @@ public class AmbiguousPronoun extends Error {
 	 * 			int[2] is the error number (7)
 	 */
 	@Override
-	public ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String[] sentences = sentenceDetector.sentDetect(line);
 		ErrorList errors = new ErrorList(line, false);
 		int prevSentenceNouns, curSentenceNouns = 0, tokenOffset = 0, index;

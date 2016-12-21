@@ -45,7 +45,7 @@ public class IncompleteSentence extends Error {
 	 * 			int[2] is the error number (2)
 	 */
 	@Override
-	public ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		ErrorList errors = new ErrorList(line, false);
 		return errors;
 	}

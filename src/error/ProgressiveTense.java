@@ -15,7 +15,7 @@ public class ProgressiveTense extends Error {
 	 */
 	public static void main(String[] args) {
 		UtilityMethods.setupOpenNLP();
-		String input = "Sensing God's desire to destroy Sodom, Abraham is quickly negotiating for a less apocalyptic punishment, he is.";
+		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		ErrorList errors = new ProgressiveTense().findErrors(input);
 		errors.sort();
@@ -46,7 +46,7 @@ public class ProgressiveTense extends Error {
 	 * 			int[2] is the error number (12)
 	 */
 	@Override
-	public ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String[] tokens = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
 		

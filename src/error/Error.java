@@ -7,7 +7,6 @@ import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.tokenize.Tokenizer;
 import util.ErrorList;
-import util.UtilityMethods;
 
 /**
  * Defines abstract class for types of grammatical errors
@@ -16,32 +15,12 @@ import util.UtilityMethods;
  */
 public abstract class Error {
 	public final int ERROR_NUMBER;
-	public boolean isChecked;
+	private boolean isChecked;
 	public static SentenceDetectorME sentenceDetector;
 	public static Tokenizer tokenizer;
 	public static NameFinderME nameFinder;
 	public static POSTaggerME posTagger;
 	public static Parser parser;
-	
-	/**
-	 * for testing purposes
-	 */
-	public static void main(String[] args) {
-		UtilityMethods.setupOpenNLP();
-		String input = "I walk. The ball is round. He says: \"Hello!\"";
-		ErrorList errors = new ErrorList(input, false);
-		//not real errors - just for testing
-		int[] error1 = {6, 12, 1};
-		int[] error2 = {2, 4, 2};
-		int[] error3 = {0, 1, 3};
-		errors.add(error1);
-		errors.add(error2);
-		errors.add(error3);
-		errors.sort();
-		System.out.println(errors);
-		errors.tokensToChars(0);
-		System.out.println(errors);
-	}
 	
 	/**
 	 * creates a new Error object with the given error number
@@ -60,7 +39,7 @@ public abstract class Error {
 	 * 			int[0], int[1] are start and end tokens of the error
 	 * 			int[2] is the error number (1 - 14)
 	 */
-	public abstract ErrorList findErrors(String line);
+	protected abstract ErrorList findErrors(String line);
 	
 	/**
 	 * changes the value of isChecked

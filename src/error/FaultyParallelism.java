@@ -51,7 +51,7 @@ public class FaultyParallelism extends Error {
 	 * 			int[2] is the error number (11)
 	 */
 	@Override
-	public ErrorList findErrors(String line){
+	protected ErrorList findErrors(String line){
 		String startText = line;
 		line = line.replace('\u201D', '\"');
 		line = line.replace('\u201C', '\"');
@@ -91,7 +91,7 @@ public class FaultyParallelism extends Error {
 		}
 		return errs;
 	}
-	public ErrorList findErrorsInLine(String text){
+	private ErrorList findErrorsInLine(String text){
 		ErrorList errors = new ErrorList(text, false);
 		String parsedText = parse(text);
 		int index = -1;
@@ -165,7 +165,7 @@ public class FaultyParallelism extends Error {
 		}
 		return errors;
 	}
-	public static String parse(String input){
+	private static String parse(String input){
 		Parse topParses[] = ParserTool.parseLine(input, parser, 1);
 		StringBuffer sb = new StringBuffer(input.length()*4);
 		topParses[0].show(sb);

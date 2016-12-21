@@ -11,12 +11,12 @@ import error.Error;
  */
 @SuppressWarnings("serial")
 public class ErrorList extends ArrayList<int[]>{
-	public final String TEXT;
+	private final String TEXT;
 	private boolean isCharList;
 	
 	/**
 	 * constructor
-	 * @param text the text in which the errors of this occur
+	 * @param text the text in which the errors of this ErrorList occur
 	 * @param isCharList true if this ErrorList represents char indices, false if it represents token indices
 	 */
 	public ErrorList(String text, boolean isCharList) {
@@ -43,10 +43,6 @@ public class ErrorList extends ArrayList<int[]>{
 
 		return errors;
 	}
-	
-//	public void addAll(ErrorList errors) {
-//		list.addAll(errors.list);
-//	}
 	
 	/**
 	 * Sorts this list of all errors by location.

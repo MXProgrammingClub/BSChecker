@@ -56,11 +56,9 @@ public enum Bluesheet {
 	 * @return The bluesheet with the number num.
 	 */
 	public static Bluesheet getBluesheetFromNum(int num) {
-		for(Bluesheet b: Bluesheet.values()) {
-			if(b.getNumber() == num) {
+		for(Bluesheet b: Bluesheet.values())
+			if(b.getNumber() == num)
 				return b;
-			}
-		}
 		return null;
 	}
 

@@ -53,7 +53,7 @@ public class PronounCase extends Error {
 	 * 			int[2] is the error number (6)
 	 */
 	@Override
-	public ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String[] tokens = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
 		ArrayList<Integer> pronounIndices = new ArrayList<Integer>();

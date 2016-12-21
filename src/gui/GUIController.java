@@ -1,8 +1,6 @@
 package gui;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
@@ -15,6 +13,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 import util.ErrorList;
+import util.UtilityMethods;
 
 /**
  * This is the class that connects the GUI with the rest of the program.
@@ -118,30 +117,20 @@ public class GUIController {
 		String text = essayBox.getText();
 		essayBox.setStyleClass(0, essayBox.getLength(), null);
 		
-		ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
-		// double quotation (")
-	    replacements.add(new Replacement(Pattern.compile("[\u201C\u201D\u201E\u201F\u275D\u275E]"), "\""));
-	    // single quotation (')
-	    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201A\u201B\u275B\u275C]"), "\'"));
-	    // ellipsis (...)
-	    replacements.add(new Replacement(Pattern.compile("[\u2026]"), "..."));	   
-	    for (Replacement replacement : replacements) {
-	         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
-	    }
+		text = UtilityMethods.replaceInvalidChars(text);
 		essayBox.replaceText(text);
 		
 		errors = Error.findAllErrors(text);
 		
 		d.close();
 		
-		if(errors.size() == 0) {
+		if(errors.size() == 0)
 			errorBox.replaceText("No Error Found!");
-		} else {
+		else {
 			currError = 0;
 			//highlight all the errors
-			for(int[] location: errors) {
+			for(int[] location: errors)
 				essayBox.setStyleClass(location[0], location[1] + 1, "light-red");
-			}
 			//put first error in sentenceBox and corresponding thing in errorBox
 			displayError();
 		}
@@ -206,9 +195,11 @@ public class GUIController {
 	@FXML
 	protected void menuOpenClick() {
 		file = TextImport.chooseFile();
-		if(file == null) return;
+		if(file == null)
+			return;
 		String text = TextImport.openFile(file);
-		if(text == null) return;
+		if(text == null)
+			return;
 		//essayBox.setText(text);
 		essayBox.replaceText(text);
 	}
@@ -316,7 +307,7 @@ public class GUIController {
 	 */
 	@FXML
 	protected void menuChooseErrorsClick() {
-		//Present a radio button file w/ errors to enable disable
+		//Present a radio button file w/ errors to enable/disable
 	}
 	
 	/**

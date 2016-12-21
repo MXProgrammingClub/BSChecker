@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import error.Error;
 import opennlp.tools.cmdline.PerformanceMonitor;
@@ -105,5 +107,23 @@ public class UtilityMethods {
 			if(word.equalsIgnoreCase(item))
 				return true;
 		return false;
+	}
+	
+	/**
+	 * replaces unicode characters with their ascii equivalents
+	 * @param text the text that has characters to be changed
+	 * @return the same text with the appropriate character changes
+	 */
+	public static String replaceInvalidChars(String text) {
+		ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
+		// double quotation (")
+	    replacements.add(new Replacement(Pattern.compile("[\u201C\u201D\u201E\u201F\u275D\u275E]"), "\""));
+	    // single quotation (')
+	    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201A\u201B\u275B\u275C]"), "\'"));
+	    // ellipsis (...)
+	    replacements.add(new Replacement(Pattern.compile("[\u2026]"), "..."));
+	    for (Replacement replacement : replacements)
+	         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
+	    return text;
 	}
 }

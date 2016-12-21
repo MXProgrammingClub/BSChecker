@@ -16,7 +16,7 @@ public class PassiveVoice extends Error {
 	 */
 	public static void main(String[] args){
 		UtilityMethods.setupOpenNLP();
-		String input = "This terrible Hamlet is destroyed by Claudius.";
+		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		ErrorList errors = new PassiveVoice().findErrors(input);
 		errors.sort();
@@ -47,7 +47,7 @@ public class PassiveVoice extends Error {
 	 * 			int[2] is the error number (9)
 	 */
 	@Override
-	public ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String tokens[] = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
 		

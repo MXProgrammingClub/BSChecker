@@ -39,7 +39,7 @@ public class QuotationForm extends Error {
 	 */
 	public static void main (String[] args) {
 		UtilityMethods.setupOpenNLP();
-		String input = "he says \"hi\"; he says, \"hi\"(1), he says: \"hi\".";
+		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		ErrorList errors = new QuotationForm().findErrors(input);
 		errors.sort();
@@ -71,7 +71,7 @@ public class QuotationForm extends Error {
 	 * 			int[2] is the error number (14)
 	 */
 	@Override
-	public ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String tokens[] = tokenizer.tokenize(line);
 		ErrorList errors = new ErrorList(line, false);
 		for(int i = 0; i < tokens.length; i++)
