@@ -14,7 +14,7 @@ public class Apostrophe extends Error {
 	 */
 	public static void main(String[] args) {
 		UtilityMethods.setupOpenNLP();
-		String input = "";
+		String input = "Cars's ran to the store. Bens cars are fast.";
 		System.out.println("\ninput: " + input + "\n");
 		ErrorList errors = new Apostrophe().findErrors(input);
 		errors.sort();
@@ -47,6 +47,29 @@ public class Apostrophe extends Error {
 	@Override
 	protected ErrorList findErrors(String line) {
 		ErrorList errors = new ErrorList(line, false);
+		String tokens[] = tokenizer.tokenize(line);
+		String[] tags = posTagger.tag(tokens);
+		for(int i = 0; i < tokens.length; i++){
+			System.out.println(tags[i]);
+		
+			if(tags[i].length()>1 && tags[i].substring(0,2).equals("NN")){
+				int j = i+1;
+				while(tags[j].length()>1 &&(tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length) j++;
+				if(tags[j].length()>1 &&tags[j].substring(0,2).equals("NN")){
+					errors.add(new int[]{i, j, ERROR_NUMBER});
+				}
+				
+				if(i+1 < tokens.length && tags[i+1].length()>2 && tags[i+1].substring(0, 3).equals("POS")){
+					j = i+2;
+					while((tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length) j++;
+					if(tags[j].length()>1 && tags[j].substring(0,2).equals("VB")){
+						errors.add(new int[]{i, j, ERROR_NUMBER});
+					}
+				}
+			}
+			
+			
+		}
 		return errors;
 	}
 }
