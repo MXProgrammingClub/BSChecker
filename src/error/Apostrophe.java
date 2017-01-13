@@ -50,8 +50,6 @@ public class Apostrophe extends Error {
 		String tokens[] = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
 		for(int i = 0; i < tokens.length; i++){
-			System.out.println(tags[i]);
-		
 			if(tags[i].length()>1 && tags[i].substring(0,2).equals("NN")){
 				int j = i+1;
 				while(tags[j].length()>1 &&(tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length) j++;
