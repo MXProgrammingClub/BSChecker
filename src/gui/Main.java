@@ -24,8 +24,8 @@ public class Main extends Application {
 			new VagueThisWhich(true),
 			new NumberDisagreement(false), //nonfunctional
 			new PronounCase(true),
-			new AmbiguousPronoun(true),
-			new Apostrophe(false), //unimplemented
+			new AmbiguousPronoun(false), //over-reports
+			new Apostrophe(false), //over-reports
 			new PassiveVoice(true),
 			new DanglingModifier(false), //unimplemented
 			new FaultyParallelism(false), //nonfunctional
