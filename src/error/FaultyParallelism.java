@@ -53,10 +53,6 @@ public class FaultyParallelism extends Error {
 	@Override
 	protected ErrorList findErrors(String line){
 		String startText = line;
-		line = line.replace('\u201D', '\"');
-		line = line.replace('\u201C', '\"');
-		line = line.replace('\u2018','\'');
-		line = line.replace('\u2019','\'');
 		line = line.replace(':', '.');
 		line = line.replace(';', '.');
 		StringBuffer buf = new StringBuffer(line);
@@ -80,7 +76,7 @@ public class FaultyParallelism extends Error {
 		for(String sentence : sentences){
 			int lineShift = 0;
 			sentence.replace(".", "");
-			ErrorList errors = findErrorsInLine(sentence.substring(0, sentence.length()));
+			ErrorList errors = findErrorsInSentence(sentence);
 			for(int[] err: errors){
 				String conjunction = sentence.substring(err[0],err[1]);
 				int[] newErr = {startText.indexOf(conjunction,lineShift + shift),startText.indexOf(conjunction, lineShift + shift) + conjunction.length(),ERROR_NUMBER};
@@ -91,11 +87,10 @@ public class FaultyParallelism extends Error {
 		}
 		return errs;
 	}
-	private ErrorList findErrorsInLine(String text){
-		ErrorList errors = new ErrorList(text, false);
-		String parsedText = parse(text);
-		int index = -1;
-		int textIndex = 0;
+	private ErrorList findErrorsInSentence(String sentence){
+		ErrorList errors = new ErrorList(sentence, false);
+		String parsedText = parse(sentence);
+		int index = -1, textIndex = 0;
 		while(index < parsedText.length() && parsedText.indexOf("CC",index+1) >= 0){
 			index = parsedText.indexOf("CC",index+1);
 			int net = 0;
@@ -156,8 +151,8 @@ public class FaultyParallelism extends Error {
 				type2 = parsedText.substring(start,parsedText.indexOf(' ',start));
 			}
 			String conjunction = parsedText.substring(parsedText.indexOf(' ',index)+1,parsedText.indexOf(')',index));
-			int newTextIndex = text.indexOf(conjunction,textIndex);
-			int[] err = {newTextIndex,text.indexOf(' ', newTextIndex)};
+			int newTextIndex = sentence.indexOf(conjunction,textIndex);
+			int[] err = {newTextIndex,sentence.indexOf(' ', newTextIndex)};
 			if(!type1.equals(type2)){
 				errors.add(err);
 			}

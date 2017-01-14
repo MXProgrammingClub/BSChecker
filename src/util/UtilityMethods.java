@@ -13,8 +13,8 @@ import opennlp.tools.cmdline.PerformanceMonitor;
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
-//import opennlp.tools.parser.ParserFactory;
-//import opennlp.tools.parser.ParserModel;
+import opennlp.tools.parser.ParserFactory;
+import opennlp.tools.parser.ParserModel;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -41,7 +41,7 @@ public class UtilityMethods {
 	public static void setupOpenNLP() {
 		PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "tools");
 		InputStream is = null;
-		System.out.println("Setting up opennlp:\n");
+		System.out.println("Setting up opennlp tools:");
 		perfMon.start();
 
 		System.out.println("Setting up the Sentence Detector");
@@ -75,25 +75,25 @@ public class UtilityMethods {
 		POSModel posModel = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		perfMon.incrementCounter();
 
-//		System.out.println("Setting up the Parser");
-//		ParserModel pModel = null;
-//		try {is = new FileInputStream("lib/en-parser-chunking.bin");}
-//		catch (FileNotFoundException e1) {e1.printStackTrace();}
-//		try {pModel = new ParserModel(is); }
-//		catch (InvalidFormatException e1) {e1.printStackTrace();}
-//		catch (IOException e1) {e1.printStackTrace();}
-//		perfMon.incrementCounter();
+		System.out.println("Setting up the Parser");
+		ParserModel pModel = null;
+		try {is = new FileInputStream("lib/en-parser-chunking.bin");}
+		catch (FileNotFoundException e1) {e1.printStackTrace();}
+		try {pModel = new ParserModel(is); }
+		catch (InvalidFormatException e1) {e1.printStackTrace();}
+		catch (IOException e1) {e1.printStackTrace();}
+		perfMon.incrementCounter();
 
 		Error.sentenceDetector = new SentenceDetectorME(sModel);
 		Error.nameFinder = new NameFinderME(nModel);
 		Error.tokenizer = new TokenizerME(tModel);
 		Error.posTagger = new POSTaggerME(posModel);
-//		Error.parser = ParserFactory.create(pModel);
+		Error.parser = ParserFactory.create(pModel);
 
 		try {is.close();}
 		catch (IOException e) {e.printStackTrace();}
 		perfMon.stopAndPrintFinalResult();
-		System.out.println("Set up complete!\n");
+		System.out.println("\nSet up complete!\n");
 	}
 	
 	/**
