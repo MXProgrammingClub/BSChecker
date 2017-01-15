@@ -15,7 +15,7 @@ public class Apostrophe extends Error {
 	 */
 	public static void main(String[] args) {
 		UtilityMethods.setupOpenNLP();
-		String input = "Cars's ran to the store. Bens cars are fast.";
+		String input = "A new graph is available in the Graphs tab to visualize your repository's data. You can now explore how repositories that contain Ruby gems relate to other repositories on GitHub.";
 		System.out.println("\ninput: " + input + "\n");
 		ErrorList errors = new Apostrophe().findErrors(input);
 		errors.sort();
@@ -52,7 +52,7 @@ public class Apostrophe extends Error {
 		
 		ErrorList errors = new ErrorList(line, false);
 		for(int i = 0; i < tokens.length; i++){
-			if(tags[i].length()>1 && tags[i].substring(0,2).equals("NN")){
+			if(tags[i].length()>2 && tags[i].substring(0,3).equals("NNS")){
 				int j = i+1;
 				while(tags[j].length()>1 && (tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length)
 					j++;
