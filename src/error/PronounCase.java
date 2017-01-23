@@ -2,7 +2,7 @@ package error;
 
 import java.util.ArrayList;
 
-import util.ErrorList;
+import util.TokenErrorList;
 import util.UtilityMethods;
 
 /**
@@ -24,10 +24,9 @@ public class PronounCase extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "However, he died and instead of adapting political systems from he apple, he died.";
 		System.out.println("\ninput: " + input + "\n");
-		ErrorList errors = new PronounCase().findErrors(input);
+		TokenErrorList errors = new PronounCase().findErrors(input);
 		errors.sort();
-		errors.tokensToChars(0);
-		System.out.println(errors);
+		System.out.println(errors.tokensToChars(0));
 	}
 	
 	/**
@@ -48,21 +47,21 @@ public class PronounCase extends Error {
 	/**
 	 * finds all errors in pronoun case within the paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
-	 * 			int[0], int[1] are start and end tokens of the error
-	 * 			int[2] is the error number (6)
+	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (6)
 	 */
 	@Override
-	protected ErrorList findErrors(String line) {
+	protected TokenErrorList findErrors(String line) {
 		String[] tokens = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
+		
 		ArrayList<Integer> pronounIndices = new ArrayList<Integer>();
 		for(int i = 0; i < tokens.length; i++) {
 			String word = tokens[i];
 			if(UtilityMethods.arrayContains(ALLPN, word))
 				pronounIndices.add(i);
 		}
-		ErrorList errors = new ErrorList(line, false);
+		
+		TokenErrorList errors = new TokenErrorList(line);
 		posPronoun(pronounIndices, tokens, tags, errors);
 		subjPronoun(pronounIndices, tokens, tags, errors);
 		objPronoun(pronounIndices, tokens, tags, errors);	
@@ -77,7 +76,7 @@ public class PronounCase extends Error {
 	 * @param tagList the parts of speech of those tokens
 	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
 	 */
-	private void posPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorIndices) {
+	private void posPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, TokenErrorList errorTokens) {
 //		System.out.println("Looking for Possesives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);
@@ -91,7 +90,7 @@ public class PronounCase extends Error {
 				if(tagList[nextWordIndex].charAt(0) == 'N' || ((index >= 2) && (tagList[index - 1].equals("of")) && tagList[index - 2].charAt(0) == 'N')) {
 					// so the pronoun should be possessive
 					if(!(UtilityMethods.arrayContains(POSSES, tokenList[index]) || UtilityMethods.arrayContains(POSSESADJ, tokenList[index]))) {
-						errorIndices.add(new int[] {index, index, ERROR_NUMBER});
+						errorTokens.add(new int[] {index, index, ERROR_NUMBER});
 //						System.out.println("possesive error: " + tokenList[index]);
 					}
 					pronounIndices.remove(element);
@@ -108,7 +107,7 @@ public class PronounCase extends Error {
 	 * @param tagList the parts of speech of those tokens
 	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
 	 */
-	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorIndices) {
+	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, TokenErrorList errorTokens) {
 //		System.out.println("Looking for Subjectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);
@@ -122,7 +121,7 @@ public class PronounCase extends Error {
 				if(tagList[nextWordIndex].charAt(0) == 'V') {
 					// so the pronoun should be subjective
 					if(!UtilityMethods.arrayContains(SUBJ, tokenList[index])) {
-						errorIndices.add(new int[] {index, index, ERROR_NUMBER});
+						errorTokens.add(new int[] {index, index, ERROR_NUMBER});
 //						System.out.println("subjective error: " + tokenList[index]);
 					}
 					pronounIndices.remove(element);
@@ -139,7 +138,7 @@ public class PronounCase extends Error {
 	 * @param tagList the parts of speech of those tokens
 	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
 	 */
-	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorIndices) {
+	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, TokenErrorList errorTokens) {
 //		System.out.println("Looking for Objectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);
@@ -149,7 +148,7 @@ public class PronounCase extends Error {
 				if(tagList[previousWordIndex].charAt(0) == 'V') {
 					// so the pronoun should be objective
 					if(!UtilityMethods.arrayContains(OBJ, tokenList[index])) {
-						errorIndices.add(new int[] {index, index, ERROR_NUMBER});
+						errorTokens.add(new int[] {index, index, ERROR_NUMBER});
 //						System.out.println("subjective error: " + tokenList[index]);
 					}
 					pronounIndices.remove(element);
