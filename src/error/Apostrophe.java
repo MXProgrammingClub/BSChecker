@@ -4,10 +4,9 @@ import util.ErrorList;
 import util.UtilityMethods;
 
 /**
- * WIP
  * Finds apostrophe errors. (8)
- * @author JeremiahDeGreeff
  * @author tedpyne
+ * @author JeremiahDeGreeff
  */
 public class Apostrophe extends Error {
 	/**
@@ -15,7 +14,7 @@ public class Apostrophe extends Error {
 	 */
 	public static void main(String[] args) {
 		UtilityMethods.setupOpenNLP();
-		String input = "Cars's ran to the store. Bens cars are fast.";
+		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		ErrorList errors = new Apostrophe().findErrors(input);
 		errors.sort();
@@ -39,7 +38,7 @@ public class Apostrophe extends Error {
 	}
 
 	/**
-	 * WIP
+	 * Finds omissions of apostrophes and incorrect apostrophes in the passed line of text
 	 * @param line the paragraph in which to find errors
 	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
 	 * 			int[0], int[1] are start and end tokens of the error
@@ -52,11 +51,12 @@ public class Apostrophe extends Error {
 		
 		ErrorList errors = new ErrorList(line, false);
 		for(int i = 0; i < tokens.length; i++){
-			if(tags[i].length()>1 && tags[i].substring(0,2).equals("NN")){
+			if(tags[i].length()>2 && tags[i].substring(0,3).equals("NNS")){
 				int j = i+1;
 				while(tags[j].length()>1 && (tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length)
 					j++;
-				if(tags[j].length()>1 && tags[j].substring(0,2).equals("NN"))
+				//If the preceding word is a noun, the tag of noun is highly likely to be in error. e.g. "the poem features cars", the tag "features"->"NNS" is incorrect
+				if((i==0 || !((tags[i-1].length()>1 && tags[i-1].substring(0, 2).equals("NN")) || tags[i-1].equals("WDT"))) && tags[j].length()>1 && tags[j].substring(0,2).equals("NN"))
 					errors.add(new int[]{i, j, ERROR_NUMBER});
 				
 				if(i+1 < tokens.length && tags[i+1].length()>2 && tags[i+1].substring(0, 3).equals("POS")){
@@ -67,8 +67,6 @@ public class Apostrophe extends Error {
 						errors.add(new int[]{i, j, ERROR_NUMBER});
 				}
 			}
-			
-			
 		}
 		return errors;
 	}

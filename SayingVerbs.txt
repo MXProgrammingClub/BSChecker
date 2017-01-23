@@ -822,3 +822,7 @@ say
 says
 saying
 said
+remark
+remarks
+remarking
+remarked
