@@ -49,9 +49,9 @@ public abstract class Error {
 	
 	/**
 	 * finds all errors within the given text
-	 * all types included in ERROR_LIST who have an isChecked value of true will be checked
+	 * all types included in ERROR_LIST which have an isChecked value of true will be checked
 	 * @param text the text to search
-	 * @return an ErrorList which contains all the errors in the passage
+	 * @return a CharacterErrorList which contains all the errors in the passage
 	 */
 	public static CharacterErrorList findAllErrors(String text) {
 		CharacterErrorList errors = new CharacterErrorList(text);

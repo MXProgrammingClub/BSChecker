@@ -9,7 +9,10 @@ import error.Error;
  * @author JeremiahDeGreeff
  */
 public class TokenErrorList extends ErrorList {
-
+	/**
+	 * constructor
+	 * @param text the text in which the errors of this TokenErrorList occur
+	 */
 	public TokenErrorList(String text) {
 		super(text);
 	}

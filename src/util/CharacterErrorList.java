@@ -7,7 +7,10 @@ package util;
  * @author JeremiahDeGreeff
  */
 public class CharacterErrorList extends ErrorList {
-
+	/**
+	 * constructor
+	 * @param text the text in which the errors of this CharacterErrorList occur
+	 */
 	public CharacterErrorList(String text) {
 		super(text);
 	}
