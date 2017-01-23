@@ -6,7 +6,8 @@ import opennlp.tools.parser.Parser;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.tokenize.Tokenizer;
-import util.ErrorList;
+import util.CharacterErrorList;
+import util.TokenErrorList;
 
 /**
  * Defines abstract class for types of grammatical errors
@@ -35,11 +36,9 @@ public abstract class Error {
 	/**
 	 * Finds errors of a specific type in the submitted text
 	 * @param line the paragraph in which to find errors
-	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
-	 * 			int[0], int[1] are start and end tokens of the error
-	 * 			int[2] is the error number (1 - 14)
+	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (1 - 14)
 	 */
-	protected abstract ErrorList findErrors(String line);
+	protected abstract TokenErrorList findErrors(String line);
 	
 	/**
 	 * changes the value of isChecked
@@ -54,8 +53,8 @@ public abstract class Error {
 	 * @param text the text to search
 	 * @return an ErrorList which contains all the errors in the passage
 	 */
-	public static ErrorList findAllErrors(String text) {
-		ErrorList errors = new ErrorList(text, true);
+	public static CharacterErrorList findAllErrors(String text) {
+		CharacterErrorList errors = new CharacterErrorList(text);
 		int lineNum = 1, charOffset = 0;
 		String line;
 		while (charOffset < text.length()) {
@@ -64,18 +63,16 @@ public abstract class Error {
 			else
 				line = text.substring(charOffset);
 			System.out.println("\nAnalysing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
-			ErrorList lineErrors = new ErrorList(line, false);
+			TokenErrorList lineErrors = new TokenErrorList(line);
 
-			for(Error e: Main.ERROR_LIST) {
+			for(Error e: Main.ERROR_LIST)
 				if(e.isChecked) {
 					System.out.println("looking for: " + e.getClass());
-					ErrorList temp = e.findErrors(line);
+					TokenErrorList temp = e.findErrors(line);
 					lineErrors.addAll(temp);
 				}
-			}
 			lineErrors.sort();
-			lineErrors.tokensToChars(charOffset);
-			errors.addAll(lineErrors);
+			errors.addAll(lineErrors.tokensToChars(charOffset));
 
 			lineNum++;
 			charOffset += line.length() + 1;

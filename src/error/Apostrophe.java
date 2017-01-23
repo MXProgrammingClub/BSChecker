@@ -1,6 +1,6 @@
 package error;
 
-import util.ErrorList;
+import util.TokenErrorList;
 import util.UtilityMethods;
 
 /**
@@ -16,10 +16,9 @@ public class Apostrophe extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
-		ErrorList errors = new Apostrophe().findErrors(input);
+		TokenErrorList errors = new Apostrophe().findErrors(input);
 		errors.sort();
-		errors.tokensToChars(0);
-		System.out.println(errors);
+		System.out.println(errors.tokensToChars(0));
 	}
 	
 	/**
@@ -40,16 +39,14 @@ public class Apostrophe extends Error {
 	/**
 	 * Finds omissions of apostrophes and incorrect apostrophes in the passed line of text
 	 * @param line the paragraph in which to find errors
-	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
-	 * 			int[0], int[1] are start and end tokens of the error
-	 * 			int[2] is the error number (8)
+	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (8)
 	 */
 	@Override
-	protected ErrorList findErrors(String line) {
+	protected TokenErrorList findErrors(String line) {
 		String tokens[] = tokenizer.tokenize(line);
 		String[] tags = posTagger.tag(tokens);
 		
-		ErrorList errors = new ErrorList(line, false);
+		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 0; i < tokens.length; i++){
 			if(tags[i].length()>2 && tags[i].substring(0,3).equals("NNS")){
 				int j = i+1;

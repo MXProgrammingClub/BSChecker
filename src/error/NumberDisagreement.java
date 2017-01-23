@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
-import util.ErrorList;
 import util.SentenceTree;
+import util.TokenErrorList;
 import util.UtilityMethods;
 
 /**
@@ -23,10 +23,9 @@ public class NumberDisagreement extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.";
 		System.out.println("\ninput: " + input + "\n");
-		ErrorList errors = new NumberDisagreement().findErrors(input);
+		TokenErrorList errors = new NumberDisagreement().findErrors(input);
 		errors.sort();
-		errors.tokensToChars(0);
-		System.out.println(errors);
+		System.out.println(errors.tokensToChars(0));
 	}
 	
 	/**
@@ -47,12 +46,10 @@ public class NumberDisagreement extends Error {
 	/**
 	 * finds errors in number disagreement in the given paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
-	 * 			int[0], int[1] are start and end tokens of the error
-	 * 			int[2] is the error number (1 - 14)
+	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (5)
 	 */
 	@Override
-	protected ErrorList findErrors(String line){
+	protected TokenErrorList findErrors(String line){
 		String sentences[] = sentenceDetector.sentDetect(line);
 		ArrayList<Parse> parses = new ArrayList<Parse>();
 		ArrayList<int[]> arr = new ArrayList<int[]>();

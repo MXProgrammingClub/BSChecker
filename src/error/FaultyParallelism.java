@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
 import util.ErrorList;
+import util.TokenErrorList;
 import util.UtilityMethods;
 
 /**
@@ -46,12 +47,10 @@ public class FaultyParallelism extends Error {
 	/**
 	 * finds instances of faulty parallelism in the given paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
-	 * 			int[0], int[1] are start and end tokens of the error
-	 * 			int[2] is the error number (11)
+	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (11)
 	 */
 	@Override
-	protected ErrorList findErrors(String line){
+	protected TokenErrorList findErrors(String line){
 		String startText = line;
 		line = line.replace('\u201D', '\"');
 		line = line.replace('\u201C', '\"');
@@ -74,7 +73,7 @@ public class FaultyParallelism extends Error {
 			}
 		}
 		line = buf.toString();
-		ErrorList errs = new ErrorList(line, false);
+		TokenErrorList errs = new TokenErrorList(line);
 		String[] sentences = sentenceDetector.sentDetect(line);
 		int shift = 0;
 		for(String sentence : sentences){
@@ -92,7 +91,7 @@ public class FaultyParallelism extends Error {
 		return errs;
 	}
 	private ErrorList findErrorsInLine(String text){
-		ErrorList errors = new ErrorList(text, false);
+		TokenErrorList errors = new TokenErrorList(text);
 		String parsedText = parse(text);
 		int index = -1;
 		int textIndex = 0;

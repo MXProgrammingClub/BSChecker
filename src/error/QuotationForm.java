@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Scanner;
 
-import util.ErrorList;
+import util.TokenErrorList;
 import util.UtilityMethods;
 
 /**
@@ -41,10 +41,9 @@ public class QuotationForm extends Error {
 		UtilityMethods.setupOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
-		ErrorList errors = new QuotationForm().findErrors(input);
+		TokenErrorList errors = new QuotationForm().findErrors(input);
 		errors.sort();
-		errors.tokensToChars(0);
-		System.out.println(errors);
+		System.out.println(errors.tokensToChars(0));
 	}
 	
 	/**
@@ -66,14 +65,12 @@ public class QuotationForm extends Error {
 	 * finds all errors with quotation form in the given paragraph
 	 * known issues: doesn't see a preceding verb if other words between it and the quote
 	 * @param line the paragraph in which to find errors
-	 * @return an ErrorList of int[3] pointers to the indices of the start and end tokens of an error
-	 * 			int[0], int[1] are start and end tokens of the error
-	 * 			int[2] is the error number (14)
+	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (14)
 	 */
 	@Override
-	protected ErrorList findErrors(String line) {
+	protected TokenErrorList findErrors(String line) {
 		String tokens[] = tokenizer.tokenize(line);
-		ErrorList errors = new ErrorList(line, false);
+		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 0; i < tokens.length; i++)
 			if(tokens[i].contains("\"")) { //finds opening quotation
 				int start = i + 1;
