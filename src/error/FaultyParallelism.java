@@ -1,10 +1,7 @@
 package error;
 
-import java.util.Scanner;
-import java.util.ArrayList;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
-import util.ErrorList;
 import util.TokenErrorList;
 import util.UtilityMethods;
 
@@ -14,19 +11,16 @@ import util.UtilityMethods;
  * @author
  */
 public class FaultyParallelism extends Error {
-	
 	/**
 	 * for testing purposes
 	 */
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		UtilityMethods.setupOpenNLP();
-		Scanner scan = new Scanner(System.in);
-		System.out.println("passage: ");
-		String passage = scan.nextLine();
-		scan.close();
-		ArrayList<int[]> errs = new FaultyParallelism().findErrors(passage);
-		for(int[] arr: errs)
-			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
+		String input = "";
+		System.out.println("\ninput: " + input + "\n");
+		TokenErrorList errors = new FaultyParallelism().findErrors(input);
+		errors.sort();
+		System.out.println(errors.tokensToChars(0));
 	}
 	
 	/**
@@ -50,7 +44,7 @@ public class FaultyParallelism extends Error {
 	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (11)
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line){
+	protected TokenErrorList findErrors(String line) {
 		String startText = line;
 		line = line.replace(':', '.');
 		line = line.replace(';', '.');
@@ -75,7 +69,7 @@ public class FaultyParallelism extends Error {
 		for(String sentence : sentences){
 			int lineShift = 0;
 			sentence.replace(".", "");
-			ErrorList errors = findErrorsInSentence(sentence);
+			TokenErrorList errors = findErrorsInSentence(sentence);
 			for(int[] err: errors){
 				String conjunction = sentence.substring(err[0],err[1]);
 				int[] newErr = {startText.indexOf(conjunction,lineShift + shift),startText.indexOf(conjunction, lineShift + shift) + conjunction.length(),ERROR_NUMBER};
@@ -86,18 +80,10 @@ public class FaultyParallelism extends Error {
 		}
 		return errs;
 	}
-<<<<<<< HEAD
-	private ErrorList findErrorsInSentence(String sentence){
-		ErrorList errors = new ErrorList(sentence, false);
+	private TokenErrorList findErrorsInSentence(String sentence) {
+		TokenErrorList errors = new TokenErrorList(sentence);
 		String parsedText = parse(sentence);
 		int index = -1, textIndex = 0;
-=======
-	private ErrorList findErrorsInLine(String text){
-		TokenErrorList errors = new TokenErrorList(text);
-		String parsedText = parse(text);
-		int index = -1;
-		int textIndex = 0;
->>>>>>> master
 		while(index < parsedText.length() && parsedText.indexOf("CC",index+1) >= 0){
 			index = parsedText.indexOf("CC",index+1);
 			int net = 0;
@@ -167,7 +153,7 @@ public class FaultyParallelism extends Error {
 		}
 		return errors;
 	}
-	private static String parse(String input){
+	private static String parse(String input) {
 		Parse topParses[] = ParserTool.parseLine(input, parser, 1);
 		StringBuffer sb = new StringBuffer(input.length()*4);
 		topParses[0].show(sb);
