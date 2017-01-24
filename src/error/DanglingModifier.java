@@ -32,10 +32,10 @@ public class DanglingModifier extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public DanglingModifier(boolean isChecked) {
-		super(10, isChecked);
+	public DanglingModifier(boolean CheckedWhenAnalyzed) {
+		super(10, CheckedWhenAnalyzed);
 	}
 
 	/**

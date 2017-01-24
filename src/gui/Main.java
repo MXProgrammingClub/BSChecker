@@ -16,7 +16,6 @@ import util.UtilityMethods;
  * @version 10/15/2016
  */
 public class Main extends Application {
-
 	public final static Error[] ERROR_LIST = {
 			new PastTense(true),
 			new IncompleteSentence(false), //unimplemented

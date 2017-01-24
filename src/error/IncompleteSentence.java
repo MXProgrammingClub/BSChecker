@@ -32,10 +32,10 @@ public class IncompleteSentence extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public IncompleteSentence(boolean isChecked) {
-		super(2, isChecked);
+	public IncompleteSentence(boolean CheckedWhenAnalyzed) {
+		super(2, CheckedWhenAnalyzed);
 	}
 
 	/**

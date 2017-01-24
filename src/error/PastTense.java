@@ -35,10 +35,10 @@ public class PastTense extends Error {
 
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public PastTense(boolean isChecked) {
-		super(1, isChecked);
+	public PastTense(boolean CheckedWhenAnalyzed) {
+		super(1, CheckedWhenAnalyzed);
 	}
 	
 	/**
@@ -48,8 +48,8 @@ public class PastTense extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String tokens[] = tokenizer.tokenize(line);
-		String[] tags = posTagger.tag(tokens);
+		String tokens[] = UtilityMethods.getTokenizer().tokenize(line);
+		String[] tags = UtilityMethods.getPOSTagger().tag(tokens);
 
 		boolean inQuote = false, inIntroducedQuote = false;
 		TokenErrorList errors = new TokenErrorList(line);

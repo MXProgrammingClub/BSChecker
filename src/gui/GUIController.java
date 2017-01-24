@@ -261,7 +261,8 @@ public class GUIController {
 	@FXML
 	protected void menuCopyClick() {
 		String temp = essayBox.getSelectedText();
-		if(!temp.equals("")) clipboard = temp;
+		if(!temp.equals(""))
+			clipboard = temp;
 	}
 
 	/**

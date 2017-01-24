@@ -8,17 +8,18 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import error.Error;
 import opennlp.tools.cmdline.PerformanceMonitor;
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
+import opennlp.tools.parser.Parser;
 //import opennlp.tools.parser.ParserFactory;
 //import opennlp.tools.parser.ParserModel;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
+import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.InvalidFormatException;
@@ -28,12 +29,11 @@ import opennlp.tools.util.InvalidFormatException;
  * @author JeremiahDeGreeff
  */
 public class UtilityMethods {
-	/**
-	 * for testing purposes
-	 */
-	public static void main(String[] args) {
-		setupOpenNLP();
-	}
+	private static SentenceDetectorME sentenceDetector;
+	private static NameFinderME nameFinder;
+	private static Tokenizer tokenizer;
+	private static POSTaggerME posTagger;
+	private static Parser parser;
 	
 	/**
 	 * Initializes all the necessary OpenNLP tools
@@ -84,16 +84,56 @@ public class UtilityMethods {
 //		catch (IOException e1) {e1.printStackTrace();}
 //		perfMon.incrementCounter();
 
-		Error.sentenceDetector = new SentenceDetectorME(sModel);
-		Error.nameFinder = new NameFinderME(nModel);
-		Error.tokenizer = new TokenizerME(tModel);
-		Error.posTagger = new POSTaggerME(posModel);
-//		Error.parser = ParserFactory.create(pModel);
+		sentenceDetector = new SentenceDetectorME(sModel);
+		nameFinder = new NameFinderME(nModel);
+		tokenizer = new TokenizerME(tModel);
+		posTagger = new POSTaggerME(posModel);
+//		parser = ParserFactory.create(pModel);
 
 		try {is.close();}
 		catch (IOException e) {e.printStackTrace();}
 		perfMon.stopAndPrintFinalResult();
 		System.out.println("Set up complete!\n");
+	}
+	
+	/**
+	 * accessor method for the openNLP sentenceDetector
+	 * @return the openNLP sentenceDetector as initialized by the setupOpenNLP() method
+	 */
+	public static SentenceDetectorME getSentenceDetector() {
+		return sentenceDetector;
+	}
+	
+	/**
+	 * accessor method for the openNLP nameFinder
+	 * @return the openNLP nameFinder as initialized by the setupOpenNLP() method
+	 */
+	public static NameFinderME getNameFinder() {
+		return nameFinder;
+	}
+	
+	/**
+	 * accessor method for the openNLP tokenizer
+	 * @return the openNLP tokenizer as initialized by the setupOpenNLP() method
+	 */
+	public static Tokenizer getTokenizer() {
+		return tokenizer;
+	}
+	
+	/**
+	 * accessor method for the openNLP posTagger
+	 * @return the openNLP posTagger as initialized by the setupOpenNLP() method
+	 */
+	public static POSTaggerME getPOSTagger() {
+		return posTagger;
+	}
+	
+	/**
+	 * accessor method for the openNLP parser
+	 * @return the openNLP parser as initialized by the setupOpenNLP() method
+	 */
+	public static Parser getParser() {
+		return parser;
 	}
 	
 	/**
@@ -103,8 +143,8 @@ public class UtilityMethods {
 	 * @return true if found, false otherwise
 	 */
 	public static boolean arrayContains(String[] array, String word) {
-		for(String item : array)
-			if(word.equalsIgnoreCase(item))
+		for(String element : array)
+			if(element.equalsIgnoreCase(word))
 				return true;
 		return false;
 	}

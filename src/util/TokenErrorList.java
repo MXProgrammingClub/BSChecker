@@ -2,8 +2,6 @@ package util;
 
 import java.util.ArrayList;
 
-import error.Error;
-
 @SuppressWarnings("serial")
 /**
  * An object which represents a list of errors referenced by token indices
@@ -40,7 +38,7 @@ public class TokenErrorList extends ErrorList {
 	 * @return a CharacterErrorList which represents the same errors as this TokenErrorList
 	 */
 	public CharacterErrorList tokensToChars(int startChar, ArrayList<Integer> ignoredChars) {
-		String[] tokens = Error.tokenizer.tokenize(TEXT);
+		String[] tokens = UtilityMethods.getTokenizer().tokenize(TEXT);
 		boolean errorProcessed;
 		int tokenIndex = 0, charIndex = 0, numIgnored = 0, errorLength;
 		CharacterErrorList charErrorList = new CharacterErrorList(TEXT);

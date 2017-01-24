@@ -14,7 +14,7 @@ import org.apache.poi.hwpf.model.PAPX;
 import org.apache.poi.hwpf.sprm.SprmBuffer;
 import org.apache.poi.hwpf.usermodel.Paragraph;
 import org.apache.poi.hwpf.usermodel.Range;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+//import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -115,32 +115,32 @@ public class TextImport {
 	 * Allows the user to create a file to save the text.
 	 * @param text The text to save in the new document.
 	 */
-	@SuppressWarnings({ "unused", "resource" })
 	public static void saveAs(String text) {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Save Essay");
-		fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Microsoft Word 2007", "*.docx"), new FileChooser.ExtensionFilter("Microsoft Word 1997", "*.doc"), 
+		fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Microsoft Word 2007", "*.docx"), //new FileChooser.ExtensionFilter("Microsoft Word 1997", "*.doc"), 
 				new FileChooser.ExtensionFilter("Text File", "*.txt"));
 		File file = fc.showSaveDialog(null);
 		if(file != null) {
 			String extension = file.getName().substring(file.getName().indexOf('.'));
 			if(extension.equals(".txt"))
 				saveTxt(file, text);
-			else if(extension.equals(".doc"))
-				try {
-					FileOutputStream f= new FileOutputStream(file); 
-					POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
-					HWPFDocument doc = new HWPFDocument(fs);
-					saveDoc(file, text);
-				} catch (IOException e) {e.printStackTrace();}
+//			else if(extension.equals(".doc"))
+//				try {
+//					FileOutputStream f = new FileOutputStream(file); 
+//					POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+//					HWPFDocument doc = new HWPFDocument(fs);
+//					saveDoc(file, text);
+//				} catch (IOException e) {e.printStackTrace();}
 			else if(extension.equals(".docx"))
-				try {
-					XWPFDocument document= new XWPFDocument(); 
-					FileOutputStream f= new FileOutputStream(file);  
+				try {	
+					XWPFDocument document = new XWPFDocument(); 
+					FileOutputStream f = new FileOutputStream(file);  
 					document.write(f);
+					document.close();
 					f.close();
 					saveDocx(file, text);
-				} catch (IOException e){}
+				} catch (IOException e) {e.printStackTrace();}
 		}
 	}
 	
@@ -197,8 +197,7 @@ public class TextImport {
 			r.getParagraph(i).delete();
 		
 		String[] lines = text.split("\n");
-		for(int i = 0; i < lines.length; i++)
-		{
+		for(int i = 0; i < lines.length; i++) {
 			Paragraph p = Paragraph.newParagraph(r, new PAPX(0, lines[i].length(), new SprmBuffer(0)));
 			if(i == 0)
 				p.insertBefore(lines[i]);
@@ -217,7 +216,6 @@ public class TextImport {
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */
-	@SuppressWarnings("resource")
 	private static boolean saveDocx(File file, String text) {
 		XWPFDocument doc = null;
 		try {
@@ -238,10 +236,8 @@ public class TextImport {
 		
 		try {
 			doc.write(new FileOutputStream(file));
-		} catch(IOException e) {return false;}
-		try {
 			doc.close();
-		} catch (IOException e){}
+		} catch(IOException e) {return false;}
 		return true;
 	}
 }

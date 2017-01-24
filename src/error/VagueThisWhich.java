@@ -31,10 +31,10 @@ public class VagueThisWhich extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public VagueThisWhich(boolean isChecked) {
-		super(4, isChecked);
+	public VagueThisWhich(boolean CheckedWhenAnalyzed) {
+		super(4, CheckedWhenAnalyzed);
 	}
 	
 	/**
@@ -44,8 +44,8 @@ public class VagueThisWhich extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line){
-		String tokens[] = tokenizer.tokenize(line);
-		String[] tags = posTagger.tag(tokens);
+		String tokens[] = UtilityMethods.getTokenizer().tokenize(line);
+		String[] tags = UtilityMethods.getPOSTagger().tag(tokens);
 		
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 0; i < tokens.length; i++)

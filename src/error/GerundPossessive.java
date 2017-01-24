@@ -31,10 +31,10 @@ public class GerundPossessive extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public GerundPossessive(boolean isChecked) {
-		super(13, isChecked);
+	public GerundPossessive(boolean CheckedWhenAnalyzed) {
+		super(13, CheckedWhenAnalyzed);
 	}
 
 	/**
@@ -45,8 +45,8 @@ public class GerundPossessive extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String[] tokens = tokenizer.tokenize(line);
-		String[] tags = posTagger.tag(tokens);
+		String[] tokens = UtilityMethods.getTokenizer().tokenize(line);
+		String[] tags = UtilityMethods.getPOSTagger().tag(tokens);
 		
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 1; i < tokens.length; i++)
