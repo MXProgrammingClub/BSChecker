@@ -1,5 +1,7 @@
 package util;
 
+import java.util.ArrayList;
+
 import error.Error;
 
 @SuppressWarnings("serial")
@@ -34,12 +36,13 @@ public class TokenErrorList extends ErrorList {
 	 * generates a CharacterErrorList based upon this TokenErrorList
 	 * should only be used on ErrorLists which pertain to single paragraphs
 	 * @param startChar the beginning of this paragraph relative to the entire input
+	 * @param ignoredChars indices of chars which have been removed from TEXT
 	 * @return a CharacterErrorList which represents the same errors as this TokenErrorList
 	 */
-	public CharacterErrorList tokensToChars(int startChar) {
+	public CharacterErrorList tokensToChars(int startChar, ArrayList<Integer> ignoredChars) {
 		String[] tokens = Error.tokenizer.tokenize(TEXT);
 		boolean errorProcessed;
-		int tokenIndex = 0, charIndex = 0, errorLength;
+		int tokenIndex = 0, charIndex = 0, numIgnored = 0, errorLength;
 		CharacterErrorList charErrorList = new CharacterErrorList(TEXT);
 
 		//loop through each error
@@ -67,9 +70,12 @@ public class TokenErrorList extends ErrorList {
 						}
 						errorLength += tokens[tokenIndex + i].length();
 					}
-
-					curErrorChars[0] = charIndex + startChar;
-					curErrorChars[1] = charIndex + errorLength - 1 + startChar;
+					if(numIgnored < ignoredChars.size())
+						System.out.println(charIndex + ", " + numIgnored + ", " + ignoredChars.get(numIgnored));
+					while(numIgnored < ignoredChars.size() && ignoredChars.get(numIgnored) < startChar + charIndex + numIgnored)
+						numIgnored++;
+					curErrorChars[0] = startChar + numIgnored + charIndex;
+					curErrorChars[1] = startChar + numIgnored + charIndex + errorLength - 1;
 					charErrorList.add(curErrorChars);
 
 					errorProcessed = true;

@@ -22,7 +22,7 @@ public class AmbiguousPronoun extends Error {
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new AmbiguousPronoun().findErrors(input);
 		errors.sort();
-		System.out.println(errors.tokensToChars(0));
+		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**

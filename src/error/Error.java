@@ -1,5 +1,7 @@
 package error;
 
+import java.util.ArrayList;
+
 import gui.Main;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.parser.Parser;
@@ -8,6 +10,7 @@ import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.tokenize.Tokenizer;
 import util.CharacterErrorList;
 import util.TokenErrorList;
+import util.UtilityMethods;
 
 /**
  * Defines abstract class for types of grammatical errors
@@ -50,6 +53,7 @@ public abstract class Error {
 	/**
 	 * finds all errors within the given text
 	 * all types included in ERROR_LIST which have an isChecked value of true will be checked
+	 * assumes that text ends with a new line character
 	 * @param text the text to search
 	 * @return a CharacterErrorList which contains all the errors in the passage
 	 */
@@ -58,13 +62,14 @@ public abstract class Error {
 		int lineNum = 1, charOffset = 0;
 		String line;
 		while (charOffset < text.length()) {
-			if(text.substring(charOffset).indexOf('\n') != -1)
-				line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
-			else
-				line = text.substring(charOffset);
+			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
+			
 			System.out.println("\nAnalysing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
+			ArrayList<Integer> removedChars = new ArrayList<Integer>();
+			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
+			System.out.println("Ignoring characters: " + removedChars);
+			
 			TokenErrorList lineErrors = new TokenErrorList(line);
-
 			for(Error e: Main.ERROR_LIST)
 				if(e.isChecked) {
 					System.out.println("looking for: " + e.getClass());
@@ -72,14 +77,12 @@ public abstract class Error {
 					lineErrors.addAll(temp);
 				}
 			lineErrors.sort();
-			errors.addAll(lineErrors.tokensToChars(charOffset));
+			errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
 
 			lineNum++;
-			charOffset += line.length() + 1;
+			charOffset += line.length() + removedChars.size() + 1;
 		}
-
 		System.out.println("\n" + errors);
-
 		return errors;
 	}
 }

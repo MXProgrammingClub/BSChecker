@@ -2,6 +2,7 @@ package error;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -43,7 +44,7 @@ public class QuotationForm extends Error {
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new QuotationForm().findErrors(input);
 		errors.sort();
-		System.out.println(errors.tokensToChars(0));
+		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
