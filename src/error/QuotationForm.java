@@ -2,6 +2,7 @@ package error;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -43,7 +44,7 @@ public class QuotationForm extends Error {
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new QuotationForm().findErrors(input);
 		errors.sort();
-		System.out.println(errors.tokensToChars(0));
+		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -55,10 +56,10 @@ public class QuotationForm extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public QuotationForm(boolean isChecked) {
-		super(14, isChecked);
+	public QuotationForm(boolean CheckedWhenAnalyzed) {
+		super(14, CheckedWhenAnalyzed);
 	}
 
 	/**
@@ -69,7 +70,7 @@ public class QuotationForm extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String tokens[] = tokenizer.tokenize(line);
+		String tokens[] = UtilityMethods.getTokenizer().tokenize(line);
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 0; i < tokens.length; i++)
 			if(tokens[i].contains("\"")) { //finds opening quotation

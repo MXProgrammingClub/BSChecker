@@ -26,7 +26,7 @@ public class PronounCase extends Error {
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new PronounCase().findErrors(input);
 		errors.sort();
-		System.out.println(errors.tokensToChars(0));
+		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -38,10 +38,10 @@ public class PronounCase extends Error {
 
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public PronounCase(boolean isChecked) {
-		super(6, isChecked);
+	public PronounCase(boolean CheckedWhenAnalyzed) {
+		super(6, CheckedWhenAnalyzed);
 	}
 
 	/**
@@ -51,8 +51,8 @@ public class PronounCase extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String[] tokens = tokenizer.tokenize(line);
-		String[] tags = posTagger.tag(tokens);
+		String[] tokens = UtilityMethods.getTokenizer().tokenize(line);
+		String[] tags = UtilityMethods.getPOSTagger().tag(tokens);
 		
 		ArrayList<Integer> pronounIndices = new ArrayList<Integer>();
 		for(int i = 0; i < tokens.length; i++) {

@@ -1,5 +1,7 @@
 package error;
 
+import java.util.ArrayList;
+
 import util.TokenErrorList;
 import util.UtilityMethods;
 
@@ -19,7 +21,7 @@ public class ProgressiveTense extends Error {
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new ProgressiveTense().findErrors(input);
 		errors.sort();
-		System.out.println(errors.tokensToChars(0));
+		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -31,10 +33,10 @@ public class ProgressiveTense extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public ProgressiveTense(boolean isChecked) {
-		super(12, isChecked);
+	public ProgressiveTense(boolean CheckedWhenAnalyzed) {
+		super(12, CheckedWhenAnalyzed);
 	}
 
 	/**
@@ -44,8 +46,8 @@ public class ProgressiveTense extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String[] tokens = tokenizer.tokenize(line);
-		String[] tags = posTagger.tag(tokens);
+		String[] tokens = UtilityMethods.getTokenizer().tokenize(line);
+		String[] tags = UtilityMethods.getPOSTagger().tag(tokens);
 		
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 1; i < tokens.length; i++)

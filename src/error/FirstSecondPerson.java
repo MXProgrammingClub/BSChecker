@@ -1,5 +1,7 @@
 package error;
 
+import java.util.ArrayList;
+
 import util.TokenErrorList;
 import util.UtilityMethods;
 
@@ -20,7 +22,7 @@ public class FirstSecondPerson extends Error {
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new FirstSecondPerson().findErrors(input);
 		errors.sort();
-		System.out.println(errors.tokensToChars(0));
+		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -32,10 +34,10 @@ public class FirstSecondPerson extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public FirstSecondPerson(boolean isChecked) {
-		super(3, isChecked);
+	public FirstSecondPerson(boolean CheckedWhenAnalyzed) {
+		super(3, CheckedWhenAnalyzed);
 	}
 
 	/**
@@ -45,7 +47,7 @@ public class FirstSecondPerson extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String[] tokens = tokenizer.tokenize(line);
+		String[] tokens = UtilityMethods.getTokenizer().tokenize(line);
 		
 		boolean inQuote = false, inIntroducedQuote = false;
 		TokenErrorList errors = new TokenErrorList(line);

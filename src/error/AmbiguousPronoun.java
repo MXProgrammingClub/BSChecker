@@ -22,7 +22,7 @@ public class AmbiguousPronoun extends Error {
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new AmbiguousPronoun().findErrors(input);
 		errors.sort();
-		System.out.println(errors.tokensToChars(0));
+		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -34,10 +34,10 @@ public class AmbiguousPronoun extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public AmbiguousPronoun(boolean isChecked) {
-		super(7, isChecked);
+	public AmbiguousPronoun(boolean CheckedWhenAnalyzed) {
+		super(7, CheckedWhenAnalyzed);
 	}
 
 	/**
@@ -48,11 +48,11 @@ public class AmbiguousPronoun extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String[] sentences = sentenceDetector.sentDetect(line);
+		String[] sentences = UtilityMethods.getSentenceDetector().sentDetect(line);
 		TokenErrorList errors = new TokenErrorList(line);
 		int prevSentenceNouns, curSentenceNouns = 0, tokenOffset = 0, index;
 		for(int i = 0; i < sentences.length; i++) {
-			String[] words = tokenizer.tokenize(sentences[i]);
+			String[] words = UtilityMethods.getTokenizer().tokenize(sentences[i]);
 			prevSentenceNouns = curSentenceNouns;
 			curSentenceNouns = 0;
 			ArrayList<String> names = findName(words);
@@ -76,7 +76,7 @@ public class AmbiguousPronoun extends Error {
 	 */
 	private static ArrayList<String> findName(String[] words) {
 		ArrayList<String> names = new ArrayList<String>();
-		Span spans[] = nameFinder.find(words);
+		Span spans[] = UtilityMethods.getNameFinder().find(words);
 		for(Span span : spans)
 			if(!names.contains(words[span.getStart()]))
 				names.add(words[span.getStart()]);

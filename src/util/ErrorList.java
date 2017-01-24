@@ -19,6 +19,9 @@ public abstract class ErrorList extends ArrayList<int[]>{
 		TEXT = text;
 	}
 	
+	@Override
+	public abstract String toString();
+	
 	/**
 	 * Sorts this list of all errors by location.
 	 */

@@ -118,6 +118,8 @@ public class GUIController {
 		essayBox.setStyleClass(0, essayBox.getLength(), null);
 		
 		text = UtilityMethods.replaceInvalidChars(text);
+		if(text.charAt(text.length() - 1) != '\n')
+			text += "\n";
 		essayBox.replaceText(text);
 		
 		errors = Error.findAllErrors(text);
@@ -259,7 +261,8 @@ public class GUIController {
 	@FXML
 	protected void menuCopyClick() {
 		String temp = essayBox.getSelectedText();
-		if(!temp.equals("")) clipboard = temp;
+		if(!temp.equals(""))
+			clipboard = temp;
 	}
 
 	/**

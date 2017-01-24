@@ -32,10 +32,10 @@ public class FaultyParallelism extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public FaultyParallelism(boolean isChecked) {
-		super(11, isChecked);
+	public FaultyParallelism(boolean CheckedWhenAnalyzed) {
+		super(11, CheckedWhenAnalyzed);
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class FaultyParallelism extends Error {
 		}
 		line = buf.toString();
 		TokenErrorList errs = new TokenErrorList(line);
-		String[] sentences = sentenceDetector.sentDetect(line);
+		String[] sentences = UtilityMethods.getSentenceDetector().sentDetect(line);
 		int shift = 0;
 		for(String sentence : sentences){
 			int lineShift = 0;
@@ -153,8 +153,13 @@ public class FaultyParallelism extends Error {
 		}
 		return errors;
 	}
+<<<<<<< HEAD
 	private static String parse(String input) {
 		Parse topParses[] = ParserTool.parseLine(input, parser, 1);
+=======
+	private static String parse(String input){
+		Parse topParses[] = ParserTool.parseLine(input, UtilityMethods.getParser(), 1);
+>>>>>>> master
 		StringBuffer sb = new StringBuffer(input.length()*4);
 		topParses[0].show(sb);
 		return sb.toString();

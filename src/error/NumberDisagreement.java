@@ -25,7 +25,7 @@ public class NumberDisagreement extends Error {
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new NumberDisagreement().findErrors(input);
 		errors.sort();
-		System.out.println(errors.tokensToChars(0));
+		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -37,10 +37,10 @@ public class NumberDisagreement extends Error {
 	
 	/**
 	 * constructor
-	 * @param isChecked true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public NumberDisagreement(boolean isChecked) {
-		super(5, isChecked);
+	public NumberDisagreement(boolean CheckedWhenAnalyzed) {
+		super(5, CheckedWhenAnalyzed);
 	}
 	
 	/**
@@ -50,13 +50,13 @@ public class NumberDisagreement extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line){
-		String sentences[] = sentenceDetector.sentDetect(line);
+		String sentences[] = UtilityMethods.getSentenceDetector().sentDetect(line);
 		ArrayList<Parse> parses = new ArrayList<Parse>();
 		ArrayList<int[]> arr = new ArrayList<int[]>();
 		for(String s: sentences){
-			ParserTool.parseLine(s.substring(0, s.length()-1), parser, 1)[0].show();
-			correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), parser, 1)[0]);
-//			arr.addAll(correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), parser, 1)[0]));
+			ParserTool.parseLine(s.substring(0, s.length()-1), UtilityMethods.getParser(), 1)[0].show();
+			correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), UtilityMethods.getParser(), 1)[0]);
+//			arr.addAll(correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), UtilityMethods.getParser(), 1)[0]));
 		}
 		return null;
 	}

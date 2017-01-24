@@ -1,13 +1,11 @@
 package error;
 
+import java.util.ArrayList;
+
 import gui.Main;
-import opennlp.tools.namefind.NameFinderME;
-import opennlp.tools.parser.Parser;
-import opennlp.tools.postag.POSTaggerME;
-import opennlp.tools.sentdetect.SentenceDetectorME;
-import opennlp.tools.tokenize.Tokenizer;
 import util.CharacterErrorList;
 import util.TokenErrorList;
+import util.UtilityMethods;
 
 /**
  * Defines abstract class for types of grammatical errors
@@ -16,21 +14,16 @@ import util.TokenErrorList;
  */
 public abstract class Error {
 	public final int ERROR_NUMBER;
-	private boolean isChecked;
-	public static SentenceDetectorME sentenceDetector;
-	public static Tokenizer tokenizer;
-	public static NameFinderME nameFinder;
-	public static POSTaggerME posTagger;
-	public static Parser parser;
+	private boolean CheckedWhenAnalyzed;
 	
 	/**
 	 * creates a new Error object with the given error number
 	 * @param errorNum the number (1 - 14) which represents this error
-	 * @param isChecked true if errors of the given type should be looked for when the text is analyzed, false otherwise
+	 * @param CheckedWhenAnalyzed true if errors of the given type should be looked for when the text is analyzed, false otherwise
 	 */
-	public Error(int errorNum, boolean isChecked) {
+	public Error(int errorNum, boolean CheckedWhenAnalyzed) {
 		ERROR_NUMBER = errorNum;
-		this.isChecked = isChecked;
+		this.CheckedWhenAnalyzed = CheckedWhenAnalyzed;
 	}
 
 	/**
@@ -41,15 +34,16 @@ public abstract class Error {
 	protected abstract TokenErrorList findErrors(String line);
 	
 	/**
-	 * changes the value of isChecked
+	 * changes the value of CheckedWhenAnalyzed
 	 */
-	public void setIsChecked() {
-		isChecked = !isChecked;
+	public void setCheckedWhenAnalyzed() {
+		CheckedWhenAnalyzed = !CheckedWhenAnalyzed;
 	}
 	
 	/**
 	 * finds all errors within the given text
-	 * all types included in ERROR_LIST which have an isChecked value of true will be checked
+	 * all types included in ERROR_LIST which have an CheckedWhenAnalyzed value of true will be checked
+	 * assumes that text ends with a new line character
 	 * @param text the text to search
 	 * @return a CharacterErrorList which contains all the errors in the passage
 	 */
@@ -58,28 +52,27 @@ public abstract class Error {
 		int lineNum = 1, charOffset = 0;
 		String line;
 		while (charOffset < text.length()) {
-			if(text.substring(charOffset).indexOf('\n') != -1)
-				line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
-			else
-				line = text.substring(charOffset);
+			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
+			
 			System.out.println("\nAnalysing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
+			ArrayList<Integer> removedChars = new ArrayList<Integer>();
+			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
+			System.out.println("Ignoring characters: " + removedChars);
+			
 			TokenErrorList lineErrors = new TokenErrorList(line);
-
 			for(Error e: Main.ERROR_LIST)
-				if(e.isChecked) {
+				if(e.CheckedWhenAnalyzed) {
 					System.out.println("looking for: " + e.getClass());
 					TokenErrorList temp = e.findErrors(line);
 					lineErrors.addAll(temp);
 				}
 			lineErrors.sort();
-			errors.addAll(lineErrors.tokensToChars(charOffset));
+			errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
 
 			lineNum++;
-			charOffset += line.length() + 1;
+			charOffset += line.length() + removedChars.size() + 1;
 		}
-
 		System.out.println("\n" + errors);
-
 		return errors;
 	}
 }
