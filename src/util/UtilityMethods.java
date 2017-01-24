@@ -12,14 +12,9 @@ import opennlp.tools.cmdline.PerformanceMonitor;
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
-<<<<<<< HEAD
+import opennlp.tools.parser.Parser;
 import opennlp.tools.parser.ParserFactory;
 import opennlp.tools.parser.ParserModel;
-=======
-import opennlp.tools.parser.Parser;
-//import opennlp.tools.parser.ParserFactory;
-//import opennlp.tools.parser.ParserModel;
->>>>>>> master
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -89,19 +84,11 @@ public class UtilityMethods {
 		catch (IOException e1) {e1.printStackTrace();}
 		perfMon.incrementCounter();
 
-<<<<<<< HEAD
-		Error.sentenceDetector = new SentenceDetectorME(sModel);
-		Error.nameFinder = new NameFinderME(nModel);
-		Error.tokenizer = new TokenizerME(tModel);
-		Error.posTagger = new POSTaggerME(posModel);
-		Error.parser = ParserFactory.create(pModel);
-=======
 		sentenceDetector = new SentenceDetectorME(sModel);
 		nameFinder = new NameFinderME(nModel);
 		tokenizer = new TokenizerME(tModel);
 		posTagger = new POSTaggerME(posModel);
-//		parser = ParserFactory.create(pModel);
->>>>>>> master
+		parser = ParserFactory.create(pModel);
 
 		try {is.close();}
 		catch (IOException e) {e.printStackTrace();}

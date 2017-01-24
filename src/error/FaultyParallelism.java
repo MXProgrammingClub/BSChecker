@@ -1,5 +1,7 @@
 package error;
 
+import java.util.ArrayList;
+
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
 import util.TokenErrorList;
@@ -20,7 +22,7 @@ public class FaultyParallelism extends Error {
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new FaultyParallelism().findErrors(input);
 		errors.sort();
-		System.out.println(errors.tokensToChars(0));
+		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -153,13 +155,9 @@ public class FaultyParallelism extends Error {
 		}
 		return errors;
 	}
-<<<<<<< HEAD
-	private static String parse(String input) {
-		Parse topParses[] = ParserTool.parseLine(input, parser, 1);
-=======
+
 	private static String parse(String input){
 		Parse topParses[] = ParserTool.parseLine(input, UtilityMethods.getParser(), 1);
->>>>>>> master
 		StringBuffer sb = new StringBuffer(input.length()*4);
 		topParses[0].show(sb);
 		return sb.toString();
