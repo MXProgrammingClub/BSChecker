@@ -6,7 +6,7 @@ import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
 import util.ErrorList;
 import util.TokenErrorList;
-import util.UtilityMethods;
+import util.Tools;
 
 /**
  * WIP
@@ -19,7 +19,7 @@ public class FaultyParallelism extends Error {
 	 * for testing purposes
 	 */
 	public static void main(String[] args){
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		Scanner scan = new Scanner(System.in);
 		System.out.println("passage: ");
 		String passage = scan.nextLine();
@@ -74,7 +74,7 @@ public class FaultyParallelism extends Error {
 		}
 		line = buf.toString();
 		TokenErrorList errs = new TokenErrorList(line);
-		String[] sentences = UtilityMethods.getSentenceDetector().sentDetect(line);
+		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int shift = 0;
 		for(String sentence : sentences){
 			int lineShift = 0;
@@ -165,7 +165,7 @@ public class FaultyParallelism extends Error {
 		return errors;
 	}
 	private static String parse(String input){
-		Parse topParses[] = ParserTool.parseLine(input, UtilityMethods.getParser(), 1);
+		Parse topParses[] = ParserTool.parseLine(input, Tools.getParser(), 1);
 		StringBuffer sb = new StringBuffer(input.length()*4);
 		topParses[0].show(sb);
 		return sb.toString();

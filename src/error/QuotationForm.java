@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 import util.TokenErrorList;
+import util.Tools;
 import util.UtilityMethods;
 
 /**
@@ -39,7 +40,7 @@ public class QuotationForm extends Error {
 	 * for testing purposes
 	 */
 	public static void main (String[] args) {
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new QuotationForm().findErrors(input);
@@ -70,7 +71,7 @@ public class QuotationForm extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String tokens[] = UtilityMethods.getTokenizer().tokenize(line);
+		String tokens[] = Tools.getTokenizer().tokenize(line);
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 0; i < tokens.length; i++)
 			if(tokens[i].contains("\"")) { //finds opening quotation

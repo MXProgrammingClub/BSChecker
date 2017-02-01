@@ -3,7 +3,8 @@ package error;
 import java.util.ArrayList;
 
 import util.TokenErrorList;
-import util.UtilityMethods;
+import util.Tools;
+//import util.UtilityMethods;
 
 /**
  * Finds verbs in the past tense. (1)
@@ -18,7 +19,7 @@ public class PastTense extends Error {
 	 * for testing purposes
 	 */
 	public static void main(String[] args) {
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new PastTense().findErrors(input);
@@ -48,8 +49,8 @@ public class PastTense extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String tokens[] = UtilityMethods.getTokenizer().tokenize(line);
-		String[] tags = UtilityMethods.getPOSTagger().tag(tokens);
+		String tokens[] = Tools.getTokenizer().tokenize(line);
+		String[] tags = Tools.getPOSTagger().tag(tokens);
 
 		boolean inQuote = false, inIntroducedQuote = false;
 		TokenErrorList errors = new TokenErrorList(line);

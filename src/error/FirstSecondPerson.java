@@ -3,6 +3,7 @@ package error;
 import java.util.ArrayList;
 
 import util.TokenErrorList;
+import util.Tools;
 import util.UtilityMethods;
 
 /**
@@ -17,7 +18,7 @@ public class FirstSecondPerson extends Error {
 	 * for testing purposes
 	 */
 	public static void main (String[] args) {
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new FirstSecondPerson().findErrors(input);
@@ -47,7 +48,7 @@ public class FirstSecondPerson extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String[] tokens = UtilityMethods.getTokenizer().tokenize(line);
+		String[] tokens = Tools.getTokenizer().tokenize(line);
 		
 		boolean inQuote = false, inIntroducedQuote = false;
 		TokenErrorList errors = new TokenErrorList(line);

@@ -3,7 +3,7 @@ package error;
 import java.util.ArrayList;
 
 import util.TokenErrorList;
-import util.UtilityMethods;
+import util.Tools;
 
 /**
  * WIP
@@ -15,7 +15,7 @@ public class DanglingModifier extends Error {
 	 * for testing purposes
 	 */
 	public static void main(String[] args) {
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new DanglingModifier().findErrors(input);

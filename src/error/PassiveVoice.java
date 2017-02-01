@@ -3,6 +3,7 @@ package error;
 import java.util.ArrayList;
 
 import util.TokenErrorList;
+import util.Tools;
 import util.UtilityMethods;
 
 /**
@@ -17,7 +18,7 @@ public class PassiveVoice extends Error {
 	 * for testing purposes
 	 */
 	public static void main(String[] args){
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new PassiveVoice().findErrors(input);
@@ -47,8 +48,8 @@ public class PassiveVoice extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String tokens[] = UtilityMethods.getTokenizer().tokenize(line);
-		String[] tags = UtilityMethods.getPOSTagger().tag(tokens);
+		String tokens[] = Tools.getTokenizer().tokenize(line);
+		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 1; i < tokens.length; i++)
