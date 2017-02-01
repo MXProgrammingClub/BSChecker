@@ -68,8 +68,6 @@ public class TokenErrorList extends ErrorList {
 						}
 						errorLength += tokens[tokenIndex + i].length();
 					}
-					if(numIgnored < ignoredChars.size())
-						System.out.println(charIndex + ", " + numIgnored + ", " + ignoredChars.get(numIgnored));
 					while(numIgnored < ignoredChars.size() && ignoredChars.get(numIgnored) < startChar + charIndex + numIgnored)
 						numIgnored++;
 					curErrorChars[0] = startChar + numIgnored + charIndex;
