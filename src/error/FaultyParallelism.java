@@ -16,25 +16,13 @@ public class FaultyParallelism extends Error {
 	/**
 	 * for testing purposes
 	 */
-<<<<<<< HEAD
 	public static void main(String[] args) {
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new FaultyParallelism().findErrors(input);
 		errors.sort();
 		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
-=======
-	public static void main(String[] args){
-		Tools.initializeOpenNLP();
-		Scanner scan = new Scanner(System.in);
-		System.out.println("passage: ");
-		String passage = scan.nextLine();
-		scan.close();
-		ArrayList<int[]> errs = new FaultyParallelism().findErrors(passage);
-		for(int[] arr: errs)
-			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
->>>>>>> master
 	}
 	
 	/**
