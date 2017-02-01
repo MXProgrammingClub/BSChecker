@@ -64,10 +64,13 @@ public class VagueThisWhich extends Error {
 	 * @return true if followed by verb and is thus vague, false if followed by noun and is thus not vague
 	 */
 	private boolean isVagueThis(String[] tokens, String[] tags, int index) {
-		if(index==tokens.length-1) return true;
+		if(index==tokens.length-1)
+			return true;
 		for(int j = index+1; j < tokens.length; j++){
-			if(tags[j].charAt(0)=='N') return false;
-			if(tags[j].charAt(0)=='V' || tags[j].charAt(0)=='.' || tags[j].charAt(0)==':') return true;
+			if(tags[j].charAt(0)=='N')
+				return false;
+			if(tags[j].charAt(0)=='V' || tags[j].charAt(0)=='.' || tags[j].charAt(0)==':')
+				return true;
 		}
 		return true;
 	}

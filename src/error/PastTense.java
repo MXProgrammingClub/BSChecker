@@ -56,10 +56,7 @@ public class PastTense extends Error {
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 0; i < tags.length; i++) {
 			if(tokens[i].contains("\"")) {
-				if(!inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":")))
-					inIntroducedQuote = true;
-				else
-					inIntroducedQuote = false;
+				inIntroducedQuote = (!inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":"))) ? true : false;
 				inQuote = !inQuote;
 			}
 			if(!inIntroducedQuote && tags[i].equals("VBD")) //|| (tags[i].equals("VBN") && i > 0 && arrayContains(TO_HAVE_CONJ, tokens[i - 1])))

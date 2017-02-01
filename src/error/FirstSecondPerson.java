@@ -54,10 +54,7 @@ public class FirstSecondPerson extends Error {
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 0; i < tokens.length; i++) {
 			if(tokens[i].contains("\"")) {
-				if(!inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":")))
-					inIntroducedQuote = true;
-				else
-					inIntroducedQuote = false;
+				inIntroducedQuote = (!inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":"))) ? true : false;
 				inQuote = !inQuote;
 			}
 			if(!inIntroducedQuote && UtilityMethods.arrayContains(PRONOUNS, tokens[i]))
