@@ -202,7 +202,6 @@ public class GUIController {
 		String text = TextImport.openFile(file);
 		if(text == null)
 			return;
-		//essayBox.setText(text);
 		essayBox.replaceText(text);
 	}
 

@@ -1,13 +1,9 @@
 package util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+<<<<<<< HEAD
 import opennlp.tools.cmdline.PerformanceMonitor;
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;
@@ -24,11 +20,14 @@ import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.InvalidFormatException;
 
+=======
+>>>>>>> master
 /**
  * A class which contains many useful static methods for the project
  * @author JeremiahDeGreeff
  */
 public class UtilityMethods {
+<<<<<<< HEAD
 	private static SentenceDetectorME sentenceDetector;
 	private static NameFinderME nameFinder;
 	private static Tokenizer tokenizer;
@@ -136,6 +135,8 @@ public class UtilityMethods {
 		return parser;
 	}
 	
+=======
+>>>>>>> master
 	/**
 	 * returns whether or not a string can be found in an array of strings
 	 * @param array the array to check

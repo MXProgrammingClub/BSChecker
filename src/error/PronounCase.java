@@ -3,6 +3,7 @@ package error;
 import java.util.ArrayList;
 
 import util.TokenErrorList;
+import util.Tools;
 import util.UtilityMethods;
 
 /**
@@ -21,7 +22,7 @@ public class PronounCase extends Error {
 	 * for testing purposes
 	 */
 	public static void main(String[] args) {
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "However, he died and instead of adapting political systems from he apple, he died.";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new PronounCase().findErrors(input);
@@ -51,8 +52,8 @@ public class PronounCase extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String[] tokens = UtilityMethods.getTokenizer().tokenize(line);
-		String[] tags = UtilityMethods.getPOSTagger().tag(tokens);
+		String[] tokens = Tools.getTokenizer().tokenize(line);
+		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
 		ArrayList<Integer> pronounIndices = new ArrayList<Integer>();
 		for(int i = 0; i < tokens.length; i++) {

@@ -7,7 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import util.UtilityMethods;
+import util.Tools;
 
 /**
  * The main class for the BSChecker
@@ -52,6 +52,6 @@ public class Main extends Application {
 			primaryStage.show();
 		} catch(Exception e) {e.printStackTrace();}
 		
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 	}
 }

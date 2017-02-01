@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 import util.TokenErrorList;
+import util.Tools;
 import util.UtilityMethods;
 
 /**
@@ -39,7 +40,7 @@ public class QuotationForm extends Error {
 	 * for testing purposes
 	 */
 	public static void main (String[] args) {
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new QuotationForm().findErrors(input);
@@ -70,7 +71,7 @@ public class QuotationForm extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String tokens[] = UtilityMethods.getTokenizer().tokenize(line);
+		String tokens[] = Tools.getTokenizer().tokenize(line);
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 0; i < tokens.length; i++)
 			if(tokens[i].contains("\"")) { //finds opening quotation
@@ -103,16 +104,16 @@ public class QuotationForm extends Error {
 	 */
 	private int findErrorsFront(String[] tokens, int start, int end)
 	{
-		if(start > 0 && tokens[start - 1].equals(":")) {
+		if(start > 0 && tokens[start - 1].equals(":"))
 			if(start > 1 && VERB_SET.contains(tokens[start - 2]))
 				return 1; //error if there is a semicolon before and the word before it is a verb
-		} else if(start > 0 && tokens[start - 1].equals(",")) {
+		else if(start > 0 && tokens[start - 1].equals(","))
 			if(start > 1 && !VERB_SET.contains(tokens[start - 2]))
 				return 2; //error if there is a comma before and the word before it is not a verb
-		} else {
+		else
 			if(start > 0 && VERB_SET.contains(tokens[start - 1]))
 				return 3; //error if there is a not punctuation before and the word before is a verb
-		} return 0;
+		return 0;
 	}
 
 	/**
@@ -123,10 +124,10 @@ public class QuotationForm extends Error {
 	 * @return 0 if no error, 1 if cited with punctuation incorrectly inside, 2 if not cited with punctuation incorrectly outside, 3 if not cited and punctuation incorrectly inside
 	 */
 	private int findErrorsBack(String[] tokens, int start, int end) {
-		if(tokens[end].contains("(") || end + 1 < tokens.length && tokens[end + 1].contains("(")) {
+		if(tokens[end].contains("(") || end + 1 < tokens.length && tokens[end + 1].contains("("))
 			if(end > start && UtilityMethods.arrayContains(PUNCTUATION1, tokens[end - 1]) || UtilityMethods.arrayContains(PUNCTUATION2, tokens[end - 1]))
 				return 1; //error if cited and punctuation inside
-		} else {
+		else {
 			if(end + 1 < tokens.length && UtilityMethods.arrayContains(PUNCTUATION1, tokens[end + 1]))
 				return 2; //error if not cited and period/comma outside
 			if(end > start && UtilityMethods.arrayContains(PUNCTUATION2, tokens[end - 1]))

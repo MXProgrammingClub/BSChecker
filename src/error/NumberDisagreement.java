@@ -6,6 +6,7 @@ import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
 import util.SentenceTree;
 import util.TokenErrorList;
+import util.Tools;
 import util.UtilityMethods;
 
 /**
@@ -20,7 +21,7 @@ public class NumberDisagreement extends Error {
 	 * for testing purposes
 	 */
 	public static void main(String[] args){
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new NumberDisagreement().findErrors(input);
@@ -50,12 +51,12 @@ public class NumberDisagreement extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line){
-		String sentences[] = UtilityMethods.getSentenceDetector().sentDetect(line);
+		String sentences[] = Tools.getSentenceDetector().sentDetect(line);
 		ArrayList<Parse> parses = new ArrayList<Parse>();
 		ArrayList<int[]> arr = new ArrayList<int[]>();
 		for(String s: sentences){
-			ParserTool.parseLine(s.substring(0, s.length()-1), UtilityMethods.getParser(), 1)[0].show();
-			correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), UtilityMethods.getParser(), 1)[0]);
+			ParserTool.parseLine(s.substring(0, s.length()-1), Tools.getParser(), 1)[0].show();
+			correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), Tools.getParser(), 1)[0]);
 //			arr.addAll(correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), UtilityMethods.getParser(), 1)[0]));
 		}
 		return null;

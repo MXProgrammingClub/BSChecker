@@ -3,7 +3,7 @@ package error;
 import java.util.ArrayList;
 
 import util.TokenErrorList;
-import util.UtilityMethods;
+import util.Tools;
 
 /**
  * Finds errors with vague use of this or which. (4)
@@ -14,7 +14,7 @@ public class VagueThisWhich extends Error {
 	 * for testing purposes
 	 */
 	public static void main(String[] args){
-		UtilityMethods.setupOpenNLP();
+		Tools.initializeOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new VagueThisWhich().findErrors(input);
@@ -44,8 +44,8 @@ public class VagueThisWhich extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line){
-		String tokens[] = UtilityMethods.getTokenizer().tokenize(line);
-		String[] tags = UtilityMethods.getPOSTagger().tag(tokens);
+		String tokens[] = Tools.getTokenizer().tokenize(line);
+		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 0; i < tokens.length; i++)
@@ -64,10 +64,13 @@ public class VagueThisWhich extends Error {
 	 * @return true if followed by verb and is thus vague, false if followed by noun and is thus not vague
 	 */
 	private boolean isVagueThis(String[] tokens, String[] tags, int index) {
-		if(index==tokens.length-1) return true;
+		if(index==tokens.length-1)
+			return true;
 		for(int j = index+1; j < tokens.length; j++){
-			if(tags[j].charAt(0)=='N') return false;
-			if(tags[j].charAt(0)=='V' || tags[j].charAt(0)=='.' || tags[j].charAt(0)==':') return true;
+			if(tags[j].charAt(0)=='N')
+				return false;
+			if(tags[j].charAt(0)=='V' || tags[j].charAt(0)=='.' || tags[j].charAt(0)==':')
+				return true;
 		}
 		return true;
 	}

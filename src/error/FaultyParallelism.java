@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
 import util.TokenErrorList;
-import util.UtilityMethods;
+import util.Tools;
 
 /**
  * WIP
@@ -16,6 +16,7 @@ public class FaultyParallelism extends Error {
 	/**
 	 * for testing purposes
 	 */
+<<<<<<< HEAD
 	public static void main(String[] args) {
 		UtilityMethods.setupOpenNLP();
 		String input = "";
@@ -23,6 +24,17 @@ public class FaultyParallelism extends Error {
 		TokenErrorList errors = new FaultyParallelism().findErrors(input);
 		errors.sort();
 		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+=======
+	public static void main(String[] args){
+		Tools.initializeOpenNLP();
+		Scanner scan = new Scanner(System.in);
+		System.out.println("passage: ");
+		String passage = scan.nextLine();
+		scan.close();
+		ArrayList<int[]> errs = new FaultyParallelism().findErrors(passage);
+		for(int[] arr: errs)
+			System.out.println("(" + arr[0] + "," + arr[1] + "): " + passage.substring(arr[0], arr[1]));
+>>>>>>> master
 	}
 	
 	/**
@@ -66,7 +78,7 @@ public class FaultyParallelism extends Error {
 		}
 		line = buf.toString();
 		TokenErrorList errs = new TokenErrorList(line);
-		String[] sentences = UtilityMethods.getSentenceDetector().sentDetect(line);
+		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int shift = 0;
 		for(String sentence : sentences){
 			int lineShift = 0;
@@ -157,7 +169,7 @@ public class FaultyParallelism extends Error {
 	}
 
 	private static String parse(String input){
-		Parse topParses[] = ParserTool.parseLine(input, UtilityMethods.getParser(), 1);
+		Parse topParses[] = ParserTool.parseLine(input, Tools.getParser(), 1);
 		StringBuffer sb = new StringBuffer(input.length()*4);
 		topParses[0].show(sb);
 		return sb.toString();
