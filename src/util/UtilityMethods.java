@@ -50,7 +50,7 @@ public class UtilityMethods {
 		StringBuffer buffer = new StringBuffer(line);
 		for(int i = 0; i < buffer.length(); i++){
 			char c = buffer.charAt(i);
-			if(c == '[' || c == ']')
+			if(c == '[' || c == ']' || c == '/')
 				indices.add(startChar + i);
 		}
 		for(int j = 0; j < indices.size(); j++)
