@@ -2,8 +2,9 @@ package error;
 
 import java.util.ArrayList;
 
-import opennlp.tools.cmdline.parser.ParserTool;
+import opennlp.tools.parser.AbstractBottomUpParser;
 import opennlp.tools.parser.Parse;
+import opennlp.tools.util.Span;
 import util.TokenErrorList;
 import util.Tools;
 
@@ -18,7 +19,7 @@ public class FaultyParallelism extends Error {
 	 */
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
-		String input = "";
+		String input = "I went to the store and bought food and water.";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new FaultyParallelism().findErrors(input);
 		errors.sort();
@@ -48,29 +49,25 @@ public class FaultyParallelism extends Error {
 	@Override
 	protected TokenErrorList findErrors(String line) {
 		String startText = line;
-		line = line.replace(':', '.');
-		line = line.replace(';', '.');
-		StringBuffer buf = new StringBuffer(line);
-		boolean autoRemove = false;
-		for(int i=0;i<buf.length();i++){
-			char c = buf.charAt(i);
-			if(c == '(' || c == ')' || c == '\"'){
-				buf.deleteCharAt(i);
-				i--;
-				autoRemove = !autoRemove;
-			}
-			else if(autoRemove || c == '\'' || (c == ' ' && buf.charAt(i+1) == '(') || (c == '.' && buf.charAt(i-1) == ')')){
-				buf.deleteCharAt(i);
-				i--;
-			}
-		}
-		line = buf.toString();
+//		StringBuffer buf = new StringBuffer(line);
+//		boolean autoRemove = false;
+//		for(int i=0;i<buf.length();i++){
+//			char c = buf.charAt(i);
+//			if(c == '(' || c == ')' || c == '\"'){
+//				buf.deleteCharAt(i);
+//				i--;
+//				autoRemove = !autoRemove;
+//			} else if(autoRemove || c == '\'' || (c == ' ' && buf.charAt(i+1) == '(') || (c == '.' && buf.charAt(i-1) == ')')){
+//				buf.deleteCharAt(i);
+//				i--;
+//			}
+//		}
+//		line = buf.toString();
 		TokenErrorList errs = new TokenErrorList(line);
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int shift = 0;
 		for(String sentence : sentences){
 			int lineShift = 0;
-			sentence.replace(".", "");
 			TokenErrorList errors = findErrorsInSentence(sentence);
 			for(int[] err: errors){
 				String conjunction = sentence.substring(err[0],err[1]);
@@ -82,69 +79,77 @@ public class FaultyParallelism extends Error {
 		}
 		return errs;
 	}
+	
 	private TokenErrorList findErrorsInSentence(String sentence) {
 		TokenErrorList errors = new TokenErrorList(sentence);
 		String parsedText = parse(sentence);
+		System.out.println(parsedText);
 		int index = -1, textIndex = 0;
 		while(index < parsedText.length() && parsedText.indexOf("CC",index+1) >= 0){
 			index = parsedText.indexOf("CC",index+1);
-			int net = 0;
-			boolean first = true;
-			int i = index-2;
-			boolean passedThing = false,passedV = false;
-			String type1 = "",type2 = "";
-			for(;i>=0 && parsedText.charAt(i) != ')';i--);
-			for(;(i>=0 && !(net == 0 && passedThing)) || first ;i--){
-
-				if(parsedText.charAt(i) == ')'){
-					net += 1;
-					first = false;
-				}
-				if(parsedText.charAt(i) == '('){
-					net -= 1;
-					first = false;
-				}
-				if(!passedThing && (parsedText.charAt(i) == 'V')){
+			int i = index - 3, net = 0;
+			boolean passedThing = false, passedV = false;
+			String type1 = "", type2 = "";
+			System.out.println("\n" + index + ": " + parsedText.charAt(index));
+			
+			while(i>=0 && !(net == 0 && passedThing)){
+				if(i > 0 && !passedThing && (parsedText.charAt(i) == 'V') && (parsedText.charAt(i - 1) == '(')){
 					passedThing = true;
 					type1 = parsedText.substring(i,parsedText.indexOf(' ',i));
-				}
+					System.out.print("(**) ");
+				} else if(parsedText.charAt(i) == ')'){
+					net += 1;
+					System.out.print("(+1) ");
+				} else if(parsedText.charAt(i) == '('){
+					net -= 1;
+					System.out.print("(-1) ");
+				} else
+					System.out.print("(==) ");
+				System.out.println("index: " + i + " char: " + parsedText.charAt(i) + " net: " + net);
+				i--;
 			}
-			int beginIndex = i;
+			System.out.println(type1);
+			
 			if(type1.equals("VP")){
-				int start = parsedText.indexOf("VB",parsedText.indexOf('(',beginIndex)+1);
+				int start = parsedText.indexOf("VB", parsedText.indexOf('(', i) + 1);
 				if(start == -1)
-					start = parsedText.indexOf('(',index)+1;
-				type1 = parsedText.substring(start,parsedText.indexOf(' ',start));
+					start = parsedText.indexOf('(', index) + 1;
+				type1 = parsedText.substring(start,parsedText.indexOf(' ', start));
 			}
-			i = parsedText.indexOf(')',index)+1;
-			first = true;
+			
+			i = parsedText.indexOf('(', index);
 			net = 0;
 			passedThing = false;
-			for(;(i<parsedText.length() && !(net == 0 && passedThing)) || first;i++){
-				if(parsedText.charAt(i) == ')'){
-					net += 1;
-					first = false;
-				}
-				if(parsedText.charAt(i) == '('){
-					net -= 1;
-					first = false;
-				}
+			while(i < parsedText.length() && !(net == 0 && passedThing)){
 				if(!passedV && parsedText.charAt(i) == 'V'){
 					passedV = true;
 					passedThing = true;
 					type2 = parsedText.substring(i,parsedText.indexOf(' ',i));
-				}
-				if(!passedThing && !passedV && (parsedText.substring(i,i+2).equals("NP") || parsedText.substring(i,i+2).equals("NN"))){
+					System.out.print("(**) ");
+				} else if(!passedThing && !passedV && (parsedText.substring(i, i + 2).equals("NP") || parsedText.substring(i, i + 2).equals("NN"))){
 					passedThing = true;
 					type2 = parsedText.substring(i,parsedText.indexOf(' ',i));
-				}
+					System.out.print("(##) ");
+				} else if(parsedText.charAt(i) == ')'){
+					net += 1;
+					System.out.print("(+1) ");
+				} else if(parsedText.charAt(i) == '('){
+					net -= 1;
+					System.out.print("(-1) ");
+				} else
+					System.out.print("(==) ");
+				System.out.println("index: " + i + " char: " + parsedText.charAt(i) + " net: " + net);
+				i++;
 			}
+			System.out.println(type2);
+			
 			if(type2.equals("VP")){
 				int start = parsedText.indexOf("VB",parsedText.indexOf('(',index)+1);
 				if(start == -1)
 					start = parsedText.indexOf('(',index)+1;
 				type2 = parsedText.substring(start,parsedText.indexOf(' ',start));
 			}
+			
 			String conjunction = parsedText.substring(parsedText.indexOf(' ',index)+1,parsedText.indexOf(')',index));
 			int newTextIndex = sentence.indexOf(conjunction,textIndex);
 			int[] err = {newTextIndex,sentence.indexOf(' ', newTextIndex)};
@@ -156,10 +161,22 @@ public class FaultyParallelism extends Error {
 		return errors;
 	}
 
+	/**
+	 * parses a String using the openNLP parser
+	 * @param input the String to parse
+	 * @return a String which is a parsed version of the input
+	 */
 	private static String parse(String input){
-		Parse topParses[] = ParserTool.parseLine(input, Tools.getParser(), 1);
-		StringBuffer sb = new StringBuffer(input.length()*4);
-		topParses[0].show(sb);
+		Parse p = new Parse(input, new Span(0, input.length()), AbstractBottomUpParser.INC_NODE, 1, 0);
+		Span[] spans = Tools.getTokenizer().tokenizePos(input);
+		for(int i = 0; i < spans.length; i++) {
+		      Span span = spans[i];
+		      p.insert(new Parse(input, span, AbstractBottomUpParser.TOK_NODE, 0, i));
+		}
+		p = Tools.getParser().parse(p);
+		
+		StringBuffer sb = new StringBuffer(input.length()*4); //arbitrary initial size
+		p.show(sb);
 		return sb.toString();
 	}
 }
