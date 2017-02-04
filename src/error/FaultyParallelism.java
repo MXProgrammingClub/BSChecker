@@ -19,7 +19,7 @@ public class FaultyParallelism extends Error {
 	 */
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
-		String input = "I went to the store and bought food and water.";
+		String input = "I went to the store and bought food and water. I also love drinking water and eating food often and quickly.";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new FaultyParallelism().findErrors(input);
 		errors.sort();
@@ -142,8 +142,9 @@ public class FaultyParallelism extends Error {
 				type2 = parsedText.substring(start,parsedText.indexOf(' ',start));
 			}
 			
-			if(!type1.equals(type2))
-				errors.add(new int[]{ccTokens.get(ccNum), ccTokens.get(ccNum), ERROR_NUMBER});
+			if(!type1.equals(type2)){
+				errors.add(new int[]{ccTokens.get(ccNum) + tokenOffset, ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER});
+			}
 		}
 		return errors;
 	}
