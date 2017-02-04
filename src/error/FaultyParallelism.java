@@ -48,7 +48,6 @@ public class FaultyParallelism extends Error {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-		String startText = line;
 //		StringBuffer buf = new StringBuffer(line);
 //		boolean autoRemove = false;
 //		for(int i=0;i<buf.length();i++){
@@ -63,30 +62,23 @@ public class FaultyParallelism extends Error {
 //			}
 //		}
 //		line = buf.toString();
-		TokenErrorList errs = new TokenErrorList(line);
+		TokenErrorList errors = new TokenErrorList(line);
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
-		int shift = 0;
+		int tokenOffset = 0;
 		for(String sentence : sentences){
-			int lineShift = 0;
-			TokenErrorList errors = findErrorsInSentence(sentence);
-			for(int[] err: errors){
-				String conjunction = sentence.substring(err[0],err[1]);
-				int[] newErr = {startText.indexOf(conjunction,lineShift + shift),startText.indexOf(conjunction, lineShift + shift) + conjunction.length(),ERROR_NUMBER};
-				errs.add(newErr);
-				lineShift = newErr[1]+1 - shift;
-			}
-			shift += sentence.length()+1;
+			errors.addAll(findErrorsInSentence(sentence, findCCTokens(sentence), tokenOffset));
+			tokenOffset += Tools.getTokenizer().tokenize(sentence).length;
 		}
-		return errs;
+		return errors;
 	}
 	
-	private TokenErrorList findErrorsInSentence(String sentence) {
+	private TokenErrorList findErrorsInSentence(String sentence, ArrayList<Integer> ccTokens, int tokenOffset) {
 		TokenErrorList errors = new TokenErrorList(sentence);
 		String parsedText = parse(sentence);
 		System.out.println(parsedText);
-		int index = -1, textIndex = 0;
-		while(index < parsedText.length() && parsedText.indexOf("CC",index+1) >= 0){
-			index = parsedText.indexOf("CC",index+1);
+		int index = -1;
+		for(int ccNum = 0; ccNum < ccTokens.size(); ccNum++){
+			index = parsedText.indexOf("CC", index+1);
 			int i = index - 3, net = 0;
 			boolean passedThing = false, passedV = false;
 			String type1 = "", type2 = "";
@@ -150,13 +142,8 @@ public class FaultyParallelism extends Error {
 				type2 = parsedText.substring(start,parsedText.indexOf(' ',start));
 			}
 			
-			String conjunction = parsedText.substring(parsedText.indexOf(' ',index)+1,parsedText.indexOf(')',index));
-			int newTextIndex = sentence.indexOf(conjunction,textIndex);
-			int[] err = {newTextIndex,sentence.indexOf(' ', newTextIndex)};
-			if(!type1.equals(type2)){
-				errors.add(err);
-			}
-			textIndex = err[1];
+			if(!type1.equals(type2))
+				errors.add(new int[]{ccTokens.get(ccNum), ccTokens.get(ccNum), ERROR_NUMBER});
 		}
 		return errors;
 	}
@@ -166,7 +153,7 @@ public class FaultyParallelism extends Error {
 	 * @param input the String to parse
 	 * @return a String which is a parsed version of the input
 	 */
-	private static String parse(String input){
+	private static String parse(String input) {
 		Parse p = new Parse(input, new Span(0, input.length()), AbstractBottomUpParser.INC_NODE, 1, 0);
 		Span[] spans = Tools.getTokenizer().tokenizePos(input);
 		for(int i = 0; i < spans.length; i++) {
@@ -178,5 +165,21 @@ public class FaultyParallelism extends Error {
 		StringBuffer sb = new StringBuffer(input.length()*4); //arbitrary initial size
 		p.show(sb);
 		return sb.toString();
+	}
+	
+	/**
+	 * finds coordinating conjunctions in a String
+	 * @param input the String to search
+	 * @return an ArrayList of Integers which represent the indices of tokens which are coordinating conjunctions
+	 */
+	private static ArrayList<Integer> findCCTokens(String input) {
+		String[] tokens = Tools.getTokenizer().tokenize(input);
+		String[] tags = Tools.getPOSTagger().tag(tokens);
+		
+		ArrayList<Integer> ccIndices = new ArrayList<Integer>();
+		for(int i = 0; i < tags.length; i++)
+			if(tags[i].equals("CC"))
+				ccIndices.add(i);
+		return ccIndices;
 	}
 }
