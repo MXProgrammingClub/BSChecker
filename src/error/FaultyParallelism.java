@@ -9,9 +9,8 @@ import util.TokenErrorList;
 import util.Tools;
 
 /**
- * WIP
  * Finds errors in Parallelism. (11)
- * @author
+ * @author JeremiahDeGreeff
  */
 public class FaultyParallelism extends Error {
 	/**
@@ -19,7 +18,7 @@ public class FaultyParallelism extends Error {
 	 */
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
-		String input = "I went to the red and white restaurant to eat food and water. I like to sleep and to participate in drinking water and eating food. He said hi, and I waved.";
+		String input = "";
 		System.out.println("\ninput: " + input + "\n");
 		TokenErrorList errors = new FaultyParallelism().findErrors(input);
 		errors.sort();
@@ -68,18 +67,27 @@ public class FaultyParallelism extends Error {
 		for(String sentence : sentences){
 			errors.addAll(findErrorsInSentence(sentence, findCCTokens(sentence), tokenOffset));
 			tokenOffset += Tools.getTokenizer().tokenize(sentence).length;
-			System.out.println("\n");
 		}
 		return errors;
 	}
 	
+	/**
+	 * finds all Faulty Parallelism in a sentence
+	 * @param sentence the sentence to search
+	 * @param ccTokens the token indices of coordinating conjunctions (for returning purposes)
+	 * @param tokenOffset the number of tokens which have occurred in earlier sentences (for returning purposes)
+	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (11) which represent all the errors in this sentence
+	 */
 	private TokenErrorList findErrorsInSentence(String sentence, ArrayList<Integer> ccTokens, int tokenOffset) {
 		TokenErrorList errors = new TokenErrorList(sentence);
 		String parsedText = parse(sentence);
-		System.out.println(parsedText);
+		System.out.println("\n" + parsedText);
 		int ccIndex = -1;
 		for(int ccNum = 0; ccNum < ccTokens.size(); ccNum++){
 			ccIndex = parsedText.indexOf("CC", ccIndex + 1);
+			//catch for if posTagger identifies a CC which the parser does not
+			if(ccIndex == -1)
+				break;
 			System.out.println("\n" + ccIndex + "-" + (ccIndex + 1) + ": " + parsedText.charAt(ccIndex) + parsedText.charAt(ccIndex + 1));
 			
 			int right = ccIndex;
@@ -107,6 +115,9 @@ public class FaultyParallelism extends Error {
 					left++;
 				}
 			} else {
+				//special case CC followed by adverb e.g. "and thus"
+				if(parsedText.substring(parsedText.indexOf('(', right) + 1, parsedText.indexOf(' ', parsedText.indexOf('(', right))).equals("ADVP") || parsedText.substring(parsedText.indexOf('(', right) + 1, parsedText.indexOf(' ', parsedText.indexOf('(', right))).equals("RB")) 
+					right = parsedText.indexOf("RB", ccIndex);
 				int net = 1;
 				while(left >= 0 && !(net == 0 && Character.isLetter(parsedText.charAt(left + 2)))){
 					if(parsedText.charAt(left) == ')')

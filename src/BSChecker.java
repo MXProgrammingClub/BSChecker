@@ -29,7 +29,7 @@ import util.UtilityMethods;
  */
 public class BSChecker {
 	public static void main(String[] args) throws InvalidFormatException, IOException{
-		String input = "Duncan not only gives Macbeth this title but also chooses to honor him by dining in Inverness, a circumstance which makes Macbeth’s assassination of Duncan even more reprehensible as it is a violation of hospitality since Macbeth’s duty “as [Duncan’s] host / [is to] against his murderer shut the door” (1.7.14-15).";
+		String input = "";
 		
 		input = UtilityMethods.replaceInvalidChars(input);
 		input = UtilityMethods.removeExtraPunctuation(input, 0, new ArrayList<Integer>());
