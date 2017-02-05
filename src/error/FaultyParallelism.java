@@ -129,71 +129,7 @@ public class FaultyParallelism extends Error {
 			}
 			
 			String rightType = parsedText.substring(parsedText.indexOf('(', right) + 1, parsedText.indexOf(' ', parsedText.indexOf('(', right)));
-			String leftType = parsedText.substring(left + 2, parsedText.indexOf(' ', left + 2));
-			
-			
-//			int i = ccIndex - 3, net = 0;
-//			boolean passedThing = false, passedV = false;
-//			String type1 = "", type2 = "";
-//			
-//			while(i>=0 && !(net == 0 && passedThing)){
-//				if(i > 0 && !passedThing && (parsedText.charAt(i) == 'V') && (parsedText.charAt(i - 1) == '(')){
-//					passedThing = true;
-//					type1 = parsedText.substring(i,parsedText.indexOf(' ',i));
-//					System.out.print("(**) ");
-//				} else if(parsedText.charAt(i) == ')'){
-//					net += 1;
-//					System.out.print("(+1) ");
-//				} else if(parsedText.charAt(i) == '('){
-//					net -= 1;
-//					System.out.print("(-1) ");
-//				} else
-//					System.out.print("(==) ");
-//				System.out.println("index: " + i + " char: " + parsedText.charAt(i) + " net: " + net);
-//				i--;
-//			}
-//			System.out.println(type1);
-//			
-//			if(type1.equals("VP")){
-//				int start = parsedText.indexOf("VB", parsedText.indexOf('(', i) + 1);
-//				if(start == -1)
-//					start = parsedText.indexOf('(', ccIndex) + 1;
-//				type1 = parsedText.substring(start,parsedText.indexOf(' ', start));
-//			}
-//			
-//			i = parsedText.indexOf('(', ccIndex);
-//			net = 0;
-//			passedThing = false;
-//			while(i < parsedText.length() && !(net == 0 && passedThing)){
-//				if(!passedV && parsedText.charAt(i) == 'V'){
-//					passedV = true;
-//					passedThing = true;
-//					type2 = parsedText.substring(i,parsedText.indexOf(' ',i));
-//					System.out.print("(**) ");
-//				} else if(!passedThing && !passedV && (parsedText.substring(i, i + 2).equals("NP") || parsedText.substring(i, i + 2).equals("NN"))){
-//					passedThing = true;
-//					type2 = parsedText.substring(i,parsedText.indexOf(' ',i));
-//					System.out.print("(##) ");
-//				} else if(parsedText.charAt(i) == ')'){
-//					net += 1;
-//					System.out.print("(+1) ");
-//				} else if(parsedText.charAt(i) == '('){
-//					net -= 1;
-//					System.out.print("(-1) ");
-//				} else
-//					System.out.print("(==) ");
-//				System.out.println("index: " + i + " char: " + parsedText.charAt(i) + " net: " + net);
-//				i++;
-//			}
-//			System.out.println(type2);
-//			
-//			if(type2.equals("VP")){
-//				int start = parsedText.indexOf("VB",parsedText.indexOf('(',ccIndex)+1);
-//				if(start == -1)
-//					start = parsedText.indexOf('(',ccIndex)+1;
-//				type2 = parsedText.substring(start,parsedText.indexOf(' ',start));
-//			}
-			
+			String leftType = parsedText.substring(left + 2, parsedText.indexOf(' ', left + 2));			
 			System.out.print("Type to Right: \"" + rightType + "\", Type to Left: \"" + leftType + "\" -- ");
 			if(!rightType.equals(leftType)){
 				System.out.println("Error");
