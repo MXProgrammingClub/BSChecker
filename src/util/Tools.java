@@ -11,8 +11,8 @@ import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.parser.Parser;
-//import opennlp.tools.parser.ParserFactory;
-//import opennlp.tools.parser.ParserModel;
+import opennlp.tools.parser.ParserFactory;
+import opennlp.tools.parser.ParserModel;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
@@ -113,20 +113,20 @@ public class Tools {
 		POSModel posModel = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
 		perfMon.incrementCounter();
 
-//		System.out.println("Setting up the Parser");
-//		ParserModel pModel = null;
-//		try {is = new FileInputStream("lib/en-parser-chunking.bin");}
-//		catch (FileNotFoundException e1) {e1.printStackTrace();}
-//		try {pModel = new ParserModel(is); }
-//		catch (InvalidFormatException e1) {e1.printStackTrace();}
-//		catch (IOException e1) {e1.printStackTrace();}
-//		perfMon.incrementCounter();
+		System.out.println("Setting up the Parser");
+		ParserModel pModel = null;
+		try {is = new FileInputStream("lib/en-parser-chunking.bin");}
+		catch (FileNotFoundException e1) {e1.printStackTrace();}
+		try {pModel = new ParserModel(is); }
+		catch (InvalidFormatException e1) {e1.printStackTrace();}
+		catch (IOException e1) {e1.printStackTrace();}
+		perfMon.incrementCounter();
 
 		sentenceDetector = new SentenceDetectorME(sModel);
 		nameFinder = new NameFinderME(nModel);
 		tokenizer = new TokenizerME(tModel);
 		posTagger = new POSTaggerME(posModel);
-//		parser = ParserFactory.create(pModel);
+		parser = ParserFactory.create(pModel);
 
 		try {is.close();}
 		catch (IOException e) {e.printStackTrace();}
