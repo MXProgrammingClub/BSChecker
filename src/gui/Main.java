@@ -27,7 +27,7 @@ public class Main extends Application {
 			new Apostrophe(true),
 			new PassiveVoice(true),
 			new DanglingModifier(false), //unimplemented
-			new FaultyParallelism(false), //nonfunctional
+			new FaultyParallelism(true),
 			new ProgressiveTense(true),
 			new GerundPossessive(true),
 			new QuotationForm(true)

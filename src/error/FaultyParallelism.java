@@ -77,44 +77,51 @@ public class FaultyParallelism extends Error {
 		TokenErrorList errors = new TokenErrorList(sentence);
 		String parsedText = parse(sentence);
 		System.out.println(parsedText);
-		int index = -1;
+		int ccIndex = -1;
 		for(int ccNum = 0; ccNum < ccTokens.size(); ccNum++){
-			index = parsedText.indexOf("CC", index+1);
-			System.out.println("\n" + index + "-" + (index + 1) + ": " + parsedText.charAt(index) + parsedText.charAt(index + 1));
+			ccIndex = parsedText.indexOf("CC", ccIndex + 1);
+			System.out.println("\n" + ccIndex + "-" + (ccIndex + 1) + ": " + parsedText.charAt(ccIndex) + parsedText.charAt(ccIndex + 1));
 			
-			int start = parsedText.indexOf('(', index) + 1, end = start;
-			while(end < parsedText.length() && parsedText.charAt(end) != ' '){
-				end++;
-			}
-			String type = parsedText.substring(start, end);
-			System.out.println(type);
+			int right = ccIndex;
+			int left = ccIndex - 4;
 			
-			int i = index - 4, net = 1;
-			while(i >= 0 && !(net == 0 && Character.isLetter(parsedText.charAt(i + 2)))){
-				if(parsedText.charAt(i) == ')'){
-					net += 1;
-					System.out.print("(+1) ");
-				} else if(parsedText.charAt(i) == '('){
-					net -= 1;
-					System.out.print("(-1) ");
-				} else
-					System.out.print("(==) ");
-				System.out.println("index: " + i + " char: " + parsedText.charAt(i) + " net: " + net);
-				i--;
+			//special case: CC in CONJP
+			if(parsedText.substring(ccIndex - 7, ccIndex - 2).equals("CONJP")){
+				right = ccIndex - 7;
+				int net = -1;
+				while(right <= parsedText.length() && net != 0){
+					if(parsedText.charAt(right) == ')')
+						net += 1;
+					else if(parsedText.charAt(right) == '(')
+						net -= 1;
+					right++;
+				}
+				left = ccIndex - 8;
+				for(; left >= 0 && !(parsedText.substring(left, left + 5).equals("CONJP")); left--);
+				net = -1;
+				while(left <= parsedText.length() && net != 0){
+					if(parsedText.charAt(left) == ')')
+						net += 1;
+					else if(parsedText.charAt(left) == '(')
+						net -= 1;
+					left++;
+				}
+			} else {
+				int net = 1;
+				while(left >= 0 && !(net == 0 && Character.isLetter(parsedText.charAt(left + 2)))){
+					if(parsedText.charAt(left) == ')')
+						net += 1;
+					else if(parsedText.charAt(left) == '(')
+						net -= 1;
+					left--;
+				}
 			}
-			start = i + 2;
-			end = start;
-			while(end < parsedText.length() && parsedText.charAt(end) != ' '){
-				end++;
-			}
-			String type2 = parsedText.substring(start, end);
-			System.out.println(type2);
 			
-			if(!type.equals(type2)){
-				errors.add(new int[]{ccTokens.get(ccNum) + tokenOffset, ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER});
-			}
+			String rightType = parsedText.substring(parsedText.indexOf('(', right) + 1, parsedText.indexOf(' ', parsedText.indexOf('(', right)));
+			String leftType = parsedText.substring(left + 2, parsedText.indexOf(' ', left + 2));
 			
-//			int i = index - 3, net = 0;
+			
+//			int i = ccIndex - 3, net = 0;
 //			boolean passedThing = false, passedV = false;
 //			String type1 = "", type2 = "";
 //			
@@ -139,11 +146,11 @@ public class FaultyParallelism extends Error {
 //			if(type1.equals("VP")){
 //				int start = parsedText.indexOf("VB", parsedText.indexOf('(', i) + 1);
 //				if(start == -1)
-//					start = parsedText.indexOf('(', index) + 1;
+//					start = parsedText.indexOf('(', ccIndex) + 1;
 //				type1 = parsedText.substring(start,parsedText.indexOf(' ', start));
 //			}
 //			
-//			i = parsedText.indexOf('(', index);
+//			i = parsedText.indexOf('(', ccIndex);
 //			net = 0;
 //			passedThing = false;
 //			while(i < parsedText.length() && !(net == 0 && passedThing)){
@@ -170,15 +177,19 @@ public class FaultyParallelism extends Error {
 //			System.out.println(type2);
 //			
 //			if(type2.equals("VP")){
-//				int start = parsedText.indexOf("VB",parsedText.indexOf('(',index)+1);
+//				int start = parsedText.indexOf("VB",parsedText.indexOf('(',ccIndex)+1);
 //				if(start == -1)
-//					start = parsedText.indexOf('(',index)+1;
+//					start = parsedText.indexOf('(',ccIndex)+1;
 //				type2 = parsedText.substring(start,parsedText.indexOf(' ',start));
 //			}
-//			
-//			if(!type1.equals(type2)){
-//				errors.add(new int[]{ccTokens.get(ccNum) + tokenOffset, ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER});
-//			}
+			
+			System.out.print("Type to Right: \"" + rightType + "\", Type to Left: \"" + leftType + "\" -- ");
+			if(!rightType.equals(leftType)){
+				System.out.println("Error");
+				errors.add(new int[]{ccTokens.get(ccNum) + tokenOffset, ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER});
+			}
+			else
+				System.out.println("No Error");
 		}
 		return errors;
 	}
