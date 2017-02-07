@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,9 @@ import util.UtilityMethods;
  * @author
  */
 @SuppressWarnings("unused")
-public class NumberDisagreement extends Error {
+public class NumberDisagreement extends Bluesheet {
+	public final int ERROR_NUMBER = 5;
+	
 	/**
 	 * for testing purposes
 	 */
@@ -41,7 +43,7 @@ public class NumberDisagreement extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public NumberDisagreement(boolean CheckedWhenAnalyzed) {
-		super(5, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 	
 	/**

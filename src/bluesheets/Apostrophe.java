@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,9 @@ import util.Tools;
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
-public class Apostrophe extends Error {
+public class Apostrophe extends Bluesheet {
+	public final int ERROR_NUMBER = 8;
+	
 	/**
 	 * for testing purposes
 	 */
@@ -35,7 +37,7 @@ public class Apostrophe extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public Apostrophe(boolean CheckedWhenAnalyzed) {
-		super(8, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 
 	/**

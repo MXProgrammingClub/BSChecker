@@ -1,7 +1,5 @@
 package gui;
 
-import error.*;
-import error.Error;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,24 +14,8 @@ import util.Tools;
  * @version 10/15/2016
  */
 public class Main extends Application {
-	public final static Error[] ERROR_LIST = {
-			new PastTense(true),
-			new IncompleteSentence(false), //unimplemented
-			new FirstSecondPerson(true),
-			new VagueThisWhich(true),
-			new NumberDisagreement(false), //nonfunctional
-			new PronounCase(true),
-			new AmbiguousPronoun(false), //over-reports
-			new Apostrophe(true),
-			new PassiveVoice(true),
-			new DanglingModifier(false), //unimplemented
-			new FaultyParallelism(true),
-			new ProgressiveTense(true),
-			new GerundPossessive(true),
-			new QuotationForm(true)
-	};
-
 	public static void main(String[] args) {
+		Tools.initializeOpenNLP();
 		launch(args);
 	}
 	
@@ -51,7 +33,5 @@ public class Main extends Application {
 			controller.setDefaultText();
 			primaryStage.show();
 		} catch(Exception e) {e.printStackTrace();}
-		
-		Tools.initializeOpenNLP();
 	}
 }

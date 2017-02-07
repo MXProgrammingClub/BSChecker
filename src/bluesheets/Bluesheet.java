@@ -1,8 +1,7 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
-import gui.Main;
 import util.CharacterErrorList;
 import util.TokenErrorList;
 import util.UtilityMethods;
@@ -12,17 +11,15 @@ import util.UtilityMethods;
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
-public abstract class Error {
-	public final int ERROR_NUMBER;
+public abstract class Bluesheet {
+	public final int ERROR_NUMBER = -1;
 	private boolean CheckedWhenAnalyzed;
 	
 	/**
 	 * creates a new Error object with the given error number
-	 * @param errorNum the number (1 - 14) which represents this error
 	 * @param CheckedWhenAnalyzed true if errors of the given type should be looked for when the text is analyzed, false otherwise
 	 */
-	public Error(int errorNum, boolean CheckedWhenAnalyzed) {
-		ERROR_NUMBER = errorNum;
+	public Bluesheet(boolean CheckedWhenAnalyzed) {
 		this.CheckedWhenAnalyzed = CheckedWhenAnalyzed;
 	}
 
@@ -60,10 +57,10 @@ public abstract class Error {
 			System.out.println("Ignoring characters: " + removedChars);
 			
 			TokenErrorList lineErrors = new TokenErrorList(line);
-			for(Error e: Main.ERROR_LIST)
-				if(e.CheckedWhenAnalyzed) {
-					System.out.println("looking for: " + e.getClass());
-					TokenErrorList temp = e.findErrors(line);
+			for(Bluesheets b : Bluesheets.values())
+				if(b.getBluesheetObj().CheckedWhenAnalyzed) {
+					System.out.println("looking for: " + b.getName());
+					TokenErrorList temp = b.getBluesheetObj().findErrors(line);
 					lineErrors.addAll(temp);
 				}
 			lineErrors.sort();

@@ -1,15 +1,19 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
 import util.TokenErrorList;
 import util.Tools;
+import util.UtilityMethods;
 
 /**
- * Finds errors where gerunds incorrectly lack a possessive. (13)
+ * Finds verbs in progressive tense. (12)
  * @author JeremiahDeGreeff
  */
-public class GerundPossessive extends Error {
+public class ProgressiveTense extends Bluesheet {
+	public final int ERROR_NUMBER = 12;
+	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been"};
+
 	/**
 	 * for testing purposes
 	 */
@@ -17,7 +21,7 @@ public class GerundPossessive extends Error {
 		Tools.initializeOpenNLP();
 		String input = "";
 		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new GerundPossessive().findErrors(input);
+		TokenErrorList errors = new ProgressiveTense().findErrors(input);
 		errors.sort();
 		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
@@ -25,7 +29,7 @@ public class GerundPossessive extends Error {
 	/**
 	 * default constructor
 	 */
-	public GerundPossessive() {
+	public ProgressiveTense() {
 		this(true);
 	}
 	
@@ -33,15 +37,14 @@ public class GerundPossessive extends Error {
 	 * constructor
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public GerundPossessive(boolean CheckedWhenAnalyzed) {
-		super(13, CheckedWhenAnalyzed);
+	public ProgressiveTense(boolean CheckedWhenAnalyzed) {
+		super(CheckedWhenAnalyzed);
 	}
 
 	/**
-	 * finds all errors where gerunds are not preceded by a possessive when they should be in the given paragraph
-	 * known issues: catches cases where the supposed gerund is in fact a participle and is thus not an error
+	 * finds all instances of progressive tense in the given paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (13)
+	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (12)
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
@@ -50,9 +53,13 @@ public class GerundPossessive extends Error {
 		
 		TokenErrorList errors = new TokenErrorList(line);
 		for(int i = 1; i < tokens.length; i++)
-			if(tags[i].equals("VBG") && (tags[i - 1].equals("PRP") || ((tags[i - 1].equals("NN") || tags[i - 1].equals("NNS") || tags[i - 1].equals("NNP") || tags[i - 1].equals("NNPS")) && tokens[i - 1].indexOf('\'') == -1)))
-					errors.add(new int[]{i - 1, i, ERROR_NUMBER});
-		
+			if(UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i != tokens.length-1){
+				int j = i+1;
+				while(tags[j].equals("RB") && j < tokens.length) j++;
+				if(tags[j].equals("VBG")){
+					errors.add(new int[]{i, j, ERROR_NUMBER});
+				}
+			}
 		return errors;
 	}
 }

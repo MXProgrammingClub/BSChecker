@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,8 @@ import util.UtilityMethods;
  * @author Dalal
  * @author JeremiahDeGreeff
  */
-public class FirstSecondPerson extends Error {
+public class FirstSecondPerson extends Bluesheet {
+	public final int ERROR_NUMBER = 3;
 	private static final String[] PRONOUNS = {"I","me", "my", "we", "us", "our", "you", "your"};
 
 	/**
@@ -38,7 +39,7 @@ public class FirstSecondPerson extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public FirstSecondPerson(boolean CheckedWhenAnalyzed) {
-		super(3, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,8 @@ import util.UtilityMethods;
  * Finds errors in pronoun case. (6)
  * @author Leo
  */
-public class PronounCase extends Error {
+public class PronounCase extends Bluesheet {
+	public final int ERROR_NUMBER = 6;
 	// arrays for various pronoun cases
 	private static final String[] POSSESADJ = {"her", "his", "its", "their", "our", "my", "your", "whose"};
 	private static final String[] POSSES = {"hers", "his", "its", "theirs", "ours", "mine", "yours", "whose"};
@@ -42,7 +43,7 @@ public class PronounCase extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public PronounCase(boolean CheckedWhenAnalyzed) {
-		super(6, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 
 	/**

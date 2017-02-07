@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,9 @@ import util.Tools;
  * Finds errors with vague use of this or which. (4)
  * @author tedpyne
  */
-public class VagueThisWhich extends Error {
+public class VagueThisWhich extends Bluesheet {
+	public final int ERROR_NUMBER = 4;
+	
 	/**
 	 * for testing purposes
 	 */
@@ -34,7 +36,7 @@ public class VagueThisWhich extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public VagueThisWhich(boolean CheckedWhenAnalyzed) {
-		super(4, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 	
 	/**

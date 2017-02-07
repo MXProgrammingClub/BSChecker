@@ -6,7 +6,8 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 
 import com.jfoenix.controls.JFXButton;
 
-import error.Error;
+import bluesheets.Bluesheet;
+import bluesheets.Bluesheets;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -19,7 +20,6 @@ import util.UtilityMethods;
  * This is the class that connects the GUI with the rest of the program.
  * 
  * @author Luke Giacalone
- * @version 10/15/2016
 */
 
 public class GUIController {
@@ -122,7 +122,7 @@ public class GUIController {
 			text += "\n";
 		essayBox.replaceText(text);
 		
-		errors = Error.findAllErrors(text);
+		errors = Bluesheet.findAllErrors(text);
 		
 		d.close();
 		
@@ -179,7 +179,7 @@ public class GUIController {
 	private void displayError() {
 		essayBox.positionCaret(errors.get(currError)[0]);
 		essayBox.setStyleClass(errors.get(currError)[0], errors.get(currError)[1] + 1, "dark-red");
-		Bluesheet b = Bluesheet.getBluesheetFromNum(errors.get(currError)[2]);
+		Bluesheets b = Bluesheets.getBluesheetFromNum(errors.get(currError)[2]);
 		errorBox.replaceText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
 	}
 	

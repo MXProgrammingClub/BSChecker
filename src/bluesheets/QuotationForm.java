@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,7 +15,8 @@ import util.UtilityMethods;
  * @author Julia
  * @author JeremiahDeGreeff
  */
-public class QuotationForm extends Error {
+public class QuotationForm extends Bluesheet {
+	public final int ERROR_NUMBER = 14;
 	private static final String FILE_NAME = "SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
 	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
 	private static final String[] PUNCTUATION1 = {".", ","};
@@ -60,7 +61,7 @@ public class QuotationForm extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public QuotationForm(boolean CheckedWhenAnalyzed) {
-		super(14, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 
 	/**

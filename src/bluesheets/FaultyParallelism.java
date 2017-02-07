@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,9 @@ import util.Tools;
  * Finds errors in Parallelism. (11)
  * @author JeremiahDeGreeff
  */
-public class FaultyParallelism extends Error {
+public class FaultyParallelism extends Bluesheet {
+	public final int ERROR_NUMBER = 11;
+	
 	/**
 	 * for testing purposes
 	 */
@@ -37,7 +39,7 @@ public class FaultyParallelism extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public FaultyParallelism(boolean CheckedWhenAnalyzed) {
-		super(11, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,8 @@ import util.Tools;
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
-public class PastTense extends Error {
+public class PastTense extends Bluesheet {
+	public final int ERROR_NUMBER = 1;
 	//private static final String[] TO_HAVE_CONJ = {"have", "has", "had", "having"};
 	
 	/**
@@ -39,7 +40,7 @@ public class PastTense extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public PastTense(boolean CheckedWhenAnalyzed) {
-		super(1, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 	
 	/**

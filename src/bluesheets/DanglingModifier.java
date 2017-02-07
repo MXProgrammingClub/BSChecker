@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,9 @@ import util.Tools;
  * Finds dangling modifiers. (10)
  * @author JeremiahDeGreeff
  */
-public class DanglingModifier extends Error {
+public class DanglingModifier extends Bluesheet {
+	public final int ERROR_NUMBER = 10;
+	
 	/**
 	 * for testing purposes
 	 */
@@ -35,7 +37,7 @@ public class DanglingModifier extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public DanglingModifier(boolean CheckedWhenAnalyzed) {
-		super(10, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 
 	/**

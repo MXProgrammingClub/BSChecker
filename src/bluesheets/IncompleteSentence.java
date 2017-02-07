@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,9 @@ import util.Tools;
  * Finds sentence structure errors. (2)
  * @author JeremiahDeGreeff
  */
-public class IncompleteSentence extends Error {
+public class IncompleteSentence extends Bluesheet {
+	public final int ERROR_NUMBER = 2;
+	
 	/**
 	 * for testing purposes
 	 */
@@ -35,7 +37,7 @@ public class IncompleteSentence extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public IncompleteSentence(boolean CheckedWhenAnalyzed) {
-		super(2, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 
 	/**

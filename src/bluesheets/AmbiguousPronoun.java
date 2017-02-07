@@ -1,4 +1,4 @@
-package error;
+package bluesheets;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,8 @@ import util.UtilityMethods;
  * Finds ambiguous pronoun references. (7)
  * @author Dalal
  */
-public class AmbiguousPronoun extends Error {
+public class AmbiguousPronoun extends Bluesheet {
+	public final int ERROR_NUMBER = 7;
 	private static final String[] PRONOUNS = {"she", "her", "hers", "herself", "he", "him", "his", "himself", "they", "them", "their", "theirs", "themselves"};
 
 	/**
@@ -38,7 +39,7 @@ public class AmbiguousPronoun extends Error {
 	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
 	public AmbiguousPronoun(boolean CheckedWhenAnalyzed) {
-		super(7, CheckedWhenAnalyzed);
+		super(CheckedWhenAnalyzed);
 	}
 
 	/**
