@@ -68,12 +68,15 @@ public class TokenErrorList extends ErrorList {
 						}
 						errorLength += tokens[tokenIndex + i].length();
 					}
-					while(numIgnored < ignoredChars.size() && ignoredChars.get(numIgnored) < startChar + charIndex + numIgnored)
+					while(numIgnored < ignoredChars.size() && ignoredChars.get(numIgnored) <= startChar + numIgnored + charIndex)
 						numIgnored++;
 					curErrorChars[0] = startChar + numIgnored + charIndex;
-					curErrorChars[1] = startChar + numIgnored + charIndex + errorLength - 1;
+					int ignoredInside = 0;
+					while(numIgnored + ignoredInside < ignoredChars.size() && ignoredChars.get(numIgnored + ignoredInside) <= startChar + numIgnored + charIndex + errorLength - 1)
+						ignoredInside++;
+					curErrorChars[1] = startChar + numIgnored + ignoredInside + charIndex + errorLength - 1;
+					
 					charErrorList.add(curErrorChars);
-
 					errorProcessed = true;
 				} else {
 					charIndex += tokens[tokenIndex].length();

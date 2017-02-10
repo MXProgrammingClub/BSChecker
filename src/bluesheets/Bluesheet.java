@@ -50,7 +50,7 @@ public abstract class Bluesheet {
 		while (charOffset < text.length()) {
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
 			
-			System.out.println("\nAnalysing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
+			System.out.println("\nAnalyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
 			ArrayList<Integer> removedChars = new ArrayList<Integer>();
 			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
 			System.out.println("\tIgnoring characters: " + removedChars);
