@@ -40,7 +40,7 @@ public class TokenErrorList extends ErrorList {
 	public CharacterErrorList tokensToChars(int startChar, ArrayList<Integer> ignoredChars) {
 		String[] tokens = Tools.getTokenizer().tokenize(TEXT);
 		boolean errorProcessed;
-		int tokenIndex = 0, charIndex = 0, numIgnored = 0, errorLength;
+		int tokenIndex = 0, charIndex = 0, numIgnored = 0, ignoredInside = 0, errorLength;
 		CharacterErrorList charErrorList = new CharacterErrorList(TEXT);
 
 		//loop through each error
@@ -68,10 +68,11 @@ public class TokenErrorList extends ErrorList {
 						}
 						errorLength += tokens[tokenIndex + i].length();
 					}
+					//account for ignored characters
 					while(numIgnored < ignoredChars.size() && ignoredChars.get(numIgnored) <= startChar + numIgnored + charIndex)
 						numIgnored++;
 					curErrorChars[0] = startChar + numIgnored + charIndex;
-					int ignoredInside = 0;
+					//account for ignored characters between the start and end indices
 					while(numIgnored + ignoredInside < ignoredChars.size() && ignoredChars.get(numIgnored + ignoredInside) <= startChar + numIgnored + charIndex + errorLength - 1)
 						ignoredInside++;
 					curErrorChars[1] = startChar + numIgnored + ignoredInside + charIndex + errorLength - 1;
