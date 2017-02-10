@@ -62,7 +62,7 @@ public class Apostrophe extends Bluesheet {
 				
 				if(i+1 < tokens.length && tags[i+1].length()>2 && tags[i+1].substring(0, 3).equals("POS")){
 					j = i+2;
-					while((tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length)
+					while(tags[j].length() > 1 && (tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length)
 						j++;
 					if(tags[j].length()>1 && tags[j].substring(0,2).equals("VB"))
 						errors.add(new int[]{i, j, ERROR_NUMBER});

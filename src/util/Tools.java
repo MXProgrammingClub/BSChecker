@@ -1,13 +1,10 @@
 package util;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import opennlp.tools.cmdline.PerformanceMonitor;
-import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.parser.Parser;
@@ -21,6 +18,7 @@ import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.InvalidFormatException;
+import opennlp.tools.util.model.BaseModel;
 
 /**
  * A class which holds all the openNLP tools
@@ -77,60 +75,48 @@ public class Tools {
 	 * Initializes all the necessary OpenNLP tools
 	 */
 	public static void initializeOpenNLP() {
-		PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "tools");
+		System.out.println("Setting up opennlp tools:");
+		long start = System.currentTimeMillis();
+
+		System.out.print("\tInitializing the Sentence Detector... ");
+		sentenceDetector = new SentenceDetectorME((SentenceModel)loadModel('s', "lib/en-sent.bin"));
+		
+		System.out.print("\tInitializing the Name Finder... ");
+		nameFinder = new NameFinderME((TokenNameFinderModel)loadModel('n', "lib/en-ner-person.bin"));
+		
+		System.out.print("\tInitializing the Tokenizer... ");
+		tokenizer = new TokenizerME((TokenizerModel)loadModel('t', "lib/en-token.bin"));
+		
+		System.out.print("\tInitializing the Part of Speech Tagger... ");
+		posTagger = new POSTaggerME((POSModel)loadModel('o', "lib/en-pos-maxent.bin"));
+		
+		System.out.print("\tInitializing the Parser... ");
+		parser = ParserFactory.create((ParserModel)loadModel('p', "lib/en-parser-chunking.bin"));
+
+		System.out.println("Setup completed in " + ((System.currentTimeMillis() - start) / 1000d) + "s");
+	}
+	
+	/**
+	 * private helper method for loading individual openNLP tools
+	 * @param tool a character from ['s', 'n', 't', 'o', 'p'] which corresponds to a tool
+	 * @param file the file which contains the model to me loaded
+	 * @return a BaseModel which holds the loaded file
+	 */
+	private static BaseModel loadModel(char tool, String file) {
+		long start = System.currentTimeMillis();
 		InputStream is = null;
-		System.out.println("Setting up opennlp:\n");
-		perfMon.start();
-
-		System.out.println("Setting up the Sentence Detector");
-		SentenceModel sModel = null;
-		try {is = new FileInputStream("lib/en-sent.bin");}
-		catch (FileNotFoundException e1) {e1.printStackTrace();}
-		try {sModel = new SentenceModel(is);}
-		catch (InvalidFormatException e1) {e1.printStackTrace();}
-		catch (IOException e1) {e1.printStackTrace();}
-		perfMon.incrementCounter();
-		
-		System.out.println("Setting up the Name Finder");
-		TokenNameFinderModel nModel = null;
-		try {is = new FileInputStream("lib/en-ner-person.bin");}
-		catch (FileNotFoundException e1) {e1.printStackTrace();}
-		try {nModel = new TokenNameFinderModel(is);}
-		catch (InvalidFormatException e1) {e1.printStackTrace();}
-		catch (IOException e1) {e1.printStackTrace();}
-		perfMon.incrementCounter();
-		
-		System.out.println("Setting up the Tokenizer");
-		TokenizerModel tModel = null;
-		try {is = new FileInputStream("lib/en-token.bin");}
-		catch (FileNotFoundException e1) {e1.printStackTrace();}
-		try {tModel = new TokenizerModel(is); }
-		catch (InvalidFormatException e1) {e1.printStackTrace();}
-		catch (IOException e1) {e1.printStackTrace();}
-		perfMon.incrementCounter();
-		
-		System.out.println("Setting up the Part of Speech Tagger");
-		POSModel posModel = new POSModelLoader().load(new File("lib/en-pos-maxent.bin"));
-		perfMon.incrementCounter();
-
-		System.out.println("Setting up the Parser");
-		ParserModel pModel = null;
-		try {is = new FileInputStream("lib/en-parser-chunking.bin");}
-		catch (FileNotFoundException e1) {e1.printStackTrace();}
-		try {pModel = new ParserModel(is); }
-		catch (InvalidFormatException e1) {e1.printStackTrace();}
-		catch (IOException e1) {e1.printStackTrace();}
-		perfMon.incrementCounter();
-
-		sentenceDetector = new SentenceDetectorME(sModel);
-		nameFinder = new NameFinderME(nModel);
-		tokenizer = new TokenizerME(tModel);
-		posTagger = new POSTaggerME(posModel);
-		parser = ParserFactory.create(pModel);
-
-		try {is.close();}
+		BaseModel model = null;
+		try {is = new FileInputStream(file);}
+		catch (FileNotFoundException e) {e.printStackTrace();}
+		try {model = 
+				tool == 's' ? new SentenceModel(is): 
+				tool == 'n' ? new TokenNameFinderModel(is):
+				tool == 't' ? new TokenizerModel(is):
+				tool == 'o' ? new POSModel(is):
+				tool == 'p' ? new ParserModel(is): null;}
+		catch (InvalidFormatException e) {e.printStackTrace();}
 		catch (IOException e) {e.printStackTrace();}
-		perfMon.stopAndPrintFinalResult();
-		System.out.println("Set up complete!\n");
+		System.out.println("Complete (" + ((System.currentTimeMillis() - start) / 1000d) + "s)");
+		return model;
 	}
 }

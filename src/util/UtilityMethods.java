@@ -3,6 +3,10 @@ package util;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import opennlp.tools.parser.AbstractBottomUpParser;
+import opennlp.tools.parser.Parse;
+import opennlp.tools.util.Span;
+
 /**
  * A class which contains many useful static methods for the project
  * @author JeremiahDeGreeff
@@ -56,5 +60,24 @@ public class UtilityMethods {
 		for(int j = 0; j < indices.size(); j++)
 			buffer.deleteCharAt(indices.get(j) - j - startChar);
 		return buffer.toString();
+	}
+	
+	/**
+	 * parses a String using the openNLP parser
+	 * @param input the String to parse
+	 * @return a String which is a parsed version of the input
+	 */
+	public static String parse(String input) {
+		Parse p = new Parse(input, new Span(0, input.length()), AbstractBottomUpParser.INC_NODE, 1, 0);
+		Span[] spans = Tools.getTokenizer().tokenizePos(input);
+		for(int i = 0; i < spans.length; i++) {
+		      Span span = spans[i];
+		      p.insert(new Parse(input, span, AbstractBottomUpParser.TOK_NODE, 0, i));
+		}
+		p = Tools.getParser().parse(p);
+		
+		StringBuffer sb = new StringBuffer(input.length()*4); //arbitrary initial size
+		p.show(sb);
+		return sb.toString();
 	}
 }

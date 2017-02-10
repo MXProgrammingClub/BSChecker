@@ -2,11 +2,9 @@ package bluesheets;
 
 import java.util.ArrayList;
 
-import opennlp.tools.parser.AbstractBottomUpParser;
-import opennlp.tools.parser.Parse;
-import opennlp.tools.util.Span;
 import util.TokenErrorList;
 import util.Tools;
+import util.UtilityMethods;
 
 /**
  * Finds errors in Parallelism. (11)
@@ -82,15 +80,15 @@ public class FaultyParallelism extends Bluesheet {
 	 */
 	private TokenErrorList findErrorsInSentence(String sentence, ArrayList<Integer> ccTokens, int tokenOffset) {
 		TokenErrorList errors = new TokenErrorList(sentence);
-		String parsedText = parse(sentence);
-		System.out.println("\n" + parsedText);
+		String parsedText = UtilityMethods.parse(sentence);
+//		System.out.println("\n" + parsedText);
 		int ccIndex = -1;
 		for(int ccNum = 0; ccNum < ccTokens.size(); ccNum++){
 			ccIndex = parsedText.indexOf("CC", ccIndex + 1);
 			//catch for if posTagger identifies a CC which the parser does not
 			if(ccIndex == -1)
 				break;
-			System.out.println("\n" + ccIndex + "-" + (ccIndex + 1) + ": " + parsedText.charAt(ccIndex) + parsedText.charAt(ccIndex + 1));
+//			System.out.println("\n" + ccIndex + "-" + (ccIndex + 1) + ": " + parsedText.charAt(ccIndex) + parsedText.charAt(ccIndex + 1));
 			
 			int right = ccIndex;
 			int left = ccIndex - 4;
@@ -132,34 +130,11 @@ public class FaultyParallelism extends Bluesheet {
 			
 			String rightType = parsedText.substring(parsedText.indexOf('(', right) + 1, parsedText.indexOf(' ', parsedText.indexOf('(', right)));
 			String leftType = parsedText.substring(left + 2, parsedText.indexOf(' ', left + 2));			
-			System.out.print("Type to Right: \"" + rightType + "\", Type to Left: \"" + leftType + "\" -- ");
-			if(!rightType.equals(leftType)){
-				System.out.println("Error");
+//			System.out.print("Type to Right: \"" + rightType + "\", Type to Left: \"" + leftType + "\" -- ");
+			if(!rightType.equals(leftType))
 				errors.add(new int[]{ccTokens.get(ccNum) + tokenOffset, ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER});
-			}
-			else
-				System.out.println("No Error");
 		}
 		return errors;
-	}
-
-	/**
-	 * parses a String using the openNLP parser
-	 * @param input the String to parse
-	 * @return a String which is a parsed version of the input
-	 */
-	private static String parse(String input) {
-		Parse p = new Parse(input, new Span(0, input.length()), AbstractBottomUpParser.INC_NODE, 1, 0);
-		Span[] spans = Tools.getTokenizer().tokenizePos(input);
-		for(int i = 0; i < spans.length; i++) {
-		      Span span = spans[i];
-		      p.insert(new Parse(input, span, AbstractBottomUpParser.TOK_NODE, 0, i));
-		}
-		p = Tools.getParser().parse(p);
-		
-		StringBuffer sb = new StringBuffer(input.length()*4); //arbitrary initial size
-		p.show(sb);
-		return sb.toString();
 	}
 	
 	/**

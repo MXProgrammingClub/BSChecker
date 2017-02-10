@@ -12,7 +12,6 @@ import util.UtilityMethods;
  * @author JeremiahDeGreeff
  */
 public abstract class Bluesheet {
-	public final int ERROR_NUMBER = -1;
 	private boolean CheckedWhenAnalyzed;
 	
 	/**
@@ -54,22 +53,24 @@ public abstract class Bluesheet {
 			System.out.println("\nAnalysing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
 			ArrayList<Integer> removedChars = new ArrayList<Integer>();
 			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
-			System.out.println("Ignoring characters: " + removedChars);
+			System.out.println("\tIgnoring characters: " + removedChars);
 			
 			TokenErrorList lineErrors = new TokenErrorList(line);
 			for(Bluesheets b : Bluesheets.values())
 				if(b.getBluesheetObj().CheckedWhenAnalyzed) {
-					System.out.println("looking for: " + b.getName());
+					System.out.print("\tlooking for: " + b.getName() + "... ");
 					TokenErrorList temp = b.getBluesheetObj().findErrors(line);
+					System.out.println(temp.size() + (temp.size() == 1 ? " Error" : " Errors") + " Found");
 					lineErrors.addAll(temp);
 				}
+			System.out.println(lineErrors.size() + (lineErrors.size() == 1 ? " Error" : " Errors") + " Found in line " + lineNum);
 			lineErrors.sort();
 			errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
 
 			lineNum++;
 			charOffset += line.length() + removedChars.size() + 1;
 		}
-		System.out.println("\n" + errors);
+		System.out.println("\n\n" + errors);
 		return errors;
 	}
 }
