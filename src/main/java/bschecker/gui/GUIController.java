@@ -14,6 +14,7 @@ import javafx.scene.control.MenuItem;
 import main.java.bschecker.bluesheets.Bluesheet;
 import main.java.bschecker.bluesheets.Bluesheets;
 import main.java.bschecker.util.ErrorList;
+import main.java.bschecker.util.TextImport;
 import main.java.bschecker.util.UtilityMethods;
 
 /**
