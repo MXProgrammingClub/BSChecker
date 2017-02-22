@@ -47,20 +47,6 @@ public class FaultyParallelism extends Bluesheet {
 	 */
 	@Override
 	protected TokenErrorList findErrors(String line) {
-//		StringBuffer buf = new StringBuffer(line);
-//		boolean autoRemove = false;
-//		for(int i=0;i<buf.length();i++){
-//			char c = buf.charAt(i);
-//			if(c == '(' || c == ')' || c == '\"'){
-//				buf.deleteCharAt(i);
-//				i--;
-//				autoRemove = !autoRemove;
-//			} else if(autoRemove || c == '\'' || (c == ' ' && buf.charAt(i+1) == '(') || (c == '.' && buf.charAt(i-1) == ')')){
-//				buf.deleteCharAt(i);
-//				i--;
-//			}
-//		}
-//		line = buf.toString();
 		TokenErrorList errors = new TokenErrorList(line);
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
