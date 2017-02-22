@@ -52,10 +52,15 @@ public class UtilityMethods {
 	 */
 	public static String removeExtraPunctuation(String line, int startChar, ArrayList<Integer> indices) {
 		StringBuffer buffer = new StringBuffer(line);
+		boolean inParens = false;
 		for(int i = 0; i < buffer.length(); i++){
 			char c = buffer.charAt(i);
-			if(c == '[' || c == ']' || c == '/')
+			if(c == '(')
+				inParens = true;
+			if(inParens || c == '[' || c == ']' || c == '/')
 				indices.add(startChar + i);
+			if(c == ')')
+				inParens = false;
 		}
 		for(int j = 0; j < indices.size(); j++)
 			buffer.deleteCharAt(indices.get(j) - j - startChar);

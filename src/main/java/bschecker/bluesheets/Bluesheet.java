@@ -71,6 +71,7 @@ public abstract class Bluesheet {
 			charOffset += line.length() + removedChars.size() + 1;
 		}
 		System.out.println("\n\n" + errors);
+		
 		return errors;
 	}
 }
