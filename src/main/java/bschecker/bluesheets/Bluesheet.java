@@ -2,8 +2,7 @@ package main.java.bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.CharacterErrorList;
-import main.java.bschecker.util.TokenErrorList;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.UtilityMethods;
 
 /**
@@ -25,9 +24,9 @@ public abstract class Bluesheet {
 	/**
 	 * Finds errors of a specific type in the submitted text
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (1 - 14)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (1 - 14), and, optionally, a note
 	 */
-	protected abstract TokenErrorList findErrors(String line);
+	protected abstract ErrorList findErrors(String line);
 	
 	/**
 	 * changes the value of CheckedWhenAnalyzed
@@ -41,10 +40,10 @@ public abstract class Bluesheet {
 	 * all types included in ERROR_LIST which have an CheckedWhenAnalyzed value of true will be checked
 	 * assumes that text ends with a new line character
 	 * @param text the text to search
-	 * @return a CharacterErrorList which contains all the errors in the passage
+	 * @return a ErrorList which contains all the errors in the passage, referenced by character indices
 	 */
-	public static CharacterErrorList findAllErrors(String text) {
-		CharacterErrorList errors = new CharacterErrorList(text);
+	public static ErrorList findAllErrors(String text) {
+		ErrorList errors = new ErrorList(text, false);
 		int lineNum = 1, charOffset = 0;
 		String line;
 		while (charOffset < text.length()) {
@@ -55,11 +54,11 @@ public abstract class Bluesheet {
 			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
 			System.out.println("\tIgnoring characters: " + removedChars);
 			
-			TokenErrorList lineErrors = new TokenErrorList(line);
+			ErrorList lineErrors = new ErrorList(line, true);
 			for(Bluesheets b : Bluesheets.values())
 				if(b.getBluesheetObj().CheckedWhenAnalyzed) {
 					System.out.print("\tlooking for: " + b.getName() + "... ");
-					TokenErrorList temp = b.getBluesheetObj().findErrors(line);
+					ErrorList temp = b.getBluesheetObj().findErrors(line);
 					System.out.println(temp.size() + (temp.size() == 1 ? " Error" : " Errors") + " Found");
 					lineErrors.addAll(temp);
 				}

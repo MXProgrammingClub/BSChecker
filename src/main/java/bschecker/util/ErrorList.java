@@ -8,30 +8,128 @@ import java.util.Comparator;
  * @author JeremiahDeGreeff
  */
 @SuppressWarnings("serial")
-public abstract class ErrorList extends ArrayList<int[]>{
-	public final String TEXT;
+public class ErrorList extends ArrayList<Error>{
+	private final String TEXT;
+	private final boolean IS_TOKEN_BASED;
 	
 	/**
 	 * constructor
 	 * @param text the text in which the errors of this ErrorList occur
+	 * @param isTokenBased true if the errors in this list are stored based on token indices, false if on character indices
 	 */
-	public ErrorList(String text) {
+	public ErrorList(String text, boolean isTokenBased) {
 		TEXT = text;
+		IS_TOKEN_BASED = isTokenBased;
 	}
 	
 	@Override
-	public abstract String toString();
+	public boolean add(Error e) {
+		if(IS_TOKEN_BASED != e.isTokenBased()){
+			System.out.println("Cannot add errors of different types to same ErrorList!");
+			return false;
+		}
+		return super.add(e);
+	}
+	
+	@Override
+	public void add(int i, Error e) {
+		if(IS_TOKEN_BASED != e.isTokenBased())
+			System.out.println("Cannot add errors of different types to same ErrorList!");
+		super.add(i, e);
+	}
+	
+	@Override
+	public Error set(int i, Error e) {
+		if(IS_TOKEN_BASED != e.isTokenBased()){
+			System.out.println("Cannot add errors of different types to same ErrorList!");
+			return null;
+		}
+		return super.set(i, e);
+	}
 	
 	/**
-	 * Sorts this list of all errors by location.
+	 * Sorts this list by location.
 	 */
 	public void sort() {
-		sort(new Comparator<int[]>() {
-			public int compare(int[] o1, int[] o2) {
-				if(o1[0] == o2[0]) return 0;
-				else if(o1[0] < o2[0]) return -1;
-				else return 1;
+		sort(new Comparator<Error>() {public int compare(Error o1, Error o2) {return o1.getStartIndex() > o2.getStartIndex() ? 1 : o1.getStartIndex() < o2.getStartIndex() ? -1 : 0;}});
+	}
+	
+	/**
+	 * returns a String representation of this ErrorList with differing formatting based upon whether it is token based or character based
+	 */
+	@Override
+	public String toString() {
+		if(isEmpty())
+			return "No errors found!";
+		String errors = "All found errors (" + size() + " total):\n";
+		if(IS_TOKEN_BASED)
+			for(Error error : this)
+				errors += "Tokens " + error.getStartIndex() + "-" + error.getEndIndex() + " (error " + error.getBluesheetNumber() + ")\n";
+		else
+			for(Error error : this)
+				errors += "Characters " + error.getStartIndex() + "-" + error.getEndIndex() + ": \"" + TEXT.substring(error.getStartIndex(), error.getEndIndex() + 1) + "\" (error " + error.getBluesheetNumber() + ")\n";
+		return errors;
+	}
+	
+	/**
+	 * creates a new error list whose errors' indices are based on characters rather than tokens
+	 * should only be used on ErrorLists which pertain to single paragraphs
+	 * @param startChar the beginning of this paragraph relative to the entire input
+	 * @param ignoredChars indices of chars which have been removed from TEXT
+	 * @return an ErrorList which represents the same errors as this ErrorList but is based on characters rather than tokens
+	 */
+	public ErrorList tokensToChars(int startChar, ArrayList<Integer> ignoredChars) {
+		if(!IS_TOKEN_BASED) {
+			System.out.println("This ErrorList is already character based!");
+			return this;
+		}
+		String[] tokens = Tools.getTokenizer().tokenize(TEXT);
+		boolean errorProcessed;
+		int tokenIndex = 0, charIndex = 0, numIgnored = 0, ignoredInside = 0, errorLength;
+		ErrorList charErrorList = new ErrorList(TEXT, false);
+
+		//loop through each error
+		this.sort();
+		for(int errorNum = 0; errorNum < size(); errorNum++) {
+			errorProcessed = false;
+			Error curErrorTokens = get(errorNum);
+			Error curErrorChars = new Error(-1, -1, curErrorTokens.getBluesheetNumber(), false, curErrorTokens.getNote());
+
+			// loop until current error is processed
+			while(!errorProcessed) {
+				//find next token
+				while(tokens[tokenIndex].charAt(0) != TEXT.charAt(charIndex)) {
+					charIndex++;
+				}
+				//if token is the start of the error process it
+				if(tokenIndex == curErrorTokens.getStartIndex()) {
+					errorLength = tokens[tokenIndex].length();
+
+					//loop through errors that include multiple tokens
+					for(int i = 1; i <= curErrorTokens.getEndIndex() - curErrorTokens.getStartIndex(); i++) {
+						//find next token
+						while(tokens[tokenIndex + i].charAt(0) != TEXT.charAt(charIndex + errorLength)) {
+							errorLength++;
+						}
+						errorLength += tokens[tokenIndex + i].length();
+					}
+					//account for ignored characters
+					while(numIgnored < ignoredChars.size() && ignoredChars.get(numIgnored) <= startChar + numIgnored + charIndex)
+						numIgnored++;
+					curErrorChars.setStartIndex(startChar + numIgnored + charIndex);
+					//account for ignored characters between the start and end indices
+					while(numIgnored + ignoredInside < ignoredChars.size() && ignoredChars.get(numIgnored + ignoredInside) <= startChar + numIgnored + charIndex + errorLength - 1)
+						ignoredInside++;
+					curErrorChars.setEndIndex(startChar + numIgnored + ignoredInside + charIndex + errorLength - 1);
+					
+					charErrorList.add(curErrorChars);
+					errorProcessed = true;
+				} else {
+					charIndex += tokens[tokenIndex].length();
+					tokenIndex++;
+				}
 			}
-		});
+		}
+		return charErrorList;
 	}
 }

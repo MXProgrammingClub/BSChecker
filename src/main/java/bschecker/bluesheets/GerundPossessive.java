@@ -2,7 +2,8 @@ package main.java.bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.TokenErrorList;
+import main.java.bschecker.util.Error;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
 
 /**
@@ -18,10 +19,7 @@ public class GerundPossessive extends Bluesheet {
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
 		String input = "";
-		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new GerundPossessive().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		System.out.println("\ninput: " + input + "\n\n" + (new GerundPossessive().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -43,17 +41,17 @@ public class GerundPossessive extends Bluesheet {
 	 * finds all errors where gerunds are not preceded by a possessive when they should be in the given paragraph
 	 * known issues: catches cases where the supposed gerund is in fact a participle and is thus not an error
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (13)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (13), and, optionally, a note
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String[] tokens = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
-		TokenErrorList errors = new TokenErrorList(line);
+		ErrorList errors = new ErrorList(line, true);
 		for(int i = 1; i < tokens.length; i++)
 			if(tags[i].equals("VBG") && (tags[i - 1].equals("PRP") || ((tags[i - 1].equals("NN") || tags[i - 1].equals("NNS") || tags[i - 1].equals("NNP") || tags[i - 1].equals("NNPS")) && tokens[i - 1].indexOf('\'') == -1)))
-					errors.add(new int[]{i - 1, i, ERROR_NUMBER});
+					errors.add(new Error(i - 1, i, ERROR_NUMBER, true));
 		
 		return errors;
 	}

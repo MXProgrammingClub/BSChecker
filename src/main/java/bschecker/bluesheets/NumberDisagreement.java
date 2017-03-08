@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
+import main.java.bschecker.util.Error;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.SentenceTree;
-import main.java.bschecker.util.TokenErrorList;
 import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
@@ -24,11 +25,8 @@ public class NumberDisagreement extends Bluesheet {
 	 */
 	public static void main(String[] args){
 		Tools.initializeOpenNLP();
-		String input = "They eat the man. It is delicious. It are enjoyable. To eat men is enjoyable.";
-		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new NumberDisagreement().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		String input = "";
+		System.out.println("\ninput: " + input + "\n\n" + (new NumberDisagreement().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -49,10 +47,10 @@ public class NumberDisagreement extends Bluesheet {
 	/**
 	 * finds errors in number disagreement in the given paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (5)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (5), and, optionally, a note
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line){
+	protected ErrorList findErrors(String line){
 		String sentences[] = Tools.getSentenceDetector().sentDetect(line);
 		ArrayList<Parse> parses = new ArrayList<Parse>();
 		ArrayList<int[]> arr = new ArrayList<int[]>();

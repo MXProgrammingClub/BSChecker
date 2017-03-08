@@ -2,7 +2,8 @@ package main.java.bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.TokenErrorList;
+import main.java.bschecker.util.Error;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
@@ -21,10 +22,7 @@ public class PassiveVoice extends Bluesheet {
 	public static void main(String[] args){
 		Tools.initializeOpenNLP();
 		String input = "";
-		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new PassiveVoice().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		System.out.println("\ninput: " + input + "\n\n" + (new PassiveVoice().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -45,20 +43,20 @@ public class PassiveVoice extends Bluesheet {
 	/**
 	 * finds all instances of passive voice in the given paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (9)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (9), and, optionally, a note
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
-		TokenErrorList errors = new TokenErrorList(line);
+		ErrorList errors = new ErrorList(line, true);
 		for(int i = 1; i < tokens.length; i++)
 			if(UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i < tokens.length-1){
 				int j = i+1;
 				while(tags[j].equals("RB") && j < tokens.length) j++;
 				if(tags[j].equals("VBN")){
-					errors.add(new int[]{i, j, ERROR_NUMBER});
+					errors.add(new Error(i, j, ERROR_NUMBER, true));
 				}
 			}
 		return errors;

@@ -2,7 +2,8 @@ package main.java.bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.TokenErrorList;
+import main.java.bschecker.util.Error;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
@@ -24,11 +25,8 @@ public class PronounCase extends Bluesheet {
 	 */
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
-		String input = "However, he died and instead of adapting political systems from he apple, he died.";
-		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new PronounCase().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		String input = "";
+		System.out.println("\ninput: " + input + "\n\n" + (new PronounCase().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -49,10 +47,10 @@ public class PronounCase extends Bluesheet {
 	/**
 	 * finds all errors in pronoun case within the paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (6)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (6), and, optionally, a note
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String[] tokens = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
@@ -63,7 +61,7 @@ public class PronounCase extends Bluesheet {
 				pronounIndices.add(i);
 		}
 		
-		TokenErrorList errors = new TokenErrorList(line);
+		ErrorList errors = new ErrorList(line, true);
 		posPronoun(pronounIndices, tokens, tags, errors);
 		subjPronoun(pronounIndices, tokens, tags, errors);
 		objPronoun(pronounIndices, tokens, tags, errors);	
@@ -76,9 +74,9 @@ public class PronounCase extends Bluesheet {
 	 * @param pronounIndices the indices of all pronouns to be checked
 	 * @param tokenList the tokens of the paragraph
 	 * @param tagList the parts of speech of those tokens
-	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
+	 * @param errorTokens the ErrorList of all found errors which will be updated with any new errors that are found
 	 */
-	private void posPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, TokenErrorList errorTokens) {
+	private void posPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorTokens) {
 //		System.out.println("Looking for Possesives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);
@@ -92,7 +90,7 @@ public class PronounCase extends Bluesheet {
 				if(tagList[nextWordIndex].charAt(0) == 'N' || ((index >= 2) && (tagList[index - 1].equals("of")) && tagList[index - 2].charAt(0) == 'N')) {
 					// so the pronoun should be possessive
 					if(!(UtilityMethods.arrayContains(POSSES, tokenList[index]) || UtilityMethods.arrayContains(POSSESADJ, tokenList[index]))) {
-						errorTokens.add(new int[] {index, index, ERROR_NUMBER});
+						errorTokens.add(new Error(index, ERROR_NUMBER, true));
 //						System.out.println("possesive error: " + tokenList[index]);
 					}
 					pronounIndices.remove(element);
@@ -107,9 +105,9 @@ public class PronounCase extends Bluesheet {
 	 * @param pronounIndices the indices of all pronouns to be checked
 	 * @param tokenList the tokens of the paragraph
 	 * @param tagList the parts of speech of those tokens
-	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
+	 * @param errorTokens the ErrorList of all found errors which will be updated with any new errors that are found
 	 */
-	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, TokenErrorList errorTokens) {
+	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorTokens) {
 //		System.out.println("Looking for Subjectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);
@@ -123,7 +121,7 @@ public class PronounCase extends Bluesheet {
 				if(tagList[nextWordIndex].charAt(0) == 'V') {
 					// so the pronoun should be subjective
 					if(!UtilityMethods.arrayContains(SUBJ, tokenList[index])) {
-						errorTokens.add(new int[] {index, index, ERROR_NUMBER});
+						errorTokens.add(new Error(index, ERROR_NUMBER, true));
 //						System.out.println("subjective error: " + tokenList[index]);
 					}
 					pronounIndices.remove(element);
@@ -138,9 +136,9 @@ public class PronounCase extends Bluesheet {
 	 * @param pronounIndices the indices of all pronouns to be checked
 	 * @param tokenList the tokens of the paragraph
 	 * @param tagList the parts of speech of those tokens
-	 * @param errorIndices the list of all found errors which will be updated with any new errors that are found
+	 * @param errorTokens the ErrorList of all found errors which will be updated with any new errors that are found
 	 */
-	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, TokenErrorList errorTokens) {
+	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorTokens) {
 //		System.out.println("Looking for Objectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int index = pronounIndices.get(element);
@@ -150,7 +148,7 @@ public class PronounCase extends Bluesheet {
 				if(tagList[previousWordIndex].charAt(0) == 'V') {
 					// so the pronoun should be objective
 					if(!UtilityMethods.arrayContains(OBJ, tokenList[index])) {
-						errorTokens.add(new int[] {index, index, ERROR_NUMBER});
+						errorTokens.add(new Error(index, ERROR_NUMBER, true));
 //						System.out.println("subjective error: " + tokenList[index]);
 					}
 					pronounIndices.remove(element);

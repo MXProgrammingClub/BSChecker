@@ -2,7 +2,8 @@ package main.java.bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.TokenErrorList;
+import main.java.bschecker.util.Error;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
 
 /**
@@ -18,10 +19,7 @@ public class VagueThisWhich extends Bluesheet {
 	public static void main(String[] args){
 		Tools.initializeOpenNLP();
 		String input = "";
-		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new VagueThisWhich().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		System.out.println("\ninput: " + input + "\n\n" + (new VagueThisWhich().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -42,18 +40,18 @@ public class VagueThisWhich extends Bluesheet {
 	/**
 	 * finds any vague which or this in the given paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (4)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (4), and, optionally, a note
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line){
+	protected ErrorList findErrors(String line){
 		String tokens[] = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
-		TokenErrorList errors = new TokenErrorList(line);
+		ErrorList errors = new ErrorList(line, true);
 		for(int i = 0; i < tokens.length; i++)
 			if(	(tokens[i].equalsIgnoreCase("this") && isVagueThis(tokens,tags,i)) ||
 				(tokens[i].equalsIgnoreCase("which") && (i == 0 || (tags[i-1].charAt(0)!='N' && tags[i-1].charAt(0)!='I'))))
-				errors.add(new int[]{i, i, ERROR_NUMBER});
+				errors.add(new Error(i, ERROR_NUMBER, true));
 		
 		return errors;
 	}

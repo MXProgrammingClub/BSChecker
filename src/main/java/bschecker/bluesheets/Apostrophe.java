@@ -2,7 +2,8 @@ package main.java.bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.TokenErrorList;
+import main.java.bschecker.util.Error;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
 
 /**
@@ -19,10 +20,7 @@ public class Apostrophe extends Bluesheet {
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
 		String input = "";
-		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new Apostrophe().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		System.out.println("\ninput: " + input + "\n\n" + (new Apostrophe().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -43,14 +41,14 @@ public class Apostrophe extends Bluesheet {
 	/**
 	 * Finds omissions of apostrophes and incorrect apostrophes in the passed line of text
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (8)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (8), and, optionally, a note
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
-		TokenErrorList errors = new TokenErrorList(line);
+		ErrorList errors = new ErrorList(line, true);
 		for(int i = 0; i < tokens.length; i++){
 			if(tags[i].length()>2 && tags[i].substring(0,3).equals("NNS")){
 				int j = i+1;
@@ -58,14 +56,14 @@ public class Apostrophe extends Bluesheet {
 					j++;
 				//If the preceding word is a noun, the tag of noun is highly likely to be in error. e.g. "the poem features cars", the tag "features"->"NNS" is incorrect
 				if((i==0 || !((tags[i-1].length()>1 && tags[i-1].substring(0, 2).equals("NN")) || tags[i-1].equals("WDT"))) && tags[j].length()>1 && tags[j].substring(0,2).equals("NN"))
-					errors.add(new int[]{i, j, ERROR_NUMBER});
+					errors.add(new Error(i, j, ERROR_NUMBER, true));
 				
 				if(i+1 < tokens.length && tags[i+1].length()>2 && tags[i+1].substring(0, 3).equals("POS")){
 					j = i+2;
 					while(tags[j].length() > 1 && (tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length)
 						j++;
 					if(tags[j].length()>1 && tags[j].substring(0,2).equals("VB"))
-						errors.add(new int[]{i, j, ERROR_NUMBER});
+						errors.add(new Error(i, j, ERROR_NUMBER, true));
 				}
 			}
 		}

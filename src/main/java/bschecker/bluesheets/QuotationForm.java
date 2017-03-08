@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
-import main.java.bschecker.util.TokenErrorList;
+import main.java.bschecker.util.Error;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
@@ -43,10 +44,7 @@ public class QuotationForm extends Bluesheet {
 	public static void main (String[] args) {
 		Tools.initializeOpenNLP();
 		String input = "";
-		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new QuotationForm().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		System.out.println("\ninput: " + input + "\n\n" + (new QuotationForm().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -68,12 +66,12 @@ public class QuotationForm extends Bluesheet {
 	 * finds all errors with quotation form in the given paragraph
 	 * known issues: doesn't see a preceding verb if other words between it and the quote
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (14)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (14), and, optionally, a note
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
-		TokenErrorList errors = new TokenErrorList(line);
+		ErrorList errors = new ErrorList(line, true);
 		for(int i = 0; i < tokens.length; i++)
 			if(tokens[i].contains("\"")) { //finds opening quotation
 				int start = i + 1;
@@ -84,11 +82,11 @@ public class QuotationForm extends Bluesheet {
 						int errorFront = findErrorsFront(tokens, i, j);
 						int errorBack = findErrorsBack(tokens, i, j);
 						if(errorFront == 1 || errorFront == 2 || errorFront == 3)
-							errors.add(new int[] {i - 1, i - 1, ERROR_NUMBER});
+							errors.add(new Error(i - 1, ERROR_NUMBER, true));
 						if(errorBack == 1 || errorBack == 3)
-							errors.add(new int[] {j - 1, j - 1, ERROR_NUMBER});
+							errors.add(new Error(j - 1, ERROR_NUMBER, true));
 						if(errorBack == 2)
-							errors.add(new int[] {j + 1, j + 1, ERROR_NUMBER});
+							errors.add(new Error(j + 1, ERROR_NUMBER, true));
 						i = j;
 						break;
 					}

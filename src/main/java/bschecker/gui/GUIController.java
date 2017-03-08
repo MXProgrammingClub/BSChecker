@@ -13,6 +13,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 import main.java.bschecker.bluesheets.Bluesheet;
 import main.java.bschecker.bluesheets.Bluesheets;
+import main.java.bschecker.util.Error;
 import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.TextImport;
 import main.java.bschecker.util.UtilityMethods;
@@ -132,8 +133,8 @@ public class GUIController {
 		else {
 			currError = 0;
 			//highlight all the errors
-			for(int[] location: errors)
-				essayBox.setStyleClass(location[0], location[1] + 1, "light-red");
+			for(Error error : errors)
+				essayBox.setStyleClass(error.getStartIndex(), error.getEndIndex() + 1, "light-red");
 			//put first error in sentenceBox and corresponding thing in errorBox
 			displayError();
 		}
@@ -178,9 +179,9 @@ public class GUIController {
 	 * Displays the current error.
 	 */
 	private void displayError() {
-		essayBox.positionCaret(errors.get(currError)[0]);
-		essayBox.setStyleClass(errors.get(currError)[0], errors.get(currError)[1] + 1, "dark-red");
-		Bluesheets b = Bluesheets.getBluesheetFromNum(errors.get(currError)[2]);
+		essayBox.positionCaret(errors.get(currError).getStartIndex());
+		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "dark-red");
+		Bluesheets b = Bluesheets.getBluesheetFromNum(errors.get(currError).getBluesheetNumber());
 		errorBox.replaceText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
 	}
 	
@@ -188,7 +189,7 @@ public class GUIController {
 	 * Resets the color of the current error to the lighter color
 	 */
 	private void resetCurrentColor() {
-		essayBox.setStyleClass(errors.get(currError)[0], errors.get(currError)[1] + 1, "light-red");
+		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "light-red");
 	}
 
 	/**

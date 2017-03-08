@@ -2,7 +2,8 @@ package main.java.bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.TokenErrorList;
+import main.java.bschecker.util.Error;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
@@ -19,10 +20,7 @@ public class FaultyParallelism extends Bluesheet {
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
 		String input = "";
-		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new FaultyParallelism().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		System.out.println("\ninput: " + input + "\n\n" + (new FaultyParallelism().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -43,11 +41,11 @@ public class FaultyParallelism extends Bluesheet {
 	/**
 	 * finds instances of faulty parallelism in the given paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (11)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (11), and, optionally, a note
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line) {
-		TokenErrorList errors = new TokenErrorList(line);
+	protected ErrorList findErrors(String line) {
+		ErrorList errors = new ErrorList(line, true);
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
 		for(String sentence : sentences){
@@ -62,10 +60,10 @@ public class FaultyParallelism extends Bluesheet {
 	 * @param sentence the sentence to search
 	 * @param ccTokens the token indices of coordinating conjunctions (for returning purposes)
 	 * @param tokenOffset the number of tokens which have occurred in earlier sentences (for returning purposes)
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (11) which represent all the errors in this sentence
+	 * @return an ErrorList which for each error in this sentence references start and end tokens, the bluesheet number (11), and, optionally, a note
 	 */
-	private TokenErrorList findErrorsInSentence(String sentence, ArrayList<Integer> ccTokens, int tokenOffset) {
-		TokenErrorList errors = new TokenErrorList(sentence);
+	private ErrorList findErrorsInSentence(String sentence, ArrayList<Integer> ccTokens, int tokenOffset) {
+		ErrorList errors = new ErrorList(sentence, true);
 		String parsedText = UtilityMethods.parse(sentence);
 //		System.out.println("\n" + parsedText);
 		int ccIndex = -1;
@@ -118,7 +116,7 @@ public class FaultyParallelism extends Bluesheet {
 			String leftType = parsedText.substring(left + 2, parsedText.indexOf(' ', left + 2));			
 //			System.out.print("Type to Right: \"" + rightType + "\", Type to Left: \"" + leftType + "\" -- ");
 			if(!rightType.equals(leftType))
-				errors.add(new int[]{ccTokens.get(ccNum) + tokenOffset, ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER});
+				errors.add(new Error(ccTokens.get(ccNum) + tokenOffset, ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER, true));
 		}
 		return errors;
 	}

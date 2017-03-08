@@ -2,7 +2,8 @@ package main.java.bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.TokenErrorList;
+import main.java.bschecker.util.Error;
+import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
@@ -21,10 +22,7 @@ public class FirstSecondPerson extends Bluesheet {
 	public static void main (String[] args) {
 		Tools.initializeOpenNLP();
 		String input = "";
-		System.out.println("\ninput: " + input + "\n");
-		TokenErrorList errors = new FirstSecondPerson().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		System.out.println("\ninput: " + input + "\n\n" + (new FirstSecondPerson().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	/**
@@ -45,21 +43,21 @@ public class FirstSecondPerson extends Bluesheet {
 	/**
 	 * finds all instances of first or second person in the given paragraph
 	 * @param line the paragraph in which to find errors
-	 * @return a TokenErrorList of int[3] elements where [0] and [1] are start and end tokens of the error and [2] is the error number (3)
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (3), and, optionally, a note
 	 */
 	@Override
-	protected TokenErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line) {
 		String[] tokens = Tools.getTokenizer().tokenize(line);
 		
 		boolean inQuote = false, inIntroducedQuote = false;
-		TokenErrorList errors = new TokenErrorList(line);
+		ErrorList errors = new ErrorList(line, true);
 		for(int i = 0; i < tokens.length; i++) {
 			if(tokens[i].contains("\"")) {
 				inIntroducedQuote = (!inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":"))) ? true : false;
 				inQuote = !inQuote;
 			}
 			if(!inIntroducedQuote && UtilityMethods.arrayContains(PRONOUNS, tokens[i]))
-				errors.add(new int[]{i, i, ERROR_NUMBER});
+				errors.add(new Error(i, ERROR_NUMBER, true));
 		}
 		
 		return errors;
