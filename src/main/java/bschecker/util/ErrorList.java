@@ -61,14 +61,22 @@ public class ErrorList extends ArrayList<Error>{
 	public String toString() {
 		if(isEmpty())
 			return "No errors found!";
-		String errors = "All found errors (" + size() + " total):\n";
+		String string = "All found errors (" + size() + " total):\n";
 		if(IS_TOKEN_BASED)
-			for(Error error : this)
-				errors += "Tokens " + error.getStartIndex() + "-" + error.getEndIndex() + " (error " + error.getBluesheetNumber() + ")\n";
+			for(Error error : this) {
+				string += "Tokens " + error.getStartIndex() + "-" + error.getEndIndex() + " (bluesheet " + error.getBluesheetNumber() + ")";
+				if(!error.getNote().equals(""))
+					string += " - Note: " + error.getNote();
+				string += "\n";
+			}
 		else
-			for(Error error : this)
-				errors += "Characters " + error.getStartIndex() + "-" + error.getEndIndex() + ": \"" + TEXT.substring(error.getStartIndex(), error.getEndIndex() + 1) + "\" (error " + error.getBluesheetNumber() + ")\n";
-		return errors;
+			for(Error error : this){
+				string += "Characters " + error.getStartIndex() + "-" + error.getEndIndex() + ": \"" + TEXT.substring(error.getStartIndex(), error.getEndIndex() + 1) + "\" (bluesheet " + error.getBluesheetNumber() + ")";
+				if(!error.getNote().equals(""))
+					string += " - Note: " + error.getNote();
+				string += "\n";
+			}
+		return string;
 	}
 	
 	/**
