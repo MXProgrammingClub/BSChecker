@@ -66,14 +66,14 @@ public class ErrorList extends ArrayList<Error>{
 			for(Error error : this) {
 				string += "Tokens " + error.getStartIndex() + "-" + error.getEndIndex() + " (bluesheet " + error.getBluesheetNumber() + ")";
 				if(!error.getNote().equals(""))
-					string += " - Note: " + error.getNote();
+					string += " -- " + error.getNote();
 				string += "\n";
 			}
 		else
 			for(Error error : this){
 				string += "Characters " + error.getStartIndex() + "-" + error.getEndIndex() + ": \"" + TEXT.substring(error.getStartIndex(), error.getEndIndex() + 1) + "\" (bluesheet " + error.getBluesheetNumber() + ")";
 				if(!error.getNote().equals(""))
-					string += " - Note: " + error.getNote();
+					string += " -- " + error.getNote();
 				string += "\n";
 			}
 		return string;
