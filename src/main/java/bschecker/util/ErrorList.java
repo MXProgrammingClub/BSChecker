@@ -93,7 +93,7 @@ public class ErrorList extends ArrayList<Error>{
 		}
 		String[] tokens = Tools.getTokenizer().tokenize(TEXT);
 		boolean errorProcessed;
-		int tokenIndex = 0, charIndex = 0, numIgnored = 0, ignoredInside = 0, errorLength;
+		int tokenIndex = 0, charIndex = 0, numIgnored = 0, ignoredInside, errorIndex, errorLength;
 		ErrorList charErrorList = new ErrorList(TEXT, false);
 
 		//loop through each error
@@ -105,32 +105,40 @@ public class ErrorList extends ArrayList<Error>{
 
 			// loop until current error is processed
 			while(!errorProcessed) {
+				ignoredInside = 0;
+				
 				//find next token
 				while(tokens[tokenIndex].charAt(0) != TEXT.charAt(charIndex)) {
 					charIndex++;
 				}
 				//if token is the start of the error process it
 				if(tokenIndex == curErrorTokens.getStartIndex()) {
+					errorIndex = charIndex;
 					errorLength = tokens[tokenIndex].length();
 
 					//loop through errors that include multiple tokens
 					for(int i = 1; i <= curErrorTokens.getEndIndex() - curErrorTokens.getStartIndex(); i++) {
 						//find next token
-						while(tokens[tokenIndex + i].charAt(0) != TEXT.charAt(charIndex + errorLength)) {
+						while(tokens[tokenIndex + i].charAt(0) != TEXT.charAt(errorIndex + errorLength))
 							errorLength++;
-						}
 						errorLength += tokens[tokenIndex + i].length();
 					}
+					//don't include quotation marks as the first character of an error
+					if(TEXT.charAt(errorIndex) == '"'){
+						errorIndex++;
+						errorLength--;
+					}
 					//account for ignored characters
-					while(numIgnored < ignoredChars.size() && ignoredChars.get(numIgnored) <= startChar + numIgnored + charIndex)
+					while(numIgnored < ignoredChars.size() && ignoredChars.get(numIgnored) <= startChar + numIgnored + errorIndex)
 						numIgnored++;
-					curErrorChars.setStartIndex(startChar + numIgnored + charIndex);
 					//account for ignored characters between the start and end indices
-					while(numIgnored + ignoredInside < ignoredChars.size() && ignoredChars.get(numIgnored + ignoredInside) <= startChar + numIgnored + charIndex + errorLength - 1)
+					while(numIgnored + ignoredInside < ignoredChars.size() && ignoredChars.get(numIgnored + ignoredInside) <= startChar + numIgnored + errorIndex + errorLength - 1)
 						ignoredInside++;
-					curErrorChars.setEndIndex(startChar + numIgnored + ignoredInside + charIndex + errorLength - 1);
 					
+					curErrorChars.setStartIndex(startChar + numIgnored + errorIndex);
+					curErrorChars.setEndIndex(startChar + numIgnored + ignoredInside + errorIndex + errorLength - 1);
 					charErrorList.add(curErrorChars);
+					
 					errorProcessed = true;
 				} else {
 					charIndex += tokens[tokenIndex].length();
