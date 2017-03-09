@@ -20,7 +20,7 @@ public class IncompleteSentence extends Bluesheet {
 	 */
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
-		String input = "Even after the third apparition further assures the near invulnerability of Macbeth's kingship, Macbeth is still not content as he desires even greater security, so he announces to the witches, \"my heart  throbs to know one thing\"  and proceeds to inquire as to whether or not Banquo's line could be a threat to his sovereignty.";
+		String input = "When I walk, I run. When I walk; I run. When I walk I run. When I walk.";
 		System.out.println("\ninput: " + input + "\n\n" + (new IncompleteSentence().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
@@ -79,22 +79,39 @@ public class IncompleteSentence extends Bluesheet {
 				errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true, "Fragment"));
 			else if(tags.get(i).equals("CC") && tags.get(i + 1).equals("S") && !tags.get(i - 1).equals(",")) //run-on in form IC CC IC
 				errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true, "Run-on"));
-			else if(tags.get(i).equals("S")){
+			else if(tags.get(i).equals("S")){ //potential for comma-splice in form IC, IC
 				sIndex += parsedText.substring(sIndex + 1).indexOf("(S ") + 2;
-				int net = -1, j = sIndex;
-				while(net != 0 && j < parsedText.length()){
-					if(parsedText.charAt(j) == ')')
-						net++;
-					else if(parsedText.charAt(j) == '(')
-						net--;
-					j++;
+				//catch for the case where this clause is in fact dependent despite the parser thinking otherwise
+				int leftParen = sIndex + 2;
+				boolean isIndependant = true;
+				while(parsedText.charAt(leftParen) == '('){
+					if(parsedText.substring(leftParen + 1, leftParen + 2).equals(",") || parsedText.substring(leftParen + 1, leftParen + 3).equals("RB") || parsedText.substring(leftParen + 1, leftParen + 3).equals("PP") || parsedText.substring(leftParen + 1, leftParen + 5).equals("ADVP"))
+						leftParen = parsedText.indexOf('(', leftParen + 1);
+					else{
+						if(parsedText.substring(leftParen + 1, leftParen + 3).equals("IN"))
+							isIndependant = false;
+						break;
+					}
 				}
-				if(j + 6 < parsedText.length() && parsedText.charAt(j + 1) == ',' && parsedText.substring(j + 7, j + 9).equals("NP")){
-					int k = j + 9;
-					while(parsedText.charAt(k + 1) == '(')
-						k = parsedText.indexOf(' ', k + 1);
-					if(parsedText.charAt(k + 1) != '"')
-						errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true, "Comma Splice"));
+				if(isIndependant){
+					//find the end of this S
+					int net = -1, j = sIndex;
+					while(net != 0 && j < parsedText.length()){
+						if(parsedText.charAt(j) == ')')
+							net++;
+						else if(parsedText.charAt(j) == '(')
+							net--;
+						j++;
+					}
+					//if S followed by NP most likely a comma splice
+					if(j + 6 < parsedText.length() && parsedText.charAt(j + 1) == ',' && parsedText.substring(j + 7, j + 9).equals("NP")){
+						int k = j + 9;
+						while(parsedText.charAt(k + 1) == '(')
+							k = parsedText.indexOf(' ', k + 1);
+						//not a comma splice if comma is introducing a quote
+						if(parsedText.charAt(k + 1) != '"')
+							errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true, "Comma-Splice"));
+					}
 				}
 			}
 		}
