@@ -49,7 +49,7 @@ public class FaultyParallelism extends Bluesheet {
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
 		for(String sentence : sentences){
-			errors.addAll(findErrorsInSentence(sentence, findCCTokens(sentence), tokenOffset));
+			errors.addAll(findErrorsInSentence(sentence, UtilityMethods.findTokenTags(sentence, "CC"), tokenOffset));
 			tokenOffset += Tools.getTokenizer().tokenize(sentence).length;
 		}
 		return errors;
@@ -83,9 +83,9 @@ public class FaultyParallelism extends Bluesheet {
 				int net = -1;
 				while(right <= parsedText.length() && net != 0){
 					if(parsedText.charAt(right) == ')')
-						net += 1;
+						net++;
 					else if(parsedText.charAt(right) == '(')
-						net -= 1;
+						net--;
 					right++;
 				}
 				left = ccIndex - 8;
@@ -93,9 +93,9 @@ public class FaultyParallelism extends Bluesheet {
 				net = -1;
 				while(left <= parsedText.length() && net != 0){
 					if(parsedText.charAt(left) == ')')
-						net += 1;
+						net++;
 					else if(parsedText.charAt(left) == '(')
-						net -= 1;
+						net--;
 					left++;
 				}
 			} else {
@@ -105,9 +105,9 @@ public class FaultyParallelism extends Bluesheet {
 				int net = 1;
 				while(left >= 0 && !(net == 0 && Character.isLetter(parsedText.charAt(left + 2)))){
 					if(parsedText.charAt(left) == ')')
-						net += 1;
+						net++;
 					else if(parsedText.charAt(left) == '(')
-						net -= 1;
+						net--;
 					left--;
 				}
 			}
@@ -116,24 +116,8 @@ public class FaultyParallelism extends Bluesheet {
 			String leftType = parsedText.substring(left + 2, parsedText.indexOf(' ', left + 2));			
 //			System.out.print("Type to Right: \"" + rightType + "\", Type to Left: \"" + leftType + "\" -- ");
 			if(!rightType.equals(leftType))
-				errors.add(new Error(ccTokens.get(ccNum) + tokenOffset, ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER, true));
+				errors.add(new Error(ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER, true));
 		}
 		return errors;
-	}
-	
-	/**
-	 * finds coordinating conjunctions in a String
-	 * @param input the String to search
-	 * @return an ArrayList of Integers which represent the indices of tokens which are coordinating conjunctions
-	 */
-	private static ArrayList<Integer> findCCTokens(String input) {
-		String[] tokens = Tools.getTokenizer().tokenize(input);
-		String[] tags = Tools.getPOSTagger().tag(tokens);
-		
-		ArrayList<Integer> ccIndices = new ArrayList<Integer>();
-		for(int i = 0; i < tags.length; i++)
-			if(tags[i].equals("CC"))
-				ccIndices.add(i);
-		return ccIndices;
 	}
 }
