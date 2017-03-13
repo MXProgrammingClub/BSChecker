@@ -20,7 +20,7 @@ public class IncompleteSentence extends Bluesheet {
 	 */
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
-		String input = "When I walk, I run. When I walk; I run. When I walk I run. When I walk.";
+		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new IncompleteSentence().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
