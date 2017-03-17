@@ -8,7 +8,6 @@ import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
 /**
- * WIP
  * Finds sentence structure errors. (2)
  * @author JeremiahDeGreeff
  */
@@ -57,7 +56,6 @@ public class IncompleteSentence extends Bluesheet {
 	}
 	
 	/**
-	 * WIP
 	 * finds any issues in the structure of a sentence
 	 * @param sentence the sentence to examine
 	 * @param tokenOffset the number of tokens which have occurred in earlier sentences (for returning purposes)
@@ -67,11 +65,11 @@ public class IncompleteSentence extends Bluesheet {
 	private ErrorList findErrorsInSentence(String sentence, int tokenOffset, int length) {
 		ErrorList errors = new ErrorList(sentence, true);
 		String parsedText = UtilityMethods.parse(sentence);
-		String simplifiedParse = UtilityMethods.simplifyParse(parsedText);
+//		String simplifiedParse = UtilityMethods.simplifyParse(parsedText);
 		ArrayList<String> tags = UtilityMethods.listParseTags(parsedText);
-		System.out.println("\n" + sentence + "\n" + parsedText + "\n" + simplifiedParse + "\n" + tags);
+//		System.out.println("\n" + sentence + "\n" + parsedText + "\n" + simplifiedParse + "\n" + tags);
 		
-		if(tags.get(1).equals("SBAR")) //either lone dependent clause or run-on in form DC IC
+		if(tags.get(1).equals("SBAR")) //either lone dependent clause (Fragment) or run-on in form DC IC
 			errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true));
 		int sIndex = 0;
 		for(int i = 0; i < tags.size(); i++){
