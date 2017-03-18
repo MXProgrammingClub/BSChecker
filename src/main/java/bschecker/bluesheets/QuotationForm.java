@@ -64,12 +64,12 @@ public class QuotationForm extends Bluesheet {
 
 	/**
 	 * finds all errors with quotation form in the given paragraph
-	 * known issues: doesn't see a preceding verb if other words between it and the quote
 	 * @param line the paragraph in which to find errors
+	 * @param parses a String array of the parses of each sentence of the line
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (14), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line, String[] parses) {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
 		ErrorList errors = new ErrorList(line, true);
 		for(int i = 0; i < tokens.length; i++)

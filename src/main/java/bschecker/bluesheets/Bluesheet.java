@@ -3,6 +3,7 @@ package main.java.bschecker.bluesheets;
 import java.util.ArrayList;
 
 import main.java.bschecker.util.ErrorList;
+import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
 /**
@@ -24,9 +25,17 @@ public abstract class Bluesheet {
 	/**
 	 * Finds errors of a specific type in the submitted text
 	 * @param line the paragraph in which to find errors
+	 * @param parses a String array of the parses of each sentence of the line
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (1 - 14), and, optionally, a note
 	 */
-	protected abstract ErrorList findErrors(String line);
+	protected abstract ErrorList findErrors(String line, String[] parses);
+	
+	protected ErrorList findErrors(String line) {
+		String[] sentences = Tools.getSentenceDetector().sentDetect(line), parses = new String[sentences.length];
+		for(int i = 0; i < sentences.length; i++)
+			parses[i] = UtilityMethods.parse(sentences[i]);
+		return findErrors(line, parses);
+	}
 	
 	/**
 	 * changes the value of CheckedWhenAnalyzed
@@ -56,12 +65,19 @@ public abstract class Bluesheet {
 			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
 			System.out.println("\tIgnoring characters: " + removedChars);
 			
+			long parseStart = System.currentTimeMillis();
+			System.out.print("\tParsing line " + lineNum + "... ");
+			String[] sentences = Tools.getSentenceDetector().sentDetect(line), parses = new String[sentences.length];
+			for(int i = 0; i < sentences.length; i++)
+				parses[i] = UtilityMethods.parse(sentences[i]);
+			System.out.println("Complete (" + ((System.currentTimeMillis() - parseStart) / 1000d) + "s)");
+			
 			ErrorList lineErrors = new ErrorList(line, true);
 			for(Bluesheets b : Bluesheets.values())
 				if(b.getBluesheetObj().CheckedWhenAnalyzed){
 					long bluesheetStart = System.currentTimeMillis();
 					System.out.print("\tlooking for: " + b.getName() + "... ");
-					ErrorList temp = b.getBluesheetObj().findErrors(line);
+					ErrorList temp = b.getBluesheetObj().findErrors(line, parses);
 					lineErrors.addAll(temp);
 					System.out.println(temp.size() + (temp.size() == 1 ? " Error" : " Errors") + " Found (" + ((System.currentTimeMillis() - bluesheetStart) / 1000d) + "s)");
 				}

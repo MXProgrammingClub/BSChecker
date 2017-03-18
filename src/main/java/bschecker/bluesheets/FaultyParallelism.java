@@ -39,33 +39,34 @@ public class FaultyParallelism extends Bluesheet {
 	}
 	
 	/**
-	 * finds instances of faulty parallelism in the given paragraph
+	 * finds any instances of faulty parallelism in the given paragraph
 	 * @param line the paragraph in which to find errors
+	 * @param parses a String array of the parses of each sentence of the line
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (11), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line, String[] parses) {
 		ErrorList errors = new ErrorList(line, true);
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
-		for(String sentence : sentences){
-			errors.addAll(findErrorsInSentence(sentence, UtilityMethods.findTokenTags(sentence, "CC"), tokenOffset));
-			tokenOffset += Tools.getTokenizer().tokenize(sentence).length;
+		for(int i = 0; i < sentences.length; i++){
+			errors.addAll(findErrorsInSentence(line, parses[i], UtilityMethods.findTokenTags(sentences[i], "CC"), tokenOffset));
+			tokenOffset += Tools.getTokenizer().tokenize(sentences[i]).length;
 		}
 		return errors;
 	}
 	
 	/**
-	 * finds all Faulty Parallelism in a sentence
-	 * @param sentence the sentence to search
+	 * finds any Faulty Parallelism in a sentence
+	 * @param line the full line which the sentence is a part of (for returning purposes)
+	 * @param parse the string representation of the parse of the sentence
 	 * @param ccTokens the token indices of coordinating conjunctions (for returning purposes)
 	 * @param tokenOffset the number of tokens which have occurred in earlier sentences (for returning purposes)
 	 * @return an ErrorList which for each error in this sentence references start and end tokens, the bluesheet number (11), and, optionally, a note
 	 */
-	private ErrorList findErrorsInSentence(String sentence, ArrayList<Integer> ccTokens, int tokenOffset) {
-		ErrorList errors = new ErrorList(sentence, true);
-		String parsedText = UtilityMethods.parse(sentence);
-		String simplifiedParse = UtilityMethods.simplifyParse(parsedText);
+	private ErrorList findErrorsInSentence(String line, String parse, ArrayList<Integer> ccTokens, int tokenOffset) {
+		ErrorList errors = new ErrorList(line, true);
+		String simplifiedParse = UtilityMethods.simplifyParse(parse);
 //		System.out.print("\n\t" + sentence + "\n\t" + parsedText + "\n\t" + simplifiedParse);
 		int ccIndex = -1;
 		for(int ccNum = 0; ccNum < ccTokens.size(); ccNum++){

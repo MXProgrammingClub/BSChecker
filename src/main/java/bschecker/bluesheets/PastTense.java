@@ -42,10 +42,11 @@ public class PastTense extends Bluesheet {
 	/**
 	 * finds all instances of past tense in the given paragraph
 	 * @param line the paragraph in which to find errors
+	 * @param parses a String array of the parses of each sentence of the line
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (1), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line, String[] parses) {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 

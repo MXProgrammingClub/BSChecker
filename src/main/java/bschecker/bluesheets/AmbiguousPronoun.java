@@ -42,12 +42,12 @@ public class AmbiguousPronoun extends Bluesheet {
 
 	/**
 	 * finds all ambiguous pronoun references in the given paragraph
-	 * known issues: does not distinguish between genders, does not look for anything other than names
 	 * @param line the paragraph in which to find errors
+	 * @param parses a String array of the parses of each sentence of the line
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (7), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line) {
+	protected ErrorList findErrors(String line, String[] parses) {
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		ErrorList errors = new ErrorList(line, true);
 		int prevSentenceNouns, curSentenceNouns = 0, tokenOffset = 0, index;
