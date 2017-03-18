@@ -66,14 +66,13 @@ public class FaultyParallelism extends Bluesheet {
 		ErrorList errors = new ErrorList(sentence, true);
 		String parsedText = UtilityMethods.parse(sentence);
 		String simplifiedParse = UtilityMethods.simplifyParse(parsedText);
-//		System.out.println("\n" + sentence + "\n" + parsedText + "\n" + simplifiedParse);
+//		System.out.print("\n\t" + sentence + "\n\t" + parsedText + "\n\t" + simplifiedParse);
 		int ccIndex = -1;
 		for(int ccNum = 0; ccNum < ccTokens.size(); ccNum++){
 			ccIndex = simplifiedParse.indexOf("CC", ccIndex + 1);
 			//catch for if posTagger identifies a CC which the parser does not
 			if(ccIndex == -1)
 				break;
-//			System.out.println("\n" + ccIndex + "-" + (ccIndex + 1) + ": " + parsedText.charAt(ccIndex) + parsedText.charAt(ccIndex + 1));
 			
 			int right, left;
 			//special case: CC in CONJP
@@ -91,9 +90,9 @@ public class FaultyParallelism extends Bluesheet {
 				left = ccIndex - 11;
 			} else {
 				right = simplifiedParse.indexOf('(', ccIndex) + 1;
-				//special case CC followed by adverb e.g. "and thus"
+				//special case CC followed by adverb e.g. "and thus" but leave alone if part of a correlative conjunction e.g. whether or not
 				String nextType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right)) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
-				if(nextType.equals("ADVP") || nextType.equals("RB"))
+				if(nextType.equals("ADVP") || (nextType.equals("RB") && !simplifiedParse.substring(ccIndex - 5, ccIndex - 3).equals("IN")))
 					right = simplifiedParse.indexOf('(', simplifiedParse.indexOf("RB", ccIndex)) + 1;
 				left = ccIndex - 4;
 			}
@@ -106,12 +105,14 @@ public class FaultyParallelism extends Bluesheet {
 				left--;
 			}
 			left+=2; //move left from the character before the open parenthesis to the first character of the desired token
-//			System.out.print("\t\tLeft Start Index: " + left + ", Right Start Index: " + right);
+//			System.out.print("\n\t\tLeft Start Index: " + left + ", Right Start Index: " + right);
 			String rightType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right)) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
 			String leftType = simplifiedParse.substring(left, (simplifiedParse.indexOf(' ', left) < simplifiedParse.indexOf(')', left)) ? simplifiedParse.indexOf(' ', left) : simplifiedParse.indexOf(')', left));			
-//			System.out.println("\tType to Left: \"" + leftType + "\" -- Type to Right: \"" + rightType + (rightType.equals(leftType) ? "\"" : "\" --> Error!"));
-			if(!rightType.equals(leftType))
+//			System.out.print("\tType to Left: \"" + leftType + "\" -- Type to Right: \"" + rightType + "\"");
+			if(!(rightType.equals(leftType) || (leftType.length() > 1 && rightType.length() > 1 && ((leftType.substring(0, 2).equals("NN") && rightType.substring(0, 2).equals("NN"))  || (leftType.equals("IN") && rightType.equals("RB")))))){
+//				System.out.print("\tError!");
 				errors.add(new Error(ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER, true));
+			}
 		}
 		return errors;
 	}
