@@ -140,4 +140,18 @@ public class UtilityMethods {
 		}
 		return tags;
 	}
+	
+	/**
+	 * checks particular indices within an array of the tokens of a sentence to determine if each resides within a clause or phrase of the given type
+	 * @param tokens the tokens of the sentence
+	 * @param indices the indices of the tokens to check
+	 * @param parse the String representation of an openNLP parse of the sentence
+	 * @param tag the clause or phrase tag to check for
+	 * @return a boolean array where each boolean indicates if the corresponding token resides within the indicated clause or phrase
+	 */
+	public static boolean[] tokensInsideTag(String[] tokens, int[] indices, String parse, String tag) {
+		boolean[] result = new boolean[indices.length];
+		//WIP
+		return result;
+	}
 }
