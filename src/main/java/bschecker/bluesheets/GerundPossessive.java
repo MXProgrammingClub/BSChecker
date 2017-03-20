@@ -31,10 +31,10 @@ public class GerundPossessive extends Bluesheet {
 	
 	/**
 	 * constructor
-	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public GerundPossessive(boolean CheckedWhenAnalyzed) {
-		super(CheckedWhenAnalyzed);
+	public GerundPossessive(boolean checkedWhenAnalyzed) {
+		super(checkedWhenAnalyzed);
 	}
 
 	/**

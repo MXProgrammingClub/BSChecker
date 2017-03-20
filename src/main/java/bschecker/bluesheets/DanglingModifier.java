@@ -36,10 +36,10 @@ public class DanglingModifier extends Bluesheet {
 	
 	/**
 	 * constructor
-	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public DanglingModifier(boolean CheckedWhenAnalyzed) {
-		super(CheckedWhenAnalyzed);
+	public DanglingModifier(boolean checkedWhenAnalyzed) {
+		super(checkedWhenAnalyzed);
 	}
 
 	/**

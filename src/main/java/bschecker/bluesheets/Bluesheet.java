@@ -12,14 +12,14 @@ import main.java.bschecker.util.UtilityMethods;
  * @author JeremiahDeGreeff
  */
 public abstract class Bluesheet {
-	private boolean CheckedWhenAnalyzed;
+	private boolean checkedWhenAnalyzed;
 	
 	/**
 	 * creates a new Error object with the given error number
-	 * @param CheckedWhenAnalyzed true if errors of the given type should be looked for when the text is analyzed, false otherwise
+	 * @param checkedWhenAnalyzed true if errors of the given type should be looked for when the text is analyzed, false otherwise
 	 */
-	public Bluesheet(boolean CheckedWhenAnalyzed) {
-		this.CheckedWhenAnalyzed = CheckedWhenAnalyzed;
+	public Bluesheet(boolean checkedWhenAnalyzed) {
+		this.checkedWhenAnalyzed = checkedWhenAnalyzed;
 	}
 
 	/**
@@ -41,7 +41,7 @@ public abstract class Bluesheet {
 	 * changes the value of CheckedWhenAnalyzed
 	 */
 	public void setCheckedWhenAnalyzed() {
-		CheckedWhenAnalyzed = !CheckedWhenAnalyzed;
+		checkedWhenAnalyzed = !checkedWhenAnalyzed;
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public abstract class Bluesheet {
 			
 			ErrorList lineErrors = new ErrorList(line, true);
 			for(Bluesheets b : Bluesheets.values())
-				if(b.getBluesheetObj().CheckedWhenAnalyzed){
+				if(b.getBluesheetObj().checkedWhenAnalyzed){
 					long bluesheetStart = System.currentTimeMillis();
 					System.out.print("\tlooking for: " + b.getName() + "... ");
 					ErrorList temp = b.getBluesheetObj().findErrors(line, parses);

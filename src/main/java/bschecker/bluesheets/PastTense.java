@@ -35,10 +35,10 @@ public class PastTense extends Bluesheet {
 
 	/**
 	 * constructor
-	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public PastTense(boolean CheckedWhenAnalyzed) {
-		super(CheckedWhenAnalyzed);
+	public PastTense(boolean checkedWhenAnalyzed) {
+		super(checkedWhenAnalyzed);
 	}
 	
 	/**

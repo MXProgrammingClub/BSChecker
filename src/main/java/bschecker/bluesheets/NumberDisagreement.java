@@ -38,10 +38,10 @@ public class NumberDisagreement extends Bluesheet {
 	
 	/**
 	 * constructor
-	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public NumberDisagreement(boolean CheckedWhenAnalyzed) {
-		super(CheckedWhenAnalyzed);
+	public NumberDisagreement(boolean checkedWhenAnalyzed) {
+		super(checkedWhenAnalyzed);
 	}
 	
 	/**

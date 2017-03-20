@@ -32,10 +32,10 @@ public class FaultyParallelism extends Bluesheet {
 	
 	/**
 	 * constructor
-	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public FaultyParallelism(boolean CheckedWhenAnalyzed) {
-		super(CheckedWhenAnalyzed);
+	public FaultyParallelism(boolean checkedWhenAnalyzed) {
+		super(checkedWhenAnalyzed);
 	}
 	
 	/**

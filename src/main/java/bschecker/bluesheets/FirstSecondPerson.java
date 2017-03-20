@@ -34,10 +34,10 @@ public class FirstSecondPerson extends Bluesheet {
 	
 	/**
 	 * constructor
-	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public FirstSecondPerson(boolean CheckedWhenAnalyzed) {
-		super(CheckedWhenAnalyzed);
+	public FirstSecondPerson(boolean checkedWhenAnalyzed) {
+		super(checkedWhenAnalyzed);
 	}
 
 	/**

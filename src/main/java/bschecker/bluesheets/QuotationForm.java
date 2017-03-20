@@ -56,10 +56,10 @@ public class QuotationForm extends Bluesheet {
 	
 	/**
 	 * constructor
-	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public QuotationForm(boolean CheckedWhenAnalyzed) {
-		super(CheckedWhenAnalyzed);
+	public QuotationForm(boolean checkedWhenAnalyzed) {
+		super(checkedWhenAnalyzed);
 	}
 
 	/**

@@ -31,10 +31,10 @@ public class VagueThisWhich extends Bluesheet {
 	
 	/**
 	 * constructor
-	 * @param CheckedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
+	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
 	 */
-	public VagueThisWhich(boolean CheckedWhenAnalyzed) {
-		super(CheckedWhenAnalyzed);
+	public VagueThisWhich(boolean checkedWhenAnalyzed) {
+		super(checkedWhenAnalyzed);
 	}
 	
 	/**
