@@ -56,7 +56,7 @@ public class PronounCase extends Bluesheet {
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
 		ArrayList<Integer> pronounIndices = new ArrayList<Integer>();
-		for(int i = 0; i < tokens.length; i++) {
+		for(int i = 0; i < tokens.length; i++){
 			String word = tokens[i];
 			if(UtilityMethods.arrayContains(ALLPN, word))
 				pronounIndices.add(i);
@@ -71,6 +71,28 @@ public class PronounCase extends Bluesheet {
 	}
 	
 	/**
+	 * A helper method that skips adjectives and adverbs and returns the correct nextWordIndex
+	 * @param tagList the parts of speech of those tokens
+	 * @param curWordIndex the index of the current word
+	 * @param isForward whether look forward to the next word or look backward to previous word
+	 */
+	private int findNextWord(String[] tagList, int curWordIndex, boolean isForward) {
+		if(isForward){
+			int nextWordIndex = curWordIndex + 1;
+			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R')
+				nextWordIndex++;
+			return nextWordIndex;
+		} else {
+			int nextWordIndex = curWordIndex - 1;
+			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R') 
+				nextWordIndex--;
+			return nextWordIndex;
+		}
+	}
+	
+	
+	
+	/**
 	 * A method that looks at pronouns that should be possessive and returns the indices of any of those that are not
 	 * @param pronounIndices the indices of all pronouns to be checked
 	 * @param tokenList the tokens of the paragraph
@@ -79,20 +101,25 @@ public class PronounCase extends Bluesheet {
 	 */
 	private void posPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorTokens) {
 //		System.out.println("Looking for Possesives in: " + pronounIndices);
-		for(int element = 0; element < pronounIndices.size(); element++) {
-			int index = pronounIndices.get(element);
-			if(index + 1 < tokenList.length) {
-				int nextWordIndex = index + 1;
-				//pass over adjectives and adverbs
-				while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R') {
-					nextWordIndex++;
-				}
+		for(int element = 0; element < pronounIndices.size(); element++) 
+		{
+			int pronounIndex = pronounIndices.get(element);
+			// assume no possessive pronouns occur at the end of the sentence
+			if(pronounIndex + 1 < tokenList.length) 
+			{
+				int nextWordIndex = findNextWord(tagList, pronounIndex, true);
+//				//pass over adjectives and adverbs
+//				while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R') 
+//				{
+//					nextWordIndex++;
+//				}
 				//checking for a noun after the pronoun or the use of "of" as a possessive e.g. friend (noun) of his (possessive pronoun)
-				if(tagList[nextWordIndex].charAt(0) == 'N' || ((index >= 2) && (tagList[index - 1].equals("of")) && tagList[index - 2].charAt(0) == 'N')) {
+				if(tagList[nextWordIndex].charAt(0) == 'N' || ((pronounIndex >= 2) && (tagList[pronounIndex - 1].equals("of")) && tagList[pronounIndex - 2].charAt(0) == 'N')) {
 					// so the pronoun should be possessive
-					if(!(UtilityMethods.arrayContains(POSSES, tokenList[index]) || UtilityMethods.arrayContains(POSSESADJ, tokenList[index]))) {
-						errorTokens.add(new Error(index, ERROR_NUMBER, true));
-//						System.out.println("possesive error: " + tokenList[index]);
+					if(!(UtilityMethods.arrayContains(POSSES, tokenList[pronounIndex]) || UtilityMethods.arrayContains(POSSESADJ, tokenList[pronounIndex]))) {
+						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true));
+						// prints message for testing
+						System.out.println("possesive error: " + tokenList[pronounIndex]);
 					}
 					pronounIndices.remove(element);
 					element--;
@@ -111,19 +138,25 @@ public class PronounCase extends Bluesheet {
 	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorTokens) {
 //		System.out.println("Looking for Subjectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
-			int index = pronounIndices.get(element);
-			if(index + 1 < tokenList.length) {
-				int nextWordIndex = index + 1;
+			int pronounIndex = pronounIndices.get(element);
+			// assume no subjective pronouns occur at the end of the sentence
+			if(pronounIndex + 1 < tokenList.length) 
+			{
+				int nextWordIndex = findNextWord(tagList, pronounIndex, true);
 				//pass over adverbs
-				while(tagList[nextWordIndex].charAt(0) == 'R' || tagList[nextWordIndex].equals("MD")) {
-					nextWordIndex++;
-				}
+//				while(tagList[nextWordIndex].charAt(0) == 'R' || tagList[nextWordIndex].equals("MD")) 
+//				{
+//					nextWordIndex++;
+//				}
 				// checking for a verb before the pronoun
-				if(tagList[nextWordIndex].charAt(0) == 'V') {
-					// so the pronoun should be subjective
-					if(!UtilityMethods.arrayContains(SUBJ, tokenList[index])) {
-						errorTokens.add(new Error(index, ERROR_NUMBER, true));
-//						System.out.println("subjective error: " + tokenList[index]);
+				if(tagList[nextWordIndex].charAt(0) == 'V') 
+				{
+					// when the pronoun is followed by a verb, the pronoun should be subjective
+					if(!UtilityMethods.arrayContains(SUBJ, tokenList[pronounIndex])) 
+					{
+						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true));
+						// prints message for testing
+						System.out.println("subjective error: " + tokenList[pronounIndex]);
 					}
 					pronounIndices.remove(element);
 					element--;
@@ -142,15 +175,19 @@ public class PronounCase extends Bluesheet {
 	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorTokens) {
 //		System.out.println("Looking for Objectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
-			int index = pronounIndices.get(element);
-			if (index > 0) {
-				int previousWordIndex = index - 1;
-				// checking for a verb before the pronoun
-				if(tagList[previousWordIndex].charAt(0) == 'V') {
-					// so the pronoun should be objective
-					if(!UtilityMethods.arrayContains(OBJ, tokenList[index])) {
-						errorTokens.add(new Error(index, ERROR_NUMBER, true));
-//						System.out.println("subjective error: " + tokenList[index]);
+			int pronounIndex = pronounIndices.get(element);
+			// assume that no objective pronouns occur at the beginning of a sentence
+			if (pronounIndex > 0) 
+			{
+				int nextWordIndex = findNextWord(tagList, pronounIndex, false);
+				if(tagList[nextWordIndex].charAt(0) == 'V') 
+				{
+					// when the pronoun is preceded by a verb, the pronoun should be objective
+					if(!UtilityMethods.arrayContains(OBJ, tokenList[pronounIndex])) 
+					{
+						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true));
+						// prints message for testing
+						System.out.println("objective error: " + tokenList[pronounIndex]);
 					}
 					pronounIndices.remove(element);
 					element--;
