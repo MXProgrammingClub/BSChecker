@@ -143,15 +143,42 @@ public class UtilityMethods {
 	
 	/**
 	 * checks particular indices within an array of the tokens of a sentence to determine if each resides within a clause or phrase of the given type
-	 * @param tokens the tokens of the sentence
-	 * @param indices the indices of the tokens to check
+	 * @param candidates the indices of the tokens to check
 	 * @param parse the String representation of an openNLP parse of the sentence
 	 * @param tag the clause or phrase tag to check for
 	 * @return a boolean array where each boolean indicates if the corresponding token resides within the indicated clause or phrase
 	 */
-	public static boolean[] tokensInsideTag(String[] tokens, int[] indices, String parse, String tag) {
-		boolean[] result = new boolean[indices.length];
-		//WIP
-		return result;
+	public static boolean[] tokensInsideTag(int[] candidates, String parse, String tag) {
+		boolean[] results = new boolean[candidates.length];
+		ArrayList<Integer> levelsWithTag = new ArrayList<Integer>();
+		int i = 0, tokenIndex = 0, candidateIndex = 0, net = 0;
+		while(candidateIndex < candidates.length && i < parse.length()){
+			if(parse.charAt(i) == '('){
+				net++;
+				if(parse.substring(i + 1, parse.indexOf(' ', i)).equals(tag))
+					levelsWithTag.add(net);
+				i = parse.indexOf(' ', i) + 1;
+			}
+			else if(parse.charAt(i) == ')'){
+				net--;
+				if(!levelsWithTag.isEmpty() && net < levelsWithTag.get(levelsWithTag.size() - 1))
+					levelsWithTag.remove(levelsWithTag.size() - 1);
+				if(i + 1 < parse.length() && parse.charAt(i + 1) == ' ')
+					i += 2;
+				else
+					i++;
+			}
+			else{ //if at a token
+				System.out.println("t: " + tokenIndex + " - " + levelsWithTag);
+				if(tokenIndex == candidates[candidateIndex]){
+					System.out.println("c: " + candidateIndex + " - " + !levelsWithTag.isEmpty());
+					results[candidateIndex] = !levelsWithTag.isEmpty();
+					candidateIndex++;
+				}
+				tokenIndex++;
+				i = parse.indexOf(')', i);
+			}
+		}
+		return results;
 	}
 }

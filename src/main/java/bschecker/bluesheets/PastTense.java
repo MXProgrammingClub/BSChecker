@@ -70,7 +70,7 @@ public class PastTense extends Bluesheet {
 			int[] errorTokens = new int[sentenceErrors.size()];
 			for(int j = 0; j < sentenceErrors.size(); j++)
 				errorTokens[j] = sentenceErrors.get(j).getEndIndex();
-			boolean[] inSBAR = UtilityMethods.tokensInsideTag(tokens, errorTokens, parses[i], "SBAR");
+			boolean[] inSBAR = UtilityMethods.tokensInsideTag(errorTokens, parses[i], "SBAR");
 			for(int j = 0; j < sentenceErrors.size(); j++)
 				if(!inSBAR[j])
 					errors.add(new Error(sentenceErrors.get(j).getStartIndex() + tokenOffset, sentenceErrors.get(j).getEndIndex() + tokenOffset, ERROR_NUMBER, true));
