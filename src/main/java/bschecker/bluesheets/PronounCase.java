@@ -119,7 +119,7 @@ public class PronounCase extends Bluesheet {
 					if(!(UtilityMethods.arrayContains(POSSES, tokenList[pronounIndex]) || UtilityMethods.arrayContains(POSSESADJ, tokenList[pronounIndex]))) {
 						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true));
 						// prints message for testing
-						System.out.println("possesive error: " + tokenList[pronounIndex]);
+//						System.out.println("possesive error: " + tokenList[pronounIndex]);
 					}
 					pronounIndices.remove(element);
 					element--;
@@ -156,7 +156,7 @@ public class PronounCase extends Bluesheet {
 					{
 						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true));
 						// prints message for testing
-						System.out.println("subjective error: " + tokenList[pronounIndex]);
+//						System.out.println("subjective error: " + tokenList[pronounIndex]);
 					}
 					pronounIndices.remove(element);
 					element--;
@@ -187,7 +187,7 @@ public class PronounCase extends Bluesheet {
 					{
 						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true));
 						// prints message for testing
-						System.out.println("objective error: " + tokenList[pronounIndex]);
+//						System.out.println("objective error: " + tokenList[pronounIndex]);
 					}
 					pronounIndices.remove(element);
 					element--;
