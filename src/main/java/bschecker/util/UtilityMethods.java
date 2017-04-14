@@ -63,6 +63,12 @@ public class UtilityMethods {
 				indices.add(startChar + i);
 			if(c == ')')
 				inParens = false;
+			if(c == '.' && i + 2 < buffer.length() && buffer.charAt(i + 1) == '.' && buffer.charAt(i + 2) == '.'){
+				indices.add(startChar + i);
+				indices.add(startChar + i + 1);
+				indices.add(startChar + i + 2);
+				i += 2;
+			}
 		}
 		for(int j = 0; j < indices.size(); j++)
 			buffer.deleteCharAt(indices.get(j) - j - startChar);
