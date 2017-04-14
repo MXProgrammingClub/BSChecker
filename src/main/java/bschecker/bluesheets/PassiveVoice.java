@@ -52,14 +52,18 @@ public class PassiveVoice extends Bluesheet {
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
 		ErrorList errors = new ErrorList(line, true);
-		for(int i = 1; i < tokens.length; i++)
-			if(UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i < tokens.length-1){
-				int j = i+1;
-				while(tags[j].equals("RB") && j < tokens.length) j++;
-				if(tags[j].equals("VBN")){
+		boolean inQuote = false;
+		for(int i = 1; i < tokens.length; i++){
+			if(tokens[i].contains("\""))
+				inQuote = !inQuote;
+			if(!inQuote && UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i < tokens.length - 1){
+				int j = i + 1;
+				while(tags[j].equals("RB") && j < tokens.length)
+					j++;
+				if(tags[j].equals("VBN"))
 					errors.add(new Error(i, j, ERROR_NUMBER, true));
-				}
 			}
+		}
 		return errors;
 	}
 }
