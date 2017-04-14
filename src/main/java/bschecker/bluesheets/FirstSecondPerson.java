@@ -14,7 +14,8 @@ import main.java.bschecker.util.UtilityMethods;
  */
 public class FirstSecondPerson extends Bluesheet {
 	public final int ERROR_NUMBER = 3;
-	private static final String[] PRONOUNS = {"I","me", "my", "we", "us", "our", "you", "your"};
+	private static final String[] FIRST_PERSON = {"I","me", "my", "mine", "we", "us", "our", "ours"};
+	private static final String[] SECOND_PERSON = {"you", "your", "yours"};
 
 	/**
 	 * for testing purposes
@@ -57,8 +58,10 @@ public class FirstSecondPerson extends Bluesheet {
 				inIntroducedQuote = (!inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":"))) ? true : false;
 				inQuote = !inQuote;
 			}
-			if(!inIntroducedQuote && UtilityMethods.arrayContains(PRONOUNS, tokens[i]))
-				errors.add(new Error(i, ERROR_NUMBER, true));
+			if(!inIntroducedQuote && UtilityMethods.arrayContains(FIRST_PERSON, tokens[i]))
+				errors.add(new Error(i, ERROR_NUMBER, true, "First Person"));
+			if(!inIntroducedQuote && UtilityMethods.arrayContains(SECOND_PERSON, tokens[i]))
+				errors.add(new Error(i, ERROR_NUMBER, true, "Second Person"));
 		}
 		
 		return errors;

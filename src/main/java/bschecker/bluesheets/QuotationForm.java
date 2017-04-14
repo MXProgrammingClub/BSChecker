@@ -81,12 +81,18 @@ public class QuotationForm extends Bluesheet {
 					if(tokens[j].contains("\"")) { //finds closing quotation
 						int errorFront = findErrorsFront(tokens, i, j);
 						int errorBack = findErrorsBack(tokens, i, j);
-						if(errorFront == 1 || errorFront == 2 || errorFront == 3)
-							errors.add(new Error(i - 1, ERROR_NUMBER, true));
-						if(errorBack == 1 || errorBack == 3)
-							errors.add(new Error(j - 1, ERROR_NUMBER, true));
+						if(errorFront == 1)
+							errors.add(new Error(i - 1, ERROR_NUMBER, true, "Do not introduce a quote with a colon after a verb of saying or thinking."));
+						if(errorFront == 2)
+							errors.add(new Error(i - 1, ERROR_NUMBER, true, "Do not introduce a quote with a comma without a verb of saying or thinking."));
+						if(errorFront == 3)
+							errors.add(new Error(i - 1, ERROR_NUMBER, true, "Do not introduce a quote with a verb of saying or thinking and no comma."));
+						if(errorBack == 1)
+							errors.add(new Error(j - 1, ERROR_NUMBER, true, "Do not put periods, commas, colons, or semicolons inside a quote which is sited."));
 						if(errorBack == 2)
-							errors.add(new Error(j + 1, ERROR_NUMBER, true));
+							errors.add(new Error(j + 1, ERROR_NUMBER, true, "Do not put periods or commas outside a quote which is not cited."));
+						if(errorBack == 3)
+							errors.add(new Error(j - 1, ERROR_NUMBER, true, "Do not put colons or semicolons inside a quote."));
 						i = j;
 						break;
 					}
@@ -105,7 +111,7 @@ public class QuotationForm extends Bluesheet {
 	{
 		if(start > 0 && tokens[start - 1].equals(":"))
 			if(start > 1 && VERB_SET.contains(tokens[start - 2]))
-				return 1; //error if there is a semicolon before and the word before it is a verb
+				return 1; //error if there is a colon before and the word before it is a verb
 		else if(start > 0 && tokens[start - 1].equals(","))
 			if(start > 1 && !VERB_SET.contains(tokens[start - 2]))
 				return 2; //error if there is a comma before and the word before it is not a verb
