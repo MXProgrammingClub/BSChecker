@@ -66,9 +66,8 @@ public class IncompleteSentence extends Bluesheet {
 	 */
 	private ErrorList findErrorsInSentence(String line, String parse, int tokenOffset, int length) {
 		ErrorList errors = new ErrorList(line, true);
-//		String simplifiedParse = UtilityMethods.simplifyParse(parse);
 		ArrayList<String> tags = UtilityMethods.listParseTags(parse);
-//		System.out.println("\n" + sentence + "\n" + parse + "\n" + simplifiedParse + "\n" + tags);
+//		System.out.println("\n\t" + parse + "\n\t" + UtilityMethods.simplifyParse(parse) + "\n\t" + tags);
 		
 		if(tags.get(1).equals("SBAR")) //either lone dependent clause (Fragment) or run-on in form DC IC
 			errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true));
