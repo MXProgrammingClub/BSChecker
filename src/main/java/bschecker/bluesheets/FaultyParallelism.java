@@ -13,6 +13,7 @@ import main.java.bschecker.util.UtilityMethods;
  */
 public class FaultyParallelism extends Bluesheet {
 	public final int ERROR_NUMBER = 11;
+	private final String[][] tagGroups = {{"NN", "NNS", "NNP", "NNPS"}, {"S", "SBAR"}, {"POS", "PRP$"}, {"IN", "RB"}};
 	
 	/**
 	 * for testing purposes
@@ -113,9 +114,17 @@ public class FaultyParallelism extends Bluesheet {
 			String rightType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right)) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
 			String leftType = simplifiedParse.substring(left, (simplifiedParse.indexOf(' ', left) < simplifiedParse.indexOf(')', left)) ? simplifiedParse.indexOf(' ', left) : simplifiedParse.indexOf(')', left));			
 //			System.out.print("\tType to Left: \"" + leftType + "\" -- Type to Right: \"" + rightType + "\"");
-			if(!(leftType.equals(rightType) || (leftType.charAt(0) == 'S' && rightType.charAt(0) == 'S') || (leftType.length() > 1 && rightType.length() > 1 && ((leftType.substring(0, 2).equals("NN") && rightType.substring(0, 2).equals("NN")) || ((leftType.equals("POS") || leftType.equals("PRP$")) && (rightType.equals("POS") || rightType.equals("PRP$"))) || (leftType.equals("IN") && rightType.equals("RB")))))){
-//				System.out.print("\tError!");
-				errors.add(new Error(ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER, true));
+			if(!leftType.equals(rightType)){
+				boolean error = true;
+				for(String[] group : tagGroups)
+					if(UtilityMethods.arrayContains(group, leftType) && UtilityMethods.arrayContains(group, rightType)){
+						error = false;
+						break;
+					}
+				if(error){
+//					System.out.print("\tError!");
+					errors.add(new Error(ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER, true));
+				}
 			}
 		}
 		return errors;
