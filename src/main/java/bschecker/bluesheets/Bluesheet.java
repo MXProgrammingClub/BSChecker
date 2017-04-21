@@ -98,7 +98,7 @@ public abstract class Bluesheet {
 	* @author Luke Giacalone
 	* @author JeremiahDeGreeff
 	*/
-	public enum Bluesheets {
+	public static enum Bluesheets {
 		PAST_TENSE ("Past Tense",
 				"Use the present tense in writing about a literary work.",
 				"(Incorrect) Macbeth hastened home to tell his wife of the king's approach.\n(Correct) Macbeth hastens home to tell his wife of the king's approach.",
