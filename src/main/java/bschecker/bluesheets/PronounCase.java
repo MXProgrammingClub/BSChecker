@@ -117,7 +117,7 @@ public class PronounCase extends Bluesheet {
 				if(tagList[nextWordIndex].charAt(0) == 'N' || ((pronounIndex >= 2) && (tagList[pronounIndex - 1].equals("of")) && tagList[pronounIndex - 2].charAt(0) == 'N')) {
 					// so the pronoun should be possessive
 					if(!(UtilityMethods.arrayContains(POSSES, tokenList[pronounIndex]) || UtilityMethods.arrayContains(POSSESADJ, tokenList[pronounIndex]))) {
-						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true));
+						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true, "Should be possesive pronoun."));
 						// prints message for testing
 //						System.out.println("possesive error: " + tokenList[pronounIndex]);
 					}
@@ -154,7 +154,7 @@ public class PronounCase extends Bluesheet {
 					// when the pronoun is followed by a verb, the pronoun should be subjective
 					if(!UtilityMethods.arrayContains(SUBJ, tokenList[pronounIndex])) 
 					{
-						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true));
+						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true, "Should be subjective pronoun."));
 						// prints message for testing
 //						System.out.println("subjective error: " + tokenList[pronounIndex]);
 					}
@@ -185,7 +185,7 @@ public class PronounCase extends Bluesheet {
 					// when the pronoun is preceded by a verb, the pronoun should be objective
 					if(!UtilityMethods.arrayContains(OBJ, tokenList[pronounIndex])) 
 					{
-						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true));
+						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true, "Should be objective pronoun."));
 						// prints message for testing
 //						System.out.println("objective error: " + tokenList[pronounIndex]);
 					}
