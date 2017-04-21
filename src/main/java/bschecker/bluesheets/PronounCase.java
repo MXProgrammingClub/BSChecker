@@ -79,12 +79,12 @@ public class PronounCase extends Bluesheet {
 	private int findNextWord(String[] tagList, int curWordIndex, boolean isForward) {
 		if(isForward){
 			int nextWordIndex = curWordIndex + 1;
-			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R')
+			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R' || tagList[nextWordIndex].equals("DT"))
 				nextWordIndex++;
 			return nextWordIndex;
 		} else {
 			int nextWordIndex = curWordIndex - 1;
-			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R') 
+			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R' || tagList[nextWordIndex].equals("DT")) 
 				nextWordIndex--;
 			return nextWordIndex;
 		}

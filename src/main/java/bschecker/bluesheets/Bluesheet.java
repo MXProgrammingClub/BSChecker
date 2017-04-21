@@ -122,7 +122,7 @@ public abstract class Bluesheet {
 		PRONOUN_CASE ("Pronoun Case",
 				"Put pronouns in the appropriate case (subjective, objective, possessive)",
 				"(Incorrect) She is the last person who I would suspect. \n(Correct) She is the last person whom I would suspect.\n\n(Incorrect) Give the credit to she and me\n(Correct) Give the credit to her and me.",
-				new PronounCase(false), 6), //buggy
+				new PronounCase(true), 6), //buggy
 		AMBIGUOUS_PRONOUN ("Ambiguous Pronoun",
 				"Avoid ambiguous pronouns.",
 				"(Incorrect) Oedipus and the shepherd argue about whether he should know the truth. \n(Correct) Oedipus and the shepherd argue about whether Oedipus should know the truth.",
