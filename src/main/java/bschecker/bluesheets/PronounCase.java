@@ -114,7 +114,7 @@ public class PronounCase extends Bluesheet {
 //					nextWordIndex++;
 //				}
 				//checking for a noun after the pronoun or the use of "of" as a possessive e.g. friend (noun) of his (possessive pronoun)
-				if(tagList[nextWordIndex].charAt(0) == 'N' || ((pronounIndex >= 2) && (tagList[pronounIndex - 1].equals("of")) && tagList[pronounIndex - 2].charAt(0) == 'N')) {
+				if(tagList[nextWordIndex].charAt(0) == 'N' || tagList[nextWordIndex].equals("VBG") || ((pronounIndex >= 2) && (tagList[pronounIndex - 1].equals("of")) && tagList[pronounIndex - 2].charAt(0) == 'N')) {
 					// so the pronoun should be possessive
 					if(!(UtilityMethods.arrayContains(POSSES, tokenList[pronounIndex]) || UtilityMethods.arrayContains(POSSESADJ, tokenList[pronounIndex]))) {
 						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true, "Should be possesive pronoun."));
@@ -149,7 +149,7 @@ public class PronounCase extends Bluesheet {
 //					nextWordIndex++;
 //				}
 				// checking for a verb before the pronoun
-				if(tagList[nextWordIndex].charAt(0) == 'V') 
+				if(tagList[nextWordIndex].charAt(0) == 'V' && (tagList[nextWordIndex].length() < 3 || tagList[nextWordIndex].charAt(2) != 'G')) 
 				{
 					// when the pronoun is followed by a verb, the pronoun should be subjective
 					if(!UtilityMethods.arrayContains(SUBJ, tokenList[pronounIndex])) 
@@ -180,7 +180,7 @@ public class PronounCase extends Bluesheet {
 			if (pronounIndex > 0) 
 			{
 				int nextWordIndex = findNextWord(tagList, pronounIndex, false, tokenList);
-				if(tagList[nextWordIndex].charAt(0) == 'V') 
+				if(tagList[nextWordIndex].charAt(0) == 'V' && (tagList[nextWordIndex].length() < 3 || tagList[nextWordIndex].charAt(2) != 'G')) 
 				{
 					// when the pronoun is preceded by a verb, the pronoun should be objective
 					if(!UtilityMethods.arrayContains(OBJ, tokenList[pronounIndex])) 
