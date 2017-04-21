@@ -30,7 +30,7 @@ import opennlp.tools.util.*;
  */
 public class BSChecker {
 	public static void main(String[] args) throws InvalidFormatException, IOException{
-		String input = "As she successfully analyzes Jane.";
+		String input = "Elizabeth's pride in her supposed understanding.";
 		
 		input = UtilityMethods.replaceInvalidChars(input);
 		input = UtilityMethods.removeExtraPunctuation(input, 0, new ArrayList<Integer>());
