@@ -25,7 +25,7 @@ public class PronounCase extends Bluesheet {
 	 */
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
-		String input = "";
+		String input = "As she successfully analyzes Jane.";
 		System.out.println("\ninput: " + input + "\n\n" + (new PronounCase().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
@@ -76,15 +76,15 @@ public class PronounCase extends Bluesheet {
 	 * @param curWordIndex the index of the current word
 	 * @param isForward whether look forward to the next word or look backward to previous word
 	 */
-	private int findNextWord(String[] tagList, int curWordIndex, boolean isForward) {
+	private int findNextWord(String[] tagList, int curWordIndex, boolean isForward, String[] tokenList) {
 		if(isForward){
 			int nextWordIndex = curWordIndex + 1;
-			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R' || tagList[nextWordIndex].equals("DT"))
+			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R' || tokenList[nextWordIndex].equalsIgnoreCase("the"))
 				nextWordIndex++;
 			return nextWordIndex;
 		} else {
 			int nextWordIndex = curWordIndex - 1;
-			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R' || tagList[nextWordIndex].equals("DT")) 
+			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R' || tokenList[nextWordIndex].equalsIgnoreCase("the")) 
 				nextWordIndex--;
 			return nextWordIndex;
 		}
@@ -107,7 +107,7 @@ public class PronounCase extends Bluesheet {
 			// assume no possessive pronouns occur at the end of the sentence
 			if(pronounIndex + 1 < tokenList.length) 
 			{
-				int nextWordIndex = findNextWord(tagList, pronounIndex, true);
+				int nextWordIndex = findNextWord(tagList, pronounIndex, true, tokenList);
 //				//pass over adjectives and adverbs
 //				while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R') 
 //				{
@@ -142,7 +142,7 @@ public class PronounCase extends Bluesheet {
 			// assume no subjective pronouns occur at the end of the sentence
 			if(pronounIndex + 1 < tokenList.length) 
 			{
-				int nextWordIndex = findNextWord(tagList, pronounIndex, true);
+				int nextWordIndex = findNextWord(tagList, pronounIndex, true, tokenList);
 				//pass over adverbs
 //				while(tagList[nextWordIndex].charAt(0) == 'R' || tagList[nextWordIndex].equals("MD")) 
 //				{
@@ -179,7 +179,7 @@ public class PronounCase extends Bluesheet {
 			// assume that no objective pronouns occur at the beginning of a sentence
 			if (pronounIndex > 0) 
 			{
-				int nextWordIndex = findNextWord(tagList, pronounIndex, false);
+				int nextWordIndex = findNextWord(tagList, pronounIndex, false, tokenList);
 				if(tagList[nextWordIndex].charAt(0) == 'V') 
 				{
 					// when the pronoun is preceded by a verb, the pronoun should be objective

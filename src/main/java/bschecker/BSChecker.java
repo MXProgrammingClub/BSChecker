@@ -30,16 +30,16 @@ import opennlp.tools.util.*;
  */
 public class BSChecker {
 	public static void main(String[] args) throws InvalidFormatException, IOException{
-		String input = "";
+		String input = "As she successfully analyzes Jane.";
 		
 		input = UtilityMethods.replaceInvalidChars(input);
 		input = UtilityMethods.removeExtraPunctuation(input, 0, new ArrayList<Integer>());
 		
-		Tokenize(input);
+//		Tokenize(input);
 //		SentenceDetect(input);
 		POStag(input);
 //		findNames(input);
-		parse(input);
+//		parse(input);
 	}
 
 	public static void Tokenize(String input) throws InvalidFormatException, IOException {
