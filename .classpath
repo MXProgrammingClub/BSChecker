@@ -16,7 +16,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jfoenix.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/richtextfx-fat-0.6.10.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/opennlp-tools-1.7.0.jar" sourcepath="opennlp-tools"/>
-	<classpathentry exported="true" kind="lib" path="lib/opennlp-uima-1.7.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/opennlp-tools-1.7.2.jar" sourcepath="opennlp-tools"/>
+	<classpathentry exported="true" kind="lib" path="lib/opennlp-uima-1.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
