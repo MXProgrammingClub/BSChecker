@@ -93,7 +93,7 @@ public class FaultyParallelism extends Bluesheet {
 			} else {
 				right = simplifiedParse.indexOf('(', ccIndex) + 1;
 				//special case CC followed by adverb e.g. "and thus" but leave alone if part of a correlative conjunction e.g. whether or not
-				String nextType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right)) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
+				String nextType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right) && simplifiedParse.indexOf(' ', right) != -1) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
 				if(nextType.equals("ADVP") || (nextType.equals("RB") && !simplifiedParse.substring(ccIndex - 5, ccIndex - 3).equals("IN")))
 					right = simplifiedParse.indexOf('(', simplifiedParse.indexOf("RB", ccIndex)) + 1;
 				left = ccIndex - 4;
@@ -111,7 +111,7 @@ public class FaultyParallelism extends Bluesheet {
 			if(simplifiedParse.indexOf('(', right) != -1 && simplifiedParse.substring(simplifiedParse.indexOf('(', right) + 1, simplifiedParse.indexOf('(', right) + 4).equals("POS"))
 				right = simplifiedParse.indexOf('(', right) + 1;
 //			System.out.print("\n\t\tLeft Start Index: " + left + ", Right Start Index: " + right);
-			String rightType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right)) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
+			String rightType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right) && simplifiedParse.indexOf(' ', right) != -1) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
 			String leftType = simplifiedParse.substring(left, (simplifiedParse.indexOf(' ', left) < simplifiedParse.indexOf(')', left)) ? simplifiedParse.indexOf(' ', left) : simplifiedParse.indexOf(')', left));			
 //			System.out.print("\tType to Left: \"" + leftType + "\" -- Type to Right: \"" + rightType + "\"");
 			if(!leftType.equals(rightType)){
