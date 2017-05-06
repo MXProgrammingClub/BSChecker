@@ -13,8 +13,9 @@ hs_err_pid*
 # eclipse files
 .metadata/
 .recommenders/
+.project
+.classpath
+/bin/
 
 # opennlp-tools source code
 opennlp-tools/
-
-/bin/
