@@ -68,55 +68,19 @@ public class FaultyParallelism extends Bluesheet {
 	private ErrorList findErrorsInSentence(String line, String parse, ArrayList<Integer> ccTokens, int tokenOffset) {
 		ErrorList errors = new ErrorList(line, true);
 		String simplifiedParse = UtilityMethods.simplifyParse(parse);
-//		System.out.print("\n\t" + parse + "\n\t" + simplifiedParse);
+//		System.out.println("\n\t" + parse + "\n\t" + simplifiedParse);
 		int ccIndex = -1;
 		for(int ccNum = 0; ccNum < ccTokens.size(); ccNum++){
 			ccIndex = simplifiedParse.indexOf("CC", ccIndex + 1);
-			//catch for if posTagger identifies a CC which the parser does not
+			//catch for if the posTagger identifies a CC which the parser does not
 			if(ccIndex == -1)
 				break;
 			
-			int right, left;
-			//special case: CC in CONJP
-			if(simplifiedParse.substring(ccIndex - 7, ccIndex - 2).equals("CONJP")){
-				right = ccIndex - 7;
-				int net = -1;
-				while(right <= simplifiedParse.length() && net != 0){
-					if(simplifiedParse.charAt(right) == ')')
-						net++;
-					else if(simplifiedParse.charAt(right) == '(')
-						net--;
-					right++;
-				}
-				right += 2; //move right from the character before the open parenthesis to the first character of the desired token
-				left = ccIndex - 11;
-			} else {
-				right = simplifiedParse.indexOf('(', ccIndex) + 1;
-				//special case CC followed by adverb e.g. "and thus" but leave alone if part of a correlative conjunction e.g. whether or not
-				String nextType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right) && simplifiedParse.indexOf(' ', right) != -1) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
-				if(nextType.equals("ADVP") || (nextType.equals("RB") && !simplifiedParse.substring(ccIndex - 5, ccIndex - 3).equals("IN")))
-					right = simplifiedParse.indexOf('(', simplifiedParse.indexOf("RB", ccIndex)) + 1;
-				left = ccIndex - 4;
-			}
-			int net = 1;
-			while(left >= 0 && !(net == 0 && Character.isLetter(simplifiedParse.charAt(left + 2)))){
-				if(simplifiedParse.charAt(left) == ')')
-					net++;
-				else if(simplifiedParse.charAt(left) == '(')
-					net--;
-				left--;
-			}
-			left += 2; //move left from the character before the open parenthesis to the first character of the desired token
-			//If the word on the right side is a possessive adjust the tag to be POS
-			if(simplifiedParse.indexOf('(', right) != -1 && simplifiedParse.substring(simplifiedParse.indexOf('(', right) + 1, simplifiedParse.indexOf('(', right) + 4).equals("POS"))
-				right = simplifiedParse.indexOf('(', right) + 1;
-			//If the token on the right is a comma, move to the next token
-			if(simplifiedParse.charAt(right) == ',')
-				right += 4;
-//			System.out.print("\n\t\tLeft Start Index: " + left + ", Right Start Index: " + right);
+			int[] rightResult = findRight(simplifiedParse, ccIndex);
+			int right = rightResult[0], left = findLeft(simplifiedParse, ccIndex, rightResult[1]);
 			String rightType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right) && simplifiedParse.indexOf(' ', right) != -1) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
-			String leftType = simplifiedParse.substring(left, (simplifiedParse.indexOf(' ', left) < simplifiedParse.indexOf(')', left)) ? simplifiedParse.indexOf(' ', left) : simplifiedParse.indexOf(')', left));			
-//			System.out.print("\tType to Left: \"" + leftType + "\" -- Type to Right: \"" + rightType + "\"");
+			String leftType = simplifiedParse.substring(left, (simplifiedParse.indexOf(' ', left) < simplifiedParse.indexOf(')', left)) ? simplifiedParse.indexOf(' ', left) : simplifiedParse.indexOf(')', left));
+//			System.out.println("\t\tType to Left: \"" + leftType + "\" (" + left + "-" + (left + leftType.length()) + ") -- Type to Right: \"" + rightType + "\" (" + right + "-" + (right + rightType.length()) + ")");
 			if(!leftType.equals(rightType)){
 				boolean error = true;
 				for(String[] group : tagGroups)
@@ -125,11 +89,71 @@ public class FaultyParallelism extends Bluesheet {
 						break;
 					}
 				if(error){
-//					System.out.print("\tError!");
+//					System.out.println("\t\t\tError!");
 					errors.add(new Error(ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER, true));
 				}
 			}
 		}
 		return errors;
+	}
+	
+	/**
+	 * a private helper method which finds the index of the tag to the right of a coordinating conjunction
+	 * @param simplifiedParse a simplified parse String representation of the sentence structure
+	 * @param ccIndex the starting index of the particular coordinating conjunction within that simplified parse
+	 * @return and int[] with [0] being the starting index of the tag to the right and [1] being the offset to begin looking for the tag to the left (normally 4)
+	 */
+	private int[] findRight(String simplifiedParse, int ccIndex) {
+		int right = simplifiedParse.indexOf('(', ccIndex) + 1, left = 4;
+		
+		//special case: CC in CONJP e.g. "but rather"
+		if(simplifiedParse.substring(ccIndex - 7, ccIndex - 2).equals("CONJP")){
+			right = ccIndex - 7;
+			int net = -1;
+			while(right <= simplifiedParse.length() && net != 0){
+				if(simplifiedParse.charAt(right) == ')')
+					net++;
+				else if(simplifiedParse.charAt(right) == '(')
+					net--;
+				right++;
+			}
+			right += 2; //move from the character before the open parenthesis to the first character of the desired token
+			left = 11;
+		}
+		
+		String rightTag = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right) && simplifiedParse.indexOf(' ', right) != -1) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
+		//special case: move past a comma
+		if(simplifiedParse.charAt(right) == ',')
+			right += 4;
+		//special case: CC followed by adverb e.g. "and thus" but leave alone if part of a correlative conjunction e.g. "whether or not"
+		if(rightTag.equals("ADVP") || (rightTag.equals("RB") && !simplifiedParse.substring(ccIndex - 5, ccIndex - 3).equals("IN")))
+			right = simplifiedParse.indexOf('(', simplifiedParse.indexOf("RB", ccIndex)) + 1;
+		//special case: if the following tag is POS, that should be the right tag
+		if(simplifiedParse.indexOf('(', right) != -1 && simplifiedParse.substring(simplifiedParse.indexOf('(', right) + 1, simplifiedParse.indexOf('(', right) + 4).equals("POS"))
+			right = simplifiedParse.indexOf('(', right) + 1;
+		
+		return new int[]{right, left};
+	}
+	
+	/**
+	 * a private helper method which finds the index of the tag to the left of a coordinating conjunction
+	 * @param simplifiedParse a simplified parse String representation of the sentence structure
+	 * @param ccIndex the starting index of the particular coordinating conjunction within that simplified parse
+	 * @param offset the offset from ccIndex to begin looking for the left tag (usually 4)
+	 * @return the starting index of the tag to the left
+	 */
+	private int findLeft(String simplifiedParse, int ccIndex, int offset) {
+		int left = ccIndex - offset;
+		int net = 1;
+		while(left >= 0 && !(net == 0 && Character.isLetter(simplifiedParse.charAt(left + 2)))){
+			if(simplifiedParse.charAt(left) == ')')
+				net++;
+			else if(simplifiedParse.charAt(left) == '(')
+				net--;
+			left--;
+		}
+		left += 2; //move from the character before the open parenthesis to the first character of the desired token
+		
+		return left;
 	}
 }
