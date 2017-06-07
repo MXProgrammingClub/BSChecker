@@ -67,16 +67,21 @@ public class IncompleteSentence extends Bluesheet {
 	private ErrorList findErrorsInSentence(String line, String parse, int tokenOffset, int length) {
 		ErrorList errors = new ErrorList(line, true);
 		ArrayList<String> tags = UtilityMethods.listParseTags(parse);
-//		System.out.println("\n\t" + parse + "\n\t" + UtilityMethods.simplifyParse(parse) + "\n\t" + tags);
+//		System.out.println("\n\t" + parse + "\n\t" + tags);
 		
 		if(tags.get(1).equals("SBAR")) //either lone dependent clause (Fragment) or run-on in form DC IC
 			errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true));
 		int sIndex = 0;
+		int wIndex = 0;
 		for(int i = 0; i < tags.size(); i++){
+			if(UtilityMethods.arrayContains(Tools.WORD_LEVEL_TAGS, tags.get(i))){
+				wIndex++;
+//				System.out.println(wIndex + "\t" + tags.get(i));
+			}
 			if(tags.get(i).equals(":") && !tags.get(i + 1).equals("S")) //fragment in form DC; IC or IC; DC
-				errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true, "Fragment"));
+				errors.add(new Error(tokenOffset + wIndex - 1, ERROR_NUMBER, true, "Fragment"));
 			else if(tags.get(i).equals("CC") && tags.get(i + 1).equals("S") && !tags.get(i - 1).equals(",")) //run-on in form IC CC IC
-				errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true, "Run-on"));
+				errors.add(new Error(tokenOffset + wIndex - 1, ERROR_NUMBER, true, "Run-on"));
 			else if(tags.get(i).equals("S")){ //potential for comma-splice in form IC, IC
 				sIndex += parse.substring(sIndex + 1).indexOf("(S ") + 2;
 				//catch for the case where this clause is in fact dependent despite the parser thinking otherwise
