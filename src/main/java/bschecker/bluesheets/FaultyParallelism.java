@@ -110,6 +110,9 @@ public class FaultyParallelism extends Bluesheet {
 			//If the word on the right side is a possessive adjust the tag to be POS
 			if(simplifiedParse.indexOf('(', right) != -1 && simplifiedParse.substring(simplifiedParse.indexOf('(', right) + 1, simplifiedParse.indexOf('(', right) + 4).equals("POS"))
 				right = simplifiedParse.indexOf('(', right) + 1;
+			//If the token on the right is a comma, move to the next token
+			if(simplifiedParse.charAt(right) == ',')
+				right += 4;
 //			System.out.print("\n\t\tLeft Start Index: " + left + ", Right Start Index: " + right);
 			String rightType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right) && simplifiedParse.indexOf(' ', right) != -1) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
 			String leftType = simplifiedParse.substring(left, (simplifiedParse.indexOf(' ', left) < simplifiedParse.indexOf(')', left)) ? simplifiedParse.indexOf(' ', left) : simplifiedParse.indexOf(')', left));			
