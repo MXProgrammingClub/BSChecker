@@ -74,10 +74,8 @@ public class IncompleteSentence extends Bluesheet {
 		int sIndex = 0;
 		int wIndex = 0;
 		for(int i = 0; i < tags.size(); i++){
-			if(UtilityMethods.arrayContains(Tools.WORD_LEVEL_TAGS, tags.get(i))){
+			if(UtilityMethods.arrayContains(Tools.WORD_LEVEL_TAGS, tags.get(i)))
 				wIndex++;
-//				System.out.println(wIndex + "\t" + tags.get(i));
-			}
 			if(tags.get(i).equals(":") && !tags.get(i + 1).equals("S")) //fragment in form DC; IC or IC; DC
 				errors.add(new Error(tokenOffset + wIndex - 1, ERROR_NUMBER, true, "Fragment"));
 			else if(tags.get(i).equals("CC") && tags.get(i + 1).equals("S") && !tags.get(i - 1).equals(",")) //run-on in form IC CC IC
@@ -98,12 +96,19 @@ public class IncompleteSentence extends Bluesheet {
 				}
 				if(isIndependant){
 					//find the end of this S
-					int net = -1, j = sIndex;
+					int net = -1, j = sIndex, tagsPassed = 0;
+					boolean inTag = false;
 					while(net != 0 && j < parse.length()){
-						if(parse.charAt(j) == ')')
+						if(parse.charAt(j) == ')'){
 							net++;
+							inTag = false;
+						}
 						else if(parse.charAt(j) == '(')
 							net--;
+						else if(!inTag && parse.charAt(j) != ' '){
+							inTag = true;
+							tagsPassed++;
+						}
 						j++;
 					}
 					//if S followed by NP most likely a comma splice
@@ -113,7 +118,7 @@ public class IncompleteSentence extends Bluesheet {
 							k = parse.indexOf(' ', k + 1);
 						//not a comma splice if comma is introducing a quote
 						if(parse.charAt(k + 1) != '"')
-							errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true, "Comma-Splice"));
+							errors.add(new Error(tokenOffset + wIndex + tagsPassed, ERROR_NUMBER, true, "Comma-Splice"));
 					}
 				}
 			}
