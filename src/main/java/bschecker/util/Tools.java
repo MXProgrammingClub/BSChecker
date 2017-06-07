@@ -25,6 +25,10 @@ import opennlp.tools.util.model.BaseModel;
  * @author JeremiahDeGreeff
  */
 public class Tools {
+	public static final String[] CLAUSE_LEVEL_TAGS = {"S", "SBAR", "SBARQ", "SINV", "SQ"};
+	public static final String[] PHRASE_LEVEL_TAGS = {"ADJP", "ADVP", "CONJP", "FRAG", "INTJ", "LST", "NAC", "NP", "NX", "PP", "PRN", "PRT", "QP", "RRC", "UCP", "VP", "WHADJP", "WHAVP", "WHNP", "WHPP", "X"};
+	public static final String[] WORD_LEVEL_TAGS = {"CC", "CD", "DT", "EX", "FW", "IN", "JJ", "JJR", "JJS", "LS", "MD", "NN", "NNS", "NNP", "NNPS", "PDT", "POS", "PRP", "PRP$", "RB", "RBR", "RBS", "RP", "SYM", "TO", "UH", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ", "WDT", "WP", "WP$", "WRB", ".", ",", ":"};
+	
 	private static SentenceDetectorME sentenceDetector;
 	private static NameFinderME nameFinder;
 	private static Tokenizer tokenizer;
