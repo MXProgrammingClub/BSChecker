@@ -154,7 +154,7 @@ public abstract class Bluesheet {
 		QUOTATION ("Quotation Error",
 				"Malformed Quotation and/or Citation",
 				"Punctuation goes inside the quotations.\nCitations go outside the quotations.\nUse commas to introduce a quote preceeded by a verb of saying or thinking.",
-				new QuotationForm(true), 15);
+				new QuotationForm(true), 14);
 		
 		private final String name;
 		private final String description;
