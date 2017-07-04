@@ -38,9 +38,11 @@ public class VagueThisWhich extends Bluesheet {
 		
 		ErrorList errors = new ErrorList(line, true);
 		for(int i = 0; i < tokens.length; i++)
-			if(	(tokens[i].equalsIgnoreCase("this") && isVagueThis(tokens,tags,i)) ||
-				(tokens[i].equalsIgnoreCase("which") && (i == 0 || (tags[i-1].charAt(0)!='N' && tags[i-1].charAt(0)!='I'))))
-				errors.add(new Error(i, ERROR_NUMBER, true));
+			if(tokens[i].equalsIgnoreCase("this") && isVagueThis(tokens,tags,i))
+				errors.add(new Error(i, ERROR_NUMBER, true, "Vague this"));
+			else if(tokens[i].equalsIgnoreCase("which") && (i == 0 || (tags[i-1].charAt(0)!='N' && tags[i-1].charAt(0)!='I')))
+				errors.add(new Error(i, ERROR_NUMBER, true, "Vague which"));
+				
 		
 		return errors;
 	}
