@@ -12,7 +12,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 import main.java.bschecker.bluesheets.Bluesheet;
-import main.java.bschecker.bluesheets.Bluesheet.Bluesheets;
+import main.java.bschecker.bluesheets.Bluesheets;
 import main.java.bschecker.util.Error;
 import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.TextImport;
