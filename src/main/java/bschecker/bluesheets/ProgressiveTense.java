@@ -23,21 +23,6 @@ public class ProgressiveTense extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new ProgressiveTense().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-	
-	/**
-	 * default constructor
-	 */
-	public ProgressiveTense() {
-		this(true);
-	}
-	
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public ProgressiveTense(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
 
 	/**
 	 * finds all instances of progressive tense in the given paragraph

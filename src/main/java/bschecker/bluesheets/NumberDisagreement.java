@@ -30,21 +30,6 @@ public class NumberDisagreement extends Bluesheet {
 	}
 	
 	/**
-	 * default constructor
-	 */
-	public NumberDisagreement() {
-		this(true);
-	}
-	
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public NumberDisagreement(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
-	
-	/**
 	 * finds errors in number disagreement in the given paragraph
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line

@@ -25,21 +25,6 @@ public class FirstSecondPerson extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new FirstSecondPerson().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-	
-	/**
-	 * default constructor
-	 */
-	public FirstSecondPerson() {
-		this(true);
-	}
-	
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public FirstSecondPerson(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
 
 	/**
 	 * finds all instances of first or second person in the given paragraph

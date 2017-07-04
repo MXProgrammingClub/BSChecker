@@ -23,21 +23,6 @@ public class VagueThisWhich extends Bluesheet {
 	}
 	
 	/**
-	 * default constructor
-	 */
-	public VagueThisWhich() {
-		this(true);
-	}
-	
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public VagueThisWhich(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
-	
-	/**
 	 * finds any vague which or this in the given paragraph
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line

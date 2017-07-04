@@ -24,21 +24,6 @@ public class AmbiguousPronoun extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new AmbiguousPronoun().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-	
-	/**
-	 * default constructor
-	 */
-	public AmbiguousPronoun() {
-		this(true);
-	}
-	
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public AmbiguousPronoun(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
 
 	/**
 	 * finds all ambiguous pronoun references in the given paragraph

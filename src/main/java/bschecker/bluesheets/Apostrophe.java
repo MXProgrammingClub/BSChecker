@@ -22,21 +22,6 @@ public class Apostrophe extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new Apostrophe().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-	
-	/**
-	 * default constructor
-	 */
-	public Apostrophe() {
-		this(true);
-	}
-	
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public Apostrophe(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
 
 	/**
 	 * Finds omissions and incorrect uses of apostrophes in the passed line of text

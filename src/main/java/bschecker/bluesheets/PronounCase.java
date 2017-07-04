@@ -28,21 +28,6 @@ public class PronounCase extends Bluesheet {
 		String input = "As she successfully analyzes Jane.";
 		System.out.println("\ninput: " + input + "\n\n" + (new PronounCase().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-	
-	/**
-	 * default constructor
-	 */
-	public PronounCase() {
-		this(true);
-	}
-
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public PronounCase(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
 
 	/**
 	 * finds all errors in pronoun case within the paragraph

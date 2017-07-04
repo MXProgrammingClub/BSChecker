@@ -46,21 +46,6 @@ public class QuotationForm extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new QuotationForm().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-	
-	/**
-	 * default constructor
-	 */
-	public QuotationForm() {
-		this(true);
-	}
-	
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public QuotationForm(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
 
 	/**
 	 * finds all errors with quotation form in the given paragraph

@@ -21,21 +21,6 @@ public class GerundPossessive extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new GerundPossessive().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-	
-	/**
-	 * default constructor
-	 */
-	public GerundPossessive() {
-		this(true);
-	}
-	
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public GerundPossessive(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
 
 	/**
 	 * finds all errors where gerunds are not preceded by a possessive when they should be in the given paragraph

@@ -24,21 +24,6 @@ public class PassiveVoice extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new PassiveVoice().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-	
-	/**
-	 * default constructor
-	 */
-	public PassiveVoice() {
-		this(true);
-	}
-	
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public PassiveVoice(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
 
 	/**
 	 * finds all instances of passive voice in the given paragraph

@@ -27,21 +27,6 @@ public class PastTense extends Bluesheet {
 	}
 	
 	/**
-	 * default constructor
-	 */
-	public PastTense() {
-		this(true);
-	}
-
-	/**
-	 * constructor
-	 * @param checkedWhenAnalyzed true if errors of this type should be looked for when the text is analyzed, false otherwise
-	 */
-	public PastTense(boolean checkedWhenAnalyzed) {
-		super(checkedWhenAnalyzed);
-	}
-	
-	/**
 	 * finds all instances of past tense in the given paragraph
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line
