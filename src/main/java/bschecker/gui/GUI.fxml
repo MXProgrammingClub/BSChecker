@@ -16,39 +16,28 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem accelerator="Shortcut+O" mnemonicParsing="false" onAction="#menuOpenClick" text="Open...">
-              </MenuItem>
+              <MenuItem accelerator="Shortcut+O" mnemonicParsing="false" onAction="#menuOpenClick" text="Open..." />
               <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem accelerator="Shortcut+S" mnemonicParsing="false" onAction="#menuSaveClick" text="Save">
-              </MenuItem>
-              <MenuItem accelerator="Shortcut+SHIFT+S" mnemonicParsing="false" onAction="#menuSaveAsClick" text="Save As...">
-              </MenuItem>
+              <MenuItem accelerator="Shortcut+S" mnemonicParsing="false" onAction="#menuSaveClick" text="Save" />
+              <MenuItem accelerator="Shortcut+SHIFT+S" mnemonicParsing="false" onAction="#menuSaveAsClick" text="Save As..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem accelerator="Shortcut+Z" mnemonicParsing="false" onAction="#menuUndoClick" text="Undo">
-              </MenuItem>
-              <MenuItem accelerator="Shortcut+Y" mnemonicParsing="false" onAction="#menuRedoClick" text="Redo">
-              </MenuItem>
+              <MenuItem accelerator="Shortcut+Z" mnemonicParsing="false" onAction="#menuUndoClick" text="Undo" />
+              <MenuItem accelerator="Shortcut+Y" mnemonicParsing="false" onAction="#menuRedoClick" text="Redo" />
               <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem accelerator="Shortcut+X" mnemonicParsing="false" onAction="#menuCutClick" text="Cut">
-              </MenuItem>
-              <MenuItem accelerator="Shortcut+C" mnemonicParsing="false" onAction="#menuCopyClick" text="Copy">
-              </MenuItem>
-              <MenuItem accelerator="Shortcut+V" mnemonicParsing="false" onAction="#menuPasteClick" text="Paste">
-              </MenuItem>
+              <MenuItem accelerator="Shortcut+X" mnemonicParsing="false" onAction="#menuCutClick" text="Cut" />
+              <MenuItem accelerator="Shortcut+C" mnemonicParsing="false" onAction="#menuCopyClick" text="Copy" />
+              <MenuItem accelerator="Shortcut+V" mnemonicParsing="false" onAction="#menuPasteClick" text="Paste" />
               <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem accelerator="Shortcut+A" mnemonicParsing="false" onAction="#menuSelectAllClick" text="Select All">
-              </MenuItem>
+              <MenuItem accelerator="Shortcut+A" mnemonicParsing="false" onAction="#menuSelectAllClick" text="Select All" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="View">
             <items>
-              <MenuItem accelerator="Shortcut+DIGIT1" mnemonicParsing="false" onAction="#menuNextErrorClick" text="Next Error">
-              </MenuItem>
-              <MenuItem accelerator="Shortcut+DIGIT2" mnemonicParsing="false" onAction="#menuPreviousErrorClick" text="Previous Error">
-              </MenuItem>
+              <MenuItem accelerator="Shortcut+DIGIT1" mnemonicParsing="false" onAction="#menuNextErrorClick" text="Next Error" />
+              <MenuItem accelerator="Shortcut+DIGIT2" mnemonicParsing="false" onAction="#menuPreviousErrorClick" text="Previous Error" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
