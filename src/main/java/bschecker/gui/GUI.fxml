@@ -37,20 +37,20 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Bluesheets">
             <items>
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet1Click" text="Past Tense (1)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet2Click" text="Incomplete Sentence (2)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet3Click" text="First/Second Person (3)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet4Click" text="Vague This/Which (4)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet5Click" text="Subject-Verb Disagreement (5)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet6Click" text="Pronoun Case (6)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet7Click" text="Ambiguous Pronoun (7)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet8Click" text="Apostrophe Error (8)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet9Click" text="Passive Voice (9)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet10Click" text="Dangling Modifier (10)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet11Click" text="Faulty Parallelism (11)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet12Click" text="Progressive Tense (12)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet13Click" text="Gerund Possesive (13)" />
-              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet14Click" text="Quotation Form (14)" />
+              <CheckMenuItem fx:id="menuBluesheet1" mnemonicParsing="false" onAction="#menuBluesheet1Click" text="Past Tense (1)" />
+              <CheckMenuItem fx:id="menuBluesheet2" mnemonicParsing="false" onAction="#menuBluesheet2Click" text="Incomplete Sentence (2)" />
+              <CheckMenuItem fx:id="menuBluesheet3" mnemonicParsing="false" onAction="#menuBluesheet3Click" text="First/Second Person (3)" />
+              <CheckMenuItem fx:id="menuBluesheet4" mnemonicParsing="false" onAction="#menuBluesheet4Click" text="Vague This/Which (4)" />
+              <CheckMenuItem fx:id="menuBluesheet5" mnemonicParsing="false" onAction="#menuBluesheet5Click" text="Subject-Verb Disagreement (5)" />
+              <CheckMenuItem fx:id="menuBluesheet6" mnemonicParsing="false" onAction="#menuBluesheet6Click" text="Pronoun Case (6)" />
+              <CheckMenuItem fx:id="menuBluesheet7" mnemonicParsing="false" onAction="#menuBluesheet7Click" text="Ambiguous Pronoun (7)" />
+              <CheckMenuItem fx:id="menuBluesheet8" mnemonicParsing="false" onAction="#menuBluesheet8Click" text="Apostrophe Error (8)" />
+              <CheckMenuItem fx:id="menuBluesheet9" mnemonicParsing="false" onAction="#menuBluesheet9Click" text="Passive Voice (9)" />
+              <CheckMenuItem fx:id="menuBluesheet10" mnemonicParsing="false" onAction="#menuBluesheet10Click" text="Dangling Modifier (10)" />
+              <CheckMenuItem fx:id="menuBluesheet11" mnemonicParsing="false" onAction="#menuBluesheet11Click" text="Faulty Parallelism (11)" />
+              <CheckMenuItem fx:id="menuBluesheet12" mnemonicParsing="false" onAction="#menuBluesheet12Click" text="Progressive Tense (12)" />
+              <CheckMenuItem fx:id="menuBluesheet13" mnemonicParsing="false" onAction="#menuBluesheet13Click" text="Gerund Possesive (13)" />
+              <CheckMenuItem fx:id="menuBluesheet14" mnemonicParsing="false" onAction="#menuBluesheet14Click" text="Quotation Form (14)" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="View">

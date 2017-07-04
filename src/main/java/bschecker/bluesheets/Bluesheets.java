@@ -109,6 +109,10 @@ public enum Bluesheets {
 		return number;
 	}
 	
+	public static boolean[] getSettings() {
+		return settings;
+	}
+	
 	public static boolean isSetToAnalyze(int number) {
 		return settings[number - 1];
 	}
@@ -162,7 +166,7 @@ public enum Bluesheets {
 	/**
 	 * creates a settings.txt file and writes the passed settings into it
 	 */
-	private static void writeSettings(boolean[] writeSettings) {
+	public static void writeSettings(boolean[] writeSettings) {
 		System.out.println("Writing settings to " + SETTINGS_FILE_PATH);
 		BufferedWriter writer;
 		try {

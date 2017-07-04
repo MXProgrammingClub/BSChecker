@@ -7,6 +7,7 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Dialog;
 import main.java.bschecker.bluesheets.Bluesheet;
 import main.java.bschecker.bluesheets.Bluesheets;
@@ -26,13 +27,41 @@ public class GUIController {
 
 	@FXML
 	private StyleClassedTextArea essayBox;
-
 	@FXML
 	private StyleClassedTextArea errorBox;
-	
 	@FXML
 	private StyleClassedTextArea noteBox;
-
+	
+	@FXML
+	private CheckMenuItem menuBluesheet1;
+	@FXML
+	private CheckMenuItem menuBluesheet2;
+	@FXML
+	private CheckMenuItem menuBluesheet3;
+	@FXML
+	private CheckMenuItem menuBluesheet4;
+	@FXML
+	private CheckMenuItem menuBluesheet5;
+	@FXML
+	private CheckMenuItem menuBluesheet6;
+	@FXML
+	private CheckMenuItem menuBluesheet7;
+	@FXML
+	private CheckMenuItem menuBluesheet8;
+	@FXML
+	private CheckMenuItem menuBluesheet9;
+	@FXML
+	private CheckMenuItem menuBluesheet10;
+	@FXML
+	private CheckMenuItem menuBluesheet11;
+	@FXML
+	private CheckMenuItem menuBluesheet12;
+	@FXML
+	private CheckMenuItem menuBluesheet13;
+	@FXML
+	private CheckMenuItem menuBluesheet14;
+	
+	
 	/**
 	 * The method that will be called when the analyze button is clicked
 	 */
@@ -68,6 +97,7 @@ public class GUIController {
 		}
 	}
 	
+	
 	/**
 	 * The method that will be called when the left arrow is clicked
 	 */
@@ -77,7 +107,7 @@ public class GUIController {
 			previousError();
 		}
 	}
-
+	
 	/**
 	 * The method that will be called when the right arrow is clicked
 	 */
@@ -88,9 +118,9 @@ public class GUIController {
 		}
 	}
 	
+	
 	/**
-	 * The method that will be called when the File->Open is clicked. It takes the file and puts the contents
-	 * into the essay box.
+	 * The method that will be called when the File->Open is clicked. It takes the file and puts the contents into the essay box.
 	 */
 	@FXML
 	protected void menuOpenClick() {
@@ -280,10 +310,12 @@ public class GUIController {
 		/* HELP->ABOUT ACTION */
 	}
 	
+	
 	private int currError = 0;
 	private ErrorList errors;
 	private File file;
 	private String clipboard = "";
+	
 	
 	/**
 	 * This method sets default "empty" text for the Text Areas
@@ -292,6 +324,24 @@ public class GUIController {
 		essayBox.replaceText("Insert Essay Here");
 		errorBox.replaceText("No Error Selected");
 		noteBox.replaceText("No Error Selected");
+	}
+	
+	public boolean[] loadSettings(boolean[] settings) {
+		menuBluesheet1.setSelected(settings[0]);
+		menuBluesheet2.setSelected(settings[1]);
+		menuBluesheet3.setSelected(settings[2]);
+		menuBluesheet4.setSelected(settings[3]);
+		menuBluesheet5.setSelected(settings[4]);
+		menuBluesheet6.setSelected(settings[5]);
+		menuBluesheet7.setSelected(settings[6]);
+		menuBluesheet8.setSelected(settings[7]);
+		menuBluesheet9.setSelected(settings[8]);
+		menuBluesheet10.setSelected(settings[9]);
+		menuBluesheet11.setSelected(settings[10]);
+		menuBluesheet12.setSelected(settings[11]);
+		menuBluesheet13.setSelected(settings[12]);
+		menuBluesheet14.setSelected(settings[13]);
+		return settings;
 	}
 	
 	/**
@@ -345,4 +395,5 @@ public class GUIController {
 	private void resetCurrentColor() {
 		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "light-red");
 	}
+	
 }
