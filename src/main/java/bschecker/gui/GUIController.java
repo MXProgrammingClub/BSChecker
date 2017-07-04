@@ -66,7 +66,6 @@ public class GUIController {
 			//put first error in sentenceBox and corresponding thing in errorBox
 			displayError();
 		}
-		
 	}
 	
 	/**
@@ -175,33 +174,103 @@ public class GUIController {
 	 * The method that will be called when the Edit->Select All is clicked
 	 */
 	@FXML
-	protected void menuSelectAllClick() {
-		essayBox.selectAll();
-	}
+	protected void menuSelectAllClick() {essayBox.selectAll();}
 
 	/**
 	 * The method that will be called when the View->Next Error is clicked
 	 */
 	@FXML
-	protected void menuNextErrorClick() {
-		rightArrowClick();
-	}
+	protected void menuNextErrorClick() {rightArrowClick();}
 
 	/**
 	 * The method that will be called when the View->Previous Error is clicked
 	 */
 	@FXML
-	protected void menuPreviousErrorClick() {
-		leftArrowClick();
-	}
+	protected void menuPreviousErrorClick() {leftArrowClick();}
 	
 	/**
-	 * The method that will be called when the Settings->Choose Bluesheets is clicked
+	 * The method that will be called when the Bluesheets->Past Tense (1) is clicked
 	 */
 	@FXML
-	protected void menuChooseBluesheetsClick() {
-		//Present a radio button file w/ errors to enable/disable
-	}
+	protected void menuBluesheet1Click() {Bluesheets.reverseSetting(1);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Incomplete Sentence (2) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet2Click() {Bluesheets.reverseSetting(2);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->First/Second Person (3) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet3Click() {Bluesheets.reverseSetting(3);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Vague This/Which (4) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet4Click() {Bluesheets.reverseSetting(4);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Subject-Verb Disagreement (5) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet5Click() {Bluesheets.reverseSetting(5);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Pronoun Case (6) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet6Click() {Bluesheets.reverseSetting(6);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Ambiguous Pronoun (7) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet7Click() {Bluesheets.reverseSetting(7);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Apostrophe Error (8) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet8Click() {Bluesheets.reverseSetting(8);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Passive Voice (9) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet9Click() {Bluesheets.reverseSetting(9);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Dangling Modifier (10) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet10Click() {Bluesheets.reverseSetting(10);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Faulty Parallelism (11) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet11Click() {Bluesheets.reverseSetting(11);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Progressive Tense (12) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet12Click() {Bluesheets.reverseSetting(12);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Gerund Possesive (13) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet13Click() {Bluesheets.reverseSetting(13);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Quotation Form (14) is clicked
+	 */
+	@FXML
+	protected void menuBluesheet14Click() {Bluesheets.reverseSetting(14);}
 
 	/**
 	 * The method that will be called when the Help->About is clicked

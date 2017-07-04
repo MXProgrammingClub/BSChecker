@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -32,6 +33,24 @@
               <MenuItem accelerator="Shortcut+V" mnemonicParsing="false" onAction="#menuPasteClick" text="Paste" />
               <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem accelerator="Shortcut+A" mnemonicParsing="false" onAction="#menuSelectAllClick" text="Select All" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Bluesheets">
+            <items>
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet1Click" text="Past Tense (1)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet2Click" text="Incomplete Sentence (2)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet3Click" text="First/Second Person (3)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet4Click" text="Vague This/Which (4)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet5Click" text="Subject-Verb Disagreement (5)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet6Click" text="Pronoun Case (6)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet7Click" text="Ambiguous Pronoun (7)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet8Click" text="Apostrophe Error (8)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet9Click" text="Passive Voice (9)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet10Click" text="Dangling Modifier (10)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet11Click" text="Faulty Parallelism (11)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet12Click" text="Progressive Tense (12)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet13Click" text="Gerund Possesive (13)" />
+              <CheckMenuItem mnemonicParsing="false" onAction="#menuBluesheet14Click" text="Quotation Form (14)" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="View">
