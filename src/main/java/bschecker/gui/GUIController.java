@@ -22,6 +22,7 @@ import main.java.bschecker.util.UtilityMethods;
  * This is the class that connects the GUI with the rest of the program.
  * 
  * @author Luke Giacalone
+ * @author JeremiahDeGreeff
 */
 
 public class GUIController {
@@ -31,6 +32,9 @@ public class GUIController {
 
 	@FXML
 	private StyleClassedTextArea errorBox;
+	
+	@FXML
+	private StyleClassedTextArea noteBox;
 
 	@FXML
 	private JFXButton buttonLeft;
@@ -78,7 +82,7 @@ public class GUIController {
 	private MenuItem menuAbout;
 	
 	@FXML
-	private MenuItem menuChooseErrors;
+	private MenuItem menuChooseBluesheets;
 
 	private int currError = 0;
 	private ErrorList errors;
@@ -86,23 +90,12 @@ public class GUIController {
 	private String clipboard = "";
 	
 	/**
-	 * The method that will be called when the left arrow is clicked
+	 * This method sets default "empty" text for the Text Areas
 	 */
-	@FXML
-	protected void leftArrowClick() {
-		if(errors.size() != 0) {
-			previousError();
-		}
-	}
-
-	/**
-	 * The method that will be called when the right arrow is clicked
-	 */
-	@FXML
-	protected void rightArrowClick() {
-		if(errors.size() != 0) {
-			nextError();
-		}
+	public void setDefaultText() {
+		essayBox.replaceText("Insert Essay Here");
+		errorBox.replaceText("No Error Selected");
+		noteBox.replaceText("No Error Selected");
 	}
 
 	/**
@@ -139,6 +132,26 @@ public class GUIController {
 			displayError();
 		}
 		
+	}
+	
+	/**
+	 * The method that will be called when the left arrow is clicked
+	 */
+	@FXML
+	protected void leftArrowClick() {
+		if(errors.size() != 0) {
+			previousError();
+		}
+	}
+
+	/**
+	 * The method that will be called when the right arrow is clicked
+	 */
+	@FXML
+	protected void rightArrowClick() {
+		if(errors.size() != 0) {
+			nextError();
+		}
 	}
 	
 	/**
@@ -183,6 +196,7 @@ public class GUIController {
 		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "dark-red");
 		Bluesheets b = Bluesheets.getBluesheetFromNum(errors.get(currError).getBluesheetNumber());
 		errorBox.replaceText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
+		noteBox.replaceText(errors.get(currError).getNote().equals("") ? "No note was found for this error." : errors.get(currError).getNote());
 	}
 	
 	/**
@@ -297,6 +311,14 @@ public class GUIController {
 	protected void menuPreviousErrorClick() {
 		leftArrowClick();
 	}
+	
+	/**
+	 * The method that will be called when the Settings->Choose Bluesheets is clicked
+	 */
+	@FXML
+	protected void menuChooseBluesheetsClick() {
+		//Present a radio button file w/ errors to enable/disable
+	}
 
 	/**
 	 * The method that will be called when the Help->About is clicked
@@ -306,20 +328,6 @@ public class GUIController {
 		/* HELP->ABOUT ACTION */
 	}
 	
-	/**
-	 * The method that will be called when the Settings->Choose Errors is clicked
-	 */
-	@FXML
-	protected void menuChooseErrorsClick() {
-		//Present a radio button file w/ errors to enable/disable
-	}
 	
-	/**
-	 * This method sets default "empty" text for the Text Areas
-	 */
-	public void setDefaultText() {
-		essayBox.replaceText("Insert Essay Here");
-		errorBox.replaceText("No Error Selected");
-	}
 
 }

@@ -26,7 +26,7 @@ public class Main extends Application {
 			GUIController controller = new GUIController();
 			loader.setController(controller);
 			Parent root = loader.load();
-			Scene scene = new Scene(root, 1000, 650);
+			Scene scene = new Scene(root, 1000, 656);
 			scene.getStylesheets().add(this.getClass().getResource("gui/application.css").toExternalForm());
 
 			primaryStage.setTitle("BSChecker");
