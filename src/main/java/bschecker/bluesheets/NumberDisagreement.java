@@ -45,7 +45,8 @@ public class NumberDisagreement extends Bluesheet {
 //			correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), Tools.getParser(), 1)[0]);
 //			arr.addAll(correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), UtilityMethods.getParser(), 1)[0]));
 //		}
-		return null;
+		ErrorList errors = new ErrorList(line, true);
+		return errors;
 	}
 //	public static ArrayList<int[]> correctParse(Parse p){
 //		System.out.println(p);
