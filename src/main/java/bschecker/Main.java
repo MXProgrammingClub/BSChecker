@@ -36,7 +36,7 @@ public class Main extends Application {
 			controller.setDefaultText();
 			primaryStage.show();
 			
-			Bluesheets.writeSettings(controller.loadSettings(Bluesheets.getSettings()));
+			controller.loadSettings(Bluesheets.getSettings());
 		} catch(Exception e) {e.printStackTrace();}
 	}
 }

@@ -326,7 +326,11 @@ public class GUIController {
 		noteBox.replaceText("No Error Selected");
 	}
 	
-	public boolean[] loadSettings(boolean[] settings) {
+	/**
+	 * loads the settings into the checkedMenuItems for each bluesheet
+	 * @param settings a boolean array of settings for each bluesheet as found in the Bluesheets enum
+	 */
+	public void loadSettings(boolean[] settings) {
 		menuBluesheet1.setSelected(settings[0]);
 		menuBluesheet2.setSelected(settings[1]);
 		menuBluesheet3.setSelected(settings[2]);
@@ -341,7 +345,6 @@ public class GUIController {
 		menuBluesheet12.setSelected(settings[11]);
 		menuBluesheet13.setSelected(settings[12]);
 		menuBluesheet14.setSelected(settings[13]);
-		return settings;
 	}
 	
 	/**

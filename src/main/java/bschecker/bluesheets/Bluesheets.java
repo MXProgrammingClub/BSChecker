@@ -113,6 +113,11 @@ public enum Bluesheets {
 		return settings;
 	}
 	
+	/**
+	 * Based on the number passed in, returns whether or not the bluesheet with that number should be tested
+	 * @param number The number of the bluesheet
+	 * @return true if that bluesheet should be tested, false otherwise
+	 */
 	public static boolean isSetToAnalyze(int number) {
 		return settings[number - 1];
 	}
