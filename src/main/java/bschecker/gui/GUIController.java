@@ -33,20 +33,6 @@ public class GUIController {
 	@FXML
 	private StyleClassedTextArea noteBox;
 
-	private int currError = 0;
-	private ErrorList errors;
-	private File file;
-	private String clipboard = "";
-	
-	/**
-	 * This method sets default "empty" text for the Text Areas
-	 */
-	public void setDefaultText() {
-		essayBox.replaceText("Insert Essay Here");
-		errorBox.replaceText("No Error Selected");
-		noteBox.replaceText("No Error Selected");
-	}
-
 	/**
 	 * The method that will be called when the analyze button is clicked
 	 */
@@ -103,58 +89,6 @@ public class GUIController {
 		}
 	}
 	
-	/**
-	 * Updates the selected text to the next error.
-	 */
-	private void nextError() {
-		resetCurrentColor();
-		currError++;
-		if(currError >= errors.size()) {
-			Alert a = new Alert(Alert.AlertType.INFORMATION);
-			a.setContentText("Searching from beginning of passage.");
-			a.setHeaderText("Search Complete");
-			a.setTitle("Notice");
-			a.showAndWait();
-			currError = 0;
-		}
-		displayError();	
-	}
-	
-	/**
-	 * Updates the selected text to the previous error.
-	 */
-	private void previousError() {
-		resetCurrentColor();
-		currError--;
-		if(currError < 0) {
-			Alert a = new Alert(Alert.AlertType.INFORMATION);
-			a.setContentText("Searching from end of passage.");
-			a.setHeaderText("Search Complete");
-			a.setTitle("Notice");
-			a.showAndWait();
-			currError = errors.size() - 1;
-		}
-		displayError();
-	}
-	
-	/**
-	 * Displays the current error.
-	 */
-	private void displayError() {
-		essayBox.positionCaret(errors.get(currError).getStartIndex());
-		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "dark-red");
-		Bluesheets b = Bluesheets.getBluesheetFromNum(errors.get(currError).getBluesheetNumber());
-		errorBox.replaceText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
-		noteBox.replaceText(errors.get(currError).getNote().equals("") ? "No note was found for this error." : errors.get(currError).getNote());
-	}
-	
-	/**
-	 * Resets the color of the current error to the lighter color
-	 */
-	private void resetCurrentColor() {
-		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "light-red");
-	}
-
 	/**
 	 * The method that will be called when the File->Open is clicked. It takes the file and puts the contents
 	 * into the essay box.
@@ -277,6 +211,69 @@ public class GUIController {
 		/* HELP->ABOUT ACTION */
 	}
 	
+	private int currError = 0;
+	private ErrorList errors;
+	private File file;
+	private String clipboard = "";
 	
-
+	/**
+	 * This method sets default "empty" text for the Text Areas
+	 */
+	public void setDefaultText() {
+		essayBox.replaceText("Insert Essay Here");
+		errorBox.replaceText("No Error Selected");
+		noteBox.replaceText("No Error Selected");
+	}
+	
+	/**
+	 * Updates the selected text to the next error.
+	 */
+	private void nextError() {
+		resetCurrentColor();
+		currError++;
+		if(currError >= errors.size()) {
+			Alert a = new Alert(Alert.AlertType.INFORMATION);
+			a.setContentText("Searching from beginning of passage.");
+			a.setHeaderText("Search Complete");
+			a.setTitle("Notice");
+			a.showAndWait();
+			currError = 0;
+		}
+		displayError();	
+	}
+	
+	/**
+	 * Updates the selected text to the previous error.
+	 */
+	private void previousError() {
+		resetCurrentColor();
+		currError--;
+		if(currError < 0) {
+			Alert a = new Alert(Alert.AlertType.INFORMATION);
+			a.setContentText("Searching from end of passage.");
+			a.setHeaderText("Search Complete");
+			a.setTitle("Notice");
+			a.showAndWait();
+			currError = errors.size() - 1;
+		}
+		displayError();
+	}
+	
+	/**
+	 * Displays the current error.
+	 */
+	private void displayError() {
+		essayBox.positionCaret(errors.get(currError).getStartIndex());
+		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "dark-red");
+		Bluesheets b = Bluesheets.getBluesheetFromNum(errors.get(currError).getBluesheetNumber());
+		errorBox.replaceText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
+		noteBox.replaceText(errors.get(currError).getNote().equals("") ? "No note was found for this error." : errors.get(currError).getNote());
+	}
+	
+	/**
+	 * Resets the color of the current error to the lighter color
+	 */
+	private void resetCurrentColor() {
+		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "light-red");
+	}
 }
