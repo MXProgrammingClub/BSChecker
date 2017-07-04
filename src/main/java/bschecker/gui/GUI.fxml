@@ -55,8 +55,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="View">
             <items>
-              <MenuItem accelerator="Shortcut+DIGIT1" mnemonicParsing="false" onAction="#menuNextErrorClick" text="Next Error" />
-              <MenuItem accelerator="Shortcut+DIGIT2" mnemonicParsing="false" onAction="#menuPreviousErrorClick" text="Previous Error" />
+              <MenuItem accelerator="Shortcut+]" mnemonicParsing="false" onAction="#menuNextErrorClick" text="Next Error" />
+              <MenuItem accelerator="Shortcut+[" mnemonicParsing="false" onAction="#menuPreviousErrorClick" text="Previous Error" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
