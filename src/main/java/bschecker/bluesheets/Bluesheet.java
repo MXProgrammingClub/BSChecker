@@ -201,6 +201,9 @@ public abstract class Bluesheet {
 			return null;
 		}
 		
+		/**
+		 * reads the settings from the settings.txt file and saves them to the settings array
+		 */
 		public static void readSettings() {
 			Scanner scan = null;
 			try {
@@ -209,12 +212,12 @@ public abstract class Bluesheet {
 					settings[i] = scan.nextBoolean();
 				System.out.println(Arrays.toString(settings));
 				scan.close();
-			} catch (FileNotFoundException e) {
-				writeDefaultSettings();
-				readSettings();
-			}
+			} catch (FileNotFoundException e) {writeDefaultSettings();}
 		}
 		
+		/**
+		 * creates a settings.txt file and writes the default settings into it
+		 */
 		private static void writeDefaultSettings() {
 			BufferedWriter writer;
 			try {
@@ -222,6 +225,7 @@ public abstract class Bluesheet {
 				for(boolean setting : DEFAULT_SETTINGS)
 					writer.write(setting == true ? "true\n" : "false\n");
 				writer.close();
+				readSettings();
 			} catch (IOException e) {e.printStackTrace();}
 		}
 	}
