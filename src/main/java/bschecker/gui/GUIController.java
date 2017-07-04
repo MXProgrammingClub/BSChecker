@@ -4,13 +4,10 @@ import java.io.File;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
-import com.jfoenix.controls.JFXButton;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.MenuItem;
 import main.java.bschecker.bluesheets.Bluesheet;
 import main.java.bschecker.bluesheets.Bluesheets;
 import main.java.bschecker.util.Error;
@@ -35,54 +32,6 @@ public class GUIController {
 	
 	@FXML
 	private StyleClassedTextArea noteBox;
-
-	@FXML
-	private JFXButton buttonLeft;
-
-	@FXML
-	private JFXButton buttonRight;
-
-	@FXML
-	private JFXButton analyzeButton;
-
-	@FXML
-	private MenuItem menuOpen;
-
-	@FXML
-	private MenuItem menuSave;
-
-	@FXML
-	private MenuItem menuSaveAs;
-
-	@FXML
-	private MenuItem menuUndo;
-
-	@FXML
-	private MenuItem menuRedo;
-
-	@FXML
-	private MenuItem menuCut;
-
-	@FXML
-	private MenuItem menuCopy;
-
-	@FXML
-	private MenuItem menuPaste;
-
-	@FXML
-	private MenuItem menuSelectAll;
-
-	@FXML
-	private MenuItem menuNextError;
-
-	@FXML
-	private MenuItem menuPreviousError;
-
-	@FXML
-	private MenuItem menuAbout;
-	
-	@FXML
-	private MenuItem menuChooseBluesheets;
 
 	private int currError = 0;
 	private ErrorList errors;
