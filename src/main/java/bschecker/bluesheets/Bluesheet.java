@@ -1,6 +1,13 @@
 package main.java.bschecker.bluesheets;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 
 import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
@@ -140,6 +147,8 @@ public abstract class Bluesheet {
 				"Punctuation goes inside the quotations.\nCitations go outside the quotations.\nUse commas to introduce a quote preceeded by a verb of saying or thinking.",
 				new QuotationForm(), 14);
 		
+		private static final String SETTINGS_FILE_PATH = "bin/resources/Settings.txt";
+		private static final boolean[] DEFAULT_SETTINGS = {false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 		private static boolean[] settings = new boolean[14];
 		
 		private final String name;
@@ -191,7 +200,30 @@ public abstract class Bluesheet {
 					return b;
 			return null;
 		}
-
+		
+		public static void readSettings() {
+			Scanner scan = null;
+			try {
+				scan = new Scanner(new File(SETTINGS_FILE_PATH));
+				for(int i = 0; i < settings.length && scan.hasNextBoolean(); i++)
+					settings[i] = scan.nextBoolean();
+				System.out.println(Arrays.toString(settings));
+				scan.close();
+			} catch (FileNotFoundException e) {
+				writeDefaultSettings();
+				readSettings();
+			}
+		}
+		
+		private static void writeDefaultSettings() {
+			BufferedWriter writer;
+			try {
+				writer = new BufferedWriter(new FileWriter(SETTINGS_FILE_PATH));
+				for(boolean setting : DEFAULT_SETTINGS)
+					writer.write(setting == true ? "true\n" : "false\n");
+				writer.close();
+			} catch (IOException e) {e.printStackTrace();}
+		}
 	}
 	
 }

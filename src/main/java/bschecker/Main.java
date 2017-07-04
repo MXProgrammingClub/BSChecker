@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.java.bschecker.bluesheets.Bluesheet.Bluesheets;
 import main.java.bschecker.gui.GUIController;
 import main.java.bschecker.util.Tools;
 
@@ -17,6 +18,7 @@ import main.java.bschecker.util.Tools;
 public class Main extends Application {
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
+		Bluesheets.readSettings();
 		launch(args);
 	}
 	
