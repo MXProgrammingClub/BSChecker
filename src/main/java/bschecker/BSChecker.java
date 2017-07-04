@@ -1,4 +1,5 @@
 package main.java.bschecker;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 
 import main.java.bschecker.util.UtilityMethods;
 import opennlp.tools.cmdline.parser.ParserTool;
-import opennlp.tools.cmdline.postag.*;
+import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.parser.AbstractBottomUpParser;
@@ -20,28 +21,35 @@ import opennlp.tools.postag.POSSample;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
-import opennlp.tools.tokenize.*;
-import opennlp.tools.util.*;
+import opennlp.tools.tokenize.Tokenizer;
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
+import opennlp.tools.util.InvalidFormatException;
+import opennlp.tools.util.Span;
 
 /**
  * this class contains examples of how to use openNLP and can be used for testing purposes
+ * to use enter your input text in the literal for the input String
+ * then uncomment which ever tools you would like to run
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
 public class BSChecker {
+	
 	public static void main(String[] args) throws InvalidFormatException, IOException{
-		String input = "Elizabeth's pride in her supposed understanding.";
+		String input = "";
 		
 		input = UtilityMethods.replaceInvalidChars(input);
 		input = UtilityMethods.removeExtraPunctuation(input, 0, new ArrayList<Integer>());
 		
 //		Tokenize(input);
 //		SentenceDetect(input);
-		POStag(input);
+//		POStag(input);
 //		findNames(input);
 //		parse(input);
 	}
-
+	
+	
 	public static void Tokenize(String input) throws InvalidFormatException, IOException {
 		InputStream is = new FileInputStream("lib/en-token.bin");
 		TokenizerModel model = new TokenizerModel(is);
@@ -53,7 +61,7 @@ public class BSChecker {
 		for (String token : tokens)
 			System.out.println(token);
 	}
-
+	
 	public static void SentenceDetect(String input) throws InvalidFormatException, IOException {
 		InputStream is = new FileInputStream("lib/en-sent.bin");
 		SentenceModel model = new SentenceModel(is);
@@ -65,7 +73,7 @@ public class BSChecker {
 		for(String sentence : sentences)
 			System.out.println(sentence);
 	}
-
+	
 	public static void POStag(String input) throws IOException {
 		InputStream is = new FileInputStream("lib/en-token.bin");
 		TokenizerModel tModel = new TokenizerModel(is);
@@ -81,7 +89,7 @@ public class BSChecker {
 		POSSample sample = new POSSample(tokens, tags);
 		System.out.println(sample.toString());
 	}
-
+	
 	public static void findNames(String input) throws IOException {
 		InputStream is = new FileInputStream("lib/en-token.bin");
 		TokenizerModel tModel = new TokenizerModel(is);
@@ -125,4 +133,5 @@ public class BSChecker {
 		p = parser.parse(p);
 		p.show();
 	}
+	
 }

@@ -13,10 +13,12 @@ import main.java.bschecker.util.UtilityMethods;
  * @author JeremiahDeGreeff
  */
 public class FirstSecondPerson extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 3;
 	private static final String[] FIRST_PERSON = {"I","me", "my", "mine", "we", "us", "our", "ours"};
 	private static final String[] SECOND_PERSON = {"you", "your", "yours"};
-
+	
+	
 	/**
 	 * for testing purposes
 	 */
@@ -25,7 +27,8 @@ public class FirstSecondPerson extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new FirstSecondPerson().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-
+	
+	
 	/**
 	 * finds all instances of first or second person in the given paragraph
 	 * @param line the paragraph in which to find errors

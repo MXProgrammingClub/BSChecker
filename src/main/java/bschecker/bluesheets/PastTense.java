@@ -14,8 +14,10 @@ import main.java.bschecker.util.UtilityMethods;
  * @author JeremiahDeGreeff
  */
 public class PastTense extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 1;
 	private static final String[] TO_HAVE_CONJ = {"have", "has", "had", "having"};
+	
 	
 	/**
 	 * for testing purposes
@@ -25,6 +27,7 @@ public class PastTense extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new PastTense().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
+	
 	
 	/**
 	 * finds all instances of past tense in the given paragraph
@@ -63,4 +66,5 @@ public class PastTense extends Bluesheet {
 		}
 		return errors;
 	}
+	
 }

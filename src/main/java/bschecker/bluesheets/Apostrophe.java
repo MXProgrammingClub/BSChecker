@@ -12,7 +12,9 @@ import main.java.bschecker.util.Tools;
  * @author JeremiahDeGreeff
  */
 public class Apostrophe extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 8;
+	
 	
 	/**
 	 * for testing purposes
@@ -22,7 +24,8 @@ public class Apostrophe extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new Apostrophe().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-
+	
+	
 	/**
 	 * Finds omissions and incorrect uses of apostrophes in the passed line of text
 	 * @param line the paragraph in which to find errors
@@ -55,4 +58,5 @@ public class Apostrophe extends Bluesheet {
 		}
 		return errors;
 	}
+	
 }

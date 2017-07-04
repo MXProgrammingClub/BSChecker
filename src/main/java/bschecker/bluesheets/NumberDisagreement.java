@@ -18,7 +18,9 @@ import main.java.bschecker.util.UtilityMethods;
  */
 @SuppressWarnings("unused")
 public class NumberDisagreement extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 5;
+	
 	
 	/**
 	 * for testing purposes
@@ -28,6 +30,7 @@ public class NumberDisagreement extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new NumberDisagreement().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
+	
 	
 	/**
 	 * finds errors in number disagreement in the given paragraph
@@ -54,4 +57,5 @@ public class NumberDisagreement extends Bluesheet {
 //		SentenceTree tree = head.fix();
 //		return new ArrayList<int[]>();
 //	}
+	
 }

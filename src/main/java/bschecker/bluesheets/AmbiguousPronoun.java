@@ -13,9 +13,11 @@ import opennlp.tools.util.Span;
  * @author Dalal
  */
 public class AmbiguousPronoun extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 7;
 	private static final String[] PRONOUNS = {"she", "her", "hers", "herself", "he", "him", "his", "himself", "they", "them", "their", "theirs", "themselves"};
-
+	
+	
 	/**
 	 * for testing purposes
 	 */
@@ -24,7 +26,8 @@ public class AmbiguousPronoun extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new AmbiguousPronoun().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-
+	
+	
 	/**
 	 * finds all ambiguous pronoun references in the given paragraph
 	 * @param line the paragraph in which to find errors
@@ -67,4 +70,5 @@ public class AmbiguousPronoun extends Bluesheet {
 				names.add(words[span.getStart()]);
 		return names;
 	}
+	
 }

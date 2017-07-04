@@ -7,11 +7,13 @@ package main.java.bschecker.util;
  * @author JeremiahDeGreeff
  */
 public class Error{
+	
 	private int startIndex;
 	private int endIndex;
 	private final int BLUESHEET_NUMBER;
 	private final boolean IS_TOKEN_BASED;
 	private String note;
+	
 	
 	/**
 	 * Constructor
@@ -131,4 +133,5 @@ public class Error{
 	public void setNote(String note) {
 		this.note = note;
 	}
+	
 }

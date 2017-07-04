@@ -14,6 +14,7 @@ import java.util.Scanner;
 * @author JeremiahDeGreeff
 */
 public enum Bluesheets {
+	
 	PAST_TENSE ("Past Tense",
 			"Use the present tense in writing about a literary work.",
 			"(Incorrect) Macbeth hastened home to tell his wife of the king's approach.\n(Correct) Macbeth hastens home to tell his wife of the king's approach.",
@@ -71,6 +72,7 @@ public enum Bluesheets {
 			"Punctuation goes inside the quotations.\nCitations go outside the quotations.\nUse commas to introduce a quote preceeded by a verb of saying or thinking.",
 			new QuotationForm(), 14);
 	
+	
 	private static final String SETTINGS_FILE_PATH = "bin/resources/Settings.txt";
 	private static final boolean[] DEFAULT_SETTINGS = {false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 	private static boolean[] settings = new boolean[14];
@@ -80,7 +82,8 @@ public enum Bluesheets {
 	private final String example;
 	private final Bluesheet object;
 	private final int number;
-
+	
+	
 	Bluesheets(String name, String description, String example, Bluesheet object, int number) {
 		this.name = name;
 		this.description = description;
@@ -88,7 +91,8 @@ public enum Bluesheets {
 		this.object = object;
 		this.number = number;
 	}
-
+	
+	
 	public String getName() {
 		return name;
 	}
@@ -133,6 +137,7 @@ public enum Bluesheets {
 				return b;
 		return null;
 	}
+	
 	
 	/**
 	 * reads the settings from the settings.txt file and saves them to the settings array

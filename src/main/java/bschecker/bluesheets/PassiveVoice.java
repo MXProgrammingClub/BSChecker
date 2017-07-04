@@ -13,8 +13,10 @@ import main.java.bschecker.util.UtilityMethods;
  * @author JeremiahDeGreeff
  */
 public class PassiveVoice extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 9;
 	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been", "being"};
+	
 	
 	/**
 	 * for testing purposes
@@ -24,7 +26,8 @@ public class PassiveVoice extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new PassiveVoice().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-
+	
+	
 	/**
 	 * finds all instances of passive voice in the given paragraph
 	 * @param line the paragraph in which to find errors
@@ -51,4 +54,5 @@ public class PassiveVoice extends Bluesheet {
 		}
 		return errors;
 	}
+	
 }

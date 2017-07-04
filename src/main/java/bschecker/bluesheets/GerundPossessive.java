@@ -11,7 +11,9 @@ import main.java.bschecker.util.Tools;
  * @author JeremiahDeGreeff
  */
 public class GerundPossessive extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 13;
+	
 	
 	/**
 	 * for testing purposes
@@ -21,7 +23,8 @@ public class GerundPossessive extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new GerundPossessive().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-
+	
+	
 	/**
 	 * finds all errors where gerunds are not preceded by a possessive when they should be in the given paragraph
 	 * known issues: catches cases where the supposed gerund is in fact a participle and is thus not an error
@@ -41,4 +44,5 @@ public class GerundPossessive extends Bluesheet {
 		
 		return errors;
 	}
+	
 }

@@ -12,10 +12,11 @@ import main.java.bschecker.util.Tools;
 /**
  * The main class for the BSChecker
  * 
- * @author MX Programming Club 2016
+ * @author MX Programming Club 2016-2017
  * @version 10/15/2016
  */
 public class Main extends Application {
+	
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
 		Bluesheets.readSettings();
@@ -34,9 +35,9 @@ public class Main extends Application {
 			primaryStage.setTitle("BSChecker");
 			primaryStage.setScene(scene);
 			controller.setDefaultText();
-			primaryStage.show();
-			
 			controller.loadSettings(Bluesheets.getSettings());
+			primaryStage.show();
 		} catch(Exception e) {e.printStackTrace();}
 	}
+	
 }

@@ -12,9 +12,11 @@ import main.java.bschecker.util.UtilityMethods;
  * @author JeremiahDeGreeff
  */
 public class ProgressiveTense extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 12;
 	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been"};
-
+	
+	
 	/**
 	 * for testing purposes
 	 */
@@ -23,7 +25,8 @@ public class ProgressiveTense extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new ProgressiveTense().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-
+	
+	
 	/**
 	 * finds all instances of progressive tense in the given paragraph
 	 * @param line the paragraph in which to find errors
@@ -51,4 +54,5 @@ public class ProgressiveTense extends Bluesheet {
 		}
 		return errors;
 	}
+	
 }

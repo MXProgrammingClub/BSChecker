@@ -12,6 +12,7 @@ import opennlp.tools.util.Span;
  * @author JeremiahDeGreeff
  */
 public class UtilityMethods {
+	
 	/**
 	 * returns whether or not a string can be found in an array of strings
 	 * @param array the array to check
@@ -187,4 +188,5 @@ public class UtilityMethods {
 		}
 		return results;
 	}
+	
 }

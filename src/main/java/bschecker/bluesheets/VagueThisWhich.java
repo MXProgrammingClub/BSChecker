@@ -11,7 +11,9 @@ import main.java.bschecker.util.Tools;
  * @author tedpyne
  */
 public class VagueThisWhich extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 4;
+	
 	
 	/**
 	 * for testing purposes
@@ -21,6 +23,7 @@ public class VagueThisWhich extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new VagueThisWhich().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
+	
 	
 	/**
 	 * finds any vague which or this in the given paragraph
@@ -60,4 +63,5 @@ public class VagueThisWhich extends Bluesheet {
 		}
 		return true;
 	}
+	
 }

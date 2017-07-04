@@ -17,6 +17,7 @@ import main.java.bschecker.util.UtilityMethods;
  * @author JeremiahDeGreeff
  */
 public class QuotationForm extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 14;
 	private static final String FILE_NAME = "bin/resources/SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
 	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
@@ -38,6 +39,7 @@ public class QuotationForm extends Bluesheet {
 		return verbs;
 	}
 	
+	
 	/**
 	 * for testing purposes
 	 */
@@ -46,6 +48,7 @@ public class QuotationForm extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new QuotationForm().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
+	
 
 	/**
 	 * finds all errors with quotation form in the given paragraph
@@ -124,4 +127,5 @@ public class QuotationForm extends Bluesheet {
 				return 3; //error if not cited and colon/semicolon inside
 		} return 0;
 	}
+	
 }

@@ -12,7 +12,9 @@ import main.java.bschecker.util.UtilityMethods;
  * @author JeremiahDeGreeff
  */
 public class IncompleteSentence extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 2;
+	
 	
 	/**
 	 * for testing purposes
@@ -22,7 +24,8 @@ public class IncompleteSentence extends Bluesheet {
 		String input = "";
 		System.out.println("\ninput: " + input + "\n\n" + (new IncompleteSentence().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-
+	
+	
 	/**
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line
@@ -110,4 +113,5 @@ public class IncompleteSentence extends Bluesheet {
 		}
 		return errors;
 	}
+	
 }

@@ -26,6 +26,7 @@ import javafx.stage.FileChooser;
  * @author Julia
  */
 public class TextImport {
+	
 	/**
 	 * Creates a file chooser for the user to select which file to open. Must be called from an event handler.
 	 * @return The selected file (null if no file is chosen).
@@ -110,6 +111,7 @@ public class TextImport {
 		} catch (IOException e){} //Should never happen
 		return text;
 	}
+	
 	
 	/**
 	 * Allows the user to create a file to save the text.
@@ -240,4 +242,5 @@ public class TextImport {
 		} catch(IOException e) {return false;}
 		return true;
 	}
+	
 }

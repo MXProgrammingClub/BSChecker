@@ -9,8 +9,10 @@ import java.util.Comparator;
  */
 @SuppressWarnings("serial")
 public class ErrorList extends ArrayList<Error>{
+	
 	private final String TEXT;
 	private final boolean IS_TOKEN_BASED;
+	
 	
 	/**
 	 * constructor
@@ -21,6 +23,7 @@ public class ErrorList extends ArrayList<Error>{
 		TEXT = text;
 		IS_TOKEN_BASED = isTokenBased;
 	}
+	
 	
 	@Override
 	public boolean add(Error e) {
@@ -78,6 +81,7 @@ public class ErrorList extends ArrayList<Error>{
 			}
 		return string;
 	}
+	
 	
 	/**
 	 * creates a new error list whose errors' indices are based on characters rather than tokens
@@ -148,4 +152,5 @@ public class ErrorList extends ArrayList<Error>{
 		}
 		return charErrorList;
 	}
+	
 }

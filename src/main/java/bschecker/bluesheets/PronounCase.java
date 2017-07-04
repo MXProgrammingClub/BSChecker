@@ -12,14 +12,15 @@ import main.java.bschecker.util.UtilityMethods;
  * @author Leo
  */
 public class PronounCase extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 6;
-	// arrays for various pronoun cases
 	private static final String[] POSSESADJ = {"her", "his", "its", "their", "our", "my", "your", "whose"};
 	private static final String[] POSSES = {"hers", "his", "its", "theirs", "ours", "mine", "yours", "whose"};
 	private static final String[] OBJ = {"him", "her", "it", "them", "us", "me", "you", "whom"};
 	private static final String[] SUBJ = {"he", "she", "it", "they", "we", "I", "you", "who"};
 	private static final String[] ALLPN = {"he", "she", "it", "they", "we", "you", "his", "him", "her", "hers", "its", "their", "theirs", "them", "us", "our", "ours", "your", "yours", "who", "whose", "whom"};
-
+	
+	
 	/**
 	 * for testing purposes
 	 */
@@ -28,7 +29,8 @@ public class PronounCase extends Bluesheet {
 		String input = "As she successfully analyzes Jane.";
 		System.out.println("\ninput: " + input + "\n\n" + (new PronounCase().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
-
+	
+	
 	/**
 	 * finds all errors in pronoun case within the paragraph
 	 * @param line the paragraph in which to find errors
@@ -74,8 +76,6 @@ public class PronounCase extends Bluesheet {
 			return nextWordIndex;
 		}
 	}
-	
-	
 	
 	/**
 	 * A method that looks at pronouns that should be possessive and returns the indices of any of those that are not
@@ -180,4 +180,5 @@ public class PronounCase extends Bluesheet {
 			}
 		}
 	}
+	
 }

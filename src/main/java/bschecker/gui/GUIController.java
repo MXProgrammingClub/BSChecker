@@ -21,7 +21,7 @@ import main.java.bschecker.util.UtilityMethods;
  * 
  * @author Luke Giacalone
  * @author JeremiahDeGreeff
-*/
+ */
 
 public class GUIController {
 
@@ -66,7 +66,7 @@ public class GUIController {
 	 * The method that will be called when the analyze button is clicked
 	 */
 	@FXML
-	protected void analyzeButtonClick() {
+	private void analyzeButtonClick() {
 		Dialog<ButtonType> d = new Dialog<ButtonType>();
 		d.setTitle("Analyzing");
 		d.setContentText("BSChecker is analyzing your essay.");
@@ -102,7 +102,7 @@ public class GUIController {
 	 * The method that will be called when the left arrow is clicked
 	 */
 	@FXML
-	protected void leftArrowClick() {
+	private void leftArrowClick() {
 		if(errors.size() != 0) {
 			previousError();
 		}
@@ -112,7 +112,7 @@ public class GUIController {
 	 * The method that will be called when the right arrow is clicked
 	 */
 	@FXML
-	protected void rightArrowClick() {
+	private void rightArrowClick() {
 		if(errors.size() != 0) {
 			nextError();
 		}
@@ -123,7 +123,7 @@ public class GUIController {
 	 * The method that will be called when the File->Open is clicked. It takes the file and puts the contents into the essay box.
 	 */
 	@FXML
-	protected void menuOpenClick() {
+	private void menuOpenClick() {
 		file = TextImport.chooseFile();
 		if(file == null)
 			return;
@@ -137,7 +137,7 @@ public class GUIController {
 	 * The method that will be called when the File->Save is clicked
 	 */
 	@FXML
-	protected void menuSaveClick() {
+	private void menuSaveClick() {
 		if(file != null && !TextImport.saveText(file, essayBox.getText())) {
 			Alert a = new Alert(Alert.AlertType.ERROR);
 			a.setTitle("Saving Error");
@@ -150,7 +150,7 @@ public class GUIController {
 	 * The method that will be called when the File->Save As is clicked
 	 */
 	@FXML
-	protected void menuSaveAsClick() {
+	private void menuSaveAsClick() {
 		TextImport.saveAs(essayBox.getText());
 	}
 
@@ -158,7 +158,7 @@ public class GUIController {
 	 * The method that will be called when the Edit->Undo is clicked
 	 */
 	@FXML
-	protected void menuUndoClick() {
+	private void menuUndoClick() {
 		/* EDIT->UNDO ACTION */
 	}
 
@@ -166,7 +166,7 @@ public class GUIController {
 	 * The method that will be called when the Edit->Redo is clicked
 	 */
 	@FXML
-	protected void menuRedoClick() {
+	private void menuRedoClick() {
 		/* EDIT->REDO ACTION */
 	}
 
@@ -174,7 +174,7 @@ public class GUIController {
 	 * The method that will be called when the Edit->Cut is clicked
 	 */
 	@FXML
-	protected void menuCutClick() {
+	private void menuCutClick() {
 		String temp = essayBox.getSelectedText();
 		if(!temp.equals("")) {
 			clipboard = temp;
@@ -186,7 +186,7 @@ public class GUIController {
 	 * The method that will be called when the Edit->Copy is clicked
 	 */
 	@FXML
-	protected void menuCopyClick() {
+	private void menuCopyClick() {
 		String temp = essayBox.getSelectedText();
 		if(!temp.equals(""))
 			clipboard = temp;
@@ -196,7 +196,7 @@ public class GUIController {
 	 * The method that will be called when the Edit->Paste is clicked
 	 */
 	@FXML
-	protected void menuPasteClick() {
+	private void menuPasteClick() {
 		essayBox.insertText(essayBox.getSelection().getEnd(), clipboard);
 	}
 
@@ -204,109 +204,109 @@ public class GUIController {
 	 * The method that will be called when the Edit->Select All is clicked
 	 */
 	@FXML
-	protected void menuSelectAllClick() {essayBox.selectAll();}
+	private void menuSelectAllClick() {essayBox.selectAll();}
 
 	/**
 	 * The method that will be called when the View->Next Error is clicked
 	 */
 	@FXML
-	protected void menuNextErrorClick() {rightArrowClick();}
+	private void menuNextErrorClick() {rightArrowClick();}
 
 	/**
 	 * The method that will be called when the View->Previous Error is clicked
 	 */
 	@FXML
-	protected void menuPreviousErrorClick() {leftArrowClick();}
+	private void menuPreviousErrorClick() {leftArrowClick();}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Past Tense (1) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet1Click() {Bluesheets.reverseSetting(1);}
+	private void menuBluesheet1Click() {Bluesheets.reverseSetting(1);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Incomplete Sentence (2) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet2Click() {Bluesheets.reverseSetting(2);}
+	private void menuBluesheet2Click() {Bluesheets.reverseSetting(2);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->First/Second Person (3) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet3Click() {Bluesheets.reverseSetting(3);}
+	private void menuBluesheet3Click() {Bluesheets.reverseSetting(3);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Vague This/Which (4) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet4Click() {Bluesheets.reverseSetting(4);}
+	private void menuBluesheet4Click() {Bluesheets.reverseSetting(4);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Subject-Verb Disagreement (5) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet5Click() {Bluesheets.reverseSetting(5);}
+	private void menuBluesheet5Click() {Bluesheets.reverseSetting(5);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Pronoun Case (6) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet6Click() {Bluesheets.reverseSetting(6);}
+	private void menuBluesheet6Click() {Bluesheets.reverseSetting(6);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Ambiguous Pronoun (7) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet7Click() {Bluesheets.reverseSetting(7);}
+	private void menuBluesheet7Click() {Bluesheets.reverseSetting(7);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Apostrophe Error (8) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet8Click() {Bluesheets.reverseSetting(8);}
+	private void menuBluesheet8Click() {Bluesheets.reverseSetting(8);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Passive Voice (9) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet9Click() {Bluesheets.reverseSetting(9);}
+	private void menuBluesheet9Click() {Bluesheets.reverseSetting(9);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Dangling Modifier (10) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet10Click() {Bluesheets.reverseSetting(10);}
+	private void menuBluesheet10Click() {Bluesheets.reverseSetting(10);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Faulty Parallelism (11) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet11Click() {Bluesheets.reverseSetting(11);}
+	private void menuBluesheet11Click() {Bluesheets.reverseSetting(11);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Progressive Tense (12) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet12Click() {Bluesheets.reverseSetting(12);}
+	private void menuBluesheet12Click() {Bluesheets.reverseSetting(12);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Gerund Possesive (13) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet13Click() {Bluesheets.reverseSetting(13);}
+	private void menuBluesheet13Click() {Bluesheets.reverseSetting(13);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Quotation Form (14) is clicked
 	 */
 	@FXML
-	protected void menuBluesheet14Click() {Bluesheets.reverseSetting(14);}
+	private void menuBluesheet14Click() {Bluesheets.reverseSetting(14);}
 
 	/**
 	 * The method that will be called when the Help->About is clicked
 	 */
 	@FXML
-	protected void menuAboutClick() {
+	private void menuAboutClick() {
 		/* HELP->ABOUT ACTION */
 	}
 	

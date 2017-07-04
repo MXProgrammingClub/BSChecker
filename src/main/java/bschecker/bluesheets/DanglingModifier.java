@@ -13,7 +13,9 @@ import main.java.bschecker.util.Tools;
  */
 @SuppressWarnings("unused")
 public class DanglingModifier extends Bluesheet {
+	
 	public final int ERROR_NUMBER = 10;
+	
 	
 	/**
 	 * for testing purposes
@@ -26,7 +28,8 @@ public class DanglingModifier extends Bluesheet {
 		errors.sort();
 		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
 	}
-
+	
+	
 	/**
 	 * WIP
 	 * @param line the paragraph in which to find errors
@@ -38,4 +41,5 @@ public class DanglingModifier extends Bluesheet {
 		ErrorList errors = new ErrorList(line, true);
 		return errors;
 	}
+	
 }
