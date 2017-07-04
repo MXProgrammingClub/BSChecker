@@ -205,27 +205,48 @@ public abstract class Bluesheet {
 		 * reads the settings from the settings.txt file and saves them to the settings array
 		 */
 		public static void readSettings() {
+			System.out.println("Reading settings from " + SETTINGS_FILE_PATH);
 			Scanner scan = null;
 			try {
 				scan = new Scanner(new File(SETTINGS_FILE_PATH));
+				System.out.println("\tFile found");
 				for(int i = 0; i < settings.length && scan.hasNextBoolean(); i++)
 					settings[i] = scan.nextBoolean();
-				System.out.println(Arrays.toString(settings));
+				System.out.println("\tSettings read: " + Arrays.toString(settings));
 				scan.close();
-			} catch (FileNotFoundException e) {writeDefaultSettings();}
+			} catch (FileNotFoundException e) {
+				System.out.println("\tFile not found");
+				writeSettings(DEFAULT_SETTINGS);
+				readSettings();
+			}
 		}
 		
 		/**
-		 * creates a settings.txt file and writes the default settings into it
+		 * reverses the setting for a given bluesheet
+		 * @param number the number corresponding to the bluesheet whose setting will be reversed (1 - 14)
 		 */
-		private static void writeDefaultSettings() {
+		public static void reverseSetting(int number) {
+			if(number > 14 || number < 1)
+				System.out.println("Invalid bluesheet: #" + number);
+			else {
+				System.out.println("Updating setting for bluesheet #" + number);
+				settings[number - 1] = !settings[number - 1];
+				writeSettings(settings);
+			}
+		}
+		
+		/**
+		 * creates a settings.txt file and writes the passed settings into it
+		 */
+		private static void writeSettings(boolean[] writeSettings) {
+			System.out.println("Writing settings to " + SETTINGS_FILE_PATH);
 			BufferedWriter writer;
 			try {
 				writer = new BufferedWriter(new FileWriter(SETTINGS_FILE_PATH));
-				for(boolean setting : DEFAULT_SETTINGS)
+				for(boolean setting : writeSettings)
 					writer.write(setting == true ? "true\n" : "false\n");
+				System.out.println("\tSettings written: " + Arrays.toString(writeSettings));
 				writer.close();
-				readSettings();
 			} catch (IOException e) {e.printStackTrace();}
 		}
 	}
