@@ -19,7 +19,6 @@ public class Main extends Application {
 	
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
-		Bluesheets.readSettings();
 		launch(args);
 	}
 	
