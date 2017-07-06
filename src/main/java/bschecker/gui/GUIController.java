@@ -331,20 +331,33 @@ public class GUIController {
 	 * @param settings a boolean array of settings for each bluesheet as found in the Bluesheets enum
 	 */
 	public void loadSettings(boolean[] settings) {
-		menuBluesheet1.setSelected(settings[0]);
-		menuBluesheet2.setSelected(settings[1]);
-		menuBluesheet3.setSelected(settings[2]);
-		menuBluesheet4.setSelected(settings[3]);
-		menuBluesheet5.setSelected(settings[4]);
-		menuBluesheet6.setSelected(settings[5]);
-		menuBluesheet7.setSelected(settings[6]);
-		menuBluesheet8.setSelected(settings[7]);
-		menuBluesheet9.setSelected(settings[8]);
-		menuBluesheet10.setSelected(settings[9]);
-		menuBluesheet11.setSelected(settings[10]);
-		menuBluesheet12.setSelected(settings[11]);
-		menuBluesheet13.setSelected(settings[12]);
-		menuBluesheet14.setSelected(settings[13]);
+		for(int i = 0; i < settings.length; i++)
+			getMenuBluesheet(i + 1).setSelected(settings[i]);
+	}
+	
+	/**
+	 * accessor for a bluesheet's CheckMenuItem based on its number
+	 * @param number the number of the bluesheet
+	 * @return the CheckMenuItem for that bluesheet's setting
+	 */
+	private CheckMenuItem getMenuBluesheet(int number) {
+		switch(number) {
+		case 1: return menuBluesheet1;
+		case 2: return menuBluesheet2;
+		case 3: return menuBluesheet3;
+		case 4: return menuBluesheet4;
+		case 5: return menuBluesheet5;
+		case 6: return menuBluesheet6;
+		case 7: return menuBluesheet7;
+		case 8: return menuBluesheet8;
+		case 9: return menuBluesheet9;
+		case 10: return menuBluesheet10;
+		case 11: return menuBluesheet11;
+		case 12: return menuBluesheet12;
+		case 13: return menuBluesheet13;
+		case 14: return menuBluesheet14;
+		default: return null;
+		}
 	}
 	
 	/**
