@@ -6,6 +6,7 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Dialog;
@@ -222,85 +223,85 @@ public class GUIController {
 	 * The method that will be called when the Bluesheets->Past Tense (1) is clicked
 	 */
 	@FXML
-	private void menuBluesheet1Click() {Bluesheets.reverseSetting(1);}
+	private void menuBluesheet1Click() {menuBluesheetClick(1);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Incomplete Sentence (2) is clicked
 	 */
 	@FXML
-	private void menuBluesheet2Click() {Bluesheets.reverseSetting(2);}
+	private void menuBluesheet2Click() {menuBluesheetClick(2);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->First/Second Person (3) is clicked
 	 */
 	@FXML
-	private void menuBluesheet3Click() {Bluesheets.reverseSetting(3);}
+	private void menuBluesheet3Click() {menuBluesheetClick(3);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Vague This/Which (4) is clicked
 	 */
 	@FXML
-	private void menuBluesheet4Click() {Bluesheets.reverseSetting(4);}
+	private void menuBluesheet4Click() {menuBluesheetClick(4);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Subject-Verb Disagreement (5) is clicked
 	 */
 	@FXML
-	private void menuBluesheet5Click() {Bluesheets.reverseSetting(5);}
+	private void menuBluesheet5Click() {menuBluesheetClick(5);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Pronoun Case (6) is clicked
 	 */
 	@FXML
-	private void menuBluesheet6Click() {Bluesheets.reverseSetting(6);}
+	private void menuBluesheet6Click() {menuBluesheetClick(6);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Ambiguous Pronoun (7) is clicked
 	 */
 	@FXML
-	private void menuBluesheet7Click() {Bluesheets.reverseSetting(7);}
+	private void menuBluesheet7Click() {menuBluesheetClick(7);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Apostrophe Error (8) is clicked
 	 */
 	@FXML
-	private void menuBluesheet8Click() {Bluesheets.reverseSetting(8);}
+	private void menuBluesheet8Click() {menuBluesheetClick(8);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Passive Voice (9) is clicked
 	 */
 	@FXML
-	private void menuBluesheet9Click() {Bluesheets.reverseSetting(9);}
+	private void menuBluesheet9Click() {menuBluesheetClick(9);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Dangling Modifier (10) is clicked
 	 */
 	@FXML
-	private void menuBluesheet10Click() {Bluesheets.reverseSetting(10);}
+	private void menuBluesheet10Click() {menuBluesheetClick(10);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Faulty Parallelism (11) is clicked
 	 */
 	@FXML
-	private void menuBluesheet11Click() {Bluesheets.reverseSetting(11);}
+	private void menuBluesheet11Click() {menuBluesheetClick(11);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Progressive Tense (12) is clicked
 	 */
 	@FXML
-	private void menuBluesheet12Click() {Bluesheets.reverseSetting(12);}
+	private void menuBluesheet12Click() {menuBluesheetClick(12);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Gerund Possesive (13) is clicked
 	 */
 	@FXML
-	private void menuBluesheet13Click() {Bluesheets.reverseSetting(13);}
+	private void menuBluesheet13Click() {menuBluesheetClick(13);}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Quotation Form (14) is clicked
 	 */
 	@FXML
-	private void menuBluesheet14Click() {Bluesheets.reverseSetting(14);}
+	private void menuBluesheet14Click() {menuBluesheetClick(14);}
 
 	/**
 	 * The method that will be called when the Help->About is clicked
@@ -357,6 +358,22 @@ public class GUIController {
 		case 13: return menuBluesheet13;
 		case 14: return menuBluesheet14;
 		default: return null;
+		}
+	}
+	
+	/**
+	 * a method to be called whenever a bluesheet CheckMenuItem is clicked
+	 * it reverses the setting in the bluesheets Enum and gives a warning if the bluesheet is not fully available
+	 * @param number the number of the bluesheet which was clicked
+	 */
+	private void menuBluesheetClick(int number) {
+		Bluesheets.reverseSetting(number);
+		if(Bluesheets.getBluesheetFromNum(number).getAvailabilityWarning() != null && getMenuBluesheet(number).isSelected()) {
+			Alert a = new Alert(AlertType.WARNING);
+			a.setTitle("Warning");
+			a.setHeaderText(null);
+			a.setContentText(Bluesheets.getBluesheetFromNum(number).getAvailabilityWarning());
+			a.showAndWait();
 		}
 	}
 	
