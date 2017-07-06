@@ -91,7 +91,7 @@ public enum Bluesheets {
 		this.example = example;
 		this.object = object;
 		this.number = number;
-		this.availabilityWarning = availability.state == 0 ? null : availability.description1 + name + availability.description2;
+		this.availabilityWarning = availability.description == null ? null : availability.description.replace("BluesheetName", name);
 	}
 	
 	
@@ -213,18 +213,14 @@ public enum Bluesheets {
 	 */
 	private static enum Availability {
 		
-		AVAILABLE(0, null, null),
-		INACCURATE(1, "Warning: Testing for ", " currently has limited accuracy."),
-		UNAVAILABLE(2, "Warning: Testing for ", " is currently unavailable.");
+		AVAILABLE(null),
+		INACCURATE("Warning: Testing for BluesheetName currently has limited accuracy."),
+		UNAVAILABLE("Warning: Testing for BluesheetName is currently unavailable.");
 		
-		private final int state;
-		private final String description1;
-		private final String description2;
+		private final String description;
 		
-		Availability(int state, String description1, String description2) {
-			this.state = state;
-			this.description1 = description1;
-			this.description2 = description2;
+		Availability(String description) {
+			this.description = description;
 		}
 	}
 }
