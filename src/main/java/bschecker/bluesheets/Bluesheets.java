@@ -207,6 +207,7 @@ public enum Bluesheets {
 		} catch (IOException e) {e.printStackTrace();}
 	}
 	
+	
 	/**
 	 * a simple Enum which represent possible availability states for a bluesheet class
 	 * @author JeremiahDeGreeff
@@ -223,4 +224,5 @@ public enum Bluesheets {
 			this.description = description;
 		}
 	}
+	
 }
