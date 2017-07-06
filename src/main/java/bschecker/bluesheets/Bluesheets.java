@@ -215,8 +215,8 @@ public enum Bluesheets {
 	private static enum Availability {
 		
 		AVAILABLE(null),
-		INACCURATE("Warning: Testing for BluesheetName currently has limited accuracy."),
-		UNAVAILABLE("Warning: Testing for BluesheetName is currently unavailable.");
+		INACCURATE("Testing for BluesheetName currently has limited accuracy."),
+		UNAVAILABLE("Testing for BluesheetName is currently unavailable.");
 		
 		private final String description;
 		

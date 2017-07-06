@@ -384,10 +384,10 @@ public class GUIController {
 		resetCurrentColor();
 		currError++;
 		if(currError >= errors.size()) {
-			Alert a = new Alert(Alert.AlertType.INFORMATION);
-			a.setContentText("Searching from beginning of passage.");
-			a.setHeaderText("Search Complete");
+			Alert a = new Alert(AlertType.INFORMATION);
 			a.setTitle("Notice");
+			a.setHeaderText(null);
+			a.setContentText("Searching from beginning of passage.");
 			a.showAndWait();
 			currError = 0;
 		}
@@ -401,10 +401,10 @@ public class GUIController {
 		resetCurrentColor();
 		currError--;
 		if(currError < 0) {
-			Alert a = new Alert(Alert.AlertType.INFORMATION);
-			a.setContentText("Searching from end of passage.");
-			a.setHeaderText("Search Complete");
+			Alert a = new Alert(AlertType.INFORMATION);
 			a.setTitle("Notice");
+			a.setHeaderText(null);
+			a.setContentText("Searching from end of passage.");
 			a.showAndWait();
 			currError = errors.size() - 1;
 		}
