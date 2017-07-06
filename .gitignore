@@ -16,6 +16,3 @@ hs_err_pid*
 .project
 .classpath
 /bin/
-
-# opennlp-tools source code
-opennlp-tools/
