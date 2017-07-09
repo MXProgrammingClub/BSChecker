@@ -86,7 +86,7 @@ public class PronounCase extends Bluesheet {
 	 * @param errorTokens the ErrorList of all found errors which will be updated with any new errors that are found
 	 */
 	private void posPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorTokens) {
-//		LogHelper.getLogger(ERROR_NUMBER).debug("Looking for Possesives in: " + pronounIndices);
+		LogHelper.getLogger(ERROR_NUMBER).debug("Looking for Possesives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) 
 		{
 			int pronounIndex = pronounIndices.get(element);
@@ -104,8 +104,7 @@ public class PronounCase extends Bluesheet {
 					// so the pronoun should be possessive
 					if(!(UtilityMethods.arrayContains(POSSES, tokenList[pronounIndex]) || UtilityMethods.arrayContains(POSSESADJ, tokenList[pronounIndex]))) {
 						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true, "Should be possesive pronoun."));
-						// prints message for testing
-//						LogHelper.getLogger(ERROR_NUMBER).debug("possesive error: " + tokenList[pronounIndex]);
+						LogHelper.getLogger(ERROR_NUMBER).debug("possesive error: " + tokenList[pronounIndex]);
 					}
 					pronounIndices.remove(element);
 					element--;
@@ -122,7 +121,7 @@ public class PronounCase extends Bluesheet {
 	 * @param errorTokens the ErrorList of all found errors which will be updated with any new errors that are found
 	 */
 	private void subjPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorTokens) {
-//		LogHelper.getLogger(ERROR_NUMBER).debug("Looking for Subjectives in: " + pronounIndices);
+		LogHelper.getLogger(ERROR_NUMBER).debug("Looking for Subjectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int pronounIndex = pronounIndices.get(element);
 			// assume no subjective pronouns occur at the end of the sentence
@@ -141,8 +140,7 @@ public class PronounCase extends Bluesheet {
 					if(!UtilityMethods.arrayContains(SUBJ, tokenList[pronounIndex])) 
 					{
 						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true, "Should be subjective pronoun."));
-						// prints message for testing
-//						LogHelper.getLogger(ERROR_NUMBER).debug("subjective error: " + tokenList[pronounIndex]);
+						LogHelper.getLogger(ERROR_NUMBER).debug("subjective error: " + tokenList[pronounIndex]);
 					}
 					pronounIndices.remove(element);
 					element--;
@@ -159,7 +157,7 @@ public class PronounCase extends Bluesheet {
 	 * @param errorTokens the ErrorList of all found errors which will be updated with any new errors that are found
 	 */
 	private void objPronoun(ArrayList<Integer> pronounIndices, String[] tokenList, String[] tagList, ErrorList errorTokens) {
-//		LogHelper.getLogger(ERROR_NUMBER).debug("Looking for Objectives in: " + pronounIndices);
+		LogHelper.getLogger(ERROR_NUMBER).debug("Looking for Objectives in: " + pronounIndices);
 		for(int element = 0; element < pronounIndices.size(); element++) {
 			int pronounIndex = pronounIndices.get(element);
 			// assume that no objective pronouns occur at the beginning of a sentence
@@ -172,8 +170,7 @@ public class PronounCase extends Bluesheet {
 					if(!UtilityMethods.arrayContains(OBJ, tokenList[pronounIndex])) 
 					{
 						errorTokens.add(new Error(pronounIndex, ERROR_NUMBER, true, "Should be objective pronoun."));
-						// prints message for testing
-//						LogHelper.getLogger(ERROR_NUMBER).debug("objective error: " + tokenList[pronounIndex]);
+						LogHelper.getLogger(ERROR_NUMBER).debug("objective error: " + tokenList[pronounIndex]);
 					}
 					pronounIndices.remove(element);
 					element--;
