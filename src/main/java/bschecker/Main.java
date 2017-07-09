@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import main.java.bschecker.bluesheets.Bluesheets;
 import main.java.bschecker.gui.GUIController;
+import main.java.bschecker.util.LogHelper;
 import main.java.bschecker.util.Tools;
 
 /**
@@ -18,7 +19,9 @@ import main.java.bschecker.util.Tools;
 public class Main extends Application {
 	
 	public static void main(String[] args) {
-		Tools.initializeOpenNLP();
+		System.setProperty("log4j.configurationFile", "/Users/JeremiahDeGreeff/Documents/Projects/ProgrammingClub/BSChecker/src/main/resources/log4j2.xml");
+		LogHelper.getLogger(0).info("test");
+//		initialize();
 		launch(args);
 	}
 	
@@ -37,6 +40,10 @@ public class Main extends Application {
 			controller.loadSettings(Bluesheets.getSettings());
 			primaryStage.show();
 		} catch(Exception e) {e.printStackTrace();}
+	}
+	
+	private static void initialize() {
+		Tools.initializeOpenNLP();
 	}
 	
 }
