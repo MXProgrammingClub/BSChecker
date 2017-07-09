@@ -77,7 +77,7 @@ public enum Bluesheets {
 	
 	private static final String SETTINGS_FILE_PATH = "bin/main/resources/Settings.txt";
 	private static final boolean[] DEFAULT_SETTINGS = generateDefaultSettings();
-	private static boolean[] settings = readSettings();
+	private static boolean[] settings;
 	
 	private final int number;
 	private final Bluesheet object;
@@ -148,9 +148,10 @@ public enum Bluesheets {
 	
 	/**
 	 * this method generates the default settings based on the stated availability of each element in the Enum
-	 * @return
+	 * @return the default settings
 	 */
 	private static boolean[] generateDefaultSettings() {
+		LogHelper.getLogger(0).info("Generating default settings");
 		boolean[] settings = new boolean[14];
 		for(int i = 0; i < settings.length; i++)
 			settings[i] = Bluesheets.values()[i].availabilityWarning == null;
@@ -160,14 +161,12 @@ public enum Bluesheets {
 	/**
 	 * reads the settings from the settings.txt file and saves them to the settings array
 	 */
-	private static boolean[] readSettings() {
+	public static void readSettings() {
 		LogHelper.getLogger(0).info("Reading settings from " + SETTINGS_FILE_PATH);
-		boolean[] settings;
 		Scanner scan = null;
 		try {
 			scan = new Scanner(new File(SETTINGS_FILE_PATH));
 			LogHelper.getLogger(0).info("File found");
-			settings = new boolean[14];
 			for(int i = 0; i < settings.length && scan.hasNextBoolean(); i++)
 				settings[i] = scan.nextBoolean();
 			LogHelper.getLogger(0).info("Settings read: " + Arrays.toString(settings));
@@ -175,9 +174,8 @@ public enum Bluesheets {
 		} catch (FileNotFoundException e) {
 			LogHelper.getLogger(0).warn("File not found");
 			writeSettings(DEFAULT_SETTINGS);
-			settings = readSettings();
+			readSettings();
 		}
-		return settings;
 	}
 	
 	/**

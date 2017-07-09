@@ -18,7 +18,6 @@ import main.java.bschecker.util.Tools;
 public class Main extends Application {
 	
 	public static void main(String[] args) {
-		initialize();
 		launch(args);
 	}
 	
@@ -38,11 +37,13 @@ public class Main extends Application {
 			controller.loadSettings(Bluesheets.getSettings());
 			primaryStage.show();
 		} catch(Exception e) {e.printStackTrace();}
+		initialize();
 	}
 	
 	private static void initialize() {
 		LogHelper.getLogger(0).info("Beginning Initialization");
 		Tools.initializeOpenNLP();
+		Bluesheets.readSettings();
 	}
 	
 }
