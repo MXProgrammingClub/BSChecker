@@ -77,7 +77,7 @@ public enum Bluesheets {
 	
 	private static final String SETTINGS_FILE_PATH = "bin/main/resources/Settings.txt";
 	private static final boolean[] DEFAULT_SETTINGS = generateDefaultSettings();
-	private static boolean[] settings;
+	private static boolean[] settings = new boolean[14];
 	
 	private final int number;
 	private final Bluesheet object;
