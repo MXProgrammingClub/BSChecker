@@ -7,22 +7,22 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import main.java.bschecker.bluesheets.Bluesheets;
 import main.java.bschecker.gui.GUIController;
+import main.java.bschecker.util.LogHelper;
 import main.java.bschecker.util.Tools;
 
 /**
  * The main class for the BSChecker
  * 
  * @author MX Programming Club 2016-2017
- * @version 10/15/2016
  */
 public class Main extends Application {
 	
 	public static void main(String[] args) {
-		Tools.initializeOpenNLP();
 		launch(args);
 	}
 	
 	public void start(Stage primaryStage) {
+		LogHelper.getLogger(0).info("Starting the Application");
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/GUI.fxml"));
 			GUIController controller = new GUIController();
@@ -37,6 +37,13 @@ public class Main extends Application {
 			controller.loadSettings(Bluesheets.getSettings());
 			primaryStage.show();
 		} catch(Exception e) {e.printStackTrace();}
+		initialize();
+	}
+	
+	private static void initialize() {
+		LogHelper.getLogger(0).info("Beginning Initialization");
+		Tools.initializeOpenNLP();
+		Bluesheets.readSettings();
 	}
 	
 }
