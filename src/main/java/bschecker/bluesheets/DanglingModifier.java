@@ -23,10 +23,7 @@ public class DanglingModifier extends Bluesheet {
 	public static void main(String[] args) {
 		Tools.initializeOpenNLP();
 		String input = "";
-		System.out.println("\ninput: " + input + "\n");
-		ErrorList errors = new DanglingModifier().findErrors(input);
-		errors.sort();
-		System.out.println(errors.tokensToChars(0, new ArrayList<Integer>()));
+		System.out.println("\ninput: " + input + "\n\n" + (new FaultyParallelism().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
 	}
 	
 	
