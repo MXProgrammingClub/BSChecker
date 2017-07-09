@@ -73,7 +73,7 @@ public enum Bluesheets {
 			Availability.AVAILABLE);
 	
 	
-	private static final String SETTINGS_FILE_PATH = "bin/resources/Settings.txt";
+	private static final String SETTINGS_FILE_PATH = "bin/main/resources/Settings.txt";
 	private static final boolean[] DEFAULT_SETTINGS = generateDefaultSettings();
 	private static boolean[] settings = readSettings();
 	

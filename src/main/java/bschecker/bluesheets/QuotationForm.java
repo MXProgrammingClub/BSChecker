@@ -19,7 +19,7 @@ import main.java.bschecker.util.UtilityMethods;
 public class QuotationForm extends Bluesheet {
 	
 	public final int ERROR_NUMBER = 14;
-	private static final String FILE_NAME = "bin/resources/SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
+	private static final String FILE_NAME = "bin/main/resources/SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
 	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
 	private static final String[] PUNCTUATION1 = {".", ","};
 	private static final String[] PUNCTUATION2 = {":", ";"};
