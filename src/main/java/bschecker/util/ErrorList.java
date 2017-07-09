@@ -28,7 +28,7 @@ public class ErrorList extends ArrayList<Error>{
 	@Override
 	public boolean add(Error e) {
 		if(IS_TOKEN_BASED != e.isTokenBased()){
-			System.out.println("Cannot add errors of different types to same ErrorList!");
+			LogHelper.getLogger(15).error("Cannot add errors of different types to same ErrorList!");
 			return false;
 		}
 		return super.add(e);
@@ -37,14 +37,14 @@ public class ErrorList extends ArrayList<Error>{
 	@Override
 	public void add(int i, Error e) {
 		if(IS_TOKEN_BASED != e.isTokenBased())
-			System.out.println("Cannot add errors of different types to same ErrorList!");
+			LogHelper.getLogger(15).error("Cannot add errors of different types to same ErrorList!");
 		super.add(i, e);
 	}
 	
 	@Override
 	public Error set(int i, Error e) {
 		if(IS_TOKEN_BASED != e.isTokenBased()){
-			System.out.println("Cannot add errors of different types to same ErrorList!");
+			LogHelper.getLogger(15).error("Cannot add errors of different types to same ErrorList!");
 			return null;
 		}
 		return super.set(i, e);
@@ -92,7 +92,7 @@ public class ErrorList extends ArrayList<Error>{
 	 */
 	public ErrorList tokensToChars(int startChar, ArrayList<Integer> ignoredChars) {
 		if(!IS_TOKEN_BASED) {
-			System.out.println("This ErrorList is already character based!");
+			LogHelper.getLogger(0).error("This ErrorList is already character based!");
 			return this;
 		}
 		String[] tokens = Tools.getTokenizer().tokenize(TEXT);

@@ -176,9 +176,9 @@ public class UtilityMethods {
 					i++;
 			}
 			else{ //if at a token
-//				System.out.println("t: " + tokenIndex + " - " + levelsWithTag);
+//				LogHelper.getLogger(16).debug("t: " + tokenIndex + " - " + levelsWithTag);
 				if(tokenIndex == candidates[candidateIndex]){
-//					System.out.println("c: " + candidateIndex + " - " + !levelsWithTag.isEmpty());
+//					LogHelper.getLogger(16).debug("c: " + candidateIndex + " - " + !levelsWithTag.isEmpty());
 					results[candidateIndex] = !levelsWithTag.isEmpty();
 					candidateIndex++;
 				}

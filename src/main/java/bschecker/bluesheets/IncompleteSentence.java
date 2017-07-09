@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import main.java.bschecker.util.Error;
 import main.java.bschecker.util.ErrorList;
+import main.java.bschecker.util.LogHelper;
 import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
@@ -55,7 +56,8 @@ public class IncompleteSentence extends Bluesheet {
 	private ErrorList findErrorsInSentence(String line, String parse, int tokenOffset, int length) {
 		ErrorList errors = new ErrorList(line, true);
 		ArrayList<String> tags = UtilityMethods.listParseTags(parse);
-//		System.out.println("\n\t" + parse + "\n\t" + tags);
+//		LogHelper.getLogger(ERROR_NUMBER).debug(parse)
+//		LogHelper.getLogger(ERROR_NUMBER).debug(tags);
 		
 		if(tags.get(1).equals("SBAR")) //either lone dependent clause (Fragment) or run-on in form DC IC
 			errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true));

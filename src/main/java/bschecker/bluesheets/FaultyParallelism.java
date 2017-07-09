@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import main.java.bschecker.util.Error;
 import main.java.bschecker.util.ErrorList;
+import main.java.bschecker.util.LogHelper;
 import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
@@ -56,7 +57,8 @@ public class FaultyParallelism extends Bluesheet {
 	private ErrorList findErrorsInSentence(String line, String parse, ArrayList<Integer> ccTokens, int tokenOffset) {
 		ErrorList errors = new ErrorList(line, true);
 		String simplifiedParse = UtilityMethods.simplifyParse(parse);
-//		System.out.println("\n\t" + parse + "\n\t" + simplifiedParse);
+//		LogHelper.getLogger(ERROR_NUMBER).debug(parse)
+//		LogHelper.getLogger(ERROR_NUMBER).debug(simplifiedParse);
 		int ccIndex = -1;
 		for(int ccNum = 0; ccNum < ccTokens.size(); ccNum++){
 			ccIndex = simplifiedParse.indexOf("CC", ccIndex + 1);
@@ -68,7 +70,7 @@ public class FaultyParallelism extends Bluesheet {
 			int right = rightResult[0], left = findLeft(simplifiedParse, ccIndex, rightResult[1]);
 			String rightType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right) && simplifiedParse.indexOf(' ', right) != -1) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
 			String leftType = simplifiedParse.substring(left, (simplifiedParse.indexOf(' ', left) < simplifiedParse.indexOf(')', left)) ? simplifiedParse.indexOf(' ', left) : simplifiedParse.indexOf(')', left));
-//			System.out.println("\t\tType to Left: \"" + leftType + "\" (" + left + "-" + (left + leftType.length()) + ") -- Type to Right: \"" + rightType + "\" (" + right + "-" + (right + rightType.length()) + ")");
+//			LogHelper.getLogger(ERROR_NUMBER).debug("Type to Left: \"" + leftType + "\" (" + left + "-" + (left + leftType.length()) + ") -- Type to Right: \"" + rightType + "\" (" + right + "-" + (right + rightType.length()) + ")");
 			if(!leftType.equals(rightType)){
 				boolean error = true;
 				for(String[] group : tagGroups)
@@ -77,7 +79,7 @@ public class FaultyParallelism extends Bluesheet {
 						break;
 					}
 				if(error){
-//					System.out.println("\t\t\tError!");
+//					LogHelper.getLogger(ERROR_NUMBER).debug("Error!");
 					errors.add(new Error(ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER, true));
 				}
 			}

@@ -85,19 +85,19 @@ public class Tools {
 		LogHelper.getLogger(0).info("Initializing opennlp tools:");
 		long start = System.currentTimeMillis();
 
-		LogHelper.getLogger(0).info("Initializing the Sentence Detector... ");
+		LogHelper.getLogger(0).info("Initializing the Sentence Detector...");
 		sentenceDetector = new SentenceDetectorME((SentenceModel)loadModel('s', "lib/en-sent.bin"));
 		
-		LogHelper.getLogger(0).info("Initializing the Name Finder... ");
+		LogHelper.getLogger(0).info("Initializing the Name Finder...");
 		nameFinder = new NameFinderME((TokenNameFinderModel)loadModel('n', "lib/en-ner-person.bin"));
 		
-		LogHelper.getLogger(0).info("Initializing the Tokenizer... ");
+		LogHelper.getLogger(0).info("Initializing the Tokenizer...");
 		tokenizer = new TokenizerME((TokenizerModel)loadModel('t', "lib/en-token.bin"));
 		
-		LogHelper.getLogger(0).info("Initializing the Part of Speech Tagger... ");
+		LogHelper.getLogger(0).info("Initializing the Part of Speech Tagger...");
 		posTagger = new POSTaggerME((POSModel)loadModel('o', "lib/en-pos-maxent.bin"));
 		
-		LogHelper.getLogger(0).info("Initializing the Parser... ");
+		LogHelper.getLogger(0).info("Initializing the Parser...");
 		parser = ParserFactory.create((ParserModel)loadModel('p', "lib/en-parser-chunking.bin"));
 
 		LogHelper.getLogger(0).info("Initialization of opennlp tools completed in " + ((System.currentTimeMillis() - start) / 1000d) + "s");
