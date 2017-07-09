@@ -14,18 +14,16 @@ import main.java.bschecker.util.Tools;
  * The main class for the BSChecker
  * 
  * @author MX Programming Club 2016-2017
- * @version 10/15/2016
  */
 public class Main extends Application {
 	
 	public static void main(String[] args) {
-		System.setProperty("log4j.configurationFile", "/Users/JeremiahDeGreeff/Documents/Projects/ProgrammingClub/BSChecker/src/main/resources/log4j2.xml");
-		LogHelper.getLogger(0).info("test");
-//		initialize();
+		initialize();
 		launch(args);
 	}
 	
 	public void start(Stage primaryStage) {
+		LogHelper.getLogger(0).info("Starting the Application");
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/GUI.fxml"));
 			GUIController controller = new GUIController();
@@ -43,6 +41,7 @@ public class Main extends Application {
 	}
 	
 	private static void initialize() {
+		LogHelper.getLogger(0).info("Beginning Initialization");
 		Tools.initializeOpenNLP();
 	}
 	

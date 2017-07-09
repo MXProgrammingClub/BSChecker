@@ -82,25 +82,25 @@ public class Tools {
 	 * Initializes all the necessary OpenNLP tools
 	 */
 	public static void initializeOpenNLP() {
-		System.out.println("Setting up opennlp tools:");
+		LogHelper.getLogger(0).info("Initializing opennlp tools:");
 		long start = System.currentTimeMillis();
 
-		System.out.print("\tInitializing the Sentence Detector... ");
+		LogHelper.getLogger(0).info("Initializing the Sentence Detector... ");
 		sentenceDetector = new SentenceDetectorME((SentenceModel)loadModel('s', "lib/en-sent.bin"));
 		
-		System.out.print("\tInitializing the Name Finder... ");
+		LogHelper.getLogger(0).info("Initializing the Name Finder... ");
 		nameFinder = new NameFinderME((TokenNameFinderModel)loadModel('n', "lib/en-ner-person.bin"));
 		
-		System.out.print("\tInitializing the Tokenizer... ");
+		LogHelper.getLogger(0).info("Initializing the Tokenizer... ");
 		tokenizer = new TokenizerME((TokenizerModel)loadModel('t', "lib/en-token.bin"));
 		
-		System.out.print("\tInitializing the Part of Speech Tagger... ");
+		LogHelper.getLogger(0).info("Initializing the Part of Speech Tagger... ");
 		posTagger = new POSTaggerME((POSModel)loadModel('o', "lib/en-pos-maxent.bin"));
 		
-		System.out.print("\tInitializing the Parser... ");
+		LogHelper.getLogger(0).info("Initializing the Parser... ");
 		parser = ParserFactory.create((ParserModel)loadModel('p', "lib/en-parser-chunking.bin"));
 
-		System.out.println("Setup completed in " + ((System.currentTimeMillis() - start) / 1000d) + "s");
+		LogHelper.getLogger(0).info("Initialization of opennlp tools completed in " + ((System.currentTimeMillis() - start) / 1000d) + "s");
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public class Tools {
 				tool == 'p' ? new ParserModel(is): null;}
 		catch (InvalidFormatException e) {e.printStackTrace();}
 		catch (IOException e) {e.printStackTrace();}
-		System.out.println("Complete (" + ((System.currentTimeMillis() - start) / 1000d) + "s)");
+		LogHelper.getLogger(0).info("Complete (" + ((System.currentTimeMillis() - start) / 1000d) + "s)");
 		return model;
 	}
 }

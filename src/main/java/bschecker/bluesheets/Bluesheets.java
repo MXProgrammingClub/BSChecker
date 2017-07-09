@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import main.java.bschecker.util.LogHelper;
+
 /**
 * This enum represents the bluesheet errors.
 * @author Luke Giacalone
@@ -159,19 +161,19 @@ public enum Bluesheets {
 	 * reads the settings from the settings.txt file and saves them to the settings array
 	 */
 	private static boolean[] readSettings() {
-		System.out.println("Reading settings from " + SETTINGS_FILE_PATH);
+		LogHelper.getLogger(0).info("Reading settings from " + SETTINGS_FILE_PATH);
 		boolean[] settings;
 		Scanner scan = null;
 		try {
 			scan = new Scanner(new File(SETTINGS_FILE_PATH));
-			System.out.println("\tFile found");
+			LogHelper.getLogger(0).info("File found");
 			settings = new boolean[14];
 			for(int i = 0; i < settings.length && scan.hasNextBoolean(); i++)
 				settings[i] = scan.nextBoolean();
-			System.out.println("\tSettings read: " + Arrays.toString(settings));
+			LogHelper.getLogger(0).info("Settings read: " + Arrays.toString(settings));
 			scan.close();
 		} catch (FileNotFoundException e) {
-			System.out.println("\tFile not found");
+			LogHelper.getLogger(0).warn("File not found");
 			writeSettings(DEFAULT_SETTINGS);
 			settings = readSettings();
 		}
@@ -184,9 +186,9 @@ public enum Bluesheets {
 	 */
 	public static void reverseSetting(int number) {
 		if(number > 14 || number < 1)
-			System.out.println("Invalid bluesheet: #" + number);
+			LogHelper.getLogger(0).error("Invalid bluesheet: #" + number);
 		else {
-			System.out.println("Updating setting for bluesheet #" + number);
+			LogHelper.getLogger(0).info("Updating setting for bluesheet #" + number);
 			settings[number - 1] = !settings[number - 1];
 			writeSettings(settings);
 		}
@@ -196,13 +198,13 @@ public enum Bluesheets {
 	 * creates a settings.txt file and writes the passed settings into it
 	 */
 	public static void writeSettings(boolean[] writeSettings) {
-		System.out.println("Writing settings to " + SETTINGS_FILE_PATH);
+		LogHelper.getLogger(0).info("Writing settings to " + SETTINGS_FILE_PATH);
 		BufferedWriter writer;
 		try {
 			writer = new BufferedWriter(new FileWriter(SETTINGS_FILE_PATH));
 			for(boolean setting : writeSettings)
 				writer.write(setting == true ? "true\n" : "false\n");
-			System.out.println("\tSettings written: " + Arrays.toString(writeSettings));
+			LogHelper.getLogger(0).info("Settings written: " + Arrays.toString(writeSettings));
 			writer.close();
 		} catch (IOException e) {e.printStackTrace();}
 	}
