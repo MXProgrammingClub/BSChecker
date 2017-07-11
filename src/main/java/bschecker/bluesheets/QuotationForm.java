@@ -22,8 +22,7 @@ public class QuotationForm extends Bluesheet {
 	
 	public final int ERROR_NUMBER = 14;
 	private static HashSet<String> VERB_SET; //the set of verbs of saying or thinking
-	private static final String[] PUNCTUATION1 = {".", ","};
-	private static final String[] PUNCTUATION2 = {":", ";"};
+	private static final String[][] PUNCTUATION = {{".", ","}, {":", ";"}};
 	
 	/**
 	 * Imports the list of words of saying or thinking.
@@ -120,12 +119,12 @@ public class QuotationForm extends Bluesheet {
 	 */
 	private int findErrorsBack(String[] tokens, int start, int end) {
 		if(tokens[end].contains("(") || end + 1 < tokens.length && tokens[end + 1].contains("("))
-			if(end > start && UtilityMethods.arrayContains(PUNCTUATION1, tokens[end - 1]) || UtilityMethods.arrayContains(PUNCTUATION2, tokens[end - 1]))
+			if(end > start && UtilityMethods.arrayContains(PUNCTUATION[0], tokens[end - 1]) || UtilityMethods.arrayContains(PUNCTUATION[1], tokens[end - 1]))
 				return 1; //error if cited and punctuation inside
 		else {
-			if(end + 1 < tokens.length && UtilityMethods.arrayContains(PUNCTUATION1, tokens[end + 1]))
+			if(end + 1 < tokens.length && UtilityMethods.arrayContains(PUNCTUATION[0], tokens[end + 1]))
 				return 2; //error if not cited and period/comma outside
-			if(end > start && UtilityMethods.arrayContains(PUNCTUATION2, tokens[end - 1]))
+			if(end > start && UtilityMethods.arrayContains(PUNCTUATION[1], tokens[end - 1]))
 				return 3; //error if not cited and colon/semicolon inside
 		} return 0;
 	}
