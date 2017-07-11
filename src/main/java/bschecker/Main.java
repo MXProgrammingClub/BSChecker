@@ -22,11 +22,13 @@ public class Main extends Application {
 		launch(args);
 	}
 	
+	private static GUIController controller;
+	
 	public void start(Stage primaryStage) {
 		LogHelper.getLogger(0).info("Starting the Application");
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/GUI.fxml"));
-			GUIController controller = new GUIController();
+			controller = new GUIController();
 			loader.setController(controller);
 			Parent root = loader.load();
 			Scene scene = new Scene(root, 1000, 656);
@@ -35,7 +37,6 @@ public class Main extends Application {
 			primaryStage.setTitle("BSChecker");
 			primaryStage.setScene(scene);
 			controller.setDefaultText();
-			controller.loadSettings(Bluesheets.getSettings());
 			primaryStage.show();
 		} catch(Exception e) {e.printStackTrace();}
 		initialize();
@@ -48,6 +49,7 @@ public class Main extends Application {
 		LogHelper.getLogger(0).info("Beginning Initialization");
 		Tools.initializeOpenNLP();
 		Bluesheets.readSettings();
+		controller.loadSettings(Bluesheets.getSettings());
 		QuotationForm.importVerbs();
 	}
 	

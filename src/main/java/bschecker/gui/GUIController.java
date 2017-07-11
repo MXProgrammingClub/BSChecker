@@ -8,6 +8,7 @@ import bschecker.bluesheets.Bluesheet;
 import bschecker.bluesheets.Bluesheets;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
+import bschecker.util.LogHelper;
 import bschecker.util.TextImport;
 import bschecker.util.UtilityMethods;import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -331,6 +332,7 @@ public class GUIController {
 	 * @param settings a boolean array of settings for each bluesheet as found in the Bluesheets enum
 	 */
 	public void loadSettings(boolean[] settings) {
+		LogHelper.getLogger(0).info("Loading settings into the menu");
 		for(int i = 0; i < settings.length; i++)
 			getMenuBluesheet(i + 1).setSelected(settings[i]);
 	}
