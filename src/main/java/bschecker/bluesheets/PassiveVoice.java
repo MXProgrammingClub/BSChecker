@@ -1,7 +1,5 @@
 package main.java.bschecker.bluesheets;
 
-import java.util.ArrayList;
-
 import main.java.bschecker.util.Error;
 import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
@@ -16,16 +14,6 @@ public class PassiveVoice extends Bluesheet {
 	
 	public final int ERROR_NUMBER = 9;
 	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been", "being"};
-	
-	
-	/**
-	 * for testing purposes
-	 */
-	public static void main(String[] args){
-		Tools.initializeOpenNLP();
-		String input = "";
-		System.out.println("\ninput: " + input + "\n\n" + (new PassiveVoice().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
-	}
 	
 	
 	/**

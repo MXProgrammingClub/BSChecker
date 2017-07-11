@@ -1,7 +1,5 @@
 package main.java.bschecker.bluesheets;
 
-import java.util.ArrayList;
-
 import main.java.bschecker.util.Error;
 import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
@@ -17,16 +15,6 @@ public class FirstSecondPerson extends Bluesheet {
 	public final int ERROR_NUMBER = 3;
 	private static final String[] FIRST_PERSON = {"I","me", "my", "mine", "we", "us", "our", "ours"};
 	private static final String[] SECOND_PERSON = {"you", "your", "yours"};
-	
-	
-	/**
-	 * for testing purposes
-	 */
-	public static void main (String[] args) {
-		Tools.initializeOpenNLP();
-		String input = "";
-		System.out.println("\ninput: " + input + "\n\n" + (new FirstSecondPerson().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
-	}
 	
 	
 	/**

@@ -1,7 +1,5 @@
 package main.java.bschecker.bluesheets;
 
-import java.util.ArrayList;
-
 import main.java.bschecker.util.Error;
 import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
@@ -13,16 +11,6 @@ import main.java.bschecker.util.Tools;
 public class VagueThisWhich extends Bluesheet {
 	
 	public final int ERROR_NUMBER = 4;
-	
-	
-	/**
-	 * for testing purposes
-	 */
-	public static void main(String[] args){
-		Tools.initializeOpenNLP();
-		String input = "";
-		System.out.println("\ninput: " + input + "\n\n" + (new VagueThisWhich().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
-	}
 	
 	
 	/**

@@ -179,6 +179,30 @@ public enum Bluesheets {
 	}
 	
 	/**
+	 * loads settings without altering the settings.txt file
+	 * @param loadSettings a boolean[] which holds the settings to be loaded
+	 */
+	public static void loadSettings(boolean[] loadSettings) {
+		LogHelper.getLogger(0).info("Loading settings: " + Arrays.toString(loadSettings));
+		settings = loadSettings;
+	}
+	
+	/**
+	 * creates a settings.txt file and writes the passed settings into it
+	 */
+	private static void writeSettings(boolean[] writeSettings) {
+		LogHelper.getLogger(0).info("Writing settings to " + Paths.SETTINGS);
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new FileWriter(Paths.SETTINGS));
+			for(boolean setting : writeSettings)
+				writer.write(setting == true ? "true\n" : "false\n");
+			LogHelper.getLogger(0).info("Settings written: " + Arrays.toString(writeSettings));
+			writer.close();
+		} catch (IOException e) {e.printStackTrace();}
+	}
+	
+	/**
 	 * reverses the setting for a given bluesheet
 	 * @param number the number corresponding to the bluesheet whose setting will be reversed (1 - 14)
 	 */
@@ -190,21 +214,6 @@ public enum Bluesheets {
 			settings[number - 1] = !settings[number - 1];
 			writeSettings(settings);
 		}
-	}
-	
-	/**
-	 * creates a settings.txt file and writes the passed settings into it
-	 */
-	public static void writeSettings(boolean[] writeSettings) {
-		LogHelper.getLogger(0).info("Writing settings to " + Paths.SETTINGS);
-		BufferedWriter writer;
-		try {
-			writer = new BufferedWriter(new FileWriter(Paths.SETTINGS));
-			for(boolean setting : writeSettings)
-				writer.write(setting == true ? "true\n" : "false\n");
-			LogHelper.getLogger(0).info("Settings written: " + Arrays.toString(writeSettings));
-			writer.close();
-		} catch (IOException e) {e.printStackTrace();}
 	}
 	
 	

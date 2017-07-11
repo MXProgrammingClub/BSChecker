@@ -19,16 +19,6 @@ public class AmbiguousPronoun extends Bluesheet {
 	
 	
 	/**
-	 * for testing purposes
-	 */
-	public static void main (String[] args) {
-		Tools.initializeOpenNLP();
-		String input = "";
-		System.out.println("\ninput: " + input + "\n\n" + (new AmbiguousPronoun().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
-	}
-	
-	
-	/**
 	 * finds all ambiguous pronoun references in the given paragraph
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line

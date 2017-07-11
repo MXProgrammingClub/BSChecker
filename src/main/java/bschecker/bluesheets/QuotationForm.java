@@ -2,7 +2,6 @@ package main.java.bschecker.bluesheets;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -40,17 +39,6 @@ public class QuotationForm extends Bluesheet {
 			VERB_SET.add(scan.nextLine());
 		}
 	}
-	
-	
-	/**
-	 * for testing purposes
-	 */
-	public static void main (String[] args) {
-		Tools.initializeOpenNLP();
-		String input = "";
-		System.out.println("\ninput: " + input + "\n\n" + (new QuotationForm().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
-	}
-	
 
 	/**
 	 * finds all errors with quotation form in the given paragraph

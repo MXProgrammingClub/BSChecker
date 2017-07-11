@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import main.java.bschecker.bluesheets.Bluesheet;
+import main.java.bschecker.bluesheets.Bluesheets;
+import main.java.bschecker.bluesheets.QuotationForm;
+import main.java.bschecker.util.ErrorList;
+import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.cmdline.postag.POSModelLoader;
@@ -31,14 +36,19 @@ import opennlp.tools.util.Span;
  * this class contains examples of how to use openNLP and can be used for testing purposes
  * to use enter your input text in the literal for the input String
  * then uncomment which ever tools you would like to run
+ * 
+ * this class can also be used to test bluesheet classes without launching the application
+ * to do this first uncomment the lower portion of the main method
+ * if the boolean values in the settings array at index n is set to true, the (n + 1)th bluesheet will be tested for
+ * 
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
+@SuppressWarnings("unused")
 public class BSChecker {
 	
 	public static void main(String[] args) throws InvalidFormatException, IOException{
 		String input = "";
-		
 		input = UtilityMethods.replaceInvalidChars(input);
 		input = UtilityMethods.removeExtraPunctuation(input, 0, new ArrayList<Integer>());
 		
@@ -47,6 +57,12 @@ public class BSChecker {
 //		POStag(input);
 //		findNames(input);
 //		parse(input);
+		
+//		Tools.initializeOpenNLP();
+//		boolean[] settings = {false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+//		Bluesheets.loadSettings(settings);
+//		ErrorList errors = Bluesheet.findAllErrors(input);
+//		System.out.println(input + "\n\n" + errors);
 	}
 	
 	

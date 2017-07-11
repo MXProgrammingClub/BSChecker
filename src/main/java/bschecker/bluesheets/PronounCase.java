@@ -23,16 +23,6 @@ public class PronounCase extends Bluesheet {
 	
 	
 	/**
-	 * for testing purposes
-	 */
-	public static void main(String[] args) {
-		Tools.initializeOpenNLP();
-		String input = "As she successfully analyzes Jane.";
-		System.out.println("\ninput: " + input + "\n\n" + (new PronounCase().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
-	}
-	
-	
-	/**
 	 * finds all errors in pronoun case within the paragraph
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line

@@ -18,16 +18,6 @@ public class IncompleteSentence extends Bluesheet {
 	
 	
 	/**
-	 * for testing purposes
-	 */
-	public static void main(String[] args) {
-		Tools.initializeOpenNLP();
-		String input = "";
-		System.out.println("\ninput: " + input + "\n\n" + (new IncompleteSentence().findErrors(input)).tokensToChars(0, new ArrayList<Integer>()));
-	}
-	
-	
-	/**
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (1 - 14), and, optionally, a note
