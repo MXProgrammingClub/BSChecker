@@ -14,3 +14,6 @@ hs_err_pid*
 .metadata/
 .recommenders/
 /bin/
+
+# project files
+Settings.txt
