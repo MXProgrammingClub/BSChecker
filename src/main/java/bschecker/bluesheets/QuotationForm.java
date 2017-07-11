@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import main.java.bschecker.reference.Paths;
 import main.java.bschecker.util.Error;
 import main.java.bschecker.util.ErrorList;
 import main.java.bschecker.util.Tools;
@@ -19,7 +20,6 @@ import main.java.bschecker.util.UtilityMethods;
 public class QuotationForm extends Bluesheet {
 	
 	public final int ERROR_NUMBER = 14;
-	private static final String FILE_NAME = "bin/main/resources/SayingVerbs.txt"; //the location of the list of verbs of saying or thinking
 	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
 	private static final String[] PUNCTUATION1 = {".", ","};
 	private static final String[] PUNCTUATION2 = {":", ";"};
@@ -31,7 +31,7 @@ public class QuotationForm extends Bluesheet {
 	private static HashSet<String> importVerbs() {
 		HashSet<String> verbs = new HashSet<String>();
 		Scanner scan = null;
-			try {scan = new Scanner(new File(FILE_NAME));}
+			try {scan = new Scanner(new File(Paths.SAYING_VERBS));}
 			catch (FileNotFoundException e) {e.printStackTrace();}
 		while(scan.hasNext()) {
 			verbs.add(scan.nextLine());

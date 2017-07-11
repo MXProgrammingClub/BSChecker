@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import main.java.bschecker.reference.Paths;
 import main.java.bschecker.util.LogHelper;
 
 /**
@@ -75,7 +76,6 @@ public enum Bluesheets {
 			Availability.AVAILABLE);
 	
 	
-	private static final String SETTINGS_FILE_PATH = "bin/main/resources/Settings.txt";
 	private static final boolean[] DEFAULT_SETTINGS = generateDefaultSettings();
 	private static boolean[] settings = new boolean[14];
 	
@@ -162,10 +162,10 @@ public enum Bluesheets {
 	 * reads the settings from the settings.txt file and saves them to the settings array
 	 */
 	public static void readSettings() {
-		LogHelper.getLogger(0).info("Reading settings from " + SETTINGS_FILE_PATH);
+		LogHelper.getLogger(0).info("Reading settings from " + Paths.SETTINGS);
 		Scanner scan = null;
 		try {
-			scan = new Scanner(new File(SETTINGS_FILE_PATH));
+			scan = new Scanner(new File(Paths.SETTINGS));
 			LogHelper.getLogger(0).info("File found");
 			for(int i = 0; i < settings.length && scan.hasNextBoolean(); i++)
 				settings[i] = scan.nextBoolean();
@@ -196,10 +196,10 @@ public enum Bluesheets {
 	 * creates a settings.txt file and writes the passed settings into it
 	 */
 	public static void writeSettings(boolean[] writeSettings) {
-		LogHelper.getLogger(0).info("Writing settings to " + SETTINGS_FILE_PATH);
+		LogHelper.getLogger(0).info("Writing settings to " + Paths.SETTINGS);
 		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new FileWriter(SETTINGS_FILE_PATH));
+			writer = new BufferedWriter(new FileWriter(Paths.SETTINGS));
 			for(boolean setting : writeSettings)
 				writer.write(setting == true ? "true\n" : "false\n");
 			LogHelper.getLogger(0).info("Settings written: " + Arrays.toString(writeSettings));
