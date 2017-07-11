@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import main.java.bschecker.bluesheets.Bluesheets;
+import main.java.bschecker.bluesheets.QuotationForm;
 import main.java.bschecker.gui.GUIController;
 import main.java.bschecker.util.LogHelper;
 import main.java.bschecker.util.Tools;
@@ -47,6 +48,7 @@ public class Main extends Application {
 		LogHelper.getLogger(0).info("Beginning Initialization");
 		Tools.initializeOpenNLP();
 		Bluesheets.readSettings();
+		QuotationForm.importVerbs();
 	}
 	
 }

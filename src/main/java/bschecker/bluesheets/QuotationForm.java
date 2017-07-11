@@ -9,6 +9,7 @@ import java.util.Scanner;
 import main.java.bschecker.reference.Paths;
 import main.java.bschecker.util.Error;
 import main.java.bschecker.util.ErrorList;
+import main.java.bschecker.util.LogHelper;
 import main.java.bschecker.util.Tools;
 import main.java.bschecker.util.UtilityMethods;
 
@@ -20,23 +21,25 @@ import main.java.bschecker.util.UtilityMethods;
 public class QuotationForm extends Bluesheet {
 	
 	public final int ERROR_NUMBER = 14;
-	private static final HashSet<String> VERB_SET = importVerbs(); //the set of verbs of saying or thinking
+	private static HashSet<String> VERB_SET; //the set of verbs of saying or thinking
 	private static final String[] PUNCTUATION1 = {".", ","};
 	private static final String[] PUNCTUATION2 = {":", ";"};
 	
 	/**
 	 * Imports the list of words of saying or thinking.
-	 * @return The set of words.
 	 */
-	private static HashSet<String> importVerbs() {
-		HashSet<String> verbs = new HashSet<String>();
+	public static void importVerbs() {
+		if(VERB_SET != null) {
+			LogHelper.getLogger(0).warn("Verb Set has already been initialized - skipping");
+			return;
+		}
+		VERB_SET = new HashSet<String>();
 		Scanner scan = null;
 			try {scan = new Scanner(new File(Paths.SAYING_VERBS));}
 			catch (FileNotFoundException e) {e.printStackTrace();}
 		while(scan.hasNext()) {
-			verbs.add(scan.nextLine());
+			VERB_SET.add(scan.nextLine());
 		}
-		return verbs;
 	}
 	
 	
