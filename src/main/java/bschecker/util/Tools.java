@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import bschecker.reference.Paths;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.parser.Parser;
@@ -17,7 +18,6 @@ import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.model.BaseModel;
 
 /**
@@ -86,19 +86,19 @@ public class Tools {
 		long start = System.currentTimeMillis();
 
 		LogHelper.getLogger(0).info("Initializing the Sentence Detector...");
-		sentenceDetector = new SentenceDetectorME((SentenceModel)loadModel('s', "lib/en-sent.bin"));
+		sentenceDetector = new SentenceDetectorME((SentenceModel)loadModel('s', Paths.SENTENCE_DETECTOR));
 		
 		LogHelper.getLogger(0).info("Initializing the Name Finder...");
-		nameFinder = new NameFinderME((TokenNameFinderModel)loadModel('n', "lib/en-ner-person.bin"));
+		nameFinder = new NameFinderME((TokenNameFinderModel)loadModel('n', Paths.NAME_FINDER));
 		
 		LogHelper.getLogger(0).info("Initializing the Tokenizer...");
-		tokenizer = new TokenizerME((TokenizerModel)loadModel('t', "lib/en-token.bin"));
+		tokenizer = new TokenizerME((TokenizerModel)loadModel('t', Paths.TOKENIZER));
 		
 		LogHelper.getLogger(0).info("Initializing the Part of Speech Tagger...");
-		posTagger = new POSTaggerME((POSModel)loadModel('o', "lib/en-pos-maxent.bin"));
+		posTagger = new POSTaggerME((POSModel)loadModel('o', Paths.POS_TAGGER));
 		
 		LogHelper.getLogger(0).info("Initializing the Parser...");
-		parser = ParserFactory.create((ParserModel)loadModel('p', "lib/en-parser-chunking.bin"));
+		parser = ParserFactory.create((ParserModel)loadModel('p', Paths.PARSER));
 
 		LogHelper.getLogger(0).info("Initialization of opennlp tools completed in " + ((System.currentTimeMillis() - start) / 1000d) + "s");
 	}
@@ -121,7 +121,6 @@ public class Tools {
 				tool == 't' ? new TokenizerModel(is):
 				tool == 'o' ? new POSModel(is):
 				tool == 'p' ? new ParserModel(is): null;}
-		catch (InvalidFormatException e) {e.printStackTrace();}
 		catch (IOException e) {e.printStackTrace();}
 		LogHelper.getLogger(0).info("Complete (" + ((System.currentTimeMillis() - start) / 1000d) + "s)");
 		return model;
