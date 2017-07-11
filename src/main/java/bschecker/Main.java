@@ -40,6 +40,9 @@ public class Main extends Application {
 		initialize();
 	}
 	
+	/**
+	 * initializes various static references for the project
+	 */
 	private static void initialize() {
 		LogHelper.getLogger(0).info("Beginning Initialization");
 		Tools.initializeOpenNLP();

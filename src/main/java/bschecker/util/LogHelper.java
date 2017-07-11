@@ -25,6 +25,15 @@ public class LogHelper {
 			LogManager.getLogger("Parse")
 	};
 	
+	/**
+	 * returns the logger at the passed index
+	 * @param number the number of the desired logger:
+	 * 0 for Init
+	 * 1-14 for each bluesheet
+	 * 15 for Analyze
+	 * 16 for Parse
+	 * @return the desired logger
+	 */
 	public static Logger getLogger(int number) {
 		return loggers[number];
 	}
