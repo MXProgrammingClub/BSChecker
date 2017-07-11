@@ -1,14 +1,14 @@
-package main.java.bschecker.bluesheets;
+package bschecker.bluesheets;
 
 import java.util.ArrayList;
 
+import bschecker.util.Error;
+import bschecker.util.ErrorList;
+import bschecker.util.SentenceTree;
+import bschecker.util.Tools;
+import bschecker.util.UtilityMethods;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
-import main.java.bschecker.util.Error;
-import main.java.bschecker.util.ErrorList;
-import main.java.bschecker.util.SentenceTree;
-import main.java.bschecker.util.Tools;
-import main.java.bschecker.util.UtilityMethods;
 
 /**
  * WIP

@@ -1,4 +1,4 @@
-package main.java.bschecker.util;
+package bschecker.util;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

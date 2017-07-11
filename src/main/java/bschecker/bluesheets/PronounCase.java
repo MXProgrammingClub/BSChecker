@@ -1,12 +1,12 @@
-package main.java.bschecker.bluesheets;
+package bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.Error;
-import main.java.bschecker.util.ErrorList;
-import main.java.bschecker.util.LogHelper;
-import main.java.bschecker.util.Tools;
-import main.java.bschecker.util.UtilityMethods;
+import bschecker.util.Error;
+import bschecker.util.ErrorList;
+import bschecker.util.LogHelper;
+import bschecker.util.Tools;
+import bschecker.util.UtilityMethods;
 
 /**
  * Finds errors in pronoun case. (6)

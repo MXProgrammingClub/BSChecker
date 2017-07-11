@@ -1,15 +1,15 @@
-package main.java.bschecker;
+package bschecker;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import main.java.bschecker.bluesheets.Bluesheets;
-import main.java.bschecker.bluesheets.QuotationForm;
-import main.java.bschecker.gui.GUIController;
-import main.java.bschecker.util.LogHelper;
-import main.java.bschecker.util.Tools;
+import bschecker.bluesheets.Bluesheets;
+import bschecker.bluesheets.QuotationForm;
+import bschecker.gui.GUIController;
+import bschecker.util.LogHelper;
+import bschecker.util.Tools;
 
 /**
  * The main class for the BSChecker

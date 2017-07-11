@@ -1,11 +1,11 @@
-package main.java.bschecker.bluesheets;
+package bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.Error;
-import main.java.bschecker.util.ErrorList;
-import main.java.bschecker.util.Tools;
-import main.java.bschecker.util.UtilityMethods;
+import bschecker.util.Error;
+import bschecker.util.ErrorList;
+import bschecker.util.Tools;
+import bschecker.util.UtilityMethods;
 import opennlp.tools.util.Span;
 
 /**

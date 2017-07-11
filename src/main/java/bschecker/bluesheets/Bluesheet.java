@@ -1,11 +1,11 @@
-package main.java.bschecker.bluesheets;
+package bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import main.java.bschecker.util.ErrorList;
-import main.java.bschecker.util.LogHelper;
-import main.java.bschecker.util.Tools;
-import main.java.bschecker.util.UtilityMethods;
+import bschecker.util.ErrorList;
+import bschecker.util.LogHelper;
+import bschecker.util.Tools;
+import bschecker.util.UtilityMethods;
 
 /**
  * Defines abstract class for types of grammatical errors

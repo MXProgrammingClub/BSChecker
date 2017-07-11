@@ -1,4 +1,4 @@
-package main.java.bschecker.util;
+package bschecker.util;
 
 import java.io.File;
 import java.io.FileInputStream;

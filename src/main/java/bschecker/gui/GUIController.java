@@ -1,21 +1,20 @@
-package main.java.bschecker.gui;
+package bschecker.gui;
 
 import java.io.File;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
-import javafx.fxml.FXML;
+import bschecker.bluesheets.Bluesheet;
+import bschecker.bluesheets.Bluesheets;
+import bschecker.util.Error;
+import bschecker.util.ErrorList;
+import bschecker.util.TextImport;
+import bschecker.util.UtilityMethods;import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Dialog;
-import main.java.bschecker.bluesheets.Bluesheet;
-import main.java.bschecker.bluesheets.Bluesheets;
-import main.java.bschecker.util.Error;
-import main.java.bschecker.util.ErrorList;
-import main.java.bschecker.util.TextImport;
-import main.java.bschecker.util.UtilityMethods;
 
 /**
  * This is the class that connects the GUI with the rest of the program.

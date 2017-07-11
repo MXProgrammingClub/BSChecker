@@ -1,4 +1,4 @@
-package main.java.bschecker.bluesheets;
+package bschecker.bluesheets;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import main.java.bschecker.reference.Paths;
-import main.java.bschecker.util.LogHelper;
+import bschecker.reference.Paths;
+import bschecker.util.LogHelper;
 
 /**
 * This enum represents the bluesheet errors.

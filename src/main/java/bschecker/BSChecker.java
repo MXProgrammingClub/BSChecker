@@ -1,4 +1,4 @@
-package main.java.bschecker;
+package bschecker;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import main.java.bschecker.bluesheets.Bluesheet;
-import main.java.bschecker.bluesheets.Bluesheets;
-import main.java.bschecker.bluesheets.QuotationForm;
-import main.java.bschecker.util.ErrorList;
-import main.java.bschecker.util.Tools;
-import main.java.bschecker.util.UtilityMethods;
+import bschecker.bluesheets.Bluesheet;
+import bschecker.bluesheets.Bluesheets;
+import bschecker.bluesheets.QuotationForm;
+import bschecker.util.ErrorList;
+import bschecker.util.Tools;
+import bschecker.util.UtilityMethods;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.namefind.NameFinderME;

@@ -1,16 +1,16 @@
-package main.java.bschecker.bluesheets;
+package bschecker.bluesheets;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Scanner;
 
-import main.java.bschecker.reference.Paths;
-import main.java.bschecker.util.Error;
-import main.java.bschecker.util.ErrorList;
-import main.java.bschecker.util.LogHelper;
-import main.java.bschecker.util.Tools;
-import main.java.bschecker.util.UtilityMethods;
+import bschecker.reference.Paths;
+import bschecker.util.Error;
+import bschecker.util.ErrorList;
+import bschecker.util.LogHelper;
+import bschecker.util.Tools;
+import bschecker.util.UtilityMethods;
 
 /**
  * Finds errors in quotation form. (14)

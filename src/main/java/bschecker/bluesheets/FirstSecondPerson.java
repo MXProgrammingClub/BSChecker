@@ -1,9 +1,9 @@
-package main.java.bschecker.bluesheets;
+package bschecker.bluesheets;
 
-import main.java.bschecker.util.Error;
-import main.java.bschecker.util.ErrorList;
-import main.java.bschecker.util.Tools;
-import main.java.bschecker.util.UtilityMethods;
+import bschecker.util.Error;
+import bschecker.util.ErrorList;
+import bschecker.util.Tools;
+import bschecker.util.UtilityMethods;
 
 /**
  * Finds uses of first and second person. (3)
