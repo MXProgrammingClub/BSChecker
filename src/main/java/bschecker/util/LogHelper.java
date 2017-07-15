@@ -22,7 +22,8 @@ public class LogHelper {
 			LogManager.getLogger("Incorrect Use of Gerund/Possessive"),
 			LogManager.getLogger("Quotation Error"),
 			LogManager.getLogger("Analyze"),
-			LogManager.getLogger("Parse")
+			LogManager.getLogger("Parse"),
+			LogManager.getLogger("I/O")
 	};
 	
 	/**
@@ -32,6 +33,7 @@ public class LogHelper {
 	 * 1-14 for each bluesheet
 	 * 15 for Analyze
 	 * 16 for Parse
+	 * 17 for I/O
 	 * @return the desired logger
 	 */
 	public static Logger getLogger(int number) {

@@ -166,13 +166,13 @@ public enum Bluesheets {
 		Scanner scan = null;
 		try {
 			scan = new Scanner(new File(Paths.SETTINGS));
-			LogHelper.getLogger(0).info("File found");
+			LogHelper.getLogger(17).info("File found");
 			for(int i = 0; i < settings.length && scan.hasNextBoolean(); i++)
 				settings[i] = scan.nextBoolean();
-			LogHelper.getLogger(0).info("Settings read: " + Arrays.toString(settings));
+			LogHelper.getLogger(17).info("Settings read: " + Arrays.toString(settings));
 			scan.close();
 		} catch (FileNotFoundException e) {
-			LogHelper.getLogger(0).warn("File not found");
+			LogHelper.getLogger(17).warn("File not found");
 			writeSettings(DEFAULT_SETTINGS);
 			readSettings();
 		}
@@ -191,13 +191,13 @@ public enum Bluesheets {
 	 * creates a settings.txt file and writes the passed settings into it
 	 */
 	private static void writeSettings(boolean[] writeSettings) {
-		LogHelper.getLogger(0).info("Writing settings to " + Paths.SETTINGS);
+		LogHelper.getLogger(17).info("Writing settings to " + Paths.SETTINGS);
 		BufferedWriter writer;
 		try {
 			writer = new BufferedWriter(new FileWriter(Paths.SETTINGS));
 			for(boolean setting : writeSettings)
 				writer.write(setting == true ? "true\n" : "false\n");
-			LogHelper.getLogger(0).info("Settings written: " + Arrays.toString(writeSettings));
+			LogHelper.getLogger(17).info("Settings written: " + Arrays.toString(writeSettings));
 			writer.close();
 		} catch (IOException e) {e.printStackTrace();}
 	}
