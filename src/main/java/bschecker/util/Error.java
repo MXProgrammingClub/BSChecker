@@ -25,7 +25,7 @@ public class Error{
 	 */
 	public Error(int startIndex, int endIndex, int bluesheetNum, boolean isTokenBased, String note) {
 		if(startIndex > endIndex){
-			LogHelper.getLogger(15).error("WARNING: invalid error object created");
+			LogHelper.getLogger(17).error("WARNING: invalid error object created");
 			this.startIndex = -1;
 			this.endIndex = -1;
 		}else{

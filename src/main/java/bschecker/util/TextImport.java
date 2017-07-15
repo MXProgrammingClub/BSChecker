@@ -52,7 +52,7 @@ public class TextImport {
 		case ".doc": return importDoc(file);
 		case ".txt": return importTxt(file);
 		default:
-			LogHelper.getLogger(17).error("invalid file");
+			LogHelper.getLogger(16).error("invalid file");
 			return null;
 		}
 	}
@@ -135,17 +135,17 @@ public class TextImport {
 					document.write(f);
 					document.close();
 					if(saveDocx(file, text))
-						LogHelper.getLogger(17).info("text successfully saved as " + file.getName());
+						LogHelper.getLogger(16).info("text successfully saved as " + file.getName());
 				} catch (IOException e) {e.printStackTrace();}
 				break;
 			case ".doc":
 					createEmptyDoc(file);
 					if(saveDoc(file, text))
-						LogHelper.getLogger(17).info("text successfully saved as " + file.getName());
+						LogHelper.getLogger(16).info("text successfully saved as " + file.getName());
 				break;
 			case ".txt":
 				if(saveTxt(file, text))
-					LogHelper.getLogger(17).info("text successfully saved as " + file.getName());
+					LogHelper.getLogger(16).info("text successfully saved as " + file.getName());
 				break;
 			}
 		return file;

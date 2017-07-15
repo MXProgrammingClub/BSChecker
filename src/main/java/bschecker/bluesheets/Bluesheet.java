@@ -45,35 +45,35 @@ public abstract class Bluesheet {
 			long lineStart = System.currentTimeMillis();
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
 			
-			LogHelper.getLogger(15).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
+			LogHelper.getLogger(17).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
 			ArrayList<Integer> removedChars = new ArrayList<Integer>();
 			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
-			LogHelper.getLogger(15).info("Ignoring characters: " + removedChars);
+			LogHelper.getLogger(17).info("Ignoring characters: " + removedChars);
 			
 			long parseStart = System.currentTimeMillis();
-			LogHelper.getLogger(16).info("Parsing line " + lineNum + "...");
+			LogHelper.getLogger(18).info("Parsing line " + lineNum + "...");
 			String[] sentences = Tools.getSentenceDetector().sentDetect(line), parses = new String[sentences.length];
 			for(int i = 0; i < sentences.length; i++)
 				parses[i] = UtilityMethods.parse(sentences[i]);
-			LogHelper.getLogger(16).info("Complete (" + ((System.currentTimeMillis() - parseStart) / 1000d) + "s)");
+			LogHelper.getLogger(18).info("Complete (" + ((System.currentTimeMillis() - parseStart) / 1000d) + "s)");
 			
 			ErrorList lineErrors = new ErrorList(line, true);
 			for(Bluesheets b : Bluesheets.values())
 				if(Bluesheets.isSetToAnalyze(b.getNumber())){
 					long bluesheetStart = System.currentTimeMillis();
-					LogHelper.getLogger(15).info("Looking for: " + b.getName() + "...");
+					LogHelper.getLogger(17).info("Looking for: " + b.getName() + "...");
 					ErrorList temp = b.getObject().findErrors(line, parses);
 					lineErrors.addAll(temp);
-					LogHelper.getLogger(15).info(temp.size() + (temp.size() == 1 ? " Error" : " Errors") + " Found (" + ((System.currentTimeMillis() - bluesheetStart) / 1000d) + "s)");
+					LogHelper.getLogger(17).info(temp.size() + (temp.size() == 1 ? " Error" : " Errors") + " Found (" + ((System.currentTimeMillis() - bluesheetStart) / 1000d) + "s)");
 				}
-			LogHelper.getLogger(15).info(lineErrors.size() + (lineErrors.size() == 1 ? " Error" : " Errors") + " Found in line " + lineNum + " (" + ((System.currentTimeMillis() - lineStart) / 1000d) + "s)");
+			LogHelper.getLogger(17).info(lineErrors.size() + (lineErrors.size() == 1 ? " Error" : " Errors") + " Found in line " + lineNum + " (" + ((System.currentTimeMillis() - lineStart) / 1000d) + "s)");
 			lineErrors.sort();
 			errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
 
 			lineNum++;
 			charOffset += line.length() + removedChars.size() + 1;
 		}
-		LogHelper.getLogger(15).info("Passage analyzed in " + ((System.currentTimeMillis() - start) / 1000d) + "s\n\n" + errors);
+		LogHelper.getLogger(17).info("Passage analyzed in " + ((System.currentTimeMillis() - start) / 1000d) + "s\n\n" + errors);
 		
 		return errors;
 	}

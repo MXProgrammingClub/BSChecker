@@ -21,9 +21,10 @@ public class LogHelper {
 			LogManager.getLogger("Progressive Tense"),
 			LogManager.getLogger("Incorrect Use of Gerund/Possessive"),
 			LogManager.getLogger("Quotation Error"),
+			LogManager.getLogger("Application"),
+			LogManager.getLogger("I/O"),
 			LogManager.getLogger("Analyze"),
-			LogManager.getLogger("Parse"),
-			LogManager.getLogger("I/O")
+			LogManager.getLogger("Parse")
 	};
 	
 	/**
@@ -31,9 +32,10 @@ public class LogHelper {
 	 * @param number the number of the desired logger:
 	 * 0 for Init
 	 * 1-14 for each bluesheet
-	 * 15 for Analyze
-	 * 16 for Parse
-	 * 17 for I/O
+	 * 15 for Application
+	 * 16 for I/O
+	 * 17 for Analyze
+	 * 18 for Parse
 	 * @return the desired logger
 	 */
 	public static Logger getLogger(int number) {

@@ -127,16 +127,16 @@ public class GUIController {
 	private void menuOpenClick() {
 		file = TextImport.chooseFile();
 		if(file == null) {
-			LogHelper.getLogger(17).warn("Invalid file selection - aborting.");
+			LogHelper.getLogger(16).warn("Invalid file selection - aborting.");
 			return;
 		}
 		String text = TextImport.openFile(file);
 		if(text == null) {
-			LogHelper.getLogger(17).warn("Unable to read any text from the file - aborting.");
+			LogHelper.getLogger(16).warn("Unable to read any text from the file - aborting.");
 			return;
 		}
 		essayBox.replaceText(text);
-		LogHelper.getLogger(17).info(file.getName() + " was loaded successfully.");
+		LogHelper.getLogger(16).info(file.getName() + " was loaded successfully.");
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class GUIController {
 		if(file == null)
 			TextImport.saveAs(essayBox.getText());
 		else if(TextImport.saveText(file, essayBox.getText()))
-			LogHelper.getLogger(17).info(file.getName() + " was saved successfully");
+			LogHelper.getLogger(16).info(file.getName() + " was saved successfully");
 		else {
 			Alert a = new Alert(Alert.AlertType.ERROR);
 			a.setTitle("Saving Error");

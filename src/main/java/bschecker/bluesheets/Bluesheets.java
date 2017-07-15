@@ -162,17 +162,17 @@ public enum Bluesheets {
 	 * reads the settings from the settings.txt file and saves them to the settings array
 	 */
 	public static void readSettings() {
-		LogHelper.getLogger(0).info("Reading settings from " + Paths.SETTINGS);
+		LogHelper.getLogger(16).info("Reading settings from " + Paths.SETTINGS);
 		Scanner scan = null;
 		try {
 			scan = new Scanner(new File(Paths.SETTINGS));
-			LogHelper.getLogger(17).info("File found");
+			LogHelper.getLogger(16).info("File found");
 			for(int i = 0; i < settings.length && scan.hasNextBoolean(); i++)
 				settings[i] = scan.nextBoolean();
-			LogHelper.getLogger(17).info("Settings read: " + Arrays.toString(settings));
+			LogHelper.getLogger(16).info("Settings read: " + Arrays.toString(settings));
 			scan.close();
 		} catch (FileNotFoundException e) {
-			LogHelper.getLogger(17).warn("File not found");
+			LogHelper.getLogger(16).warn("File not found");
 			writeSettings(DEFAULT_SETTINGS);
 			readSettings();
 		}
@@ -191,13 +191,13 @@ public enum Bluesheets {
 	 * creates a settings.txt file and writes the passed settings into it
 	 */
 	private static void writeSettings(boolean[] writeSettings) {
-		LogHelper.getLogger(17).info("Writing settings to " + Paths.SETTINGS);
+		LogHelper.getLogger(16).info("Writing settings to " + Paths.SETTINGS);
 		BufferedWriter writer;
 		try {
 			writer = new BufferedWriter(new FileWriter(Paths.SETTINGS));
 			for(boolean setting : writeSettings)
 				writer.write(setting == true ? "true\n" : "false\n");
-			LogHelper.getLogger(17).info("Settings written: " + Arrays.toString(writeSettings));
+			LogHelper.getLogger(16).info("Settings written: " + Arrays.toString(writeSettings));
 			writer.close();
 		} catch (IOException e) {e.printStackTrace();}
 	}
@@ -208,9 +208,9 @@ public enum Bluesheets {
 	 */
 	public static void reverseSetting(int number) {
 		if(number > 14 || number < 1)
-			LogHelper.getLogger(0).error("Invalid bluesheet: #" + number);
+			LogHelper.getLogger(15).error("Invalid bluesheet: #" + number);
 		else {
-			LogHelper.getLogger(0).info("Updating setting for bluesheet #" + number);
+			LogHelper.getLogger(15).info("Updating setting for bluesheet #" + number);
 			settings[number - 1] = !settings[number - 1];
 			writeSettings(settings);
 		}

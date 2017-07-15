@@ -25,7 +25,7 @@ public class Main extends Application {
 	private static GUIController controller;
 	
 	public void start(Stage primaryStage) {
-		LogHelper.getLogger(0).info("Starting the Application");
+		LogHelper.getLogger(15).info("Starting the Application");
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/GUI.fxml"));
 			controller = new GUIController();
