@@ -126,12 +126,17 @@ public class GUIController {
 	@FXML
 	private void menuOpenClick() {
 		file = TextImport.chooseFile();
-		if(file == null)
+		if(file == null) {
+			LogHelper.getLogger(17).warn("Invalid file selection - aborting.");
 			return;
+		}
 		String text = TextImport.openFile(file);
-		if(text == null)
+		if(text == null) {
+			LogHelper.getLogger(17).warn("Unable to read any text from the file - aborting.");
 			return;
+		}
 		essayBox.replaceText(text);
+		LogHelper.getLogger(17).info(file.getName() + " was loaded successfully.");
 	}
 
 	/**
@@ -139,7 +144,11 @@ public class GUIController {
 	 */
 	@FXML
 	private void menuSaveClick() {
-		if(file != null && !TextImport.saveText(file, essayBox.getText())) {
+		if(file == null)
+			TextImport.saveAs(essayBox.getText());
+		else if(TextImport.saveText(file, essayBox.getText()))
+			LogHelper.getLogger(17).info(file.getName() + " was saved successfully");
+		else {
 			Alert a = new Alert(Alert.AlertType.ERROR);
 			a.setTitle("Saving Error");
 			a.setContentText("There was an error in saving your file. It may be in use or moved from its original location.");
@@ -152,7 +161,7 @@ public class GUIController {
 	 */
 	@FXML
 	private void menuSaveAsClick() {
-		TextImport.saveAs(essayBox.getText());
+		file = TextImport.saveAs(essayBox.getText());
 	}
 
 	/**
