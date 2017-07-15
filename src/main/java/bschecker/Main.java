@@ -35,6 +35,7 @@ public class Main extends Application {
 		try {
 			Parent root = loader.load();
 			controller.setDefaultText();
+			controller.loadSettings(Bluesheets.getSettings());
 			Scene scene = new Scene(root, 1000, 656);
 			scene.getStylesheets().add(this.getClass().getResource("gui/application.css").toExternalForm());
 

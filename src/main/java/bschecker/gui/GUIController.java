@@ -316,11 +316,6 @@ public class GUIController {
 	private String clipboard = "";
 	
 	
-	public GUIController() {
-		loadSettings(Bluesheets.getSettings());
-	}
-	
-	
 	/**
 	 * This method sets default "empty" text for the Text Areas
 	 */
@@ -334,7 +329,7 @@ public class GUIController {
 	 * loads the settings into the checkedMenuItems for each bluesheet
 	 * @param settings a boolean array of settings for each bluesheet as found in the Bluesheets enum
 	 */
-	private void loadSettings(boolean[] settings) {
+	public void loadSettings(boolean[] settings) {
 		LogHelper.getLogger(0).info("Loading settings into the menu");
 		for(int i = 0; i < settings.length; i++)
 			getMenuBluesheet(i + 1).setSelected(settings[i]);
