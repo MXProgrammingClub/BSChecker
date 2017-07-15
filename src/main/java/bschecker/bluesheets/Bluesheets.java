@@ -179,15 +179,6 @@ public enum Bluesheets {
 	}
 	
 	/**
-	 * loads settings without altering the settings.txt file
-	 * @param loadSettings a boolean[] which holds the settings to be loaded
-	 */
-	public static void loadSettings(boolean[] loadSettings) {
-		LogHelper.getLogger(0).info("Loading settings: " + Arrays.toString(loadSettings));
-		settings = loadSettings;
-	}
-	
-	/**
 	 * creates a settings.txt file and writes the passed settings into it
 	 */
 	private static void writeSettings(boolean[] writeSettings) {
