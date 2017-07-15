@@ -139,11 +139,6 @@ public class TextImport {
 				} catch (IOException e) {e.printStackTrace();}
 				break;
 			case ".doc":
-//					POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(Paths.EMPTY_DOC));
-//					HWPFDocument document = new HWPFDocument(fs);
-//					FileOutputStream f = new FileOutputStream(file);
-//					document.write(f);
-//					document.close();
 					createEmptyDoc(file);
 					if(saveDoc(file, text))
 						LogHelper.getLogger(17).info("text successfully saved as " + file.getName());
