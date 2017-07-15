@@ -10,12 +10,11 @@ import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
 import bschecker.util.TextImport;
-import bschecker.util.UtilityMethods;import javafx.fxml.FXML;
+import bschecker.util.UtilityMethods;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Dialog;
 
 /**
  * This is the class that connects the GUI with the rest of the program.
@@ -68,12 +67,6 @@ public class GUIController {
 	 */
 	@FXML
 	private void analyzeButtonClick() {
-		Dialog<ButtonType> d = new Dialog<ButtonType>();
-		d.setTitle("Analyzing");
-		d.setContentText("BSChecker is analyzing your essay.");
-		d.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-		d.show();
-		
 		String text = essayBox.getText();
 		essayBox.setStyleClass(0, essayBox.getLength(), null);
 		
@@ -83,8 +76,6 @@ public class GUIController {
 		essayBox.replaceText(text);
 		
 		errors = Bluesheet.findAllErrors(text);
-		
-		d.close();
 		
 		if(errors.size() == 0)
 			errorBox.replaceText("No Error Found!");
@@ -127,12 +118,14 @@ public class GUIController {
 	private void menuOpenClick() {
 		file = TextImport.chooseFile();
 		if(file == null) {
-			LogHelper.getLogger(16).warn("Invalid file selection - aborting.");
+			LogHelper.getLogger(16).error("Invalid file selection - aborting.");
+			alert(AlertType.ERROR, "Selection Error", "There was an error in the file selection. The file selected is invalid.");
 			return;
 		}
 		String text = TextImport.openFile(file);
 		if(text == null) {
-			LogHelper.getLogger(16).warn("Unable to read any text from the file - aborting.");
+			LogHelper.getLogger(16).error("Unable to read any text from the file - aborting.");
+			alert(AlertType.ERROR, "Selection Error", "There was an error in the file selection. No text was able to be extracted from the file.");
 			return;
 		}
 		essayBox.replaceText(text);
@@ -148,12 +141,8 @@ public class GUIController {
 			TextImport.saveAs(essayBox.getText());
 		else if(TextImport.saveText(file, essayBox.getText()))
 			LogHelper.getLogger(16).info(file.getName() + " was saved successfully");
-		else {
-			Alert a = new Alert(Alert.AlertType.ERROR);
-			a.setTitle("Saving Error");
-			a.setContentText("There was an error in saving your file. It may be in use or moved from its original location.");
-			a.showAndWait();
-		}
+		else
+			alert(AlertType.ERROR, "Saving Error", "There was an error in saving your file. It may be in use or moved from its original location.");
 	}
 
 	/**
@@ -383,13 +372,8 @@ public class GUIController {
 	 */
 	private void menuBluesheetClick(int number) {
 		Bluesheets.reverseSetting(number);
-		if(Bluesheets.getBluesheetFromNum(number).getAvailabilityWarning() != null && getMenuBluesheet(number).isSelected()) {
-			Alert a = new Alert(AlertType.WARNING);
-			a.setTitle("Warning");
-			a.setHeaderText(null);
-			a.setContentText(Bluesheets.getBluesheetFromNum(number).getAvailabilityWarning());
-			a.showAndWait();
-		}
+		if(Bluesheets.getBluesheetFromNum(number).getAvailabilityWarning() != null && getMenuBluesheet(number).isSelected())
+			alert(AlertType.WARNING, "Warning", Bluesheets.getBluesheetFromNum(number).getAvailabilityWarning());
 	}
 	
 	/**
@@ -399,11 +383,7 @@ public class GUIController {
 		resetCurrentColor();
 		currError++;
 		if(currError >= errors.size()) {
-			Alert a = new Alert(AlertType.INFORMATION);
-			a.setTitle("Notice");
-			a.setHeaderText(null);
-			a.setContentText("Searching from beginning of passage.");
-			a.showAndWait();
+			alert(AlertType.INFORMATION, "Notice", "Wrapping search to beginning of passage.");
 			currError = 0;
 		}
 		displayError();	
@@ -416,11 +396,7 @@ public class GUIController {
 		resetCurrentColor();
 		currError--;
 		if(currError < 0) {
-			Alert a = new Alert(AlertType.INFORMATION);
-			a.setTitle("Notice");
-			a.setHeaderText(null);
-			a.setContentText("Searching from end of passage.");
-			a.showAndWait();
+			alert(AlertType.INFORMATION, "Notice", "Wrapping search to end of passage.");
 			currError = errors.size() - 1;
 		}
 		displayError();
@@ -444,8 +420,18 @@ public class GUIController {
 		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "light-red");
 	}
 	
-	private void alert() {
-		
+	/**
+	 * creates an alert
+	 * @param type the type of the alert
+	 * @param title the title of the alert
+	 * @param content the body text of the alert
+	 */
+	private void alert(AlertType type, String title, String content) {
+		Alert a = new Alert(type);
+		a.setTitle(title);
+		a.setHeaderText(null);
+		a.setContentText(content);
+		a.showAndWait();
 	}
 	
 }
