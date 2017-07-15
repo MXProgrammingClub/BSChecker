@@ -25,7 +25,7 @@ import javafx.scene.control.Dialog;
  */
 
 public class GUIController {
-
+	
 	@FXML
 	private StyleClassedTextArea essayBox;
 	@FXML
@@ -221,7 +221,7 @@ public class GUIController {
 	 */
 	@FXML
 	private void menuNextErrorClick() {rightArrowClick();}
-
+	
 	/**
 	 * The method that will be called when the View->Previous Error is clicked
 	 */
@@ -327,6 +327,11 @@ public class GUIController {
 	private String clipboard = "";
 	
 	
+	public GUIController() {
+		loadSettings(Bluesheets.getSettings());
+	}
+	
+	
 	/**
 	 * This method sets default "empty" text for the Text Areas
 	 */
@@ -340,7 +345,7 @@ public class GUIController {
 	 * loads the settings into the checkedMenuItems for each bluesheet
 	 * @param settings a boolean array of settings for each bluesheet as found in the Bluesheets enum
 	 */
-	public void loadSettings(boolean[] settings) {
+	private void loadSettings(boolean[] settings) {
 		LogHelper.getLogger(0).info("Loading settings into the menu");
 		for(int i = 0; i < settings.length; i++)
 			getMenuBluesheet(i + 1).setSelected(settings[i]);
@@ -437,6 +442,10 @@ public class GUIController {
 	 */
 	private void resetCurrentColor() {
 		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "light-red");
+	}
+	
+	private void alert() {
+		
 	}
 	
 }

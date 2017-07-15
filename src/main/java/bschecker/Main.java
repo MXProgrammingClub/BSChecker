@@ -5,6 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+
 import bschecker.bluesheets.Bluesheets;
 import bschecker.bluesheets.QuotationForm;
 import bschecker.gui.GUIController;
@@ -22,34 +25,32 @@ public class Main extends Application {
 		launch(args);
 	}
 	
-	private static GUIController controller;
-	
 	public void start(Stage primaryStage) {
+		initialize();
+		
 		LogHelper.getLogger(15).info("Starting the Application");
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/GUI.fxml"));
+		GUIController controller = new GUIController();
+		loader.setController(controller);
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/GUI.fxml"));
-			controller = new GUIController();
-			loader.setController(controller);
 			Parent root = loader.load();
+			controller.setDefaultText();
 			Scene scene = new Scene(root, 1000, 656);
 			scene.getStylesheets().add(this.getClass().getResource("gui/application.css").toExternalForm());
 
 			primaryStage.setTitle("BSChecker");
 			primaryStage.setScene(scene);
-			controller.setDefaultText();
 			primaryStage.show();
-		} catch(Exception e) {e.printStackTrace();}
-		initialize();
+		} catch(IOException e) {e.printStackTrace();}
 	}
 	
 	/**
-	 * initializes various static references for the project
+	 * initializes various static references for the project before the application is launched
 	 */
 	private static void initialize() {
 		LogHelper.getLogger(0).info("Beginning Initialization");
 		Tools.initializeOpenNLP();
 		Bluesheets.readSettings();
-		controller.loadSettings(Bluesheets.getSettings());
 		QuotationForm.importVerbs();
 	}
 	
