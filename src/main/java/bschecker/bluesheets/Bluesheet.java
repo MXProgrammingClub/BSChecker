@@ -15,10 +15,10 @@ import bschecker.util.UtilityMethods;
 public abstract class Bluesheet {
 	
 	/**
-	 * Finds errors of a specific type in the submitted text
+	 * Finds errors of a specific type in the submitted text.
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line
-	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (1 - 14), and, optionally, a note
+	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number [1 - 14], and, optionally, a note
 	 */
 	protected abstract ErrorList findErrors(String line, String[] parses);
 	
@@ -30,9 +30,9 @@ public abstract class Bluesheet {
 	}
 	
 	/**
-	 * finds all errors within the given text
-	 * all types included in ERROR_LIST which have an CheckedWhenAnalyzed value of true will be checked
-	 * assumes that text ends with a new line character
+	 * Finds all errors within the given text.
+	 * All types included in {@code ERROR_LIST} which have a {@code CheckedWhenAnalyzed} value of {@code true} will be checked.
+	 * Assumes that text ends with a new line character.
 	 * @param text the text to search
 	 * @return a ErrorList which contains all the errors in the passage, referenced by character indices
 	 */

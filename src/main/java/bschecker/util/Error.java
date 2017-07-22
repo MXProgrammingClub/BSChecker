@@ -3,7 +3,7 @@ package bschecker.util;
 
 /**
  * an object which represents a blue sheet error
- * the object contains the start and end indices of the error, the type of error (1 - 14) and an optional note which provides more information about the specific error
+ * the object contains the start and end indices of the error, the type of error [1 - 14] and an optional note which provides more information about the specific error
  * @author JeremiahDeGreeff
  */
 public class Error{
@@ -16,40 +16,39 @@ public class Error{
 	
 	
 	/**
-	 * Constructor
+	 * constructor
 	 * @param startIndex the starting index of the error
 	 * @param endIndex the ending index of the error
-	 * @param bluesheetNum the number of the bluesheet which the error violates
+	 * @param bluesheetNum the number of the bluesheet [1, 14] which the error violates
 	 * @param isTokenBased true if the indicies of this error are based on tokens, false if based on characters
 	 * @param note a note to be attached to the error
+	 * @throws IllegalArgumentException if startIndex > endIndex
 	 */
 	public Error(int startIndex, int endIndex, int bluesheetNum, boolean isTokenBased, String note) {
-		if(startIndex > endIndex){
-			LogHelper.getLogger(17).error("WARNING: invalid error object created");
-			this.startIndex = -1;
-			this.endIndex = -1;
-		}else{
-			this.startIndex = startIndex;
-			this.endIndex = endIndex;
-		}
+		if(startIndex > endIndex)
+			throw new IllegalArgumentException("StartIndex must occur before EndIndex.");
+		
+		this.startIndex = startIndex;
+		this.endIndex = endIndex;
 		BLUESHEET_NUMBER = bluesheetNum;
 		IS_TOKEN_BASED = isTokenBased;
 		this.note = note;
 	}
 	
 	/**
-	 * Constructor
+	 * constructor
 	 * @param startIndex the starting index of the error
 	 * @param endIndex the ending index of the error
 	 * @param bluesheetNum the number of the bluesheet which the error violates
 	 * @param isTokenBased true if the indicies of this error are based on tokens, false if based on characters
+	 * @throws IllegalArgumentException if startIndex > endIndex
 	 */
 	public Error(int startIndex, int endIndex, int bluesheetNum, boolean isTokenBased) {
 		this(startIndex, endIndex, bluesheetNum, isTokenBased, "");
 	}
 	
 	/**
-	 * Constructor
+	 * constructor
 	 * @param index the index of the error (starting and ending)
 	 * @param bluesheetNum the number of the bluesheet which the error violates
 	 * @param isTokenBased true if the indicies of this error are based on tokens, false if based on characters
@@ -60,7 +59,7 @@ public class Error{
 	}
 	
 	/**
-	 * Constructor
+	 * constructor
 	 * @param index the index of the error (starting and ending)
 	 * @param bluesheetNum the number of the bluesheet which the error violates
 	 * @param isTokenBased true if the indicies of this error are based on tokens, false if based on characters

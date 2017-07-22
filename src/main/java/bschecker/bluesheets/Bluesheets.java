@@ -13,6 +13,8 @@ import bschecker.util.LogHelper;
 
 /**
 * This enum represents the bluesheet errors.
+* It also stores the settings indicating which bluesheets should be checked for and provides static methods to change these settings.
+* The settings are stored externally in the file indicated by {@code Paths.SETTINGS}.
 * @author Luke Giacalone
 * @author JeremiahDeGreeff
 */
@@ -126,29 +128,35 @@ public enum Bluesheets {
 	}
 	
 	/**
-	 * Based on the number passed in, returns whether or not the bluesheet with that number should be tested
+	 * Based on the number passed in, returns whether or not the bluesheet with that number should be tested.
 	 * @param number The number of the bluesheet
 	 * @return true if that bluesheet should be tested, false otherwise
+	 * @throws IllegalArgumentException if number is not [1, 14]
 	 */
 	public static boolean isSetToAnalyze(int number) {
+		if(number > 14 || number < 1) {
+			LogHelper.getLogger(0).error("Passed number is invalid - it must be in range [1, 14].");
+			throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
+		}
 		return settings[number - 1];
 	}
 
 	/**
 	 * Based on the number passed in, returns the corresponding element.
-	 * @param num The number of the element.
-	 * @return The element with the number num.
+	 * @param number The number of the element.
+	 * @return The element with the number number.
+	 * @throws IllegalArgumentException if number is not [1, 14].
 	 */
-	public static Bluesheets getBluesheetFromNum(int num) {
+	public static Bluesheets getBluesheetFromNum(int number) {
 		for(Bluesheets b: Bluesheets.values())
-			if(b.getNumber() == num)
+			if(b.getNumber() == number)
 				return b;
-		return null;
+		throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
 	}
 	
 	/**
-	 * this method generates the default settings based on the stated availability of each element in the Enum
-	 * @return the default settings
+	 * Generates the default settings based on the stated availability of each element in the Enum.
+	 * @return these default settings
 	 */
 	private static boolean[] generateDefaultSettings() {
 		LogHelper.getLogger(0).info("Generating default settings");
@@ -159,57 +167,69 @@ public enum Bluesheets {
 	}
 	
 	/**
-	 * reads the settings from the settings.txt file and saves them to the settings array
+	 * Reads the settings from the file indicated by {@code Paths.SETTINGS} and loads them into the settings array.
+	 * If the file is longer than 14 lines, only the first 14 will be read.
+	 * If the file is not found or is less than 14 lines, the default settings will be written and loaded.
 	 */
 	public static void readSettings() {
 		LogHelper.getLogger(16).info("Reading settings from " + Paths.SETTINGS);
-		Scanner scan = null;
+		boolean successful = true;
 		try {
-			scan = new Scanner(new File(Paths.SETTINGS));
+			Scanner scan = new Scanner(new File(Paths.SETTINGS));
 			LogHelper.getLogger(16).info("File found");
-			for(int i = 0; i < settings.length && scan.hasNextBoolean(); i++)
-				settings[i] = scan.nextBoolean();
-			LogHelper.getLogger(16).info("Settings read: " + Arrays.toString(settings));
+			for(int i = 0; i < settings.length; i++)
+				if(scan.hasNextBoolean())
+					settings[i] = scan.nextBoolean();
+				else {
+					LogHelper.getLogger(16).warn("File contains less than 14 booleans. Default Settings will be used instead.");
+					successful = false;
+					break;
+				}
 			scan.close();
 		} catch (FileNotFoundException e) {
-			LogHelper.getLogger(16).warn("File not found");
+			LogHelper.getLogger(16).warn("File not found. Default Settings will be used instead.");
+			successful = false;
+		}
+		if(successful)
+			LogHelper.getLogger(16).info("Settings read: " + Arrays.toString(settings));
+		else {
 			writeSettings(DEFAULT_SETTINGS);
 			readSettings();
 		}
 	}
 	
 	/**
-	 * creates a settings.txt file and writes the passed settings into it
+	 * Creates a settings file and writes the passed boolean[] of settings into it.
+	 * If the file already exists it will be overwritten.
+	 * @param writeSettings a boolean[] which must be length 14 which will be written to the settings file
 	 */
 	private static void writeSettings(boolean[] writeSettings) {
 		LogHelper.getLogger(16).info("Writing settings to " + Paths.SETTINGS);
-		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new FileWriter(Paths.SETTINGS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.SETTINGS));
 			for(boolean setting : writeSettings)
 				writer.write(setting == true ? "true\n" : "false\n");
 			LogHelper.getLogger(16).info("Settings written: " + Arrays.toString(writeSettings));
 			writer.close();
-		} catch (IOException e) {e.printStackTrace();}
+		} catch (IOException e) {LogHelper.getLogger(16).error("Opening the file for writting failed.");}
 	}
 	
 	/**
-	 * reverses the setting for a given bluesheet
-	 * @param number the number corresponding to the bluesheet whose setting will be reversed (1 - 14)
+	 * Reverses the setting for a given bluesheet.
+	 * @param number the number corresponding to the bluesheet whose setting will be reversed [1 - 14]
+	 * @throws IllegalArgumentException if number is not [1, 14]
 	 */
 	public static void reverseSetting(int number) {
 		if(number > 14 || number < 1)
-			LogHelper.getLogger(15).error("Invalid bluesheet: #" + number);
-		else {
-			LogHelper.getLogger(15).info("Updating setting for bluesheet #" + number);
-			settings[number - 1] = !settings[number - 1];
-			writeSettings(settings);
-		}
+			throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
+		LogHelper.getLogger(15).info("Updating setting for bluesheet #" + number);
+		settings[number - 1] = !settings[number - 1];
+		writeSettings(settings);
 	}
 	
 	
 	/**
-	 * a simple Enum which represent possible availability states for a bluesheet class
+	 * A simple Enum which represents possible availability states for a bluesheet class.
 	 * @author JeremiahDeGreeff
 	 */
 	private static enum Availability {

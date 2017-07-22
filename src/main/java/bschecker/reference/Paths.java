@@ -1,7 +1,7 @@
 package bschecker.reference;
 
 /**
- * A simple class to store the paths of any resources needed by the project in one place
+ * A simple class to store the paths of any resources needed by the project in one place.
  * @author JeremiahDeGreeff
  */
 public class Paths {

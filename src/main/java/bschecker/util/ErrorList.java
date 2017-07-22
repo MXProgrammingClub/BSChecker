@@ -58,7 +58,7 @@ public class ErrorList extends ArrayList<Error>{
 	}
 	
 	/**
-	 * returns a String representation of this ErrorList with differing formatting based upon whether it is token based or character based
+	 * Returns a String representation of this ErrorList with differing formatting based upon whether it is token based or character based.
 	 */
 	@Override
 	public String toString() {
@@ -84,10 +84,10 @@ public class ErrorList extends ArrayList<Error>{
 	
 	
 	/**
-	 * creates a new error list whose errors' indices are based on characters rather than tokens
-	 * should only be used on ErrorLists which pertain to single paragraphs
+	 * Creates a new error list whose errors' indices are based on characters rather than tokens.
+	 * Should only be used on ErrorLists which pertain to single paragraphs.
 	 * @param startChar the beginning of this paragraph relative to the entire input
-	 * @param ignoredChars indices of chars which have been removed from TEXT
+	 * @param ignoredChars indices of chars which have been removed from {@codeTEXT}
 	 * @return an ErrorList which represents the same errors as this ErrorList but is based on characters rather than tokens
 	 */
 	public ErrorList tokensToChars(int startChar, ArrayList<Integer> ignoredChars) {

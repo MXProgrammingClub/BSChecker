@@ -94,21 +94,13 @@ public class GUIController {
 	 * The method that will be called when the left arrow is clicked
 	 */
 	@FXML
-	private void leftArrowClick() {
-		if(errors.size() != 0) {
-			previousError();
-		}
-	}
+	private void leftArrowClick() {previousError();}
 	
 	/**
 	 * The method that will be called when the right arrow is clicked
 	 */
 	@FXML
-	private void rightArrowClick() {
-		if(errors.size() != 0) {
-			nextError();
-		}
-	}
+	private void rightArrowClick() {nextError();}
 	
 	
 	/**
@@ -149,25 +141,19 @@ public class GUIController {
 	 * The method that will be called when the File->Save As is clicked
 	 */
 	@FXML
-	private void menuSaveAsClick() {
-		file = TextImport.saveAs(essayBox.getText());
-	}
+	private void menuSaveAsClick() {file = TextImport.saveAs(essayBox.getText());}
 
 	/**
 	 * The method that will be called when the Edit->Undo is clicked
 	 */
 	@FXML
-	private void menuUndoClick() {
-		/* EDIT->UNDO ACTION */
-	}
+	private void menuUndoClick() {/* EDIT->UNDO ACTION */}
 
 	/**
 	 * The method that will be called when the Edit->Redo is clicked
 	 */
 	@FXML
-	private void menuRedoClick() {
-		/* EDIT->REDO ACTION */
-	}
+	private void menuRedoClick() {/* EDIT->REDO ACTION */}
 
 	/**
 	 * The method that will be called when the Edit->Cut is clicked
@@ -195,9 +181,7 @@ public class GUIController {
 	 * The method that will be called when the Edit->Paste is clicked
 	 */
 	@FXML
-	private void menuPasteClick() {
-		essayBox.insertText(essayBox.getSelection().getEnd(), clipboard);
-	}
+	private void menuPasteClick() {essayBox.insertText(essayBox.getSelection().getEnd(), clipboard);}
 
 	/**
 	 * The method that will be called when the Edit->Select All is clicked
@@ -209,13 +193,13 @@ public class GUIController {
 	 * The method that will be called when the View->Next Error is clicked
 	 */
 	@FXML
-	private void menuNextErrorClick() {rightArrowClick();}
+	private void menuNextErrorClick() {nextError();}
 	
 	/**
 	 * The method that will be called when the View->Previous Error is clicked
 	 */
 	@FXML
-	private void menuPreviousErrorClick() {leftArrowClick();}
+	private void menuPreviousErrorClick() {previousError();}
 	
 	/**
 	 * The method that will be called when the Bluesheets->Past Tense (1) is clicked
@@ -305,9 +289,7 @@ public class GUIController {
 	 * The method that will be called when the Help->About is clicked
 	 */
 	@FXML
-	private void menuAboutClick() {
-		/* HELP->ABOUT ACTION */
-	}
+	private void menuAboutClick() {/* HELP->ABOUT ACTION */}
 	
 	
 	private int currError = 0;
@@ -328,10 +310,15 @@ public class GUIController {
 	/**
 	 * loads the settings into the checkedMenuItems for each bluesheet
 	 * @param settings a boolean array of settings for each bluesheet as found in the Bluesheets enum
+	 * @throws IllegalArgumentException if the length of the settings array is not 14
 	 */
 	public void loadSettings(boolean[] settings) {
+		if(settings.length != 14) {
+			LogHelper.getLogger(0).error("Passed array is invalid - it must be of length 14.");
+			throw new IllegalArgumentException("Passed settings array is invalid - it must be of length 14.");
+		}
 		LogHelper.getLogger(0).info("Loading settings into the menu");
-		for(int i = 0; i < settings.length; i++)
+		for(int i = 0; i < 14; i++)
 			getMenuBluesheet(i + 1).setSelected(settings[i]);
 	}
 	
@@ -375,26 +362,30 @@ public class GUIController {
 	 * Updates the selected text to the next error.
 	 */
 	private void nextError() {
-		resetCurrentColor();
-		currError++;
-		if(currError >= errors.size()) {
-			alert(AlertType.INFORMATION, "Notice", "Wrapping search to beginning of passage.");
-			currError = 0;
+		if(errors.size() != 0) {
+			resetCurrentColor();
+			currError++;
+			if(currError >= errors.size()) {
+				alert(AlertType.INFORMATION, "Notice", "Wrapping search to beginning of passage.");
+				currError = 0;
+			}
+			displayError();
 		}
-		displayError();	
 	}
 	
 	/**
 	 * Updates the selected text to the previous error.
 	 */
 	private void previousError() {
-		resetCurrentColor();
-		currError--;
-		if(currError < 0) {
-			alert(AlertType.INFORMATION, "Notice", "Wrapping search to end of passage.");
-			currError = errors.size() - 1;
+		if(errors.size() != 0) {
+			resetCurrentColor();
+			currError--;
+			if(currError < 0) {
+				alert(AlertType.INFORMATION, "Notice", "Wrapping search to end of passage.");
+				currError = errors.size() - 1;
+			}
+			displayError();
 		}
-		displayError();
 	}
 	
 	/**

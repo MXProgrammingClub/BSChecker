@@ -1,6 +1,7 @@
 package bschecker.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import opennlp.tools.parser.AbstractBottomUpParser;
@@ -14,7 +15,7 @@ import opennlp.tools.util.Span;
 public class UtilityMethods {
 	
 	/**
-	 * returns whether or not a string can be found in an array of strings
+	 * Returns whether or not a string can be found in an array of strings.
 	 * @param array the array to check
 	 * @param word the string to look for
 	 * @return true if found, false otherwise
@@ -27,25 +28,25 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * replaces unicode characters with their ascii equivalents
+	 * Replaces unicode characters with their ascii equivalents.
 	 * @param text the text that has characters to be changed
 	 * @return the same text with the appropriate character changes
 	 */
 	public static String replaceInvalidChars(String text) {
-		ArrayList<Replacement>  replacements = new ArrayList<Replacement>();
+		HashMap<String, Pattern> replacements = new HashMap<String, Pattern>();
 		// double quotation (")
-	    replacements.add(new Replacement(Pattern.compile("[\u201C\u201D\u201E\u201F\u275D\u275E]"), "\""));
+	    replacements.put("\"", Pattern.compile("[\u201C\u201D\u201E\u201F\u275D\u275E]"));
 	    // single quotation (')
-	    replacements.add(new Replacement(Pattern.compile("[\u2018\u2019\u201A\u201B\u275B\u275C]"), "\'"));
+	    replacements.put("\'", Pattern.compile("[\u2018\u2019\u201A\u201B\u275B\u275C]"));
 	    // ellipsis (...)
-	    replacements.add(new Replacement(Pattern.compile("[\u2026]"), "..."));
-	    for (Replacement replacement : replacements)
-	         text = replacement.pattern.matcher(text).replaceAll(replacement.toString());
+	    replacements.put("...", Pattern.compile("[\u2026]"));
+	    for (String replacement : replacements.keySet())
+	         text = replacements.get(replacement).matcher(text).replaceAll(replacement);
 	    return text;
 	}
 	
 	/**
-	 * removes extra punctuation from the passed text
+	 * Removes extra punctuation from the passed text.
 	 * @param line the text to remove punctuation from
 	 * @param startChar where this line starts relative to an entire passage
 	 * @param indices an ArrayList of Integers which represent the indices of any characters which are removed by the method
@@ -77,7 +78,7 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * finds words which are a particular part of speech within in a String
+	 * Finds words which are a particular part of speech within in a String.
 	 * @param input the String to search
 	 * @param tag the openNLP tag for the desired part of speech
 	 * @return an ArrayList of Integers which represent the indices of tokens which are the desired part of speech
@@ -94,7 +95,7 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * parses a String using the openNLP parser
+	 * Parses a String using the openNLP parser.
 	 * @param input the String to parse
 	 * @return a String which is a parsed version of the input
 	 */
@@ -113,7 +114,7 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * removes the words from a string representation of a parse to make traversing it simpler
+	 * Removes the words from a string representation of a parse to make traversing it simpler.
 	 * @param parse the original string representation of the parse
 	 * @return a String which represents the same parse as the original String but without any words
 	 */
@@ -132,7 +133,7 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * lists all clause, phrase, and word tags which are found in a particular String representation of a parse
+	 * Lists all clause, phrase, and word tags which are found in a particular String representation of a parse.
 	 * @param parse the String representation of the parse
 	 * @return an ArrayList of Strings which are each tag of the parse in order
 	 */
@@ -149,7 +150,7 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * checks particular indices within an array of the tokens of a sentence to determine if each resides within a clause or phrase of the given type
+	 * Checks particular indices within an array of the tokens of a sentence to determine if each resides within a clause or phrase of the given type.
 	 * @param candidates the indices of the tokens to check
 	 * @param parse the String representation of an openNLP parse of the sentence
 	 * @param tag the clause or phrase tag to check for
@@ -176,9 +177,9 @@ public class UtilityMethods {
 					i++;
 			}
 			else{ //if at a token
-//				LogHelper.getLogger(18).debug("t: " + tokenIndex + " - " + levelsWithTag);
+				LogHelper.getLogger(18).debug("t: " + tokenIndex + " - " + levelsWithTag);
 				if(tokenIndex == candidates[candidateIndex]){
-//					LogHelper.getLogger(18).debug("c: " + candidateIndex + " - " + !levelsWithTag.isEmpty());
+					LogHelper.getLogger(18).debug("c: " + candidateIndex + " - " + !levelsWithTag.isEmpty());
 					results[candidateIndex] = !levelsWithTag.isEmpty();
 					candidateIndex++;
 				}

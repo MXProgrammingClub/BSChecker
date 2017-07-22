@@ -52,7 +52,7 @@ public class TextImport {
 		case ".doc": return importDoc(file);
 		case ".txt": return importTxt(file);
 		default:
-			LogHelper.getLogger(16).error("invalid file");
+			LogHelper.getLogger(16).error("Invalid file");
 			return null;
 		}
 	}
@@ -73,7 +73,11 @@ public class TextImport {
 			doc.close();
 			return text;
 		}
-		catch (IOException e) {return null;}
+		catch (IOException e) {
+			LogHelper.getLogger(16).error("Failed to open file.");
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
@@ -92,7 +96,11 @@ public class TextImport {
 			doc.close();
 			return text;
 		}
-		catch (IOException e) {return null;}
+		catch (IOException e) {
+			LogHelper.getLogger(16).error("Failed to open file.");
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
@@ -110,7 +118,11 @@ public class TextImport {
 			scan.close();
 			return text;
 		}
-		catch(FileNotFoundException e) {return null;}
+		catch(FileNotFoundException e) {
+			LogHelper.getLogger(16).error("Failed to open file.");
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	
@@ -136,12 +148,20 @@ public class TextImport {
 					document.close();
 					if(saveDocx(file, text))
 						LogHelper.getLogger(16).info("text successfully saved as " + file.getName());
-				} catch (IOException e) {e.printStackTrace();}
+				} catch (IOException e) {
+					LogHelper.getLogger(16).error("Failed to save file.");
+					e.printStackTrace();
+				}
 				break;
 			case ".doc":
+				try {
 					createEmptyDoc(file);
 					if(saveDoc(file, text))
 						LogHelper.getLogger(16).info("text successfully saved as " + file.getName());
+				} catch (IOException e) {
+					LogHelper.getLogger(16).error("Failed to save file.");
+					e.printStackTrace();
+				}	
 				break;
 			case ".txt":
 				if(saveTxt(file, text))
@@ -154,17 +174,14 @@ public class TextImport {
 	/**
 	 * creates an empty .doc file at the specified file path
 	 * @param file the location where this file will be created
+	 * @throws IOException if the creation fails for any reason
 	 */
-	private static void createEmptyDoc(File file) {
-		POIFSFileSystem fs;
-		try {
-			fs = new POIFSFileSystem(new FileInputStream(Paths.EMPTY_DOC));
-			HWPFDocument document = new HWPFDocument(fs);
-			FileOutputStream f = new FileOutputStream(file);
-			document.write(f);
-			document.close();
-		} catch (IOException e) {e.printStackTrace();}
-		
+	private static void createEmptyDoc(File file) throws IOException {
+		POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(Paths.EMPTY_DOC));
+		HWPFDocument document = new HWPFDocument(fs);
+		FileOutputStream f = new FileOutputStream(file);
+		document.write(f);
+		document.close();
 	}
 	
 	/**
@@ -176,7 +193,11 @@ public class TextImport {
 		switch(file.getName().substring(file.getName().indexOf('.'))) {
 		case ".docx": return saveDocx(file, text);
 		case ".doc":
-			createEmptyDoc(file);
+			try {createEmptyDoc(file);}
+			catch (IOException e) {
+				LogHelper.getLogger(16).error("Failed to save file.");
+				e.printStackTrace();
+			}
 			return saveDoc(file, text);
 		case ".txt": return saveTxt(file, text);
 		default: return false;
@@ -204,6 +225,7 @@ public class TextImport {
 			return true;
 		}
 		catch (IOException e) {
+			LogHelper.getLogger(16).error("Failed to save file.");
 			e.printStackTrace();
 			return false;
 		}
@@ -225,6 +247,7 @@ public class TextImport {
 			return true;
 		}
 		catch (IOException e) {
+			LogHelper.getLogger(16).error("Failed to save file.");
 			e.printStackTrace();
 			return false;
 		}
@@ -238,7 +261,11 @@ public class TextImport {
 	private static boolean saveTxt(File file, String text) {
 		PrintWriter output = null;
 		try {output = new PrintWriter(file);}
-		catch (FileNotFoundException e) {return false;}
+		catch (FileNotFoundException e) {
+			LogHelper.getLogger(16).error("Failed to save file - the file could not be found.");
+			e.printStackTrace();
+			return false;
+		}
 		
 		String[] paragraphs = text.split("\n");
 		for(String paragraph: paragraphs)

@@ -37,8 +37,11 @@ public class LogHelper {
 	 * 17 for Analyze
 	 * 18 for Parse
 	 * @return the desired logger
+	 * @throws IllegalArgumentException if number is not [1, 18]
 	 */
 	public static Logger getLogger(int number) {
+		if(number > 18 || number < 1)
+			throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 18].");
 		return loggers[number];
 	}
 	

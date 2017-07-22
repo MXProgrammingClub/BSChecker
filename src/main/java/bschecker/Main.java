@@ -27,22 +27,26 @@ public class Main extends Application {
 	
 	public void start(Stage primaryStage) {
 		initialize();
-		
 		LogHelper.getLogger(15).info("Starting the Application");
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/GUI.fxml"));
 		GUIController controller = new GUIController();
 		loader.setController(controller);
-		try {
-			Parent root = loader.load();
-			controller.setDefaultText();
-			controller.loadSettings(Bluesheets.getSettings());
-			Scene scene = new Scene(root, 1000, 656);
-			scene.getStylesheets().add(this.getClass().getResource("gui/application.css").toExternalForm());
-
-			primaryStage.setTitle("BSChecker");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch(IOException e) {e.printStackTrace();}
+		Parent root;
+		try {root = loader.load();}
+		catch(IOException e) {
+			LogHelper.getLogger(15).fatal("Application failed to load - program terminating.");
+			e.printStackTrace();
+			return;
+		}
+		Scene scene = new Scene(root, 1000, 656);
+		scene.getStylesheets().add(this.getClass().getResource("gui/application.css").toExternalForm());
+		
+		controller.setDefaultText();
+		controller.loadSettings(Bluesheets.getSettings());
+		
+		primaryStage.setTitle("BSChecker");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 	
 	/**
