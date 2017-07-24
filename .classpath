@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="lib/jfoenix.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-api-2.8.2.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-core-2.8.2.jar"/>
-	<classpathentry kind="lib" path="lib/opennlp-tools-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/opennlp-tools-1.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/poi-3.16.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-3.16.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.16.jar"/>
