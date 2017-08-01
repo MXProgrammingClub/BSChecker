@@ -55,11 +55,17 @@ public class Main extends Application {
 	 */
 	private static void initialize() {
 		LogHelper.init();
+		System.out.println();
 		LogHelper.getLogger(0).info("Beginning Initialization");
+		System.out.println();
 		Tools.initializeOpenNLP();
+		System.out.println();
 		Bluesheets.readSettings();
+		System.out.println();
 		QuotationForm.importVerbs();
+		System.out.println();
 		LogHelper.getLogger(0).info("Initialization Complete");
+		System.out.println();
 	}
 	
 }

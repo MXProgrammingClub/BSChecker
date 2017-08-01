@@ -45,6 +45,7 @@ public abstract class Bluesheet {
 			long lineStart = System.currentTimeMillis();
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
 			
+			System.out.println();
 			LogHelper.getLogger(17).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
 			ArrayList<Integer> removedChars = new ArrayList<Integer>();
 			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
@@ -75,6 +76,7 @@ public abstract class Bluesheet {
 			lineNum++;
 			charOffset += line.length() + removedChars.size() + 1;
 		}
+		System.out.println();
 		LogHelper.getLogger(17).info("Passage analyzed in " + ((System.currentTimeMillis() - start) / 1000d) + "s\n\n" + errors);
 		
 		return errors;
