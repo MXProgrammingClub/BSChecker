@@ -61,7 +61,7 @@ public class BSChecker {
 		
 //		Main.initialize();
 //		Bluesheets.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
-//		System.out.println("input: " + input);
+//		System.out.print("\ninput: " + input);
 //		ErrorList errors = Bluesheet.findAllErrors(input);
 	}
 	
