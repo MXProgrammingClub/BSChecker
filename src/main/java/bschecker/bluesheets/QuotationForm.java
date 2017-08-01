@@ -57,20 +57,12 @@ public class QuotationForm extends Bluesheet {
 					start = i;
 				for(int j = start; j < tokens.length; j++)
 					if(tokens[j].contains("\"")) { //finds closing quotation
-						int errorFront = findErrorsFront(tokens, i, j);
-						int errorBack = findErrorsBack(tokens, i, j);
-						if(errorFront == 1)
-							errors.add(new Error(i - 1, "Do not introduce a quote with a colon after a verb of saying or thinking."));
-						if(errorFront == 2)
-							errors.add(new Error(i - 1, "Do not introduce a quote with a comma without a verb of saying or thinking."));
-						if(errorFront == 3)
-							errors.add(new Error(i - 1, "Do not introduce a quote with a verb of saying or thinking and no comma."));
-						if(errorBack == 1)
-							errors.add(new Error(j - 1, "Do not put periods, commas, colons, or semicolons inside a quote which is sited."));
-						if(errorBack == 2)
-							errors.add(new Error(j + 1, "Do not put periods or commas outside a quote which is not cited."));
-						if(errorBack == 3)
-							errors.add(new Error(j - 1, "Do not put colons or semicolons inside a quote."));
+						ErrorTypes errorFront = findErrorsFront(tokens, i, j);
+						if(!(errorFront == ErrorTypes.NO_ERROR))
+							errors.add(new Error(i - 1, errorFront.DESCRIPTION));
+						ErrorTypes errorBack = findErrorsBack(tokens, i, j);
+						if(!(errorBack == ErrorTypes.NO_ERROR))
+							errors.add(new Error(errorBack == ErrorTypes.PUNCTUATION_OUTSIDE ? j + 1 : j - 1, errorBack.DESCRIPTION));
 						i = j;
 						break;
 					}
@@ -83,19 +75,19 @@ public class QuotationForm extends Bluesheet {
 	 * @param tokens The tokens from the nlp tokenizer.
 	 * @param start The starting index of the quotation.
 	 * @param end The ending index of the quotation
-	 * @return 0 if no error, 1 if semicolon that should be a comma, 2 if comma that should be no punctuation, 3 if no punctuation that should be a comma
+	 * @return the type of any error which is found
 	 */
-	private int findErrorsFront(String[] tokens, int start, int end) {
-		if(start > 0 && tokens[start - 1].equals(":"))
+	private ErrorTypes findErrorsFront(String[] tokens, int start, int end) {
+		if(start > 0 && tokens[start - 1].equals(":")) {
 			if(start > 1 && VERB_SET.contains(tokens[start - 2]))
-				return 1; //error if there is a colon before and the word before it is a verb
-		else if(start > 0 && tokens[start - 1].equals(","))
+				return ErrorTypes.INVALID_COLON; //error if there is a colon before and the word before it is a verb
+		} else if(start > 0 && tokens[start - 1].equals(",")) {
 			if(start > 1 && !VERB_SET.contains(tokens[start - 2]))
-				return 2; //error if there is a comma before and the word before it is not a verb
-		else
+				return ErrorTypes.INVALID_COMMA; //error if there is a comma before and the word before it is not a verb
+		} else
 			if(start > 0 && VERB_SET.contains(tokens[start - 1]))
-				return 3; //error if there is a not punctuation before and the word before is a verb
-		return 0;
+				return ErrorTypes.NEEDS_COMMA; //error if there is a not punctuation before and the word before is a verb
+		return ErrorTypes.NO_ERROR;
 	}
 
 	/**
@@ -103,18 +95,38 @@ public class QuotationForm extends Bluesheet {
 	 * @param tokens The tokens from the nlp tokenizer.
 	 * @param start The starting index of the quotation.
 	 * @param end The ending index of the quotation
-	 * @return 0 if no error, 1 if cited with punctuation incorrectly inside, 2 if not cited with punctuation incorrectly outside, 3 if not cited and punctuation incorrectly inside
+	 * @return the type of any error which is found
 	 */
-	private int findErrorsBack(String[] tokens, int start, int end) {
-		if(tokens[end].contains("(") || end + 1 < tokens.length && tokens[end + 1].contains("("))
+	private ErrorTypes findErrorsBack(String[] tokens, int start, int end) {
+		if(tokens[end].contains("(") || end + 1 < tokens.length && tokens[end + 1].contains("(")) {
 			if(end > start && UtilityMethods.arrayContains(PUNCTUATION[0], tokens[end - 1]) || UtilityMethods.arrayContains(PUNCTUATION[1], tokens[end - 1]))
-				return 1; //error if cited and punctuation inside
-		else {
+				return ErrorTypes.PUNCTUATION_INSIDE_CITED; //error if cited and punctuation inside
+		} else {
 			if(end + 1 < tokens.length && UtilityMethods.arrayContains(PUNCTUATION[0], tokens[end + 1]))
-				return 2; //error if not cited and period/comma outside
+				return ErrorTypes.PUNCTUATION_OUTSIDE; //error if not cited and period/comma outside
 			if(end > start && UtilityMethods.arrayContains(PUNCTUATION[1], tokens[end - 1]))
-				return 3; //error if not cited and colon/semicolon inside
-		} return 0;
+				return ErrorTypes.PUNCTUATION_INSIDE; //error if not cited and colon/semicolon inside
+		} return ErrorTypes.NO_ERROR;
+	}
+	
+	/**
+	 * an enum which defines possible types of quotation form errors
+	 * @author JeremiahDeGreeff
+	 */
+	private enum ErrorTypes {
+		NO_ERROR(null),
+		INVALID_COLON("Do not introduce a quote with a colon after a verb of saying or thinking."),
+		INVALID_COMMA("Do not introduce a quote with a comma without a verb of saying or thinking."),
+		NEEDS_COMMA("Do not introduce a quote with a verb of saying or thinking and no comma."),
+		PUNCTUATION_INSIDE_CITED("Do not put periods, commas, colons, or semicolons inside a quote which is cited."),
+		PUNCTUATION_OUTSIDE("Do not put periods or commas outside a quote which is not cited."),
+		PUNCTUATION_INSIDE("Do not put colons or semicolons inside a quote which is not cited.");
+		
+		public final String DESCRIPTION;
+		
+		ErrorTypes(String description) {
+			DESCRIPTION = description;
+		}
 	}
 	
 }
