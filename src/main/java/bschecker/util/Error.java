@@ -1,18 +1,17 @@
 package bschecker.util;
 
-
 /**
  * an object which represents a blue sheet error
  * the object contains the start and end indices of the error, the type of error [1 - 14] and an optional note which provides more information about the specific error
  * @author JeremiahDeGreeff
  */
-public class Error{
+public class Error {
 	
-	private int startIndex;
-	private int endIndex;
-	private final int BLUESHEET_NUMBER;
-	private final boolean IS_TOKEN_BASED;
-	private String note;
+	protected final boolean IS_TOKEN_BASED;
+	private final int START_INDEX;
+	private final int END_INDEX;
+	private int bluesheetNumber;
+	private final String NOTE;
 	
 	
 	/**
@@ -24,48 +23,56 @@ public class Error{
 	 * @param note a note to be attached to the error
 	 * @throws IllegalArgumentException if startIndex > endIndex
 	 */
-	public Error(int startIndex, int endIndex, int bluesheetNum, boolean isTokenBased, String note) {
+	protected Error(boolean isTokenBased, int startIndex, int endIndex, int bluesheetNum, String note) {
 		if(startIndex > endIndex)
 			throw new IllegalArgumentException("StartIndex must occur before EndIndex.");
-		
-		this.startIndex = startIndex;
-		this.endIndex = endIndex;
-		BLUESHEET_NUMBER = bluesheetNum;
 		IS_TOKEN_BASED = isTokenBased;
-		this.note = note;
+		START_INDEX = startIndex;
+		END_INDEX = endIndex;
+		this.bluesheetNumber = bluesheetNum;
+		NOTE = note;
 	}
 	
 	/**
 	 * constructor
+	 * assumes that the Error is indexed based on tokens
 	 * @param startIndex the starting index of the error
 	 * @param endIndex the ending index of the error
-	 * @param bluesheetNum the number of the bluesheet which the error violates
-	 * @param isTokenBased true if the indicies of this error are based on tokens, false if based on characters
+	 * @param note a note to be attached to the error
 	 * @throws IllegalArgumentException if startIndex > endIndex
 	 */
-	public Error(int startIndex, int endIndex, int bluesheetNum, boolean isTokenBased) {
-		this(startIndex, endIndex, bluesheetNum, isTokenBased, "");
+	public Error(int startIndex, int endIndex, String note) {
+		this(true, startIndex, endIndex, 0, note);
 	}
 	
 	/**
 	 * constructor
+	 * assumes that the Error is indexed based on tokens
+	 * @param startIndex the starting index of the error
+	 * @param endIndex the ending index of the error
+	 * @throws IllegalArgumentException if startIndex > endIndex
+	 */
+	public Error(int startIndex, int endIndex) {
+		this(true, startIndex, endIndex, 0, "");
+	}
+	
+	/**
+	 * constructor
+	 * assumes that the Error is indexed based on tokens
 	 * @param index the index of the error (starting and ending)
-	 * @param bluesheetNum the number of the bluesheet which the error violates
-	 * @param isTokenBased true if the indicies of this error are based on tokens, false if based on characters
 	 * @param note a note to be attached to the error
 	 */
-	public Error(int index, int bluesheetNum, boolean isTokenBased, String note) {
-		this(index, index, bluesheetNum, isTokenBased, note);
+	public Error(int index, String note) {
+		this(true, index, index, 0, note);
 	}
 	
 	/**
 	 * constructor
+	 * assumes that the Error is indexed based on tokens
 	 * @param index the index of the error (starting and ending)
-	 * @param bluesheetNum the number of the bluesheet which the error violates
-	 * @param isTokenBased true if the indicies of this error are based on tokens, false if based on characters
 	 */
-	public Error(int index, int bluesheetNum, boolean isTokenBased) {
-		this(index, index, bluesheetNum, isTokenBased, "");
+	public Error(int index) {
+		this(true, index, index, 0, "");
 	}
 	
 	
@@ -74,7 +81,7 @@ public class Error{
 	 * @return the starting index of the error
 	 */
 	public int getStartIndex() {
-		return startIndex;
+		return START_INDEX;
 	}
 	
 	/**
@@ -82,7 +89,7 @@ public class Error{
 	 * @return the ending index of the error
 	 */
 	public int getEndIndex() {
-		return endIndex;
+		return END_INDEX;
 	}
 	
 	/**
@@ -90,15 +97,7 @@ public class Error{
 	 * @return the bluesheet number
 	 */
 	public int getBluesheetNumber() {
-		return BLUESHEET_NUMBER;
-	}
-	
-	/**
-	 * accessor method for whether this error object's indices are based on tokens or characters
-	 * @return true if tokens, false if characters
-	 */
-	public boolean isTokenBased() {
-		return IS_TOKEN_BASED;
+		return bluesheetNumber;
 	}
 	
 	/**
@@ -106,31 +105,15 @@ public class Error{
 	 * @return the note attached to this error
 	 */
 	public String getNote() {
-		return note;
+		return NOTE;
 	}
 	
 	/**
-	 * a mutator method for the starting index of the error
-	 * @param startIndex the new starting index
+	 * a mutator method for the number of the bluesheet
+	 * @param bluesheetNumber the number to be set
 	 */
-	public void setStartIndex(int startIndex) {
-		this.startIndex = startIndex;
-	}
-	
-	/**
-	 * a mutator method for the ending index of the error
-	 * @param endIndex the new ending index
-	 */
-	public void setEndIndex(int endIndex) {
-		this.endIndex = endIndex;
-	}
-	
-	/**
-	 * a mutator method for the note of an error
-	 * @param note the new note
-	 */
-	public void setNote(String note) {
-		this.note = note;
+	protected void setBluesheetNumber(int bluesheetNumber) {
+		this.bluesheetNumber = bluesheetNumber;
 	}
 	
 }

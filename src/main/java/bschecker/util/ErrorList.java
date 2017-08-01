@@ -8,7 +8,7 @@ import java.util.Comparator;
  * @author JeremiahDeGreeff
  */
 @SuppressWarnings("serial")
-public class ErrorList extends ArrayList<Error>{
+public class ErrorList extends ArrayList<Error> {
 	
 	private final String TEXT;
 	private final boolean IS_TOKEN_BASED;
@@ -24,10 +24,19 @@ public class ErrorList extends ArrayList<Error>{
 		IS_TOKEN_BASED = isTokenBased;
 	}
 	
+	/**
+	 * constructor
+	 * assumes that the ErrorList contains Errors which are indexed based on tokens
+	 * @param text the text in which the errors of this ErrorList occur
+	 */
+	public ErrorList(String text) {
+		this(text, true);
+	}
+	
 	
 	@Override
 	public boolean add(Error e) {
-		if(IS_TOKEN_BASED != e.isTokenBased()){
+		if(this.IS_TOKEN_BASED != e.IS_TOKEN_BASED) {
 			LogHelper.getLogger(17).error("Cannot add errors of different types to same ErrorList!");
 			return false;
 		}
@@ -36,14 +45,14 @@ public class ErrorList extends ArrayList<Error>{
 	
 	@Override
 	public void add(int i, Error e) {
-		if(IS_TOKEN_BASED != e.isTokenBased())
+		if(this.IS_TOKEN_BASED != e.IS_TOKEN_BASED)
 			LogHelper.getLogger(17).error("Cannot add errors of different types to same ErrorList!");
 		super.add(i, e);
 	}
 	
 	@Override
 	public Error set(int i, Error e) {
-		if(IS_TOKEN_BASED != e.isTokenBased()){
+		if(this.IS_TOKEN_BASED != e.IS_TOKEN_BASED) {
 			LogHelper.getLogger(17).error("Cannot add errors of different types to same ErrorList!");
 			return null;
 		}
@@ -53,8 +62,12 @@ public class ErrorList extends ArrayList<Error>{
 	/**
 	 * Sorts this list by location.
 	 */
-	public void sort() {
-		sort(new Comparator<Error>() {public int compare(Error o1, Error o2) {return o1.getStartIndex() > o2.getStartIndex() ? 1 : o1.getStartIndex() < o2.getStartIndex() ? -1 : 0;}});
+	private void sort() {
+		sort(new Comparator<Error>() {
+			public int compare(Error o1, Error o2) {
+				return o1.getStartIndex() > o2.getStartIndex() ? 1 : o1.getStartIndex() < o2.getStartIndex() ? -1 : 0;
+				}
+			});
 	}
 	
 	/**
@@ -102,10 +115,8 @@ public class ErrorList extends ArrayList<Error>{
 
 		//loop through each error
 		this.sort();
-		for(int errorNum = 0; errorNum < size(); errorNum++) {
+		for(Error e : this) {
 			errorProcessed = false;
-			Error curErrorTokens = get(errorNum);
-			Error curErrorChars = new Error(-1, -1, curErrorTokens.getBluesheetNumber(), false, curErrorTokens.getNote());
 
 			// loop until current error is processed
 			while(!errorProcessed) {
@@ -116,12 +127,12 @@ public class ErrorList extends ArrayList<Error>{
 					charIndex++;
 				}
 				//if token is the start of the error process it
-				if(tokenIndex == curErrorTokens.getStartIndex()) {
+				if(tokenIndex == e.getStartIndex()) {
 					errorIndex = charIndex;
 					errorLength = tokens[tokenIndex].length();
 
 					//loop through errors that include multiple tokens
-					for(int i = 1; i <= curErrorTokens.getEndIndex() - curErrorTokens.getStartIndex(); i++) {
+					for(int i = 1; i <= e.getEndIndex() - e.getStartIndex(); i++) {
 						//find next token
 						while(tokens[tokenIndex + i].charAt(0) != TEXT.charAt(errorIndex + errorLength))
 							errorLength++;
@@ -139,10 +150,7 @@ public class ErrorList extends ArrayList<Error>{
 					while(numIgnored + ignoredInside < ignoredChars.size() && ignoredChars.get(numIgnored + ignoredInside) <= startChar + numIgnored + errorIndex + errorLength - 1)
 						ignoredInside++;
 					
-					curErrorChars.setStartIndex(startChar + numIgnored + errorIndex);
-					curErrorChars.setEndIndex(startChar + numIgnored + ignoredInside + errorIndex + errorLength - 1);
-					charErrorList.add(curErrorChars);
-					
+					charErrorList.add(new Error(false, startChar + numIgnored + errorIndex, startChar + numIgnored + ignoredInside + errorIndex + errorLength - 1, e.getBluesheetNumber(), e.getNote()));
 					errorProcessed = true;
 				} else {
 					charIndex += tokens[tokenIndex].length();
@@ -151,6 +159,15 @@ public class ErrorList extends ArrayList<Error>{
 			}
 		}
 		return charErrorList;
+	}
+	
+	/**
+	 * Sets the bluesheet number for all elements of this ErrorList
+	 * @param bluesheetNumber the number to be set
+	 */
+	public void setBluesheetNumber(int bluesheetNumber) {
+		for(Error e : this)
+			e.setBluesheetNumber(bluesheetNumber);
 	}
 	
 }

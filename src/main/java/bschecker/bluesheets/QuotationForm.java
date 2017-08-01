@@ -19,7 +19,6 @@ import bschecker.util.UtilityMethods;
  */
 public class QuotationForm extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 14;
 	private static HashSet<String> VERB_SET; //the set of verbs of saying or thinking
 	private static final String[][] PUNCTUATION = {{".", ","}, {":", ";"}};
 	
@@ -49,7 +48,7 @@ public class QuotationForm extends Bluesheet {
 	@Override
 	protected ErrorList findErrors(String line, String[] parses) {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		for(int i = 0; i < tokens.length; i++)
 			if(tokens[i].contains("\"")) { //finds opening quotation
 				int start = i + 1;
@@ -60,17 +59,17 @@ public class QuotationForm extends Bluesheet {
 						int errorFront = findErrorsFront(tokens, i, j);
 						int errorBack = findErrorsBack(tokens, i, j);
 						if(errorFront == 1)
-							errors.add(new Error(i - 1, ERROR_NUMBER, true, "Do not introduce a quote with a colon after a verb of saying or thinking."));
+							errors.add(new Error(i - 1, "Do not introduce a quote with a colon after a verb of saying or thinking."));
 						if(errorFront == 2)
-							errors.add(new Error(i - 1, ERROR_NUMBER, true, "Do not introduce a quote with a comma without a verb of saying or thinking."));
+							errors.add(new Error(i - 1, "Do not introduce a quote with a comma without a verb of saying or thinking."));
 						if(errorFront == 3)
-							errors.add(new Error(i - 1, ERROR_NUMBER, true, "Do not introduce a quote with a verb of saying or thinking and no comma."));
+							errors.add(new Error(i - 1, "Do not introduce a quote with a verb of saying or thinking and no comma."));
 						if(errorBack == 1)
-							errors.add(new Error(j - 1, ERROR_NUMBER, true, "Do not put periods, commas, colons, or semicolons inside a quote which is sited."));
+							errors.add(new Error(j - 1, "Do not put periods, commas, colons, or semicolons inside a quote which is sited."));
 						if(errorBack == 2)
-							errors.add(new Error(j + 1, ERROR_NUMBER, true, "Do not put periods or commas outside a quote which is not cited."));
+							errors.add(new Error(j + 1, "Do not put periods or commas outside a quote which is not cited."));
 						if(errorBack == 3)
-							errors.add(new Error(j - 1, ERROR_NUMBER, true, "Do not put colons or semicolons inside a quote."));
+							errors.add(new Error(j - 1, "Do not put colons or semicolons inside a quote."));
 						i = j;
 						break;
 					}

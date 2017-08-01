@@ -63,11 +63,13 @@ public abstract class Bluesheet {
 					long bluesheetStart = System.currentTimeMillis();
 					LogHelper.getLogger(17).info("Looking for: " + b.getName() + "...");
 					ErrorList temp = b.getObject().findErrors(line, parses);
+					temp.setBluesheetNumber(b.getNumber());
 					lineErrors.addAll(temp);
 					LogHelper.getLogger(17).info(temp.size() + (temp.size() == 1 ? " Error" : " Errors") + " Found (" + ((System.currentTimeMillis() - bluesheetStart) / 1000d) + "s)");
 				}
 			LogHelper.getLogger(17).info(lineErrors.size() + (lineErrors.size() == 1 ? " Error" : " Errors") + " Found in line " + lineNum + " (" + ((System.currentTimeMillis() - lineStart) / 1000d) + "s)");
-			lineErrors.sort();
+			
+			
 			errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
 
 			lineNum++;

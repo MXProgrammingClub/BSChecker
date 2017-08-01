@@ -12,7 +12,6 @@ import bschecker.util.UtilityMethods;
  */
 public class PassiveVoice extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 9;
 	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been", "being"};
 	
 	
@@ -27,7 +26,7 @@ public class PassiveVoice extends Bluesheet {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		boolean inQuote = false;
 		for(int i = 1; i < tokens.length; i++){
 			if(tokens[i].contains("\""))
@@ -37,7 +36,7 @@ public class PassiveVoice extends Bluesheet {
 				while(tags[j].equals("RB") && j < tokens.length)
 					j++;
 				if(tags[j].equals("VBN"))
-					errors.add(new Error(i, j, ERROR_NUMBER, true));
+					errors.add(new Error(i, j));
 			}
 		}
 		return errors;

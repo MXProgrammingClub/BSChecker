@@ -14,9 +14,6 @@ import bschecker.util.UtilityMethods;
  */
 public class IncompleteSentence extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 2;
-	
-	
 	/**
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line
@@ -24,7 +21,7 @@ public class IncompleteSentence extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, String[] parses) {
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
 		for(int i = 0; i < sentences.length; i++){
@@ -44,22 +41,22 @@ public class IncompleteSentence extends Bluesheet {
 	 * @return an ErrorList which for each error in this sentence references start and end tokens, the bluesheet number (11), and, optionally, a note
 	 */
 	private ErrorList findErrorsInSentence(String line, String parse, int tokenOffset, int length) {
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		ArrayList<String> tags = UtilityMethods.listParseTags(parse);
-		LogHelper.getLogger(ERROR_NUMBER).debug(parse);
-		LogHelper.getLogger(ERROR_NUMBER).debug(tags);
+		LogHelper.getLogger(this).debug(parse);
+		LogHelper.getLogger(this).debug(tags);
 		
 		if(tags.get(1).equals("SBAR")) //either lone dependent clause (Fragment) or run-on in form DC IC
-			errors.add(new Error(tokenOffset, tokenOffset + length - 1, ERROR_NUMBER, true));
+			errors.add(new Error(tokenOffset, tokenOffset + length - 1));
 		int sIndex = 0;
 		int wIndex = 0;
 		for(int i = 0; i < tags.size(); i++){
 			if(UtilityMethods.arrayContains(Tools.WORD_LEVEL_TAGS, tags.get(i)))
 				wIndex++;
 			if(tags.get(i).equals(":") && !tags.get(i + 1).equals("S")) //fragment in form DC; IC or IC; DC
-				errors.add(new Error(tokenOffset + wIndex - 1, ERROR_NUMBER, true, "Fragment"));
+				errors.add(new Error(tokenOffset + wIndex - 1, "Fragment"));
 			else if(tags.get(i).equals("CC") && tags.get(i + 1).equals("S") && !tags.get(i - 1).equals(",")) //run-on in form IC CC IC
-				errors.add(new Error(tokenOffset + wIndex - 1, ERROR_NUMBER, true, "Run-on"));
+				errors.add(new Error(tokenOffset + wIndex - 1, "Run-on"));
 			else if(tags.get(i).equals("S")){ //potential for comma-splice in form IC, IC
 				sIndex += parse.substring(sIndex + 1).indexOf("(S ") + 2;
 				//catch for the case where this clause is in fact dependent despite the parser thinking otherwise
@@ -98,7 +95,7 @@ public class IncompleteSentence extends Bluesheet {
 							k = parse.indexOf(' ', k + 1);
 						//not a comma splice if comma is introducing a quote
 						if(parse.charAt(k + 1) != '"')
-							errors.add(new Error(tokenOffset + wIndex + tagsPassed, ERROR_NUMBER, true, "Comma-Splice"));
+							errors.add(new Error(tokenOffset + wIndex + tagsPassed, "Comma-Splice"));
 					}
 				}
 			}

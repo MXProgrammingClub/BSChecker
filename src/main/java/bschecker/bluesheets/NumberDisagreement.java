@@ -19,9 +19,6 @@ import opennlp.tools.parser.Parse;
 @SuppressWarnings("unused")
 public class NumberDisagreement extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 5;
-	
-	
 	/**
 	 * finds errors in number disagreement in the given paragraph
 	 * @param line the paragraph in which to find errors
@@ -38,7 +35,7 @@ public class NumberDisagreement extends Bluesheet {
 //			correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), Tools.getParser(), 1)[0]);
 //			arr.addAll(correctParse(ParserTool.parseLine(s.substring(0,s.length()-1), UtilityMethods.getParser(), 1)[0]));
 //		}
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		return errors;
 	}
 //	public static ArrayList<int[]> correctParse(Parse p){

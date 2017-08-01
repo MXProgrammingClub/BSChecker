@@ -3,6 +3,9 @@ package bschecker.util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import bschecker.bluesheets.Bluesheet;
+import bschecker.bluesheets.Bluesheets;
+
 public class LogHelper {
 	
 	private static Logger[] loggers = {
@@ -43,6 +46,15 @@ public class LogHelper {
 		if(number > 18 || number < 0)
 			throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [0, 18].");
 		return loggers[number];
+	}
+	
+	/**
+	 * returns the logger associated with the passed Bluesheet object
+	 * @param object the Bluesheet object whose logger should be returned
+	 * @return the logger corresponding to this Bluesheet
+	 */
+	public static Logger getLogger(Bluesheet object) {
+		return loggers[Bluesheets.getNumber(object)];
 	}
 	
 }

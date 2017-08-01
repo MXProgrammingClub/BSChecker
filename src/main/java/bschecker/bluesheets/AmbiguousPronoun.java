@@ -14,7 +14,6 @@ import opennlp.tools.util.Span;
  */
 public class AmbiguousPronoun extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 7;
 	private static final String[] PRONOUNS = {"she", "her", "hers", "herself", "he", "him", "his", "himself", "they", "them", "their", "theirs", "themselves"};
 	
 	
@@ -27,7 +26,7 @@ public class AmbiguousPronoun extends Bluesheet {
 	@Override
 	protected ErrorList findErrors(String line, String[] parses) {
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		int prevSentenceNouns, curSentenceNouns = 0, tokenOffset = 0, index;
 		for(int i = 0; i < sentences.length; i++) {
 			String[] words = Tools.getTokenizer().tokenize(sentences[i]);
@@ -36,7 +35,7 @@ public class AmbiguousPronoun extends Bluesheet {
 			ArrayList<String> names = findName(words);
 			for(int j = 0; j < words.length; j++)
 				if(UtilityMethods.arrayContains(PRONOUNS, words[j]) && prevSentenceNouns + curSentenceNouns >= 2)
-						errors.add(new Error(tokenOffset + j, ERROR_NUMBER, true));	
+						errors.add(new Error(tokenOffset + j));	
 				else if((index = names.indexOf(words[j])) >= 0) {
 					prevSentenceNouns = 0;
 					curSentenceNouns++;

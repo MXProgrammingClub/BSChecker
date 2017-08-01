@@ -14,7 +14,6 @@ import bschecker.util.UtilityMethods;
  */
 public class FaultyParallelism extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 11;
 	private final String[][] tagGroups = {{"NN", "NNS", "NNP", "NNPS"}, {"S", "SBAR"}, {"POS", "PRP$"}, {"IN", "RB"}};
 	
 	
@@ -26,7 +25,7 @@ public class FaultyParallelism extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, String[] parses) {
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
 		for(int i = 0; i < sentences.length; i++){
@@ -45,10 +44,10 @@ public class FaultyParallelism extends Bluesheet {
 	 * @return an ErrorList which for each error in this sentence references start and end tokens, the bluesheet number (11), and, optionally, a note
 	 */
 	private ErrorList findErrorsInSentence(String line, String parse, ArrayList<Integer> ccTokens, int tokenOffset) {
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		String simplifiedParse = UtilityMethods.simplifyParse(parse);
-		LogHelper.getLogger(ERROR_NUMBER).debug(parse);
-		LogHelper.getLogger(ERROR_NUMBER).debug(simplifiedParse);
+		LogHelper.getLogger(this).debug(parse);
+		LogHelper.getLogger(this).debug(simplifiedParse);
 		int ccIndex = -1;
 		for(int ccNum = 0; ccNum < ccTokens.size(); ccNum++){
 			ccIndex = simplifiedParse.indexOf("CC", ccIndex + 1);
@@ -60,7 +59,7 @@ public class FaultyParallelism extends Bluesheet {
 			int right = rightResult[0], left = findLeft(simplifiedParse, ccIndex, rightResult[1]);
 			String rightType = simplifiedParse.substring(right, (simplifiedParse.indexOf(' ', right) < simplifiedParse.indexOf(')', right) && simplifiedParse.indexOf(' ', right) != -1) ? simplifiedParse.indexOf(' ', right) : simplifiedParse.indexOf(')', right));
 			String leftType = simplifiedParse.substring(left, (simplifiedParse.indexOf(' ', left) < simplifiedParse.indexOf(')', left)) ? simplifiedParse.indexOf(' ', left) : simplifiedParse.indexOf(')', left));
-			LogHelper.getLogger(ERROR_NUMBER).debug("Type to Left: \"" + leftType + "\" (" + left + "-" + (left + leftType.length()) + ") -- Type to Right: \"" + rightType + "\" (" + right + "-" + (right + rightType.length()) + ")");
+			LogHelper.getLogger(this).debug("Type to Left: \"" + leftType + "\" (" + left + "-" + (left + leftType.length()) + ") -- Type to Right: \"" + rightType + "\" (" + right + "-" + (right + rightType.length()) + ")");
 			if(!leftType.equals(rightType)){
 				boolean error = true;
 				for(String[] group : tagGroups)
@@ -69,8 +68,8 @@ public class FaultyParallelism extends Bluesheet {
 						break;
 					}
 				if(error){
-					LogHelper.getLogger(ERROR_NUMBER).debug("Error!");
-					errors.add(new Error(ccTokens.get(ccNum) + tokenOffset, ERROR_NUMBER, true));
+					LogHelper.getLogger(this).debug("Error!");
+					errors.add(new Error(ccTokens.get(ccNum) + tokenOffset));
 				}
 			}
 		}

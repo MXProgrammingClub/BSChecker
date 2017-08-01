@@ -14,9 +14,6 @@ import bschecker.util.Tools;
 @SuppressWarnings("unused")
 public class DanglingModifier extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 10;
-	
-	
 	/**
 	 * WIP
 	 * @param line the paragraph in which to find errors
@@ -25,7 +22,7 @@ public class DanglingModifier extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, String[] parses) {
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		return errors;
 	}
 	

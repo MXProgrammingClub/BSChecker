@@ -149,9 +149,22 @@ public enum Bluesheets {
 	 */
 	public static Bluesheets getBluesheetFromNum(int number) {
 		for(Bluesheets b: Bluesheets.values())
-			if(b.getNumber() == number)
+			if(b.number == number)
 				return b;
 		throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
+	}
+	
+	/**
+	 * returns the number corresponding to the passed Bluesheet object
+	 * @param object the object whose number will be returned
+	 * @return the number of the object [1, 14]
+	 * @throws IllegalArgumentException if object is does not belong to any of the values in this enum
+	 */
+	public static int getNumber(Bluesheet object) {
+		for(Bluesheets b: Bluesheets.values())
+			if(b.object == object)
+				return b.number;
+		throw new IllegalArgumentException("The passed Bluesheet object was not found.");
 	}
 	
 	/**

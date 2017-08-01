@@ -10,9 +10,6 @@ import bschecker.util.Tools;
  */
 public class VagueThisWhich extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 4;
-	
-	
 	/**
 	 * finds any vague which or this in the given paragraph
 	 * @param line the paragraph in which to find errors
@@ -24,14 +21,12 @@ public class VagueThisWhich extends Bluesheet {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		for(int i = 0; i < tokens.length; i++)
 			if(tokens[i].equalsIgnoreCase("this") && isVagueThis(tokens,tags,i))
-				errors.add(new Error(i, ERROR_NUMBER, true, "Vague this"));
+				errors.add(new Error(i, "Vague this"));
 			else if(tokens[i].equalsIgnoreCase("which") && (i == 0 || (tags[i-1].charAt(0)!='N' && tags[i-1].charAt(0)!='I')))
-				errors.add(new Error(i, ERROR_NUMBER, true, "Vague which"));
-				
-		
+				errors.add(new Error(i, "Vague which"));
 		return errors;
 	}
 

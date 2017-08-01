@@ -13,7 +13,6 @@ import bschecker.util.UtilityMethods;
  */
 public class PastTense extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 1;
 	private static final String[] TO_HAVE_CONJ = {"have", "has", "had", "having"};
 	
 	
@@ -25,13 +24,13 @@ public class PastTense extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, String[] parses) {
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		String sentences[] = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
 		for(int i = 0; i < sentences.length; i++){
 			String tokens[] = Tools.getTokenizer().tokenize(sentences[i]);
 			String[] tags = Tools.getPOSTagger().tag(tokens);
-			ErrorList sentenceErrors = new ErrorList(sentences[i], true);
+			ErrorList sentenceErrors = new ErrorList(sentences[i]);
 			boolean inQuote = false, inIntroducedQuote = false;
 			for(int j = 0; j < tags.length; j++){
 				if(tokens[j].contains("\"")) {
@@ -39,9 +38,9 @@ public class PastTense extends Bluesheet {
 					inQuote = !inQuote;
 				}
 				if(!inIntroducedQuote && tags[j].equals("VBD"))
-					sentenceErrors.add(new Error(j, ERROR_NUMBER, true));
+					sentenceErrors.add(new Error(j));
 				if(!inIntroducedQuote && tags[j].equals("VBN") && j > 0 && UtilityMethods.arrayContains(TO_HAVE_CONJ, tokens[j - 1]))
-					sentenceErrors.add(new Error(j - 1, j, ERROR_NUMBER, true)); //does not currently look past intermediary adverbs
+					sentenceErrors.add(new Error(j - 1, j)); //does not currently look past intermediary adverbs
 			}
 			int[] errorTokens = new int[sentenceErrors.size()];
 			for(int j = 0; j < sentenceErrors.size(); j++)
@@ -49,7 +48,7 @@ public class PastTense extends Bluesheet {
 			boolean[] inSBAR = UtilityMethods.tokensInsideTag(errorTokens, parses[i], "SBAR");
 			for(int j = 0; j < sentenceErrors.size(); j++)
 				if(!inSBAR[j])
-					errors.add(new Error(sentenceErrors.get(j).getStartIndex() + tokenOffset, sentenceErrors.get(j).getEndIndex() + tokenOffset, ERROR_NUMBER, true));
+					errors.add(new Error(sentenceErrors.get(j).getStartIndex() + tokenOffset, sentenceErrors.get(j).getEndIndex() + tokenOffset));
 			tokenOffset += tokens.length;
 		}
 		return errors;

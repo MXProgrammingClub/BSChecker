@@ -11,7 +11,6 @@ import bschecker.util.UtilityMethods;
  */
 public class ProgressiveTense extends Bluesheet {
 	
-	public final int ERROR_NUMBER = 12;
 	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been"};
 	
 	
@@ -26,7 +25,7 @@ public class ProgressiveTense extends Bluesheet {
 		String[] tokens = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
-		ErrorList errors = new ErrorList(line, true);
+		ErrorList errors = new ErrorList(line);
 		boolean inQuote = false, inIntroducedQuote = false;
 		for(int i = 1; i < tokens.length; i++){
 			if(tokens[i].contains("\"")){
@@ -37,7 +36,7 @@ public class ProgressiveTense extends Bluesheet {
 				int j = i + 1;
 				while(tags[j].equals("RB") && j < tokens.length) j++;
 				if(tags[j].equals("VBG"))
-					errors.add(new Error(i, j, ERROR_NUMBER, true));
+					errors.add(new Error(i, j));
 			}
 		}
 		return errors;
