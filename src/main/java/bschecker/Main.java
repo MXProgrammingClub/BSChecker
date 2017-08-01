@@ -54,10 +54,12 @@ public class Main extends Application {
 	 * initializes various static references for the project before the application is launched
 	 */
 	private static void initialize() {
+		LogHelper.init();
 		LogHelper.getLogger(0).info("Beginning Initialization");
 		Tools.initializeOpenNLP();
 		Bluesheets.readSettings();
 		QuotationForm.importVerbs();
+		LogHelper.getLogger(0).info("Initialization Complete");
 	}
 	
 }

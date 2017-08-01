@@ -23,13 +23,14 @@ public class QuotationForm extends Bluesheet {
 	private static final String[][] PUNCTUATION = {{".", ","}, {":", ";"}};
 	
 	/**
-	 * Imports the list of words of saying or thinking.
+	 * Imports the list of verbs of saying or thinking.
 	 */
 	public static void importVerbs() {
 		if(VERB_SET != null) {
 			LogHelper.getLogger(0).warn("Verb Set has already been initialized - skipping");
 			return;
 		}
+		LogHelper.getLogger(0).info("Loading verbs of saying or thinking");
 		VERB_SET = new HashSet<String>();
 		Scanner scan = null;
 			try {scan = new Scanner(new File(Paths.SAYING_VERBS));}

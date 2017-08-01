@@ -8,27 +8,21 @@ import bschecker.bluesheets.Bluesheets;
 
 public class LogHelper {
 	
-	private static Logger[] loggers = {
-			LogManager.getLogger("Init"),
-			LogManager.getLogger("Past Tense"),
-			LogManager.getLogger("Fragment/Run-On/Comma-Splice"),
-			LogManager.getLogger("First/Second Person"),
-			LogManager.getLogger("Vague \"this\" or \"which\""),
-			LogManager.getLogger("Subject-Verb Disagreement"),
-			LogManager.getLogger("Pronoun Case"),
-			LogManager.getLogger("Ambiguous Pronoun"),
-			LogManager.getLogger("Apostrophe Error"),
-			LogManager.getLogger("Passive Voice"),
-			LogManager.getLogger("Dangling Participle"),
-			LogManager.getLogger("Faulty Parallelism"),
-			LogManager.getLogger("Progressive Tense"),
-			LogManager.getLogger("Incorrect Use of Gerund/Possessive"),
-			LogManager.getLogger("Quotation Error"),
-			LogManager.getLogger("Application"),
-			LogManager.getLogger("I/O"),
-			LogManager.getLogger("Analyze"),
-			LogManager.getLogger("Parse")
-	};
+	private static Logger[] loggers = new Logger[19];
+	
+	/**
+	 * initializes all the loggers used by the project
+	 */
+	public static void init() {
+		loggers[0] = LogManager.getLogger("Init");
+		for(int i = 0; i < 14; i++)
+			loggers[i + 1] = LogManager.getLogger(Bluesheets.values()[i].getName());
+		loggers[15] = LogManager.getLogger("Application");
+		loggers[16] = LogManager.getLogger("I/O");
+		loggers[17] = LogManager.getLogger("Analyze");
+		loggers[18] = LogManager.getLogger("Parse");
+		loggers[0].info("Loggers initialized");
+	}
 	
 	/**
 	 * returns the logger at the passed index

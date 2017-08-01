@@ -78,7 +78,7 @@ public enum Bluesheets {
 			Availability.AVAILABLE);
 	
 	
-	private static final boolean[] DEFAULT_SETTINGS = generateDefaultSettings();
+	private static boolean[] defaultSettings;
 	private static boolean[] settings = new boolean[14];
 	
 	private final int NUMBER;
@@ -127,6 +127,12 @@ public enum Bluesheets {
 		return settings;
 	}
 	
+	public static boolean[] getDefaultSettings() {
+		if(defaultSettings == null)
+			generateDefaultSettings();
+		return defaultSettings;
+	}
+	
 	/**
 	 * Based on the number passed in, returns whether or not the bluesheet with that number should be tested.
 	 * @param number The number of the bluesheet
@@ -169,14 +175,12 @@ public enum Bluesheets {
 	
 	/**
 	 * Generates the default settings based on the stated availability of each element in the Enum.
-	 * @return these default settings
 	 */
-	private static boolean[] generateDefaultSettings() {
+	private static void generateDefaultSettings() {
 		LogHelper.getLogger(0).info("Generating default settings");
-		boolean[] settings = new boolean[14];
+		defaultSettings = new boolean[14];
 		for(int i = 0; i < settings.length; i++)
-			settings[i] = Bluesheets.values()[i].AVAILABILITY_WARNING == null;
-		return settings;
+			defaultSettings[i] = Bluesheets.values()[i].AVAILABILITY_WARNING == null;
 	}
 	
 	/**
@@ -206,7 +210,7 @@ public enum Bluesheets {
 		if(successful)
 			LogHelper.getLogger(16).info("Settings read: " + Arrays.toString(settings));
 		else {
-			writeSettings(DEFAULT_SETTINGS);
+			writeSettings(getDefaultSettings());
 			readSettings();
 		}
 	}
