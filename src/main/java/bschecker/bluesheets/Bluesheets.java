@@ -244,6 +244,15 @@ public enum Bluesheets {
 		writeSettings(settings);
 	}
 	
+	/**
+	 * loads settings without altering the settings.txt file
+	 * @param loadSettings a boolean[] which holds the settings to be loaded
+	 */
+	public static void loadSettings(boolean[] loadSettings) {
+		LogHelper.getLogger(0).info("Loading settings: " + Arrays.toString(loadSettings));
+		settings = loadSettings;
+	}
+	
 	
 	/**
 	 * A simple Enum which represents possible availability states for a bluesheet class.

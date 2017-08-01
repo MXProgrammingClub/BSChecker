@@ -53,7 +53,7 @@ public class Main extends Application {
 	/**
 	 * initializes various static references for the project before the application is launched
 	 */
-	private static void initialize() {
+	protected static void initialize() {
 		LogHelper.init();
 		System.out.println();
 		LogHelper.getLogger(0).info("Beginning Initialization");

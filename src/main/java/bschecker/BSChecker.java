@@ -39,7 +39,7 @@ import opennlp.tools.util.Span;
  * 
  * this class can also be used to test bluesheet classes without launching the application
  * to do this first uncomment the lower portion of the main method
- * if the boolean values in the settings array at index n is set to true, the (n + 1)th bluesheet will be tested for
+ * if the value in the boolean array at index n is true, the (n + 1)th bluesheet will be tested for
  * 
  * @author tedpyne
  * @author JeremiahDeGreeff
@@ -51,6 +51,7 @@ public class BSChecker {
 		String input = "";
 		input = UtilityMethods.replaceInvalidChars(input);
 		input = UtilityMethods.removeExtraPunctuation(input, 0, new ArrayList<Integer>());
+		input += "\n";
 		
 //		Tokenize(input);
 //		SentenceDetect(input);
@@ -58,11 +59,10 @@ public class BSChecker {
 //		findNames(input);
 //		parse(input);
 		
-//		Tools.initializeOpenNLP();
-//		boolean[] settings = {false, false, false, false, false, false, false, false, false, false, false, false, false, false};
-//		Bluesheets.loadSettings(settings);
+//		Main.initialize();
+//		Bluesheets.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
+//		System.out.println("input: " + input);
 //		ErrorList errors = Bluesheet.findAllErrors(input);
-//		System.out.println(input + "\n\n" + errors);
 	}
 	
 	
