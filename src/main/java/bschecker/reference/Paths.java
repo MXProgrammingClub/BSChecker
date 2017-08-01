@@ -16,6 +16,8 @@ public class Paths {
 	public static final String SAYING_VERBS = "bin/SayingVerbs.txt";
 	public static final String SETTINGS = "Settings.txt";
 	
+	public static final String APPLICATION_STYLESHEET = "gui/application.css";
+	
 	public static final String EMPTY_DOC = "bin/empty.doc";
 	
 }

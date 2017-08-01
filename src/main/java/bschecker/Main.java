@@ -11,6 +11,7 @@ import java.io.IOException;
 import bschecker.bluesheets.Bluesheets;
 import bschecker.bluesheets.QuotationForm;
 import bschecker.gui.GUIController;
+import bschecker.reference.Paths;
 import bschecker.util.LogHelper;
 import bschecker.util.Tools;
 
@@ -39,7 +40,7 @@ public class Main extends Application {
 			return;
 		}
 		Scene scene = new Scene(root, 1000, 656);
-		scene.getStylesheets().add(this.getClass().getResource("gui/application.css").toExternalForm());
+		scene.getStylesheets().add(this.getClass().getResource(Paths.APPLICATION_STYLESHEET).toExternalForm());
 		
 		controller.setDefaultText();
 		controller.loadSettings(Bluesheets.getSettings());
