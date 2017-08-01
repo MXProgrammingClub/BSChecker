@@ -354,8 +354,8 @@ public class GUIController {
 	 */
 	private void menuBluesheetClick(int number) {
 		Bluesheets.reverseSetting(number);
-		if(Bluesheets.getBluesheetFromNum(number).getAvailabilityWarning() != null && getMenuBluesheet(number).isSelected())
-			alert(AlertType.WARNING, "Warning", Bluesheets.getBluesheetFromNum(number).getAvailabilityWarning());
+		if(Bluesheets.getBluesheetFromNumber(number).getAvailabilityWarning() != null && getMenuBluesheet(number).isSelected())
+			alert(AlertType.WARNING, "Warning", Bluesheets.getBluesheetFromNumber(number).getAvailabilityWarning());
 	}
 	
 	/**
@@ -394,7 +394,7 @@ public class GUIController {
 	private void displayError() {
 		essayBox.positionCaret(errors.get(currError).getStartIndex());
 		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "dark-red");
-		Bluesheets b = Bluesheets.getBluesheetFromNum(errors.get(currError).getBluesheetNumber());
+		Bluesheets b = Bluesheets.getBluesheetFromNumber(errors.get(currError).getBluesheetNumber());
 		errorBox.replaceText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
 		noteBox.replaceText(errors.get(currError).getNote().equals("") ? "No note was found for this error." : errors.get(currError).getNote());
 	}

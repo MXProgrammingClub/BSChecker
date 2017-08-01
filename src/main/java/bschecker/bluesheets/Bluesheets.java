@@ -81,46 +81,46 @@ public enum Bluesheets {
 	private static final boolean[] DEFAULT_SETTINGS = generateDefaultSettings();
 	private static boolean[] settings = new boolean[14];
 	
-	private final int number;
-	private final Bluesheet object;
-	private final String name;
-	private final String description;
-	private final String example;
-	private final String availabilityWarning;
+	private final int NUMBER;
+	private final Bluesheet OBJECT;
+	private final String NAME;
+	private final String DESCRIPTION;
+	private final String EXAMPLE;
+	private final String AVAILABILITY_WARNING;
 	
 	
 	Bluesheets(int number, Bluesheet object, String name, String description, String example, Availability availability) {
-		this.name = name;
-		this.description = description;
-		this.example = example;
-		this.object = object;
-		this.number = number;
-		this.availabilityWarning = availability.description == null ? null : availability.description.replace("BluesheetName", name);
+		NUMBER = number;
+		OBJECT = object;
+		NAME = name;
+		DESCRIPTION = description;
+		EXAMPLE = example;
+		AVAILABILITY_WARNING = availability.description == null ? null : availability.description.replace("BluesheetName", name);
 	}
 	
 	
 	public int getNumber() {
-		return number;
+		return NUMBER;
 	}
 	
 	public Bluesheet getObject() {
-		return object;
+		return OBJECT;
 	}
 	
 	public String getName() {
-		return name;
+		return NAME;
 	}
 
 	public String getDescription() {
-		return description;
+		return DESCRIPTION;
 	}
 	
 	public String getExample() {
-		return example;
+		return EXAMPLE;
 	}
 
 	public String getAvailabilityWarning() {
-		return availabilityWarning;
+		return AVAILABILITY_WARNING;
 	}
 	
 	public static boolean[] getSettings() {
@@ -147,9 +147,9 @@ public enum Bluesheets {
 	 * @return The element with the number number.
 	 * @throws IllegalArgumentException if number is not [1, 14].
 	 */
-	public static Bluesheets getBluesheetFromNum(int number) {
+	public static Bluesheets getBluesheetFromNumber(int number) {
 		for(Bluesheets b: Bluesheets.values())
-			if(b.number == number)
+			if(b.NUMBER == number)
 				return b;
 		throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
 	}
@@ -162,8 +162,8 @@ public enum Bluesheets {
 	 */
 	public static int getNumber(Bluesheet object) {
 		for(Bluesheets b: Bluesheets.values())
-			if(b.object == object)
-				return b.number;
+			if(b.OBJECT == object)
+				return b.NUMBER;
 		throw new IllegalArgumentException("The passed Bluesheet object was not found.");
 	}
 	
@@ -175,7 +175,7 @@ public enum Bluesheets {
 		LogHelper.getLogger(0).info("Generating default settings");
 		boolean[] settings = new boolean[14];
 		for(int i = 0; i < settings.length; i++)
-			settings[i] = Bluesheets.values()[i].availabilityWarning == null;
+			settings[i] = Bluesheets.values()[i].AVAILABILITY_WARNING == null;
 		return settings;
 	}
 	
