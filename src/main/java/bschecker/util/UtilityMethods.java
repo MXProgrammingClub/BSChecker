@@ -1,7 +1,6 @@
 package bschecker.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -110,19 +109,6 @@ public class UtilityMethods {
 		p = Tools.getParser().parse(p);
 		
 		p.showCodeTree();
-		System.out.println(p.getChildCount());
-		System.out.println(p.getHeadIndex());
-		System.out.println(p.getLabel());
-		System.out.println(p.getProb());
-		System.out.println(p.getText());
-		System.out.println(p.getType());
-		System.out.println(p.getNextPunctuationSet());
-		System.out.println(p.getParent());
-		System.out.println(Arrays.toString(p.getChildren()));
-		System.out.println(p.getPreviousPunctuationSet());
-		System.out.println(p.getSpan());
-		System.out.println(Arrays.toString(p.getTagNodes()));
-		System.out.println(Arrays.toString(p.getTokenNodes()));
 		
 		return p;
 	}
@@ -202,6 +188,52 @@ public class UtilityMethods {
 			}
 		}
 		return results;
+	}
+	
+	/**
+	 * a recursive method which returns the Parse object of the token at the passed index
+	 * @param parse the Parse to search
+	 * @param target the index of the token - must be zero-indexed
+	 * @return the Parse for the indicated token, null if the target exceeds the number of tokens in the passed Parse
+	 */
+	public static Parse getParseAtToken(Parse parse, int target) {
+		for(Parse child : parse.getChildren()) {
+			int count = getCountTokens(child, target + 1);
+			if(count == target + 1)
+				return getParseAtToken(child, target);
+			else
+				target -= count;
+		}
+		return target == 0 ? parse : null;
+	}
+	
+	/**
+	 * a recursive method which counts the number of tokens in a parse
+	 * if the count reaches the passed threshold the threshold value will be returned
+	 * otherwise the count will be returned
+	 * @param parse the parse to traverse
+	 * @param threshold the target which the count will be compared to
+	 * @return the number of tokens in the parse as long as it does not exceed the threshold
+	 */
+	private static int getCountTokens(Parse parse, int threshold) {
+		int count = 0;
+		for(Parse child : parse.getChildren()) {
+			count += child.getType().equals("TK") ? 1 : getCountTokens(child, threshold - count);
+			if(count == threshold)
+				return threshold;
+		}
+		return count;
+	}
+	
+	/**
+	 * a recursive method which returns true if the passed Parse occurs within a particular tag
+	 * @param parse the Parse to search
+	 * @param tag the tag to search for
+	 * @return true if the passed Parse occurs within the specified tag, false otherwise
+	 */
+	public static boolean parseHasParent(Parse parse, String tag) {
+		Parse parent = parse.getParent();
+		return parent != null && (parent.getType().equals(tag) || parseHasParent(parent, tag));
 	}
 	
 }
