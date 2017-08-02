@@ -22,13 +22,6 @@ public abstract class Bluesheet {
 	 */
 	protected abstract ErrorList findErrors(String line, String[] parses);
 	
-	protected ErrorList findErrors(String line) {
-		String[] sentences = Tools.getSentenceDetector().sentDetect(line), parses = new String[sentences.length];
-		for(int i = 0; i < sentences.length; i++)
-			parses[i] = UtilityMethods.parse(sentences[i]);
-		return findErrors(line, parses);
-	}
-	
 	/**
 	 * Finds all errors within the given text.
 	 * All types included in {@code ERROR_LIST} which have a {@code CheckedWhenAnalyzed} value of {@code true} will be checked.
@@ -60,7 +53,7 @@ public abstract class Bluesheet {
 			
 			ErrorList lineErrors = new ErrorList(line, true);
 			for(Bluesheets b : Bluesheets.values())
-				if(Bluesheets.isSetToAnalyze(b.getNumber())){
+				if(Bluesheets.isSetToAnalyze(b.getNumber())) {
 					long bluesheetStart = System.currentTimeMillis();
 					LogHelper.getLogger(17).info("Looking for: " + b.getName() + "...");
 					ErrorList temp = b.getObject().findErrors(line, parses);
@@ -72,7 +65,7 @@ public abstract class Bluesheet {
 			
 			
 			errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
-
+			
 			lineNum++;
 			charOffset += line.length() + removedChars.size() + 1;
 		}
