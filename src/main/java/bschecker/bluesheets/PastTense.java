@@ -28,6 +28,15 @@ public class PastTense extends Bluesheet {
 		ErrorList errors = new ErrorList(line);
 		String sentences[] = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
+		
+		//temporary
+		String[] parseStrings = new String[parses.length];
+		for(int i = 0; i < parses.length; i++) {
+			StringBuffer sb = new StringBuffer(sentences[i].length() * 4);
+			parses[i].show(sb);
+			parseStrings[i] = sb.toString();
+		}
+		
 		for(int i = 0; i < sentences.length; i++){
 			String tokens[] = Tools.getTokenizer().tokenize(sentences[i]);
 			String[] tags = Tools.getPOSTagger().tag(tokens);
@@ -46,7 +55,7 @@ public class PastTense extends Bluesheet {
 			int[] errorTokens = new int[sentenceErrors.size()];
 			for(int j = 0; j < sentenceErrors.size(); j++)
 				errorTokens[j] = sentenceErrors.get(j).getEndIndex();
-			boolean[] inSBAR = UtilityMethods.tokensInsideTag(errorTokens, parses[i], "SBAR");
+			boolean[] inSBAR = UtilityMethods.tokensInsideTag(errorTokens, parseStrings[i], "SBAR");
 			for(int j = 0; j < sentenceErrors.size(); j++)
 				if(!inSBAR[j])
 					errors.add(new Error(sentenceErrors.get(j).getStartIndex() + tokenOffset, sentenceErrors.get(j).getEndIndex() + tokenOffset));
