@@ -48,7 +48,7 @@ import opennlp.tools.util.Span;
 public class BSChecker {
 	
 	public static void main(String[] args) throws InvalidFormatException, IOException{
-		String input = "";
+		String input = "This is a test.";
 		input = UtilityMethods.replaceInvalidChars(input);
 		input = UtilityMethods.removeExtraPunctuation(input, 0, new ArrayList<Integer>());
 		input += "\n";
@@ -59,10 +59,10 @@ public class BSChecker {
 //		findNames(input);
 //		parse(input);
 		
-//		Main.initialize();
-//		Bluesheets.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
-//		System.out.print("\ninput: " + input);
-//		ErrorList errors = Bluesheet.findAllErrors(input);
+		Main.initialize();
+		Bluesheets.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
+		System.out.print("\ninput: " + input);
+		ErrorList errors = Bluesheet.findAllErrors(input);
 	}
 	
 	

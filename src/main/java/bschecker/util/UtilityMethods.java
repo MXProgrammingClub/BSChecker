@@ -1,6 +1,7 @@
 package bschecker.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -108,7 +109,22 @@ public class UtilityMethods {
 		}
 		p = Tools.getParser().parse(p);
 		
-		StringBuffer sb = new StringBuffer(input.length()*4); //arbitrary initial size
+		p.showCodeTree();
+		System.out.println(p.getChildCount());
+		System.out.println(p.getHeadIndex());
+		System.out.println(p.getLabel());
+		System.out.println(p.getProb());
+		System.out.println(p.getText());
+		System.out.println(p.getType());
+		System.out.println(p.getNextPunctuationSet());
+		System.out.println(p.getParent());
+		System.out.println(Arrays.toString(p.getChildren()));
+		System.out.println(p.getPreviousPunctuationSet());
+		System.out.println(p.getSpan());
+		System.out.println(Arrays.toString(p.getTagNodes()));
+		System.out.println(Arrays.toString(p.getTokenNodes()));
+		
+		StringBuffer sb = new StringBuffer(input.length() * 4);
 		p.show(sb);
 		return sb.toString();
 	}
