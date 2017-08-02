@@ -64,7 +64,7 @@ public enum Bluesheets {
 			"Use identical grammatical forms to coordinate parallel ideas.",
 			"(Incorrect) In a good essay the sentences are clear, concise, and hang together. \n(Correct) In a good essay, the sentences are clear, concise, and coherent.",
 			Availability.AVAILABLE),
-	PROGRESSIVE_TENSE (11, new ProgressiveTense(), "Progressive Tense",
+	PROGRESSIVE_TENSE (12, new ProgressiveTense(), "Progressive Tense",
 			"Avoid progressive tenses.",
 			"(Incorrect) Sensing God's desire to destroy Sodom, Abraham is negotiating for a less apocalyptic punishment. \n(Correct) Sensing God's desire to destroy Sodom, Abraham negotiates for a less apocalyptic punishment. ",
 			Availability.AVAILABLE),
