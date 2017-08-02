@@ -6,6 +6,7 @@ import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
+import opennlp.tools.parser.Parse;
 import opennlp.tools.util.Span;
 
 /**
@@ -24,7 +25,7 @@ public class AmbiguousPronoun extends Bluesheet {
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (7), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses) {
+	protected ErrorList findErrors(String line, Parse[] parses) {
 		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		ErrorList errors = new ErrorList(line);
 		int prevSentenceNouns, curSentenceNouns = 0, tokenOffset = 0, index;

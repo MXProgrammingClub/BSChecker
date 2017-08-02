@@ -1,17 +1,13 @@
 package bschecker.bluesheets;
 
-import java.util.ArrayList;
-
-import bschecker.util.Error;
 import bschecker.util.ErrorList;
-import bschecker.util.Tools;
+import opennlp.tools.parser.Parse;
 
 /**
  * WIP
  * Finds dangling modifiers. (10)
  * @author JeremiahDeGreeff
  */
-@SuppressWarnings("unused")
 public class DanglingModifier extends Bluesheet {
 	
 	/**
@@ -21,7 +17,7 @@ public class DanglingModifier extends Bluesheet {
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (10), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses) {
+	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		return errors;
 	}

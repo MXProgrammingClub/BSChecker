@@ -4,6 +4,7 @@ import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
+import opennlp.tools.parser.Parse;
 
 /**
  * Finds uses of first and second person. (3)
@@ -23,7 +24,7 @@ public class FirstSecondPerson extends Bluesheet {
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (3), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses) {
+	protected ErrorList findErrors(String line, Parse[] parses) {
 		String[] tokens = Tools.getTokenizer().tokenize(line);
 		
 		boolean inQuote = false, inIntroducedQuote = false;

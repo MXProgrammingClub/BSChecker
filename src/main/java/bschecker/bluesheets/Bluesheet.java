@@ -6,6 +6,7 @@ import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
+import opennlp.tools.parser.Parse;
 
 /**
  * Defines abstract class for types of grammatical errors
@@ -20,7 +21,7 @@ public abstract class Bluesheet {
 	 * @param parses a String array of the parses of each sentence of the line
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number [1 - 14], and, optionally, a note
 	 */
-	protected abstract ErrorList findErrors(String line, String[] parses);
+	protected abstract ErrorList findErrors(String line, Parse[] parses);
 	
 	/**
 	 * Finds all errors within the given text.
@@ -46,7 +47,8 @@ public abstract class Bluesheet {
 			
 			long parseStart = System.currentTimeMillis();
 			LogHelper.getLogger(18).info("Parsing line " + lineNum + "...");
-			String[] sentences = Tools.getSentenceDetector().sentDetect(line), parses = new String[sentences.length];
+			String[] sentences = Tools.getSentenceDetector().sentDetect(line);
+			Parse[] parses = new Parse[sentences.length];
 			for(int i = 0; i < sentences.length; i++)
 				parses[i] = UtilityMethods.parse(sentences[i]);
 			LogHelper.getLogger(18).info("Complete (" + ((System.currentTimeMillis() - parseStart) / 1000d) + "s)");

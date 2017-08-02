@@ -11,6 +11,7 @@ import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
+import opennlp.tools.parser.Parse;
 
 /**
  * Finds errors in quotation form. (14)
@@ -47,7 +48,7 @@ public class QuotationForm extends Bluesheet {
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (14), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses) {
+	protected ErrorList findErrors(String line, Parse[] parses) {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
 		ErrorList errors = new ErrorList(line);
 		for(int i = 0; i < tokens.length; i++)

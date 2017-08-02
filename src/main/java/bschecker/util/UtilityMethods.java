@@ -100,7 +100,7 @@ public class UtilityMethods {
 	 * @param input the String to parse
 	 * @return a String which is a parsed version of the input
 	 */
-	public static String parse(String input) {
+	public static Parse parse(String input) {
 		Parse p = new Parse(input, new Span(0, input.length()), AbstractBottomUpParser.INC_NODE, 1, 0);
 		Span[] spans = Tools.getTokenizer().tokenizePos(input);
 		for(int i = 0; i < spans.length; i++) {
@@ -124,9 +124,7 @@ public class UtilityMethods {
 		System.out.println(Arrays.toString(p.getTagNodes()));
 		System.out.println(Arrays.toString(p.getTokenNodes()));
 		
-		StringBuffer sb = new StringBuffer(input.length() * 4);
-		p.show(sb);
-		return sb.toString();
+		return p;
 	}
 	
 	/**

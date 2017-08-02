@@ -7,6 +7,7 @@ import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
+import opennlp.tools.parser.Parse;
 
 /**
  * Finds errors in pronoun case. (6)
@@ -28,7 +29,7 @@ public class PronounCase extends Bluesheet {
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (6), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses) {
+	protected ErrorList findErrors(String line, Parse[] parses) {
 		String[] tokens = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		

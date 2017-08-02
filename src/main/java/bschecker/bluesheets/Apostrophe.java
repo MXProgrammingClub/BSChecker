@@ -3,6 +3,7 @@ package bschecker.bluesheets;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
+import opennlp.tools.parser.Parse;
 
 /**
  * Finds apostrophe errors. (8)
@@ -18,7 +19,7 @@ public class Apostrophe extends Bluesheet {
 	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (8), and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses) {
+	protected ErrorList findErrors(String line, Parse[] parses) {
 		String tokens[] = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
