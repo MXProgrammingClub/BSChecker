@@ -24,19 +24,18 @@ public class IncompleteSentence extends Bluesheet {
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
-		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
 		
 		//temporary
 		String[] parseStrings = new String[parses.length];
-		for(int i = 0; i < parses.length; i++) {
-			StringBuffer sb = new StringBuffer(sentences[i].length() * 4);
+		for(int i = 0; i < parses.length; i++){
+			StringBuffer sb = new StringBuffer(parses[i].getText().length() * 4);
 			parses[i].show(sb);
 			parseStrings[i] = sb.toString();
 		}
 			
-		for(int i = 0; i < sentences.length; i++){
-			int length = Tools.getTokenizer().tokenize(sentences[i]).length;
+		for(int i = 0; i < parses.length; i++){
+			int length = Tools.getTokenizer().tokenize(parses[i].getText()).length;
 			errors.addAll(findErrorsInSentence(line, parseStrings[i], tokenOffset, length));
 			tokenOffset += length;
 		}

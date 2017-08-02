@@ -27,12 +27,13 @@ public class FaultyParallelism extends Bluesheet {
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
-		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
 		
 		//temporary
+		String[] sentences = new String[parses.length];
 		String[] parseStrings = new String[parses.length];
-		for(int i = 0; i < parses.length; i++) {
+		for(int i = 0; i < parses.length; i++){
+			sentences[i] = parses[i].getText();
 			StringBuffer sb = new StringBuffer(sentences[i].length() * 4);
 			parses[i].show(sb);
 			parseStrings[i] = sb.toString();

@@ -38,7 +38,6 @@ public abstract class Bluesheet {
 		while (charOffset < text.length()) {
 			long lineStart = System.currentTimeMillis();
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
-			
 			System.out.println();
 			LogHelper.getLogger(17).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
 			ArrayList<Integer> removedChars = new ArrayList<Integer>();
@@ -64,7 +63,6 @@ public abstract class Bluesheet {
 					LogHelper.getLogger(17).info(temp.size() + (temp.size() == 1 ? " Error" : " Errors") + " Found (" + ((System.currentTimeMillis() - bluesheetStart) / 1000d) + "s)");
 				}
 			LogHelper.getLogger(17).info(lineErrors.size() + (lineErrors.size() == 1 ? " Error" : " Errors") + " Found in line " + lineNum + " (" + ((System.currentTimeMillis() - lineStart) / 1000d) + "s)");
-			
 			
 			errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
 			

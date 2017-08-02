@@ -26,11 +26,10 @@ public class AmbiguousPronoun extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses) {
-		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 		ErrorList errors = new ErrorList(line);
 		int prevSentenceNouns, curSentenceNouns = 0, tokenOffset = 0, index;
-		for(int i = 0; i < sentences.length; i++) {
-			String[] words = Tools.getTokenizer().tokenize(sentences[i]);
+		for(int i = 0; i < parses.length; i++) {
+			String[] words = Tools.getTokenizer().tokenize(parses[i].getText());
 			prevSentenceNouns = curSentenceNouns;
 			curSentenceNouns = 0;
 			ArrayList<String> names = findName(words);
