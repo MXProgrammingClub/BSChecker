@@ -16,9 +16,10 @@ import opennlp.tools.parser.Parse;
 public class IncompleteSentence extends Bluesheet {
 	
 	/**
+	 * Finds any invalid sentence structure in a paragraph.
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line
-	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (1 - 14), and, optionally, a note
+	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses) {

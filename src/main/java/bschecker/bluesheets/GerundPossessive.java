@@ -12,11 +12,10 @@ import opennlp.tools.parser.Parse;
 public class GerundPossessive extends Bluesheet {
 	
 	/**
-	 * finds all errors where gerunds are not preceded by a possessive when they should be in the given paragraph
-	 * known issues: catches cases where the supposed gerund is in fact a participle and is thus not an error
+	 * Finds all errors where gerunds are not preceded by a possessive when they should be in a paragraph.
 	 * @param line the paragraph in which to find errors
 	 * @param parses a String array of the parses of each sentence of the line
-	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (13), and, optionally, a note
+	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses) {
