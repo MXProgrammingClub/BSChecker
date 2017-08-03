@@ -157,7 +157,7 @@ public class UtilityMethods {
 	 */
 	public static Parse getParseAtToken(Parse parse, int target) {
 		for(Parse child : parse.getChildren()) {
-			int count = getCountTokens(child, target + 1);
+			int count = countTokens(child, target + 1);
 			if(count == target + 1)
 				return getParseAtToken(child, target);
 			else
@@ -174,13 +174,42 @@ public class UtilityMethods {
 	 * @param threshold the target which the count will be compared to
 	 * @return the number of tokens in the parse as long as it does not exceed the threshold
 	 */
-	private static int getCountTokens(Parse parse, int threshold) {
-		int count = 0;
+	private static int countTokens(Parse parse, int threshold) {
+		int count = parse.getType().equals(AbstractBottomUpParser.TOK_NODE) ? 1 : 0;
 		for(Parse child : parse.getChildren()) {
-			count += child.getType().equals("TK") ? 1 : getCountTokens(child, threshold - count);
+			count += child.getType().equals(AbstractBottomUpParser.TOK_NODE) ? 1 : countTokens(child, threshold - count);
 			if(count == threshold)
 				return threshold;
 		}
+		return count;
+	}
+	
+	/**
+	 * returns the index in the sentence of the token of this parse if it is a token node
+	 * @param parse the parse to traverse
+	 * @return the index in the sentence of the token of this parse if it is a token node, -1 otherwise
+	 */
+	public static int getIndexOfParse(Parse parse) {
+		if(!parse.getType().equals(AbstractBottomUpParser.TOK_NODE))
+			return -1;
+		return countPreceedingTokens(parse);
+	}
+	
+	/**
+	 * a recursive method that counts the number of tokens which occur before the node of this parse
+	 * @param parse the parse to traverse
+	 * @return the number of tokens which occur before the node of this parse
+	 */
+	private static int countPreceedingTokens(Parse parse) {
+		if(parse.getType().equals(AbstractBottomUpParser.TOP_NODE))
+			return 0;
+		int count = 0;
+		for(Parse sibling : parse.getParent().getChildren()){
+			if(sibling.equals(parse))
+				break;
+			count += countTokens(sibling, Integer.MAX_VALUE);
+		}
+		count += countPreceedingTokens(parse.getParent());
 		return count;
 	}
 	
@@ -191,8 +220,7 @@ public class UtilityMethods {
 	 * @return true if the passed Parse occurs within the specified tag, false otherwise
 	 */
 	public static boolean parseHasParent(Parse parse, String tag) {
-		Parse parent = parse.getParent();
-		return parent != null && (parent.getType().equals(tag) || parseHasParent(parent, tag));
+		return !parse.getType().equals(AbstractBottomUpParser.TOP_NODE) && (parse.getParent().getType().equals(tag) || parseHasParent(parse.getParent(), tag));
 	}
 	
 }

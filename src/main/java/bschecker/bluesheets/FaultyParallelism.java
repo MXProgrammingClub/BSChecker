@@ -28,22 +28,22 @@ public class FaultyParallelism extends Bluesheet {
 	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
-		
-		//temporary
-		String[] sentences = new String[parses.length];
-		String[] parseStrings = new String[parses.length];
 		for(int i = 0; i < parses.length; i++){
-			sentences[i] = parses[i].getText();
-			StringBuffer sb = new StringBuffer(sentences[i].length() * 4);
-			parses[i].show(sb);
-			parseStrings[i] = sb.toString();
-		}
-		
-		for(int i = 0; i < sentences.length; i++){
-			errors.addAll(findErrorsInSentence(line, parseStrings[i], UtilityMethods.findTokenTags(sentences[i], "CC"), tokenOffset));
-			tokenOffset += Tools.getTokenizer().tokenize(sentences[i]).length;
+			String[] tags = Tools.getPOSTagger().tag(Tools.getTokenizer().tokenize(parses[i].getText()));
+			ArrayList<Parse> ccParses = new ArrayList<Parse>();
+			for(int j = 0; j < tags.length; j++)
+				if(tags[j].equals("CC"))
+					ccParses.add(UtilityMethods.getParseAtToken(parses[i], j));
+			for(Parse parse : ccParses)
+				if(ccIsFaultyParallelism(parse))
+					errors.add(new Error(UtilityMethods.getIndexOfParse(parse) + tokenOffset));
+			tokenOffset += tags.length;
 		}
 		return errors;
+	}
+	
+	private boolean ccIsFaultyParallelism(Parse parse) {
+		return true;
 	}
 	
 	/**
