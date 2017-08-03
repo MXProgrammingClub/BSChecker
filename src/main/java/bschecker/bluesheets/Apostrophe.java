@@ -20,24 +20,22 @@ public class Apostrophe extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses) {
-		String tokens[] = Tools.getTokenizer().tokenize(line);
-		String[] tags = Tools.getPOSTagger().tag(tokens);
-		
 		ErrorList errors = new ErrorList(line);
-		for(int i = 0; i < tokens.length; i++){
-			if(tags[i].length()>2 && tags[i].substring(0,3).equals("NNS")){
-				int j = i+1;
-				while(tags[j].length()>1 && (tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length)
+		String[] tags = Tools.getPOSTagger().tag(Tools.getTokenizer().tokenize(line));
+		for(int i = 0; i < tags.length; i++){
+			if(tags[i].length() > 2 && tags[i].substring(0, 3).equals("NNS")){
+				int j = i + 1;
+				while(tags[j].length() > 1 && (tags[j].substring(0, 2).equals("RB") || tags[j].substring(0, 2).equals("JJ")) && j < tags.length)
 					j++;
 				//If the preceding word is a noun, the tag of noun is highly likely to be in error. e.g. "the poem features cars", the tag "features"->"NNS" is incorrect
-				if((i==0 || !((tags[i-1].length()>1 && tags[i-1].substring(0, 2).equals("NN")) || tags[i-1].equals("WDT"))) && tags[j].length()>1 && tags[j].substring(0,2).equals("NN"))
+				if((i == 0 || !((tags[i - 1].length() > 1 && tags[i - 1].substring(0, 2).equals("NN")) || tags[i - 1].equals("WDT"))) && tags[j].length() > 1 && tags[j].substring(0, 2).equals("NN"))
 					errors.add(new Error(i, j));
 				
-				if(i+1 < tokens.length && tags[i+1].length()>2 && tags[i+1].substring(0, 3).equals("POS")){
-					j = i+2;
-					while(tags[j].length() > 1 && (tags[j].substring(0,2).equals("RB") || tags[j].substring(0,2).equals("JJ")) && j < tokens.length)
+				if(i + 1 < tags.length && tags[i + 1].length() > 2 && tags[i + 1].substring(0, 3).equals("POS")){
+					j = i + 2;
+					while(tags[j].length() > 1 && (tags[j].substring(0,2).equals("RB") || tags[j].substring(0, 2).equals("JJ")) && j < tags.length)
 						j++;
-					if(tags[j].length()>1 && tags[j].substring(0,2).equals("VB"))
+					if(tags[j].length()>1 && tags[j].substring(0, 2).equals("VB"))
 						errors.add(new Error(i, j));
 				}
 			}

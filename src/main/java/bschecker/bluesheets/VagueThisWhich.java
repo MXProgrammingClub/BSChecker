@@ -19,7 +19,7 @@ public class VagueThisWhich extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses){
-		String tokens[] = Tools.getTokenizer().tokenize(line);
+		String[] tokens = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
 		ErrorList errors = new ErrorList(line);

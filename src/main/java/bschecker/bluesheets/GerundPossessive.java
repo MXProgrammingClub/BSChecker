@@ -24,7 +24,7 @@ public class GerundPossessive extends Bluesheet {
 		
 		ErrorList errors = new ErrorList(line);
 		for(int i = 1; i < tokens.length; i++)
-			if(tags[i].equals("VBG") && (tags[i - 1].equals("PRP") || ((tags[i - 1].equals("NN") || tags[i - 1].equals("NNS") || tags[i - 1].equals("NNP") || tags[i - 1].equals("NNPS")) && tokens[i - 1].indexOf('\'') == -1)))
+			if(tags[i].equals("VBG") && (tags[i - 1].equals("PRP") || ((tags[i - 1].equals("NN") || tags[i - 1].equals("NNS") || tags[i - 1].equals("NNP") || tags[i - 1].equals("NNPS")) && !tokens[i - 1].contains("\'"))))
 					errors.add(new Error(i - 1, i));
 		
 		return errors;

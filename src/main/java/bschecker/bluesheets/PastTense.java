@@ -29,7 +29,7 @@ public class PastTense extends Bluesheet {
 		int tokenOffset = 0;
 		for(int i = 0; i < parses.length; i++){
 			String sentence = parses[i].getText();
-			String tokens[] = Tools.getTokenizer().tokenize(sentence);
+			String[] tokens = Tools.getTokenizer().tokenize(sentence);
 			String[] tags = Tools.getPOSTagger().tag(tokens);
 			ErrorList sentenceErrors = new ErrorList(sentence);
 			boolean inQuote = false, inIntroducedQuote = false;
