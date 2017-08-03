@@ -48,7 +48,7 @@ import opennlp.tools.util.Span;
 public class BSChecker {
 	
 	public static void main(String[] args) throws InvalidFormatException, IOException{
-		String input = "I don't walk, but rather I run.";
+		String input = "";
 		input = UtilityMethods.replaceInvalidChars(input);
 		input = UtilityMethods.removeExtraPunctuation(input, 0, new ArrayList<Integer>());
 		input += "\n";
@@ -60,7 +60,7 @@ public class BSChecker {
 //		parse(input);
 		
 		Main.initialize();
-		Bluesheets.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, true, false, false, false});
+		Bluesheets.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
 		System.out.print("\ninput: " + input);
 		ErrorList errors = Bluesheet.findAllErrors(input);
 	}
