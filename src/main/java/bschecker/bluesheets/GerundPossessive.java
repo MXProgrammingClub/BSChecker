@@ -14,7 +14,7 @@ public class GerundPossessive extends Bluesheet {
 	/**
 	 * Finds all errors where gerunds are not preceded by a possessive when they should be in a paragraph.
 	 * @param line the paragraph in which to find errors
-	 * @param parses a String array of the parses of each sentence of the line
+	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
