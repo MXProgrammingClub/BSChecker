@@ -49,17 +49,20 @@ public class FaultyParallelism extends Bluesheet {
 	private boolean ccIsFaultyParallelism(Parse parse) {
 		Parse ccParse = parse.getParent(), ccParent = ccParse.getParent(), left = null, right = null;
 		//special case: CC in CONJP e.g. "but rather"
-		if(ccParent.getType().equals("CONJP")){
+		if(ccParent.getType().equals("CONJP")) {
 			ccParent = ccParent.getParent();
 			ccParse = ccParse.getParent();
 		}
+		
 		for(int i = 0; i < ccParent.getChildCount(); i++)
-			if(ccParent.getChildren()[i].equals(ccParse)){
+			if(ccParent.getChildren()[i].equals(ccParse)) {
+				//this catches exceptions generally caused by parsing errors - NOTE: these cases may in fact be errors, but with this parsing tool they are ambiguous
+				if(i == 0 || i == ccParent.getChildCount() - 1)
+					return false;
 				left = ccParent.getChildren()[i - 1];
 				//special case: CC preceded by comma e.g. 'IC, CC IC' structure
 				if(left.getType().equals(","))
 					left = ccParent.getChildren()[i - 2];
-				
 				right = ccParent.getChildren()[i + 1];
 				//special case: CC followed by comma separated phrase
 				//special case: CC followed by adverb e.g. "and thus"
