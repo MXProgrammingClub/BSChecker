@@ -46,7 +46,7 @@ public class IncompleteSentence extends Bluesheet {
 				if(siblingIndex > 1 && siblings[siblingIndex - 1].getType().equals("CC") && !siblings[siblingIndex - 2].getType().equals(",")) //run-on in form IC CC IC
 					errors.add(new Error(tokenOffset + UtilityMethods.getIndexOfParse(siblings[siblingIndex - 1].getChildren()[0]), "Run-on"));
 				if(siblingIndex == 0 || siblingIndex > 0 && !siblings[siblingIndex - 1].getType().equals("IN")) //can't be comma splice if first clause is dependent
-					if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 1].getType().equals(",") && (siblings[siblingIndex + 2].getType().equals("S") || siblings[siblingIndex + 2].getType().equals("NP"))) //if S followed by , S or , NP most likely a comma splice
+					if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 1].getType().equals(",") && siblings[siblingIndex + 2].getType().equals("S")) //comma-splice
 						if(siblings[siblingIndex + 2].getCoveredText().charAt(0) != '\"') //not a comma splice if comma is introducing a quote
 							errors.add(new Error(tokenOffset + UtilityMethods.getIndexOfParse(siblings[siblingIndex + 1].getChildren()[0]), "Comma-Splice"));
 			}
