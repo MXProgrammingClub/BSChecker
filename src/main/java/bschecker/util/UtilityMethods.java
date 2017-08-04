@@ -214,6 +214,17 @@ public class UtilityMethods {
 	}
 	
 	/**
+	 * determines the range of tokens within the full parse that occur after this node
+	 * note that the returned values are inclusive, exclusive
+	 * @param parse the Parse whose tokens will be represented
+	 * @return an int[2] with {start token, end token}
+	 */
+	public static int[] getTokenRange(Parse parse) {
+		int start = countPreceedingTokens(parse), end = start + countTokens(parse, Integer.MAX_VALUE);
+		return new int[]{start, end};
+	}
+	
+	/**
 	 * a recursive method which returns true if the passed Parse occurs within a particular tag
 	 * @param parse the Parse to search
 	 * @param tag the tag to search for
@@ -221,6 +232,21 @@ public class UtilityMethods {
 	 */
 	public static boolean parseHasParent(Parse parse, String tag) {
 		return !parse.getType().equals(AbstractBottomUpParser.TOP_NODE) && (parse.getParent().getType().equals(tag) || parseHasParent(parse.getParent(), tag));
+	}
+	
+	/**
+	 * a recursive method which will find all Parses below the passed Parse which have the desired tag
+	 * @param parse the Parse to traverse
+	 * @param tag the desired tag
+	 * @return an ArrayList of all Parses below the passed Parse which have the desired tag
+	 */
+	public static ArrayList<Parse> findParsesWithTag(Parse parse, String tag) {
+		ArrayList<Parse> result = new ArrayList<Parse>();
+		if(parse.getType().equals(tag))
+			result.add(parse);
+		for(Parse child : parse.getChildren())
+			result.addAll(findParsesWithTag(child, tag));
+		return result;
 	}
 	
 }
