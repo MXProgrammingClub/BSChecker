@@ -59,10 +59,10 @@ public class BSChecker {
 //		findNames(input);
 //		parse(input);
 		
-//		Main.initialize();
-//		Bluesheets.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
-//		System.out.print("\ninput: " + input);
-//		ErrorList errors = Bluesheet.findAllErrors(input);
+		Main.initialize();
+		Bluesheets.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
+		System.out.print("\ninput: " + input);
+		ErrorList errors = Bluesheet.findAllErrors(input);
 	}
 	
 	

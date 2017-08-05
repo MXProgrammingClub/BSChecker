@@ -4,6 +4,7 @@ import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
+import opennlp.tools.parser.Parse;
 
 /**
  * Finds verbs in the past tense. (1)
@@ -17,20 +18,20 @@ public class PastTense extends Bluesheet {
 	
 	
 	/**
-	 * finds all instances of past tense in the given paragraph
+	 * Finds all instances of past tense in a paragraph.
 	 * @param line the paragraph in which to find errors
-	 * @param parses a String array of the parses of each sentence of the line
-	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (1), and, optionally, a note
+	 * @param parses a Parse array of each sentence of the line
+	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses) {
+	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
-		String sentences[] = Tools.getSentenceDetector().sentDetect(line);
 		int tokenOffset = 0;
-		for(int i = 0; i < sentences.length; i++){
-			String tokens[] = Tools.getTokenizer().tokenize(sentences[i]);
+		for(int i = 0; i < parses.length; i++){
+			String sentence = parses[i].getText();
+			String[] tokens = Tools.getTokenizer().tokenize(sentence);
 			String[] tags = Tools.getPOSTagger().tag(tokens);
-			ErrorList sentenceErrors = new ErrorList(sentences[i]);
+			ErrorList sentenceErrors = new ErrorList(sentence);
 			boolean inQuote = false, inIntroducedQuote = false;
 			for(int j = 0; j < tags.length; j++){
 				if(tokens[j].contains("\"")) {
@@ -42,12 +43,8 @@ public class PastTense extends Bluesheet {
 				if(!inIntroducedQuote && tags[j].equals("VBN") && j > 0 && UtilityMethods.arrayContains(TO_HAVE_CONJ, tokens[j - 1]))
 					sentenceErrors.add(new Error(j - 1, j)); //does not currently look past intermediary adverbs
 			}
-			int[] errorTokens = new int[sentenceErrors.size()];
 			for(int j = 0; j < sentenceErrors.size(); j++)
-				errorTokens[j] = sentenceErrors.get(j).getEndIndex();
-			boolean[] inSBAR = UtilityMethods.tokensInsideTag(errorTokens, parses[i], "SBAR");
-			for(int j = 0; j < sentenceErrors.size(); j++)
-				if(!inSBAR[j])
+				if(!UtilityMethods.parseHasParent(UtilityMethods.getParseAtToken(parses[i], sentenceErrors.get(j).getEndIndex()), "SBAR"))
 					errors.add(new Error(sentenceErrors.get(j).getStartIndex() + tokenOffset, sentenceErrors.get(j).getEndIndex() + tokenOffset));
 			tokenOffset += tokens.length;
 		}

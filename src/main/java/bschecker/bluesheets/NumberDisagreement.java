@@ -1,13 +1,6 @@
 package bschecker.bluesheets;
 
-import java.util.ArrayList;
-
-import bschecker.util.Error;
 import bschecker.util.ErrorList;
-import bschecker.util.SentenceTree;
-import bschecker.util.Tools;
-import bschecker.util.UtilityMethods;
-import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.Parse;
 
 /**
@@ -16,17 +9,16 @@ import opennlp.tools.parser.Parse;
  * and pronouns which don't agree in number with their antecedents. (5)
  * @author
  */
-@SuppressWarnings("unused")
 public class NumberDisagreement extends Bluesheet {
 	
 	/**
-	 * finds errors in number disagreement in the given paragraph
+	 * WIP
 	 * @param line the paragraph in which to find errors
-	 * @param parses a String array of the parses of each sentence of the line
-	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (5), and, optionally, a note
+	 * @param parses a Parse array of each sentence of the line
+	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses){
+	protected ErrorList findErrors(String line, Parse[] parses){
 //		String sentences[] = Tools.getSentenceDetector().sentDetect(line);
 //		ArrayList<Parse> parses = new ArrayList<Parse>();
 //		ArrayList<int[]> arr = new ArrayList<int[]>();

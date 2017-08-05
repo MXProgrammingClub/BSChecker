@@ -4,6 +4,7 @@ import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
+import opennlp.tools.parser.Parse;
 
 /**
  * Finds verbs in the passive voice. (9)
@@ -16,14 +17,14 @@ public class PassiveVoice extends Bluesheet {
 	
 	
 	/**
-	 * finds all instances of passive voice in the given paragraph
+	 * Finds all instances of passive voice in a paragraph.
 	 * @param line the paragraph in which to find errors
-	 * @param parses a String array of the parses of each sentence of the line
-	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (9), and, optionally, a note
+	 * @param parses a Parse array of each sentence of the line
+	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses) {
-		String tokens[] = Tools.getTokenizer().tokenize(line);
+	protected ErrorList findErrors(String line, Parse[] parses) {
+		String[] tokens = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
 		ErrorList errors = new ErrorList(line);

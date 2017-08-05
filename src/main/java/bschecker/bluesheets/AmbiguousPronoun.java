@@ -6,6 +6,7 @@ import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
+import opennlp.tools.parser.Parse;
 import opennlp.tools.util.Span;
 
 /**
@@ -18,18 +19,17 @@ public class AmbiguousPronoun extends Bluesheet {
 	
 	
 	/**
-	 * finds all ambiguous pronoun references in the given paragraph
+	 * Finds all ambiguous pronoun references in a paragraph.
 	 * @param line the paragraph in which to find errors
-	 * @param parses a String array of the parses of each sentence of the line
-	 * @return an ErrorList which for each error references start and end tokens, the bluesheet number (7), and, optionally, a note
+	 * @param parses a Parse array of each sentence of the line
+	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, String[] parses) {
-		String[] sentences = Tools.getSentenceDetector().sentDetect(line);
+	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int prevSentenceNouns, curSentenceNouns = 0, tokenOffset = 0, index;
-		for(int i = 0; i < sentences.length; i++) {
-			String[] words = Tools.getTokenizer().tokenize(sentences[i]);
+		for(int i = 0; i < parses.length; i++) {
+			String[] words = Tools.getTokenizer().tokenize(parses[i].getText());
 			prevSentenceNouns = curSentenceNouns;
 			curSentenceNouns = 0;
 			ArrayList<String> names = findName(words);
