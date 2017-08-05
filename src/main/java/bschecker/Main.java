@@ -13,6 +13,7 @@ import bschecker.bluesheets.QuotationForm;
 import bschecker.gui.GUIController;
 import bschecker.reference.Paths;
 import bschecker.util.LogHelper;
+import bschecker.util.PerformanceMonitor;
 import bschecker.util.Tools;
 
 /**
@@ -54,9 +55,10 @@ public class Main extends Application {
 	 * initializes various static references for the project before the application is launched
 	 */
 	protected static void initialize() {
+		PerformanceMonitor.start("init");
 		LogHelper.init();
 		System.out.println();
-		LogHelper.getLogger(0).info("Beginning Initialization");
+		LogHelper.getLogger(0).info("Beginning Initialization...");
 		System.out.println();
 		Tools.initializeOpenNLP();
 		System.out.println();
@@ -64,7 +66,7 @@ public class Main extends Application {
 		System.out.println();
 		QuotationForm.importVerbs();
 		System.out.println();
-		LogHelper.getLogger(0).info("Initialization Complete");
+		LogHelper.getLogger(0).info("Initialization Completed in " + PerformanceMonitor.stop("init"));
 		System.out.println();
 	}
 	

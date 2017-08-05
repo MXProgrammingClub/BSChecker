@@ -2,6 +2,7 @@ package bschecker.bluesheets;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -9,6 +10,7 @@ import bschecker.reference.Paths;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
+import bschecker.util.PerformanceMonitor;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.parser.Parse;
@@ -31,7 +33,8 @@ public class QuotationForm extends Bluesheet {
 			LogHelper.getLogger(0).warn("Verb Set has already been initialized - skipping");
 			return;
 		}
-		LogHelper.getLogger(0).info("Loading verbs of saying or thinking");
+		PerformanceMonitor.start("verbs");
+		LogHelper.getLogger(0).info("Loading verbs of saying or thinking...");
 		VERB_SET = new HashSet<String>();
 		Scanner scan = null;
 			try {scan = new Scanner(new File(Paths.SAYING_VERBS));}
@@ -39,6 +42,7 @@ public class QuotationForm extends Bluesheet {
 		while(scan.hasNext()) {
 			VERB_SET.add(scan.nextLine());
 		}
+		LogHelper.getLogger(0).info("Complete (" + PerformanceMonitor.stop("verbs") + ")");
 	}
 
 	/**
@@ -58,6 +62,8 @@ public class QuotationForm extends Bluesheet {
 					start = i;
 				for(int j = start; j < tokens.length; j++)
 					if(tokens[j].contains("\"")) { //finds closing quotation
+						System.out.println(line);
+						System.out.println(Arrays.toString(tokens) + "\t" + i + "\t" + j + "\t" + tokens.length + "\t" + tokens[j]);
 						ErrorTypes errorFront = findErrorsFront(tokens, i, j);
 						if(!(errorFront == ErrorTypes.NO_ERROR))
 							errors.add(new Error(i - 1, errorFront.DESCRIPTION));

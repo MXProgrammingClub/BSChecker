@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
+import bschecker.util.PerformanceMonitor;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.parser.Parse;
@@ -31,12 +32,12 @@ public abstract class Bluesheet {
 	 * @return a ErrorList which contains all the errors in the passage, referenced by character indices
 	 */
 	public static ErrorList findAllErrors(String text) {
-		long start = System.currentTimeMillis();
+		PerformanceMonitor.start("analyze");
 		ErrorList errors = new ErrorList(text, false);
 		int lineNum = 1, charOffset = 0;
 		String line;
 		while (charOffset < text.length()) {
-			long lineStart = System.currentTimeMillis();
+			PerformanceMonitor.start("line");
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
 			System.out.println();
 			LogHelper.getLogger(17).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
@@ -44,25 +45,25 @@ public abstract class Bluesheet {
 			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
 			LogHelper.getLogger(17).info("Ignoring characters: " + removedChars);
 			
-			long parseStart = System.currentTimeMillis();
+			PerformanceMonitor.start("parse");
 			LogHelper.getLogger(18).info("Parsing line " + lineNum + "...");
 			String[] sentences = Tools.getSentenceDetector().sentDetect(line);
 			Parse[] parses = new Parse[sentences.length];
 			for(int i = 0; i < sentences.length; i++)
 				parses[i] = UtilityMethods.parse(sentences[i]);
-			LogHelper.getLogger(18).info("Complete (" + ((System.currentTimeMillis() - parseStart) / 1000d) + "s)");
+			LogHelper.getLogger(18).info("Complete (" + PerformanceMonitor.stop("parse") + ")");
 			
 			ErrorList lineErrors = new ErrorList(line, true);
 			for(Bluesheets b : Bluesheets.values())
 				if(Bluesheets.isSetToAnalyze(b.getNumber())) {
-					long bluesheetStart = System.currentTimeMillis();
+					PerformanceMonitor.start("bluesheet");
 					LogHelper.getLogger(17).info("Looking for: " + b.getName() + "...");
 					ErrorList temp = b.getObject().findErrors(line, parses);
 					temp.setBluesheetNumber(b.getNumber());
 					lineErrors.addAll(temp);
-					LogHelper.getLogger(17).info(temp.size() + (temp.size() == 1 ? " Error" : " Errors") + " Found (" + ((System.currentTimeMillis() - bluesheetStart) / 1000d) + "s)");
+					LogHelper.getLogger(17).info(temp.size() + " Error" + (temp.size() == 1 ? "" : "s") + " Found (" + PerformanceMonitor.stop("bluesheet") + ")");
 				}
-			LogHelper.getLogger(17).info(lineErrors.size() + (lineErrors.size() == 1 ? " Error" : " Errors") + " Found in line " + lineNum + " (" + ((System.currentTimeMillis() - lineStart) / 1000d) + "s)");
+			LogHelper.getLogger(17).info(lineErrors.size() + " Error" + (lineErrors.size() == 1 ? "" : "s") + " Found in line " + lineNum + " (" + PerformanceMonitor.stop("line") + ")");
 			
 			errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
 			
@@ -70,7 +71,7 @@ public abstract class Bluesheet {
 			charOffset += line.length() + removedChars.size() + 1;
 		}
 		System.out.println();
-		LogHelper.getLogger(17).info("Passage analyzed in " + ((System.currentTimeMillis() - start) / 1000d) + "s\n\n" + errors);
+		LogHelper.getLogger(17).info("Passage analyzed in " + PerformanceMonitor.stop("analyze") + "s\n\n" + errors);
 		
 		return errors;
 	}

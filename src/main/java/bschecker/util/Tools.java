@@ -78,25 +78,16 @@ public class Tools {
 	 * Initializes all the necessary OpenNLP tools
 	 */
 	public static void initializeOpenNLP() {
-		LogHelper.getLogger(0).info("Initializing opennlp tools:");
-		long start = System.currentTimeMillis();
-
-		LogHelper.getLogger(0).info("Initializing the Sentence Detector...");
+		PerformanceMonitor.start("tools");
+		LogHelper.getLogger(0).info("Initializing opennlp tools...");
+		
 		sentenceDetector = new SentenceDetectorME((SentenceModel)loadModel('s', Paths.SENTENCE_DETECTOR));
-		
-		LogHelper.getLogger(0).info("Initializing the Name Finder...");
 		nameFinder = new NameFinderME((TokenNameFinderModel)loadModel('n', Paths.NAME_FINDER));
-		
-		LogHelper.getLogger(0).info("Initializing the Tokenizer...");
 		tokenizer = new TokenizerME((TokenizerModel)loadModel('t', Paths.TOKENIZER));
-		
-		LogHelper.getLogger(0).info("Initializing the Part of Speech Tagger...");
 		posTagger = new POSTaggerME((POSModel)loadModel('o', Paths.POS_TAGGER));
-		
-		LogHelper.getLogger(0).info("Initializing the Parser...");
 		parser = ParserFactory.create((ParserModel)loadModel('p', Paths.PARSER));
-
-		LogHelper.getLogger(0).info("Initialization of opennlp tools completed in " + ((System.currentTimeMillis() - start) / 1000d) + "s");
+		
+		LogHelper.getLogger(0).info("Initialization of opennlp tools completed in " + PerformanceMonitor.stop("tools"));
 	}
 	
 	/**
@@ -106,19 +97,27 @@ public class Tools {
 	 * @return a BaseModel which holds the loaded file
 	 */
 	private static BaseModel loadModel(char tool, String file) {
-		long start = System.currentTimeMillis();
+		PerformanceMonitor.start("model");
+		LogHelper.getLogger(0).info("Initializing the " +
+				(tool == 's' ? "Sentence Detector" :
+					tool == 'n' ? "Name Finder" :
+						tool == 't' ? "Tokenizer" :
+							tool == 'o' ? "Part of Speech Tagger" :
+								tool == 'p' ? "Parser" :
+						"") + " ...");
 		InputStream is = null;
 		BaseModel model = null;
 		try {is = new FileInputStream(file);}
 		catch (FileNotFoundException e) {e.printStackTrace();}
 		try {model = 
 				tool == 's' ? new SentenceModel(is): 
-				tool == 'n' ? new TokenNameFinderModel(is):
-				tool == 't' ? new TokenizerModel(is):
-				tool == 'o' ? new POSModel(is):
-				tool == 'p' ? new ParserModel(is): null;}
+					tool == 'n' ? new TokenNameFinderModel(is):
+						tool == 't' ? new TokenizerModel(is):
+							tool == 'o' ? new POSModel(is):
+								tool == 'p' ? new ParserModel(is):
+									null;}
 		catch (IOException e) {e.printStackTrace();}
-		LogHelper.getLogger(0).info("Complete (" + ((System.currentTimeMillis() - start) / 1000d) + "s)");
+		LogHelper.getLogger(0).info("Complete (" + PerformanceMonitor.stop("model") + ")");
 		return model;
 	}
 }
