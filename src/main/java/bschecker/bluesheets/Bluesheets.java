@@ -24,7 +24,7 @@ public enum Bluesheets {
 			"Use the present tense in writing about a literary work.",
 			"(Incorrect) Macbeth hastened home to tell his wife of the king's approach.\n(Correct) Macbeth hastens home to tell his wife of the king's approach.",
 			Availability.AVAILABLE),
-	COMPLETE_SENTENCE (2, new IncompleteSentence(), "Fragment/Run-On/Comma-Splice",
+	INCOMPLETE_SENTENCE (2, new IncompleteSentence(), "Fragment/Run-On/Comma-Splice",
 			"Write complete, corrext sentences.",
 			"(Incorrect) Macbeth murders King Duncan for many reasons. One being his desire for power.\n(Correct) Macbeth murders King Duncan for many reasons, one being his desire for power.\n\n(Incorrect) Huck Finn's father is an abusive parent he kidnaps his son, holds him prisoner, and nearly kills him in a drunken fit. \n(Correct) Huck Finn's father is an abusive parent who kidnaps his son, holds him prisoner, and nearly kills him in a drunken fit.\nOR\nHuck Finn's father is an abusive parent: he kidnaps his son, holds him prisoner, and nearly\nkills him in a drunken fit.\n\n(Incorrect) Homer seems fond of Eumaios, he addresses him familiarly as \"my swineherd.\"\n(Correct) Homer seems fond of Eumaios; he addresses him familiarly as \"my swineherd.\"",
 			Availability.AVAILABLE),
@@ -72,7 +72,7 @@ public enum Bluesheets {
 			"Recognize gerunds and use possessives accordingly",
 			"(Incorrect) Elizabeth is grateful for him loving her so well. \n(Correct) Elizabeth is grateful for his loving her so well. ",
 			Availability.AVAILABLE),
-	QUOTATION (14, new QuotationForm(), "Quotation Error",
+	QUOTATION_FORM (14, new QuotationForm(), "Quotation Error",
 			"Malformed Quotation and/or Citation",
 			"Punctuation goes inside the quotations.\nCitations go outside the quotations.\nUse commas to introduce a quote preceeded by a verb of saying or thinking.",
 			Availability.AVAILABLE);
