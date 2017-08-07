@@ -123,13 +123,16 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * returns the index in the sentence of the token of this parse if it is a token node
+	 * returns the index in the sentence of the token of this parse
 	 * @param parse the parse to traverse
-	 * @return the index in the sentence of the token of this parse if it is a token node, -1 otherwise
+	 * @return the index in the sentence of the token of this parse
+	 * @throws IllegalArgumentException if the parse is not a token node
 	 */
 	public static int getIndexOfParse(Parse parse) {
-		if(!parse.getType().equals(AbstractBottomUpParser.TOK_NODE))
-			return -1;
+		if(!parse.getType().equals(AbstractBottomUpParser.TOK_NODE)) {
+			LogHelper.getLogger(17).error("Parse must be a token node.");
+			throw new IllegalArgumentException("Parse must be a token node.");
+		}
 		return countPreceedingTokens(parse);
 	}
 	
