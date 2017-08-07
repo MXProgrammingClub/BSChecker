@@ -34,7 +34,7 @@ public class PronounCase extends Bluesheet {
 		String[] tags = Tools.getPOSTagger().tag(tokens);
 		
 		ArrayList<Integer> pronounIndices = new ArrayList<Integer>();
-		for(int i = 0; i < tokens.length; i++){
+		for(int i = 0; i < tokens.length; i++) {
 			String word = tokens[i];
 			if(UtilityMethods.arrayContains(ALLPN, word))
 				pronounIndices.add(i);
@@ -55,7 +55,7 @@ public class PronounCase extends Bluesheet {
 	 * @param isForward whether look forward to the next word or look backward to previous word
 	 */
 	private int findNextWord(String[] tagList, int curWordIndex, boolean isForward, String[] tokenList) {
-		if(isForward){
+		if(isForward) {
 			int nextWordIndex = curWordIndex + 1;
 			while(tagList[nextWordIndex].charAt(0) == 'J' || tagList[nextWordIndex].charAt(0) == 'R' || tagList[nextWordIndex].equals("VBN") || tokenList[nextWordIndex].equalsIgnoreCase("the"))
 				nextWordIndex++;

@@ -28,12 +28,12 @@ public class ProgressiveTense extends Bluesheet {
 		
 		ErrorList errors = new ErrorList(line);
 		boolean inQuote = false, inIntroducedQuote = false;
-		for(int i = 1; i < tokens.length; i++){
-			if(tokens[i].contains("\"")){
+		for(int i = 1; i < tokens.length; i++) {
+			if(tokens[i].contains("\"")) {
 				inIntroducedQuote = !inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":"));
 				inQuote = !inQuote;
 			}
-			if(!inIntroducedQuote && UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i != tokens.length - 1){
+			if(!inIntroducedQuote && UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i != tokens.length - 1) {
 				int j = i + 1;
 				while(tags[j].equals("RB") && j < tokens.length) j++;
 				if(tags[j].equals("VBG"))

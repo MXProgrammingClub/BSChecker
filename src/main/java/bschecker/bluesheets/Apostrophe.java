@@ -22,7 +22,7 @@ public class Apostrophe extends Bluesheet {
 	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		String[] tags = Tools.getPOSTagger().tag(Tools.getTokenizer().tokenize(line));
-		for(int i = 0; i < tags.length; i++){
+		for(int i = 0; i < tags.length; i++) {
 			if(tags[i].length() > 2 && tags[i].substring(0, 3).equals("NNS")){
 				int j = i + 1;
 				while(tags[j].length() > 1 && (tags[j].substring(0, 2).equals("RB") || tags[j].substring(0, 2).equals("JJ")) && j < tags.length)

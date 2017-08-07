@@ -27,13 +27,13 @@ public class PastTense extends Bluesheet {
 	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
-		for(int i = 0; i < parses.length; i++){
+		for(int i = 0; i < parses.length; i++) {
 			String sentence = parses[i].getText();
 			String[] tokens = Tools.getTokenizer().tokenize(sentence);
 			String[] tags = Tools.getPOSTagger().tag(tokens);
 			ErrorList sentenceErrors = new ErrorList(sentence);
 			boolean inQuote = false, inIntroducedQuote = false;
-			for(int j = 0; j < tags.length; j++){
+			for(int j = 0; j < tags.length; j++) {
 				if(tokens[j].contains("\"")) {
 					inIntroducedQuote = !inQuote && j > 0 && (tokens[j - 1].equals(",") || tokens[j - 1].equals(":"));
 					inQuote = !inQuote;

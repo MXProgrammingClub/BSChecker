@@ -29,7 +29,7 @@ public class PassiveVoice extends Bluesheet {
 		
 		ErrorList errors = new ErrorList(line);
 		boolean inQuote = false;
-		for(int i = 1; i < tokens.length; i++){
+		for(int i = 1; i < tokens.length; i++) {
 			if(tokens[i].contains("\""))
 				inQuote = !inQuote;
 			if(!inQuote && UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i < tokens.length - 1){

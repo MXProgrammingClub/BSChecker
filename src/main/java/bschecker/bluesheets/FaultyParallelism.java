@@ -27,7 +27,7 @@ public class FaultyParallelism extends Bluesheet {
 	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
-		for(int i = 0; i < parses.length; i++){
+		for(int i = 0; i < parses.length; i++) {
 			String[] tags = Tools.getPOSTagger().tag(Tools.getTokenizer().tokenize(parses[i].getText()));
 			ArrayList<Parse> ccParses = new ArrayList<Parse>();
 			for(int j = 0; j < tags.length; j++)
