@@ -43,7 +43,7 @@ public enum Bluesheets {
 	PRONOUN_CASE (6, new PronounCase(), "Pronoun Case",
 			"Put pronouns in the appropriate case (subjective, objective, possessive)",
 			"(Incorrect) She is the last person who I would suspect. \n(Correct) She is the last person whom I would suspect.\n\n(Incorrect) Give the credit to she and me\n(Correct) Give the credit to her and me.",
-			Availability.INACCURATE),
+			Availability.AVAILABLE),
 	AMBIGUOUS_PRONOUN (7, new AmbiguousPronoun(), "Ambiguous Pronoun",
 			"Avoid ambiguous pronouns.",
 			"(Incorrect) Oedipus and the shepherd argue about whether he should know the truth. \n(Correct) Oedipus and the shepherd argue about whether Oedipus should know the truth.",
