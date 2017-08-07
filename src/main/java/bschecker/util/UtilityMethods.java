@@ -187,4 +187,18 @@ public class UtilityMethods {
 		return result;
 	}
 	
+	/**
+	 * determines the index of this node of the Parse among its siblings
+	 * assumes that the passed Parse object is not the TOP node
+	 * @param parse the Parse to traverse whose node will be indexed
+	 * @return the index of this node of the Parse among its siblings
+	 */
+	public static int getSiblingIndex(Parse parse) {
+		Parse[] siblings = parse.getParent().getChildren();
+		for(int i = 0; i < siblings.length; i++)
+			if(siblings[i].equals(parse))
+				return i;
+		return -1;
+	}
+	
 }

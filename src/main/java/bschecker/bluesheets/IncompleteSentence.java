@@ -34,13 +34,7 @@ public class IncompleteSentence extends Bluesheet {
 			for(Parse sParse : sParses) {
 				LogHelper.getLogger(this).debug(sParse.getType() + ":\t" + sParse.getCoveredText());
 				Parse[] siblings = sParse.getParent().getChildren();
-				int siblingIndex = 0;
-				for(int i = 0; i < siblings.length; i++) {
-					if(siblings[i].equals(sParse)) {
-						siblingIndex = i;
-						break;
-					}
-				}
+				int siblingIndex = UtilityMethods.getSiblingIndex(sParse);
 				if(siblingIndex > 0 && siblings[siblingIndex - 1].getType().equals(":")) //fragment in form DC; IC or IC; DC
 					errors.add(new Error(tokenOffset + UtilityMethods.getIndexOfParse(siblings[siblingIndex - 1].getChildren()[0]), "Fragment"));
 				if(siblingIndex > 1 && siblings[siblingIndex - 1].getType().equals("CC") && !siblings[siblingIndex - 2].getType().equals(",")) //run-on in form IC CC IC

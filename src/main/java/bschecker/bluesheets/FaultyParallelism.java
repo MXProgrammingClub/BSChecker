@@ -27,15 +27,15 @@ public class FaultyParallelism extends Bluesheet {
 	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
-		for(int i = 0; i < parses.length; i++) {
-			String[] tags = Tools.getPOSTagger().tag(Tools.getTokenizer().tokenize(parses[i].getText()));
+		for(Parse parse : parses) {
+			String[] tags = Tools.getPOSTagger().tag(Tools.getTokenizer().tokenize(parse.getText()));
 			ArrayList<Parse> ccParses = new ArrayList<Parse>();
-			for(int j = 0; j < tags.length; j++)
-				if(tags[j].equals("CC"))
-					ccParses.add(UtilityMethods.getParseAtToken(parses[i], j));
-			for(Parse parse : ccParses)
-				if(ccIsFaultyParallelism(parse))
-					errors.add(new Error(UtilityMethods.getIndexOfParse(parse) + tokenOffset));
+			for(int i = 0; i < tags.length; i++)
+				if(tags[i].equals("CC"))
+					ccParses.add(UtilityMethods.getParseAtToken(parse, i));
+			for(Parse ccParse : ccParses)
+				if(ccIsFaultyParallelism(ccParse))
+					errors.add(new Error(UtilityMethods.getIndexOfParse(ccParse) + tokenOffset));
 			tokenOffset += tags.length;
 		}
 		return errors;
@@ -47,29 +47,26 @@ public class FaultyParallelism extends Bluesheet {
 	 * @return true if there is faulty parallelism, false otherwise
 	 */
 	private boolean ccIsFaultyParallelism(Parse parse) {
-		Parse ccParse = parse.getParent(), ccParent = ccParse.getParent(), left = null, right = null;
+		Parse ccParse = parse.getParent(), left = null, right = null;
 		//special case: CC in CONJP e.g. "but rather"
-		if(ccParent.getType().equals("CONJP")) {
-			ccParent = ccParent.getParent();
+		if(ccParse.getParent().getType().equals("CONJP"))
 			ccParse = ccParse.getParent();
-		}
 		
-		for(int i = 0; i < ccParent.getChildCount(); i++)
-			if(ccParent.getChildren()[i].equals(ccParse)) {
-				//this catches exceptions generally caused by parsing errors - NOTE: these cases may in fact be errors, but with this parsing tool they are ambiguous
-				if(i == 0 || i == ccParent.getChildCount() - 1)
-					return false;
-				left = ccParent.getChildren()[i - 1];
-				//special case: CC preceded by comma e.g. 'IC, CC IC' structure
-				if(left.getType().equals(","))
-					left = ccParent.getChildren()[i - 2];
-				right = ccParent.getChildren()[i + 1];
-				//special case: CC followed by comma separated phrase
-				//special case: CC followed by adverb e.g. "and thus"
-				//special case: CC followed by possessive with intermediary noun
-				if(right.getType().equals(",") || right.getType().equals("ADVP") || ccParent.getChildren().length > i + 2 && ccParent.getChildren()[i + 2].getType().equals("POS"))
-					right = ccParent.getChildren()[i + 2];
-			}
+		Parse[] siblings = ccParse.getParent().getChildren();
+		int siblingIndex = UtilityMethods.getSiblingIndex(ccParse);
+		//this catches exceptions generally caused by parsing errors - NOTE: these cases may in fact be errors, but with the current implementation they are ambiguous
+		if(siblingIndex == 0 || siblingIndex == siblings.length - 1)
+			return false;
+		left = siblings[siblingIndex - 1];
+		//special case: CC preceded by comma e.g. 'IC, CC IC' structure
+		if(left.getType().equals(","))
+			left = siblings[siblingIndex - 2];
+		right = siblings[siblingIndex + 1];
+		//special case: CC followed by comma separated phrase
+		//special case: CC followed by adverb e.g. "and thus"
+		//special case: CC followed by possessive with intermediary noun
+		if(right.getType().equals(",") || right.getType().equals("ADVP") || siblings.length > siblingIndex + 2 && siblings[siblingIndex + 2].getType().equals("POS"))
+			right = siblings[siblingIndex + 2];
 		
 		String leftType = left.getType(), rightType = right.getType();
 		LogHelper.getLogger(this).debug("Type to left: " + leftType + "\t" + "Type to right: " + rightType);
