@@ -47,11 +47,8 @@ import opennlp.tools.util.Span;
 @SuppressWarnings("unused")
 public class BSChecker {
 	
-	public static void main(String[] args) throws InvalidFormatException, IOException{
-		String input = "";
-		input = UtilityMethods.replaceInvalidChars(input);
-		input = UtilityMethods.removeExtraPunctuation(input, 0, new ArrayList<Integer>());
-		input += "\n";
+	public static void main(String[] args) throws InvalidFormatException, IOException {
+		String input = UtilityMethods.replaceInvalidChars("");
 		
 //		Tokenize(input);
 //		SentenceDetect(input);

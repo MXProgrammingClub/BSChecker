@@ -27,12 +27,14 @@ public abstract class Bluesheet {
 	/**
 	 * Finds all errors within the given text.
 	 * All types included in {@code ERROR_LIST} which have a {@code CheckedWhenAnalyzed} value of {@code true} will be checked.
-	 * Assumes that text ends with a new line character.
+	 * Expects text to end with a new line character.
 	 * @param text the text to search
 	 * @return a ErrorList which contains all the errors in the passage, referenced by character indices
 	 */
 	public static ErrorList findAllErrors(String text) {
 		PerformanceMonitor.start("analyze");
+		if(!text.endsWith("\n"))
+			text += "\n";
 		ErrorList errors = new ErrorList(text, false);
 		int lineNum = 1, charOffset = 0;
 		String line;
