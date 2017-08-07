@@ -46,7 +46,7 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * Removes extra punctuation from the passed text.
+	 * Removes extra punctuation from the passed text that are found in quotations.
 	 * @param line the text to remove punctuation from
 	 * @param startChar where this line starts relative to an entire passage
 	 * @param indices an ArrayList of Integers which represent the indices of any characters which are removed by the method
@@ -54,17 +54,10 @@ public class UtilityMethods {
 	 */
 	public static String removeExtraPunctuation(String line, int startChar, ArrayList<Integer> indices) {
 		StringBuffer buffer = new StringBuffer(line);
-		boolean inParens = false;
 		for(int i = 0; i < buffer.length(); i++){
 			char c = buffer.charAt(i);
-			if(c == '('){
-				inParens = true;
-				indices.add(startChar + i - 1); //remove space before parentheses
-			}
-			if(inParens || c == '[' || c == ']' || c == '/')
+			if(c == '[' || c == ']' || c == '/')
 				indices.add(startChar + i);
-			if(c == ')')
-				inParens = false;
 			if(c == '.' && i + 2 < buffer.length() && buffer.charAt(i + 1) == '.' && buffer.charAt(i + 2) == '.'){
 				indices.add(startChar + i);
 				indices.add(startChar + i + 1);
