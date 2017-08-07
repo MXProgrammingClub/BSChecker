@@ -27,25 +27,25 @@ public class PastTense extends Bluesheet {
 	protected ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
-		for(int i = 0; i < parses.length; i++) {
-			String sentence = parses[i].getText();
+		for(Parse parse : parses) {
+			String sentence = parse.getText();
 			String[] tokens = Tools.getTokenizer().tokenize(sentence);
 			String[] tags = Tools.getPOSTagger().tag(tokens);
 			ErrorList sentenceErrors = new ErrorList(sentence);
 			boolean inQuote = false, inIntroducedQuote = false;
-			for(int j = 0; j < tags.length; j++) {
-				if(tokens[j].contains("\"")) {
-					inIntroducedQuote = !inQuote && j > 0 && (tokens[j - 1].equals(",") || tokens[j - 1].equals(":"));
+			for(int i = 0; i < tags.length; i++) {
+				if(tokens[i].contains("\"")) {
+					inIntroducedQuote = !inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":"));
 					inQuote = !inQuote;
 				}
-				if(!inIntroducedQuote && tags[j].equals("VBD"))
-					sentenceErrors.add(new Error(j));
-				if(!inIntroducedQuote && tags[j].equals("VBN") && j > 0 && UtilityMethods.arrayContains(TO_HAVE_CONJ, tokens[j - 1]))
-					sentenceErrors.add(new Error(j - 1, j)); //does not currently look past intermediary adverbs
+				if(!inIntroducedQuote && tags[i].equals("VBD"))
+					sentenceErrors.add(new Error(i));
+				if(!inIntroducedQuote && tags[i].equals("VBN") && i > 0 && UtilityMethods.arrayContains(TO_HAVE_CONJ, tokens[i - 1]))
+					sentenceErrors.add(new Error(i - 1, i)); //does not currently look past intermediary adverbs
 			}
-			for(int j = 0; j < sentenceErrors.size(); j++)
-				if(!UtilityMethods.parseHasParent(UtilityMethods.getParseAtToken(parses[i], sentenceErrors.get(j).getEndIndex()), "SBAR"))
-					errors.add(new Error(sentenceErrors.get(j).getStartIndex() + tokenOffset, sentenceErrors.get(j).getEndIndex() + tokenOffset));
+			for(int i = 0; i < sentenceErrors.size(); i++)
+				if(!UtilityMethods.parseHasParent(UtilityMethods.getParseAtToken(parse, sentenceErrors.get(i).getEndIndex()), "SBAR"))
+					errors.add(new Error(sentenceErrors.get(i).getStartIndex() + tokenOffset, sentenceErrors.get(i).getEndIndex() + tokenOffset));
 			tokenOffset += tokens.length;
 		}
 		return errors;
