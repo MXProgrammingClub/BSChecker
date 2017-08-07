@@ -104,7 +104,7 @@ public class Tools {
 						tool == 't' ? "Tokenizer" :
 							tool == 'o' ? "Part of Speech Tagger" :
 								tool == 'p' ? "Parser" :
-						"") + " ...");
+						"") + "...");
 		InputStream is = null;
 		BaseModel model = null;
 		try {is = new FileInputStream(file);}
