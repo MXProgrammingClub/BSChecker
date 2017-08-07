@@ -284,6 +284,15 @@ public class GUIController {
 	 */
 	@FXML
 	private void menuBluesheet14Click() {menuBluesheetClick(14);}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Default Settings is clicked
+	 */
+	@FXML
+	private void menuDefaultSettingsClick() {
+		Bluesheets.writeDefaultSettings();
+		this.loadSettings();
+	}
 
 	/**
 	 * The method that will be called when the Help->About is clicked
@@ -308,16 +317,11 @@ public class GUIController {
 	}
 	
 	/**
-	 * loads the settings into the checkedMenuItems for each bluesheet
-	 * @param settings a boolean array of settings for each bluesheet as found in the Bluesheets enum
-	 * @throws IllegalArgumentException if the length of the settings array is not 14
+	 * loads the settings into the checkedMenuItems for each bluesheet from the Bluesheets enum
 	 */
-	public void loadSettings(boolean[] settings) {
-		if(settings.length != 14) {
-			LogHelper.getLogger(0).error("Passed array is invalid - it must be of length 14.");
-			throw new IllegalArgumentException("Passed settings array is invalid - it must be of length 14.");
-		}
+	public void loadSettings() {
 		LogHelper.getLogger(0).info("Loading settings into the menu");
+		boolean[] settings = Bluesheets.getSettings();
 		for(int i = 0; i < 14; i++)
 			getMenuBluesheet(i + 1).setSelected(settings[i]);
 	}

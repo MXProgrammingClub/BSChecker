@@ -51,6 +51,7 @@
               <CheckMenuItem fx:id="menuBluesheet12" mnemonicParsing="false" onAction="#menuBluesheet12Click" text="Progressive Tense (12)" />
               <CheckMenuItem fx:id="menuBluesheet13" mnemonicParsing="false" onAction="#menuBluesheet13Click" text="Gerund Possesive (13)" />
               <CheckMenuItem fx:id="menuBluesheet14" mnemonicParsing="false" onAction="#menuBluesheet14Click" text="Quotation Form (14)" />
+              <MenuItem mnemonicParsing="false" onAction="#menuDefaultSettingsClick" text="Default Settings" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="View">

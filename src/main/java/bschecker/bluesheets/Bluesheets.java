@@ -210,9 +210,19 @@ public enum Bluesheets {
 		if(successful)
 			LogHelper.getLogger(16).info("Settings read: " + Arrays.toString(settings));
 		else {
-			writeSettings(getDefaultSettings());
-			readSettings();
+			writeDefaultSettings();
 		}
+	}
+	
+	/**
+	 * Creates a settings file and writes the default settings into it.
+	 * If the file already exists it will be overwritten.
+	 * Once the settings have been written they will be read.
+	 */
+	public static void writeDefaultSettings() {
+		LogHelper.getLogger(16).info("Writing default settings");
+		writeSettings(getDefaultSettings());
+		readSettings();
 	}
 	
 	/**

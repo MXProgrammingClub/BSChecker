@@ -44,7 +44,7 @@ public class Main extends Application {
 		scene.getStylesheets().add(this.getClass().getResource(Paths.APPLICATION_STYLESHEET).toExternalForm());
 		
 		controller.setDefaultText();
-		controller.loadSettings(Bluesheets.getSettings());
+		controller.loadSettings();
 		
 		primaryStage.setTitle("BSChecker");
 		primaryStage.setScene(scene);
