@@ -73,7 +73,7 @@ public abstract class Bluesheet {
 			charOffset += line.length() + removedChars.size() + 1;
 		}
 		System.out.println();
-		LogHelper.getLogger(17).info("Passage analyzed in " + PerformanceMonitor.stop("analyze") + "s\n\n" + errors);
+		LogHelper.getLogger(17).info("Passage analyzed in " + PerformanceMonitor.stop("analyze") + "\n\n" + errors);
 		
 		return errors;
 	}
