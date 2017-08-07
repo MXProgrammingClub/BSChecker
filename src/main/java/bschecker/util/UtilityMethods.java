@@ -173,17 +173,17 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * a recursive method which will find all Parses below the passed Parse which have the desired tag
+	 * a recursive method which will find all Parses below the passed Parse which have any of the the desired tags
 	 * @param parse the Parse to traverse
-	 * @param tag the desired tag
-	 * @return an ArrayList of all Parses below the passed Parse which have the desired tag
+	 * @param tags a String array of the desired tags
+	 * @return an ArrayList of all Parses below the passed Parse which have any of the the desired tags
 	 */
-	public static ArrayList<Parse> findParsesWithTag(Parse parse, String tag) {
+	public static ArrayList<Parse> findParsesWithTag(Parse parse, String[] tags) {
 		ArrayList<Parse> result = new ArrayList<Parse>();
-		if(parse.getType().equals(tag))
+		if(arrayContains(tags, parse.getType()))
 			result.add(parse);
 		for(Parse child : parse.getChildren())
-			result.addAll(findParsesWithTag(child, tag));
+			result.addAll(findParsesWithTag(child, tags));
 		return result;
 	}
 	

@@ -30,7 +30,7 @@ public class IncompleteSentence extends Bluesheet {
 				int[] errorTokens = UtilityMethods.getTokenRange(parse.getChildren()[0]);
 				errors.add(new Error(tokenOffset + errorTokens[0], tokenOffset + errorTokens[1] - 1));
 			}
-			ArrayList<Parse> sParses = UtilityMethods.findParsesWithTag(parse, "S");
+			ArrayList<Parse> sParses = UtilityMethods.findParsesWithTag(parse, new String[] {"S"});
 			for(Parse sParse : sParses) {
 				LogHelper.getLogger(this).debug(sParse.getType() + ":\t" + sParse.getCoveredText());
 				Parse[] siblings = sParse.getParent().getChildren();
