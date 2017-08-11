@@ -40,7 +40,7 @@ public class PronounCase extends Bluesheet {
 					for(int i = 0; i < tags.length; i++) {
 						tags[i] = siblings[siblingIndex + 1 + i].getType().length() > 1 ? siblings[siblingIndex + 1 + i].getType().substring(0, 2) : siblings[siblingIndex + 1 + i].getType();
 					}
-					if(UtilityMethods.arrayContains(tags, "NN")) {
+					if(UtilityMethods.arrayContains(tags, "NN") || UtilityMethods.getParseAtToken(parse, UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + 1).getParent().getType().equals("VBG")) {
 						if(!UtilityMethods.arrayContains(POSSESSIVE, pronounParse.getCoveredText().replaceAll("\"", "")))
 							errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be possessive pronoun."));
 					} else if(pronounParse.getParent().getParent().getType().equals("VP") || pronounParse.getParent().getParent().getType().equals("PP") || pronounParse.getParent().getParent().getParent().getType().equals("VP") && pronounParse.getParent().getParent().getParent().getChildren()[UtilityMethods.getSiblingIndex(pronounParse.getParent().getParent()) - 1].getType().charAt(0) == 'V') {
