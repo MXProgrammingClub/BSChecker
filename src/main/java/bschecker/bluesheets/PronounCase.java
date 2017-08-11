@@ -15,8 +15,8 @@ import opennlp.tools.parser.Parse;
  */
 public class PronounCase extends Bluesheet {
 	
-	private static final String[] SUBJECTIVE = {"I", "you", "he", "she", "it", "we", "they", "who"};
-	private static final String[] OBJECTIVE = {"me", "you", "him", "her", "it", "us", "them", "whom"};
+	private static final String[] SUBJECTIVE = {"I", "you", "he", "she", "it", "we", "they"};
+	private static final String[] OBJECTIVE = {"me", "you", "him", "her", "it", "us", "them"};
 	private static final String[] POSSESSIVE = {"my", "your", "his", "her", "its", "our", "their", "whose"};
 	private static final String[] IGNORE = {"myself", "yourself", "himself", "herself", "itself", "ourselves", "themselves"};
 	
@@ -31,8 +31,7 @@ public class PronounCase extends Bluesheet {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
 		for(Parse parse: parses) {
-			ArrayList<Parse> pronounParses = UtilityMethods.findParsesWithTag(parse, new String[] {"PRP", "PRP$", "WP", "WP$"});
-			
+			ArrayList<Parse> pronounParses = UtilityMethods.findParsesWithTag(parse, new String[] {"PRP", "PRP$", "WP$"});
 			for(Parse pronounParse : pronounParses) {
 				if(!UtilityMethods.arrayContains(IGNORE, pronounParse.getCoveredText())) {
 					Parse[] siblings = pronounParse.getParent().getChildren();
@@ -50,15 +49,19 @@ public class PronounCase extends Bluesheet {
 					} else if(siblingIndex + 1 == siblings.length && pronounParse.getParent().getParent().getType().equals("S")) {
 						if(!UtilityMethods.arrayContains(SUBJECTIVE, pronounParse.getCoveredText().replaceAll("\"", "")))
 							errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be subjective pronoun."));
-					} else if(pronounParse.getParent().getType().equals("WHNP")) {
-						if(pronounParse.getParent().getParent().getChildren()[1].getChildren()[0].getType().equals("NP")) {
-							if(!pronounParse.getCoveredText().replaceAll("\"", "").equals("whom"))
-								errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be objective pronoun."));
-						} else if(pronounParse.getParent().getParent().getChildren()[1].getChildren()[0].getType().equals("VP"))
-							if(!pronounParse.getCoveredText().replaceAll("\"", "").equals("who"))
-								errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be subjective pronoun."));
 					}
 				}
+			}
+			
+			ArrayList<Parse> relativeParses = UtilityMethods.findParsesWithTag(parse, new String[] {"WP"});
+			for(Parse relativeParse : relativeParses) {
+				System.out.println(relativeParse.getParent().getParent().getChildren()[1].getChildren()[0].getType());
+				if(relativeParse.getParent().getParent().getChildren()[1].getChildren()[0].getType().equals("NP")) {
+					if(!relativeParse.getCoveredText().replaceAll("\"", "").equals("whom"))
+						errors.add(new Error(UtilityMethods.getIndexOfParse(relativeParse.getChildren()[0]) + tokenOffset, "Should be objective pronoun."));
+				} else if(relativeParse.getParent().getParent().getChildren()[1].getChildren()[0].getType().equals("VP"))
+					if(!relativeParse.getCoveredText().replaceAll("\"", "").equals("who"))
+						errors.add(new Error(UtilityMethods.getIndexOfParse(relativeParse.getChildren()[0]) + tokenOffset, "Should be subjective pronoun."));
 			}
 			
 			tokenOffset += Tools.getTokenizer().tokenize(parse.getText()).length;
