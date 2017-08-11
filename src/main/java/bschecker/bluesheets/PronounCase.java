@@ -43,7 +43,7 @@ public class PronounCase extends Bluesheet {
 					if(UtilityMethods.arrayContains(tags, "NN")) {
 						if(!UtilityMethods.arrayContains(POSSESSIVE, pronounParse.getCoveredText().replaceAll("\"", "")))
 							errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be possessive pronoun."));
-					} else if(pronounParse.getParent().getParent().getType().equals("VP") || pronounParse.getParent().getParent().getType().equals("PP") || pronounParse.getParent().getParent().getParent().getType().equals("VP")) {
+					} else if(pronounParse.getParent().getParent().getType().equals("VP") || pronounParse.getParent().getParent().getType().equals("PP") || pronounParse.getParent().getParent().getParent().getType().equals("VP") && pronounParse.getParent().getParent().getParent().getChildren()[UtilityMethods.getSiblingIndex(pronounParse.getParent().getParent()) - 1].getType().charAt(0) == 'V') {
 						if(!UtilityMethods.arrayContains(OBJECTIVE, pronounParse.getCoveredText().replaceAll("\"", "")))
 							errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be objective pronoun."));
 					} else if(siblingIndex + 1 == siblings.length && pronounParse.getParent().getParent().getType().equals("S")) {
