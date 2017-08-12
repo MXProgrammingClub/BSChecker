@@ -80,7 +80,7 @@ public class UtilityMethods {
 	/**
 	 * Parses a String using the openNLP parser.
 	 * @param input the String to parse
-	 * @return a String which is a parsed version of the input
+	 * @return the Parse of the input String
 	 */
 	public static Parse parse(String input) {
 		Parse p = new Parse(input, new Span(0, input.length()), AbstractBottomUpParser.INC_NODE, 1, 0);
