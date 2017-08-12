@@ -1,7 +1,5 @@
 package bschecker.bluesheets;
 
-import java.util.Arrays;
-
 import bschecker.reference.Reference;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
@@ -35,8 +33,6 @@ public class QuotationForm extends Bluesheet {
 					start = i;
 				for(int j = start; j < tokens.length; j++)
 					if(tokens[j].contains("\"")) { //finds closing quotation
-						System.out.println(line);
-						System.out.println(Arrays.toString(tokens) + "\t" + i + "\t" + j + "\t" + tokens.length + "\t" + tokens[j]);
 						ErrorTypes errorFront = findErrorsFront(tokens, i, j);
 						if(!(errorFront == ErrorTypes.NO_ERROR))
 							errors.add(new Error(i - 1, errorFront.DESCRIPTION));
