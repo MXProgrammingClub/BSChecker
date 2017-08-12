@@ -9,9 +9,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import bschecker.bluesheets.Bluesheets;
-import bschecker.bluesheets.QuotationForm;
 import bschecker.gui.GUIController;
 import bschecker.reference.Paths;
+import bschecker.reference.Reference;
 import bschecker.util.LogHelper;
 import bschecker.util.PerformanceMonitor;
 import bschecker.util.Tools;
@@ -64,7 +64,7 @@ public class Main extends Application {
 		System.out.println();
 		Bluesheets.readSettings();
 		System.out.println();
-		QuotationForm.importVerbs();
+		Reference.importVerbs();
 		System.out.println();
 		LogHelper.getLogger(0).info("Initialization Completed in " + PerformanceMonitor.stop("init"));
 		System.out.println();

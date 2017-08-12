@@ -826,3 +826,7 @@ remark
 remarks
 remarking
 remarked
+wish
+wishes
+wishing
+wished

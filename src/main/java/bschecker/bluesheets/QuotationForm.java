@@ -1,16 +1,10 @@
 package bschecker.bluesheets;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Scanner;
 
-import bschecker.reference.Paths;
+import bschecker.reference.Reference;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
-import bschecker.util.LogHelper;
-import bschecker.util.PerformanceMonitor;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.parser.Parse;
@@ -22,28 +16,7 @@ import opennlp.tools.parser.Parse;
  */
 public class QuotationForm extends Bluesheet {
 	
-	private static HashSet<String> VERB_SET; //the set of verbs of saying or thinking
 	private static final String[][] PUNCTUATION = {{".", ","}, {":", ";"}};
-	
-	/**
-	 * Imports the list of verbs of saying or thinking.
-	 */
-	public static void importVerbs() {
-		if(VERB_SET != null) {
-			LogHelper.getLogger(0).warn("Verb Set has already been initialized - skipping");
-			return;
-		}
-		PerformanceMonitor.start("verbs");
-		LogHelper.getLogger(0).info("Loading verbs of saying or thinking...");
-		VERB_SET = new HashSet<String>();
-		Scanner scan = null;
-			try {scan = new Scanner(new File(Paths.SAYING_VERBS));}
-			catch (FileNotFoundException e) {e.printStackTrace();}
-		while(scan.hasNext()) {
-			VERB_SET.add(scan.nextLine());
-		}
-		LogHelper.getLogger(0).info("Complete (" + PerformanceMonitor.stop("verbs") + ")");
-	}
 
 	/**
 	 * Finds all errors with quotation form in a paragraph.
@@ -86,13 +59,13 @@ public class QuotationForm extends Bluesheet {
 	 */
 	private ErrorTypes findErrorsFront(String[] tokens, int start, int end) {
 		if(start > 0 && tokens[start - 1].equals(":")) {
-			if(start > 1 && VERB_SET.contains(tokens[start - 2]))
+			if(start > 1 && Reference.getVerbSet().contains(tokens[start - 2]))
 				return ErrorTypes.INVALID_COLON; //error if there is a colon before and the word before it is a verb
 		} else if(start > 0 && tokens[start - 1].equals(",")) {
-			if(start > 1 && !VERB_SET.contains(tokens[start - 2]))
+			if(start > 1 && !Reference.getVerbSet().contains(tokens[start - 2]))
 				return ErrorTypes.INVALID_COMMA; //error if there is a comma before and the word before it is not a verb
 		} else
-			if(start > 0 && VERB_SET.contains(tokens[start - 1]))
+			if(start > 0 && Reference.getVerbSet().contains(tokens[start - 1]))
 				return ErrorTypes.NEEDS_COMMA; //error if there is a not punctuation before and the word before is a verb
 		return ErrorTypes.NO_ERROR;
 	}
