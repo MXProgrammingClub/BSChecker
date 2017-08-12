@@ -224,13 +224,31 @@ public class UtilityMethods {
 		int siblingIndex = getSiblingIndex(parse);
 		if(siblingIndex + 1 < parse.getParent().getChildCount()) {
 			Parse child = parse.getParent().getChildren()[siblingIndex + 1].getChildren()[0];
-			while(!child.getType().equals("TK"))
+			while(!child.getType().equals(AbstractBottomUpParser.TOK_NODE))
 				child = child.getChildren()[0];
 			if(arrayContains(ignore, child.getParent().getType()))
 				return getNextToken(child, ignore);
 			return child;
 		}
 		return getNextToken(parse.getParent(), ignore);
+	}
+	
+	/**
+	 * finds the next node in the Parse
+	 * @param parse the Parse which determines the starting node
+	 * @return the next node in the Parse, null if this is the last node
+	 */
+	public static Parse getNextNode(Parse parse) {
+		if(parse.getChildCount() != 0)
+			return parse.getChildren()[0];
+		Parse temp = parse;
+		while(!temp.getType().equals(AbstractBottomUpParser.TOP_NODE)) {
+			int siblingIndex = getSiblingIndex(temp);
+			temp = temp.getParent();
+			if(siblingIndex + 1 < temp.getChildCount())
+				return temp.getChildren()[siblingIndex + 1];
+		}
+		return null;
 	}
 	
 }

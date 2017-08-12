@@ -2,10 +2,12 @@ package bschecker.bluesheets;
 
 import java.util.ArrayList;
 
+import bschecker.reference.Reference;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
+import opennlp.tools.parser.AbstractBottomUpParser;
 import opennlp.tools.parser.Parse;
 
 /**
@@ -15,9 +17,6 @@ import opennlp.tools.parser.Parse;
  */
 public class PronounCase extends Bluesheet {
 	
-	private static final String[] SUBJECTIVE = {"I", "you", "he", "she", "it", "we", "they"};
-	private static final String[] OBJECTIVE = {"me", "you", "him", "her", "it", "us", "them"};
-	private static final String[] POSSESSIVE = {"my", "your", "his", "her", "its", "our", "their", "whose"};
 	private static final String[] IGNORE = {"myself", "yourself", "himself", "herself", "itself", "ourselves", "themselves", "one", "oneself"};
 	private static final String[] RELATIVE_IGNORE = {"what"};
 	
@@ -33,30 +32,12 @@ public class PronounCase extends Bluesheet {
 		int tokenOffset = 0;
 		for(Parse parse: parses) {
 			ArrayList<Parse> pronounParses = UtilityMethods.findParsesWithTag(parse, new String[] {"PRP", "PRP$", "WP$"});
-			for(Parse pronounParse : pronounParses) {
+			for(Parse pronounParse : pronounParses)
 				if(!UtilityMethods.arrayContains(IGNORE, pronounParse.getCoveredText())) {
-					Parse[] siblings = pronounParse.getParent().getChildren();
-					int siblingIndex = UtilityMethods.getSiblingIndex(pronounParse);
-					String[] tags = new String[siblings.length - siblingIndex - 1];
-					for(int i = 0; i < tags.length; i++) {
-						tags[i] = siblings[siblingIndex + 1 + i].getType().length() > 1 ? siblings[siblingIndex + 1 + i].getType().substring(0, 2) : siblings[siblingIndex + 1 + i].getType();
-					}
-					if(UtilityMethods.arrayContains(tags, "NN")
-					|| UtilityMethods.getNextToken(pronounParse, new String[]{"RB"}).getParent().getType().equals("VBG")) {
-						if(!UtilityMethods.arrayContains(POSSESSIVE, pronounParse.getCoveredText().replaceAll("\"", "")))
-							errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be possessive pronoun."));
-					} else if(pronounParse.getParent().getParent().getType().equals("VP")
-					|| pronounParse.getParent().getParent().getType().equals("PP")
-					|| pronounParse.getParent().getParent().getParent().getType().equals("VP") && pronounParse.getParent().getParent().getParent().getChildren()[UtilityMethods.getSiblingIndex(pronounParse.getParent().getParent()) - 1].getType().charAt(0) == 'V'
-					|| UtilityMethods.getNextToken(pronounParse, null).getParent().getType().equals("TO")) {
-						if(!UtilityMethods.arrayContains(OBJECTIVE, pronounParse.getCoveredText().replaceAll("\"", "")))
-							errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be objective pronoun."));
-					} else if(siblingIndex + 1 == siblings.length && pronounParse.getParent().getParent().getType().equals("S")) {
-						if(!UtilityMethods.arrayContains(SUBJECTIVE, pronounParse.getCoveredText().replaceAll("\"", "")))
-							errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be subjective pronoun."));
-					}
+					Cases pronounCase = getCorrectCase(pronounParse);
+					if(!UtilityMethods.arrayContains(pronounCase.PRONOUNS, pronounParse.getCoveredText().replaceAll("\"", "")))
+						errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be " + pronounCase.toString().toLowerCase() + " pronoun."));
 				}
-			}
 			
 			ArrayList<Parse> relativeParses = UtilityMethods.findParsesWithTag(parse, new String[] {"WP"});
 			for(Parse relativeParse : relativeParses) {
@@ -74,6 +55,61 @@ public class PronounCase extends Bluesheet {
 		}
 		
 		return errors;
+	}
+	
+	/**
+	 * determines which case a pronoun should be based on its Parse
+	 * @param pronounParse a Parse whose node is the pronoun to check
+	 * @return the element of the Cases enum which corresponds to the correct case of the pronoun
+	 */
+	private static Cases getCorrectCase(Parse pronounParse) {
+		Parse[] siblings = pronounParse.getParent().getChildren();
+		int siblingIndex = UtilityMethods.getSiblingIndex(pronounParse);
+		String[] tags = new String[siblings.length - siblingIndex - 1];
+		for(int i = 0; i < tags.length; i++)
+			tags[i] = siblings[siblingIndex + 1 + i].getCoveredText().equals("\"") ? "" : siblings[siblingIndex + 1 + i].getType().length() > 1 ? siblings[siblingIndex + 1 + i].getType().substring(0, 2) : siblings[siblingIndex + 1 + i].getType();
+		Parse nextTokenIgnoreAdverbs = UtilityMethods.getNextToken(pronounParse, new String[]{"RB"});
+		if(UtilityMethods.arrayContains(tags, "NN")
+			|| nextTokenIgnoreAdverbs != null && nextTokenIgnoreAdverbs.getParent().getType().equals("VBG"))
+			return Cases.POSSESSIVE;
+		
+		Parse nextToken = UtilityMethods.getNextToken(pronounParse, null);
+		if(pronounParse.getParent().getParent().getType().equals("VP")
+		|| pronounParse.getParent().getParent().getType().equals("PP")
+		|| nextToken != null && nextToken.getParent().getType().equals("TO")
+		|| pronounParse.getParent().getParent().getParent().getType().equals("VP") && pronounParse.getParent().getParent().getParent().getChildren()[UtilityMethods.getSiblingIndex(pronounParse.getParent().getParent()) - 1].getType().charAt(0) == 'V'
+		|| !pronounParse.getParent().getParent().getParent().getType().equals(AbstractBottomUpParser.TOP_NODE) && pronounParse.getParent().getParent().getParent().getParent().getType().equals("VP") && pronounParse.getParent().getParent().getParent().getType().equals("SBAR") && pronounParse.getParent().getParent().getParent().getSpan().getStart() == pronounParse.getSpan().getStart() && !Reference.getVerbSet().contains(pronounParse.getParent().getParent().getParent().getParent().getChildren()[0].getCoveredText()))
+			return Cases.OBJECTIVE;
+		
+		Parse parent = pronounParse.getParent();
+		while(parent.getType().equals("NP"))
+			parent = parent.getParent();
+		if(parent.getType().equals("S")
+		|| UtilityMethods.getNextNode(pronounParse.getChildren()[0]).getType().equals("VP"))
+			return Cases.SUBJECTIVE;
+		if(parent.getType().equals("PP"))
+			return Cases.OBJECTIVE;
+		
+		return Cases.UNDETERMINED;
+	}
+	
+	/**
+	 * an enum which represents the different cases of pronouns
+	 * @author JeremiahDeGreeff
+	 */
+	private static enum Cases {
+		
+		UNDETERMINED(null),
+		SUBJECTIVE(new String[]{"I", "you", "he", "she", "it", "we", "they"}),
+		OBJECTIVE(new String[]{"me", "you", "him", "her", "it", "us", "them"}),
+		POSSESSIVE(new String[]{"my", "your", "his", "her", "its", "our", "their", "whose"});
+		
+		protected final String[] PRONOUNS;
+		
+		Cases(String[] pronouns) {
+			PRONOUNS = pronouns;
+		}
+		
 	}
 	
 }
