@@ -21,6 +21,8 @@ public class UtilityMethods {
 	 * @return true if found, false otherwise
 	 */
 	public static boolean arrayContains(String[] array, String word) {
+		if(array == null)
+			return false;
 		for(String element : array)
 			if(element.equalsIgnoreCase(word))
 				return true;
@@ -33,7 +35,7 @@ public class UtilityMethods {
 	 * @return the same text with the appropriate character changes
 	 */
 	public static String replaceInvalidChars(String text) {
-		HashMap<String, Pattern> replacements = new HashMap<String, Pattern>();
+		HashMap<String, Pattern> replacements = new HashMap<String, Pattern>(3);
 		// double quotation (")
 	    replacements.put("\"", Pattern.compile("[\u201C\u201D\u201E\u201F\u275D\u275E]"));
 	    // single quotation (')
@@ -181,7 +183,7 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * a recursive method which will find all Parses below the passed Parse which have any of the the desired tags
+	 * a recursive method which finds all Parses below the passed Parse which have any of the the desired tags
 	 * @param parse the Parse to traverse
 	 * @param tags a String array of the desired tags
 	 * @return an ArrayList of all Parses below the passed Parse which have any of the the desired tags
@@ -207,6 +209,28 @@ public class UtilityMethods {
 			if(siblings[i].equals(parse))
 				return i;
 		return -1;
+	}
+	
+	/**
+	 * a recursive method which finds the the first token node which occurs after this node
+	 * ignores any nodes whose type is included in the passed array
+	 * @param parse the Parse to traverse
+	 * @param ignore a String[] of types to ignore
+	 * @return the Parse of the first token node which occurs after this node and whose type is not included in the passed array, null if no such node is found
+	 */
+	public static Parse getNextToken(Parse parse, String[] ignore) {
+		if(parse.getType().equals(AbstractBottomUpParser.TOP_NODE))
+			return null;
+		int siblingIndex = getSiblingIndex(parse);
+		if(siblingIndex + 1 < parse.getParent().getChildCount()) {
+			Parse child = parse.getParent().getChildren()[siblingIndex + 1].getChildren()[0];
+			while(!child.getType().equals("TK"))
+				child = child.getChildren()[0];
+			if(arrayContains(ignore, child.getParent().getType()))
+				return getNextToken(child, ignore);
+			return child;
+		}
+		return getNextToken(parse.getParent(), ignore);
 	}
 	
 }
