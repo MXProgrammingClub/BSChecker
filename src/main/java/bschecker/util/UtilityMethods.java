@@ -152,7 +152,7 @@ public class UtilityMethods {
 		if(parse.getType().equals(AbstractBottomUpParser.TOP_NODE))
 			return 0;
 		int count = 0;
-		for(Parse sibling : parse.getParent().getChildren()){
+		for(Parse sibling : parse.getParent().getChildren()) {
 			if(sibling.equals(parse))
 				break;
 			count += countTokens(sibling, Integer.MAX_VALUE);

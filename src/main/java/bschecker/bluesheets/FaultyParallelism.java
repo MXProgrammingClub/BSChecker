@@ -35,7 +35,7 @@ public class FaultyParallelism extends Bluesheet {
 					ccParses.add(UtilityMethods.getParseAtToken(parse, i));
 			for(Parse ccParse : ccParses)
 				if(ccIsFaultyParallelism(ccParse))
-					errors.add(new Error(UtilityMethods.getIndexOfParse(ccParse) + tokenOffset));
+					errors.add(new Error(ccParse, tokenOffset));
 			tokenOffset += tags.length;
 		}
 		return errors;

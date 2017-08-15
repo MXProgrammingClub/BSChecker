@@ -1,5 +1,7 @@
 package bschecker.util;
 
+import opennlp.tools.parser.Parse;
+
 /**
  * an object which represents a blue sheet error
  * the object contains the start and end indices of the error, the type of error [1 - 14] and an optional note which provides more information about the specific error
@@ -42,7 +44,7 @@ public class Error {
 	 * @throws IllegalArgumentException if startIndex > endIndex
 	 */
 	public Error(int startIndex, int endIndex, String note) {
-		this(true, startIndex, endIndex, 0, note);
+		this(true, startIndex, endIndex, -1, note);
 	}
 	
 	/**
@@ -53,7 +55,7 @@ public class Error {
 	 * @throws IllegalArgumentException if startIndex > endIndex
 	 */
 	public Error(int startIndex, int endIndex) {
-		this(true, startIndex, endIndex, 0, "");
+		this(true, startIndex, endIndex, -1, "");
 	}
 	
 	/**
@@ -63,7 +65,7 @@ public class Error {
 	 * @param note a note to be attached to the error
 	 */
 	public Error(int index, String note) {
-		this(true, index, index, 0, note);
+		this(true, index, index, -1, note);
 	}
 	
 	/**
@@ -72,7 +74,36 @@ public class Error {
 	 * @param index the index of the error (starting and ending)
 	 */
 	public Error(int index) {
-		this(true, index, index, 0, "");
+		this(true, index, index, -1, "");
+	}
+	
+	/**
+	 * internal constructor
+	 * @param range the start and end tokens of the error within the sentence
+	 * @param tokenOffset where this sentence starts relative to the entire paragraph
+	 * @param note a note to be attached to the error
+	 */
+	private Error(int[] range, int tokenOffset, String note) {
+		this(true, range[0] + tokenOffset, range[1] - 1 + tokenOffset, -1, note);
+	}
+	
+	/**
+	 * constructor
+	 * @param parse a Parse that covers the error
+	 * @param tokenOffset where this sentence starts relative to the entire paragraph
+	 * @param note a note to be attached to the error
+	 */
+	public Error(Parse parse, int tokenOffset, String note) {
+		this(UtilityMethods.getTokenRange(parse), tokenOffset, note);
+	}
+	
+	/**
+	 * constructor
+	 * @param parse a Parse that covers the error
+	 * @param tokenOffset where this sentence starts relative to the entire paragraph
+	 */
+	public Error(Parse parse, int tokenOffset) {
+		this(parse, tokenOffset, "");
 	}
 	
 	
