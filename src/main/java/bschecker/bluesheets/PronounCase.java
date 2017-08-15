@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import bschecker.reference.Reference;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
+import bschecker.util.LogHelper;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.parser.AbstractBottomUpParser;
@@ -35,21 +36,22 @@ public class PronounCase extends Bluesheet {
 			for(Parse pronounParse : pronounParses)
 				if(!UtilityMethods.arrayContains(IGNORE, pronounParse.getCoveredText())) {
 					Cases pronounCase = getCorrectCase(pronounParse);
-					if(!UtilityMethods.arrayContains(pronounCase.PRONOUNS, pronounParse.getCoveredText().replaceAll("\"", "")))
-						errors.add(new Error(UtilityMethods.getIndexOfParse(pronounParse.getChildren()[0]) + tokenOffset, "Should be " + pronounCase.toString().toLowerCase() + " pronoun."));
+					if(pronounCase == Cases.UNDETERMINED)
+						LogHelper.getLogger(this).warn("Undetermined personal pronoun case");
+					else if(!UtilityMethods.arrayContains(pronounCase.PRONOUNS, pronounParse.getCoveredText().replaceAll("\"", "")))
+						errors.add(new Error(pronounParse.getChildren()[0], tokenOffset, "Should be " + pronounCase.toString().toLowerCase() + " pronoun."));
 				}
 			
 			ArrayList<Parse> relativeParses = UtilityMethods.findParsesWithTag(parse, new String[] {"WP"});
-			for(Parse relativeParse : relativeParses) {
+			for(Parse relativeParse : relativeParses)
 				if(!UtilityMethods.arrayContains(RELATIVE_IGNORE, relativeParse.getCoveredText())) {
-					if(relativeParse.getParent().getParent().getChildren()[1].getChildren()[0].getType().equals("NP")) {
-						if(!relativeParse.getCoveredText().replaceAll("\"", "").equals("whom"))
-							errors.add(new Error(UtilityMethods.getIndexOfParse(relativeParse.getChildren()[0]) + tokenOffset, "Should be objective pronoun."));
-					} else if(relativeParse.getParent().getParent().getChildren()[1].getChildren()[0].getType().equals("VP"))
-						if(!relativeParse.getCoveredText().replaceAll("\"", "").equals("who"))
-							errors.add(new Error(UtilityMethods.getIndexOfParse(relativeParse.getChildren()[0]) + tokenOffset, "Should be subjective pronoun."));
+					String type = relativeParse.getParent().getParent().getChildren()[1].getChildren()[0].getType();
+					Cases relativeCase = type.equals("NP") ? Cases.OBJECTIVE : type.equals("VP") ? Cases.SUBJECTIVE : Cases.UNDETERMINED;
+					if(relativeCase == Cases.UNDETERMINED)
+						LogHelper.getLogger(this).warn("Undetermined relative pronoun case");
+					else if(!relativeParse.getCoveredText().replaceAll("\"", "").equals(relativeCase.RELATIVE))
+						errors.add(new Error(relativeParse.getChildren()[0], tokenOffset, "Should be " + relativeCase.toString().toLowerCase() + " pronoun."));
 				}
-			}
 			
 			tokenOffset += Tools.getTokenizer().tokenize(parse.getText()).length;
 		}
@@ -99,15 +101,17 @@ public class PronounCase extends Bluesheet {
 	 */
 	private static enum Cases {
 		
-		UNDETERMINED(null),
-		SUBJECTIVE(new String[]{"I", "you", "he", "she", "it", "we", "they"}),
-		OBJECTIVE(new String[]{"me", "you", "him", "her", "it", "us", "them"}),
-		POSSESSIVE(new String[]{"my", "your", "his", "her", "its", "our", "their", "whose"});
+		UNDETERMINED(null, null),
+		SUBJECTIVE(new String[]{"I", "you", "he", "she", "it", "we", "they"}, "who"),
+		OBJECTIVE(new String[]{"me", "you", "him", "her", "it", "us", "them"}, "whom"),
+		POSSESSIVE(new String[]{"my", "your", "his", "her", "its", "our", "their", "whose"}, null);
 		
 		protected final String[] PRONOUNS;
+		protected final String RELATIVE;
 		
-		Cases(String[] pronouns) {
+		Cases(String[] pronouns, String relative) {
 			PRONOUNS = pronouns;
+			RELATIVE = relative;
 		}
 		
 	}
