@@ -293,6 +293,30 @@ public class GUIController {
 		Bluesheets.writeDefaultSettings();
 		this.loadSettings();
 	}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Select All Bluesheets is clicked
+	 */
+	@FXML
+	private void menuSelectAllBluesheetsClick() {
+		for(int i = 1; i <= 14; i++)
+			if(!getMenuBluesheet(i).isSelected()) {
+				getMenuBluesheet(i).setSelected(true);
+				menuBluesheetClick(i);
+			}
+	}
+	
+	/**
+	 * The method that will be called when the Bluesheets->Deselect All Bluesheets is clicked
+	 */
+	@FXML
+	private void menuDeselectAllBluesheetsClick() {
+		for(int i = 1; i <= 14; i++)
+			if(getMenuBluesheet(i).isSelected()) {
+				getMenuBluesheet(i).setSelected(false);
+				menuBluesheetClick(i);
+			}
+	}
 
 	/**
 	 * The method that will be called when the Help->About is clicked
