@@ -78,7 +78,7 @@ public class GUIController {
 		errors = Bluesheet.findAllErrors(text);
 		
 		if(errors.size() == 0)
-			errorBox.replaceText("No Error Found!");
+			errorBox.replaceText("No Errors Found!");
 		else {
 			currError = 0;
 			//highlight all the errors
