@@ -33,6 +33,12 @@ public class ErrorList extends ArrayList<Error> {
 		this(text, true);
 	}
 	
+	/**
+	 * @return the text in which the errors of this ErrorList occur
+	 */
+	public String getText() {
+		return TEXT;
+	}
 	
 	@Override
 	public boolean add(Error e) {
@@ -57,6 +63,20 @@ public class ErrorList extends ArrayList<Error> {
 			return null;
 		}
 		return super.set(i, e);
+	}
+	
+	/**
+	 * adds all items of the passed ErrorList to this ErrorList with an offset
+	 * @param l the ErrorList whose elements will be added
+	 * @param offset an offset to be applied to all the indices of all Errors in the added list
+	 */
+	public void addAllWithOffset(ErrorList l, int offset) {
+		if(this.IS_TOKEN_BASED != l.IS_TOKEN_BASED) {
+			LogHelper.getLogger(17).error("Cannot combine ErrorLists of different types");
+			return;
+		}
+		for(Error e : l)
+			this.add(new Error(e.IS_TOKEN_BASED, e.getStartIndex() + offset, e.getEndIndex() + offset, e.getBluesheetNumber(), e.getNote()));
 	}
 	
 	/**

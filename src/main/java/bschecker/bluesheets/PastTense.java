@@ -29,23 +29,21 @@ public class PastTense extends Bluesheet {
 		int tokenOffset = 0;
 		for(Parse parse : parses) {
 			String sentence = parse.getText();
+			ErrorList sentenceErrors = new ErrorList(sentence);
 			String[] tokens = Tools.getTokenizer().tokenize(sentence);
 			String[] tags = Tools.getPOSTagger().tag(tokens);
-			ErrorList sentenceErrors = new ErrorList(sentence);
-			boolean inQuote = false, inIntroducedQuote = false;
-			for(int i = 0; i < tags.length; i++) {
-				if(tokens[i].contains("\"")) {
-					inIntroducedQuote = !inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":"));
-					inQuote = !inQuote;
-				}
-				if(!inIntroducedQuote && tags[i].equals("VBD"))
+			for(int i = 0; i < tags.length; i++)
+				if(tags[i].equals("VBD"))
 					sentenceErrors.add(new Error(i));
-				if(!inIntroducedQuote && tags[i].equals("VBN") && i > 0 && UtilityMethods.arrayContains(TO_HAVE_CONJ, tokens[i - 1]))
+				else if(tags[i].equals("VBN") && i > 0 && UtilityMethods.arrayContains(TO_HAVE_CONJ, tokens[i - 1]))
 					sentenceErrors.add(new Error(i - 1, i)); //does not currently look past intermediary adverbs
-			}
 			for(int i = 0; i < sentenceErrors.size(); i++)
-				if(!UtilityMethods.parseHasParent(UtilityMethods.getParseAtToken(parse, sentenceErrors.get(i).getEndIndex()), "SBAR"))
-					errors.add(new Error(sentenceErrors.get(i).getStartIndex() + tokenOffset, sentenceErrors.get(i).getEndIndex() + tokenOffset));
+				if(UtilityMethods.parseHasParent(UtilityMethods.getParseAtToken(parse, sentenceErrors.get(i).getEndIndex()), "SBAR")) {
+					sentenceErrors.remove(i);
+					i--;
+				}
+			UtilityMethods.removeErrorsInQuotes(sentenceErrors, parse, true);
+			errors.addAllWithOffset(sentenceErrors, tokenOffset);
 			tokenOffset += tokens.length;
 		}
 		return errors;

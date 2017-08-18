@@ -251,4 +251,50 @@ public class UtilityMethods {
 		return null;
 	}
 	
+	/**
+	 * removes Errors from an ErrorList which occur inside of quotes
+	 * @param errors the ErrorList to be examined which covers <em>only one</em> sentence
+	 * @param parse the Parse of the same sentence
+	 * @param introducedOnly if true, only errors inside of introduced quotes will be removed
+	 */
+	public static void removeErrorsInQuotes(ErrorList errors, Parse parse, boolean introducedOnly) {
+		if(!errors.getText().equals(parse.getText()))
+			LogHelper.getLogger(17).warn("ErrorList text and Parse text do not match - results will likely be inaccurate");
+		String text = parse.getText();
+		ArrayList<Span> quotes = new ArrayList<Span>();
+		int cursor = 0;
+		while(text.substring(cursor).contains("\"")) {
+			int start = cursor + text.indexOf('\"');
+			if(!(start + 1 < text.length() && text.substring(start + 1).contains("\""))) {
+				LogHelper.getLogger(17).warn("Uneven number of quotation marks");
+				break;
+			}
+			cursor = start + 2 + text.substring(start + 1).indexOf('\"');
+			quotes.add(new Span(start, cursor));
+		}
+		if(introducedOnly)
+			for(int i = 0; i < quotes.size(); i++) {
+				String preceeding = text.substring(0, quotes.get(i).getStart()).trim();
+				if(!(preceeding.endsWith(",") || preceeding.endsWith(":"))) {
+					quotes.remove(i);
+					i--;
+				}
+			}
+		
+		for(int i = 0; i < errors.size(); i++) {
+			Error error = errors.get(i);
+			Parse errorParse = getParseAtToken(parse, error.getStartIndex());
+			if(error.getStartIndex() != error.getEndIndex()) {
+				LogHelper.getLogger(17).debug("Finding common parent");
+				errorParse = errorParse.getCommonParent(getParseAtToken(parse, error.getEndIndex()));
+			}
+			for(Span quote : quotes)
+				if(quote.intersects(errorParse.getSpan())) {
+					LogHelper.getLogger(17).debug("Removing Error in quotes: " + errorParse.getCoveredText() + " (" + errors.get(i).getStartIndex() + "-" + errors.get(i).getEndIndex() + ")");
+					errors.remove(i);
+					i--;
+				}
+		}
+	}
+	
 }

@@ -25,21 +25,21 @@ public class FirstSecondPerson extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses) {
-		String[] tokens = Tools.getTokenizer().tokenize(line);
-		
-		boolean inQuote = false, inIntroducedQuote = false;
 		ErrorList errors = new ErrorList(line);
-		for(int i = 0; i < tokens.length; i++) {
-			if(tokens[i].contains("\"")) {
-				inIntroducedQuote = (!inQuote && i > 0 && (tokens[i - 1].equals(",") || tokens[i - 1].equals(":"))) ? true : false;
-				inQuote = !inQuote;
-			}
-			if(!inIntroducedQuote && UtilityMethods.arrayContains(FIRST_PERSON, tokens[i]))
-				errors.add(new Error(i, "First Person"));
-			if(!inIntroducedQuote && UtilityMethods.arrayContains(SECOND_PERSON, tokens[i]))
-				errors.add(new Error(i, "Second Person"));
+		int tokenOffset = 0;
+		for(Parse parse : parses) {
+			String sentence = parse.getText();
+			ErrorList sentenceErrors = new ErrorList(sentence);
+			String[] tokens = Tools.getTokenizer().tokenize(sentence);
+			for(int i = 0; i < tokens.length; i++)
+				if(UtilityMethods.arrayContains(FIRST_PERSON, tokens[i]))
+					sentenceErrors.add(new Error(i, "First Person"));
+				else if(UtilityMethods.arrayContains(SECOND_PERSON, tokens[i]))
+					sentenceErrors.add(new Error(i, "Second Person"));
+			UtilityMethods.removeErrorsInQuotes(sentenceErrors, parse, true);
+			errors.addAllWithOffset(sentenceErrors, tokenOffset);
+			tokenOffset += tokens.length;
 		}
-		
 		return errors;
 	}
 }

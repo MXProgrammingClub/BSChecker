@@ -24,21 +24,24 @@ public class PassiveVoice extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses) {
-		String[] tokens = Tools.getTokenizer().tokenize(line);
-		String[] tags = Tools.getPOSTagger().tag(tokens);
-		
 		ErrorList errors = new ErrorList(line);
-		boolean inQuote = false;
-		for(int i = 1; i < tokens.length; i++) {
-			if(tokens[i].contains("\""))
-				inQuote = !inQuote;
-			if(!inQuote && UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i < tokens.length - 1){
-				int j = i + 1;
-				while(tags[j].equals("RB") && j < tokens.length)
-					j++;
-				if(tags[j].equals("VBN"))
-					errors.add(new Error(i, j));
-			}
+		int tokenOffset = 0;
+		for(Parse parse : parses) {
+			String sentence = parse.getText();
+			ErrorList sentenceErrors = new ErrorList(sentence);
+			String[] tokens = Tools.getTokenizer().tokenize(sentence);
+			String[] tags = Tools.getPOSTagger().tag(tokens);
+			for(int i = 1; i < tokens.length; i++)
+				if(UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i < tokens.length - 1) {
+					int j = i + 1;
+					while(tags[j].equals("RB") && j < tokens.length)
+						j++;
+					if(tags[j].equals("VBN"))
+						sentenceErrors.add(new Error(i, j));
+				}
+			UtilityMethods.removeErrorsInQuotes(sentenceErrors, parse, false);
+			errors.addAllWithOffset(sentenceErrors, tokenOffset);
+			tokenOffset += tokens.length;
 		}
 		return errors;
 	}
