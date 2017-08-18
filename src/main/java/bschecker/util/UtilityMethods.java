@@ -104,7 +104,7 @@ public class UtilityMethods {
 				} else
 					previousSentenceOdd = true;
 		}
-		return (String[]) sentences.toArray();
+		return sentences.toArray(new String[sentences.size()]);
 	}
 	
 	/**
