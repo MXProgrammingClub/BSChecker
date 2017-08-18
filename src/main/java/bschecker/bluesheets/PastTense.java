@@ -35,8 +35,13 @@ public class PastTense extends Bluesheet {
 			for(int i = 0; i < tags.length; i++)
 				if(tags[i].equals("VBD"))
 					sentenceErrors.add(new Error(i));
-				else if(tags[i].equals("VBN") && i > 0 && UtilityMethods.arrayContains(TO_HAVE_CONJ, tokens[i - 1]))
-					sentenceErrors.add(new Error(i - 1, i)); //does not currently look past intermediary adverbs
+				else if(tags[i].equals("VBN")) {
+					int j = i - 1;
+					while(tags[j].equals("RB") && j > 0)
+						j--;
+					if(UtilityMethods.arrayContains(TO_HAVE_CONJ, tokens[j]))
+						sentenceErrors.add(new Error(j, i));
+				}
 			for(int i = 0; i < sentenceErrors.size(); i++)
 				if(UtilityMethods.parseHasParent(UtilityMethods.getParseAtToken(parse, sentenceErrors.get(i).getEndIndex()), "SBAR")) {
 					sentenceErrors.remove(i);
