@@ -1,6 +1,7 @@
 package bschecker.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -75,6 +76,35 @@ public class UtilityMethods {
 		for(int j = 0; j < indices.size(); j++)
 			buffer.deleteCharAt(indices.get(j) - j - startChar);
 		return buffer.toString();
+	}
+	
+	/**
+	 * uses the opennlp SentenceDetector to separate a paragraph into sentences
+	 * additionally it tries to combine sentences which are separated due to having periods within quotes
+	 * @param line the paragraph to separate
+	 * @return a String[] of the sentences in the paragraph
+	 */
+	public static String[] separateSentences(String line) {
+		ArrayList<String> sentences = new ArrayList<String>();
+		sentences.addAll(Arrays.asList(Tools.getSentenceDetector().sentDetect(line)));
+		boolean previousSentenceOdd = false;
+		for(int i = 0; i < sentences.size(); i++) {
+			boolean evenQuotations = true;
+			int cursor = 0;
+			while(sentences.get(i).substring(cursor).contains("\"")) {
+				evenQuotations = !evenQuotations;
+				cursor += sentences.get(i).substring(cursor).indexOf('\"') + 1;
+			}
+			if(!evenQuotations)
+				if(previousSentenceOdd) {
+					sentences.set(i - 1, sentences.get(i - 1) + " " + sentences.get(i));
+					sentences.remove(i);
+					previousSentenceOdd = false;
+					i--;
+				} else
+					previousSentenceOdd = true;
+		}
+		return (String[]) sentences.toArray();
 	}
 	
 	/**

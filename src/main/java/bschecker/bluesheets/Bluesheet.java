@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
 import bschecker.util.PerformanceMonitor;
-import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.parser.Parse;
 
@@ -49,7 +48,7 @@ public abstract class Bluesheet {
 			
 			PerformanceMonitor.start("parse");
 			LogHelper.getLogger(18).info("Parsing line " + lineNum + "...");
-			String[] sentences = Tools.getSentenceDetector().sentDetect(line);
+			String[] sentences = UtilityMethods.separateSentences(line);
 			Parse[] parses = new Parse[sentences.length];
 			for(int i = 0; i < sentences.length; i++)
 				parses[i] = UtilityMethods.parse(sentences[i]);
