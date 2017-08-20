@@ -61,8 +61,8 @@ public class QuotationForm extends Bluesheet {
 			if(start > 1 && !Reference.getVerbSet().contains(tokens[start - 2]))
 				return ErrorTypes.INVALID_COMMA; //error if there is a comma before and the word before it is not a verb
 		} else
-			if(start > 0 && Reference.getVerbSet().contains(tokens[start - 1]))
-				return ErrorTypes.NEEDS_COMMA; //error if there is a not punctuation before and the word before is a verb
+			if(start > 0 && Reference.getVerbSet().contains(tokens[start - 1]) && start + 1 < tokens.length && !tokens[start + 1].equalsIgnoreCase("that"))
+				return ErrorTypes.NEEDS_COMMA; //error if there is not a punctuation before and the word before is a verb unless the first word of the quote is that
 		return ErrorTypes.NO_ERROR;
 	}
 
