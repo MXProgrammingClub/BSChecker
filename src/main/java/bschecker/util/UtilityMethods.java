@@ -110,9 +110,10 @@ public class UtilityMethods {
 	/**
 	 * Parses a String using the openNLP parser.
 	 * @param input the String to parse
+	 * @param logParse if true, all Parse trees will be logged to the console - should only be used for debugging
 	 * @return the Parse of the input String
 	 */
-	public static Parse parse(String input) {
+	public static Parse parse(String input, boolean logParse) {
 		Parse p = new Parse(input, new Span(0, input.length()), AbstractBottomUpParser.INC_NODE, 1, 0);
 		Span[] spans = Tools.getTokenizer().tokenizePos(input);
 		for(int i = 0; i < spans.length; i++) {
@@ -120,7 +121,8 @@ public class UtilityMethods {
 		      p.insert(new Parse(input, span, AbstractBottomUpParser.TOK_NODE, 0, i));
 		}
 		p = Tools.getParser().parse(p);
-//		p.showCodeTree();
+		if(logParse)
+			p.showCodeTree();
 		return p;
 	}
 	

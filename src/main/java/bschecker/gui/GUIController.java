@@ -75,7 +75,7 @@ public class GUIController {
 			text += "\n";
 		essayBox.replaceText(text);
 		
-		errors = Bluesheet.findAllErrors(text);
+		errors = Bluesheet.findAllErrors(text, false);
 		
 		if(errors.size() == 0)
 			errorBox.replaceText("No Errors Found!");

@@ -28,9 +28,10 @@ public abstract class Bluesheet {
 	 * All types included in {@code ERROR_LIST} which have a {@code CheckedWhenAnalyzed} value of {@code true} will be checked.
 	 * Expects text to end with a new line character.
 	 * @param text the text to search
+	 * @param logParses if true, all Parse trees will be logged to the console - should only be used for debugging
 	 * @return a ErrorList which contains all the errors in the passage, referenced by character indices
 	 */
-	public static ErrorList findAllErrors(String text) {
+	public static ErrorList findAllErrors(String text, boolean logParses) {
 		PerformanceMonitor.start("analyze");
 		if(!text.endsWith("\n"))
 			text += "\n";
@@ -51,7 +52,7 @@ public abstract class Bluesheet {
 			String[] sentences = UtilityMethods.separateSentences(line);
 			Parse[] parses = new Parse[sentences.length];
 			for(int i = 0; i < sentences.length; i++)
-				parses[i] = UtilityMethods.parse(sentences[i]);
+				parses[i] = UtilityMethods.parse(sentences[i], logParses);
 			LogHelper.getLogger(18).info("Complete (" + PerformanceMonitor.stop("parse") + ")");
 			
 			ErrorList lineErrors = new ErrorList(line, true);
