@@ -57,17 +57,17 @@ public class Main extends Application {
 	protected static void initialize() {
 		PerformanceMonitor.start("init");
 		LogHelper.init();
-		System.out.println();
+		LogHelper.line();
 		LogHelper.getLogger(0).info("Beginning Initialization...");
-		System.out.println();
+		LogHelper.line();
 		Tools.initializeOpenNLP();
-		System.out.println();
+		LogHelper.line();
 		Bluesheets.readSettings();
-		System.out.println();
+		LogHelper.line();
 		Reference.importVerbs();
-		System.out.println();
+		LogHelper.line();
 		LogHelper.getLogger(0).info("Initialization Completed in " + PerformanceMonitor.stop("init"));
-		System.out.println();
+		LogHelper.line();
 	}
 	
 }

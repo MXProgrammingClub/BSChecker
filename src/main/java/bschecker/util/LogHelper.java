@@ -51,4 +51,11 @@ public class LogHelper {
 		return loggers[Bluesheets.getNumber(object)];
 	}
 	
+	/**
+	 * prints a blank line to the log
+	 */
+	public static void line() {
+		System.out.println();
+	}
+	
 }

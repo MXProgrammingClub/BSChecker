@@ -41,7 +41,7 @@ public abstract class Bluesheet {
 		while (charOffset < text.length()) {
 			PerformanceMonitor.start("line");
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
-			System.out.println();
+			LogHelper.line();
 			LogHelper.getLogger(17).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
 			ArrayList<Integer> removedChars = new ArrayList<Integer>();
 			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
@@ -72,7 +72,7 @@ public abstract class Bluesheet {
 			lineNum++;
 			charOffset += line.length() + removedChars.size() + 1;
 		}
-		System.out.println();
+		LogHelper.line();
 		LogHelper.getLogger(17).info("Passage analyzed in " + PerformanceMonitor.stop("analyze") + "\n\n" + errors);
 		
 		return errors;

@@ -10,6 +10,7 @@ import bschecker.bluesheets.Bluesheet;
 import bschecker.bluesheets.Bluesheets;
 import bschecker.bluesheets.QuotationForm;
 import bschecker.util.ErrorList;
+import bschecker.util.LogHelper;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.cmdline.parser.ParserTool;
@@ -58,7 +59,8 @@ public class BSChecker {
 		
 		Main.initialize();
 		Bluesheets.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
-		System.out.print("\ninput: " + input);
+		LogHelper.line();
+		LogHelper.getLogger(15).info("input:\t" + input);
 		ErrorList errors = Bluesheet.findAllErrors(input, true);
 	}
 	
