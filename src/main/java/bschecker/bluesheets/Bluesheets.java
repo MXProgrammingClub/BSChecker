@@ -140,10 +140,8 @@ public enum Bluesheets {
 	 * @throws IllegalArgumentException if number is not [1, 14]
 	 */
 	public static boolean isSetToAnalyze(int number) {
-		if(number > 14 || number < 1) {
-			LogHelper.getLogger(0).error("Passed number is invalid - it must be in range [1, 14].");
+		if(number > 14 || number < 1)
 			throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
-		}
 		return settings[number - 1];
 	}
 

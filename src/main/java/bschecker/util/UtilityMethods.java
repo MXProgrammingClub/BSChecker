@@ -166,10 +166,8 @@ public class UtilityMethods {
 	 * @throws IllegalArgumentException if the parse is not a token node
 	 */
 	public static int getIndexOfParse(Parse parse) {
-		if(!parse.getType().equals(AbstractBottomUpParser.TOK_NODE)) {
-			LogHelper.getLogger(17).error("Parse must be a token node.");
+		if(!parse.getType().equals(AbstractBottomUpParser.TOK_NODE))
 			throw new IllegalArgumentException("Parse must be a token node.");
-		}
 		return countPreceedingTokens(parse);
 	}
 	

@@ -1,7 +1,6 @@
 package bschecker.util;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -107,16 +106,16 @@ public class Tools {
 						"") + "...");
 		InputStream is = null;
 		BaseModel model = null;
-		try {is = new FileInputStream(file);}
-		catch (FileNotFoundException e) {e.printStackTrace();}
-		try {model = 
+		try {
+			is = new FileInputStream(file);
+			model = 
 				tool == 's' ? new SentenceModel(is): 
 					tool == 'n' ? new TokenNameFinderModel(is):
 						tool == 't' ? new TokenizerModel(is):
 							tool == 'o' ? new POSModel(is):
 								tool == 'p' ? new ParserModel(is):
-									null;}
-		catch (IOException e) {e.printStackTrace();}
+									null;
+		} catch (IOException e) {e.printStackTrace();}
 		LogHelper.getLogger(0).info("Complete (" + PerformanceMonitor.stop("model") + ")");
 		return model;
 	}
