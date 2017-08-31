@@ -15,7 +15,7 @@ import opennlp.tools.parser.Parse;
  */
 public class FaultyParallelism extends Bluesheet {
 	
-	private final String[][] tagGroups = {{"NN", "NNS", "NNP", "NNPS"}, {"S", "SBAR"}, {"POS", "PRP$"}};
+	private final String[][] tagGroups = {{"NN", "NNS", "NNP", "NNPS"}, {"S", "SBAR", "NP"}, {"POS", "PRP$"}, {"VP", "VB", "VBD", "VBP", "VBZ"}};
 	
 	/**
 	 * Finds any instances of faulty parallelism in a paragraph.
@@ -47,38 +47,50 @@ public class FaultyParallelism extends Bluesheet {
 	 * @return true if there is faulty parallelism, false otherwise
 	 */
 	private boolean ccIsFaultyParallelism(Parse parse) {
-		Parse ccParse = parse.getParent(), left = null, right = null;
+		Parse ccParse = parse.getParent();
 		//special case: CC in CONJP e.g. "but rather"
 		if(ccParse.getParent().getType().equals("CONJP"))
 			ccParse = ccParse.getParent();
 		
 		Parse[] siblings = ccParse.getParent().getChildren();
 		int siblingIndex = UtilityMethods.getSiblingIndex(ccParse);
-		//this catches exceptions generally caused by parsing errors - NOTE: these cases may in fact be errors, but with the current implementation they are ambiguous
+		//this catches exceptions generally caused by parsing errors - NOTE: these cases may in fact be errors, but with the current implementation they are AMBIGUOUS
 		if(siblingIndex == 0 || siblingIndex == siblings.length - 1)
 			return false;
-		left = siblings[siblingIndex - 1];
+		Parse left = siblings[siblingIndex - 1], right = siblings[siblingIndex + 1];
+		
+		//special case: correlative conjunction e.g. "whether or not" - parsed as IN CC RB - must be checked here because afterwards RB are ignored
+		if(left.getType().equals("IN") && right.getType().equals("RB"))
+			return false;
+		
 		//special case: CC preceded by comma e.g. 'IC, CC IC' structure
-		if(left.getType().equals(","))
+		//special case: CC preceded by semicolon (not valid sentence structure)
+		if(left.getType().equals(",") || left.getType().equals(":"))
 			left = siblings[siblingIndex - 2];
-		right = siblings[siblingIndex + 1];
 		//special case: CC followed by comma separated phrase
 		//special case: CC followed by adverb e.g. "and thus"
-		//special case: CC followed by possessive with intermediary noun
-		if(right.getType().equals(",") || right.getType().equals("ADVP") || siblings.length > siblingIndex + 2 && siblings[siblingIndex + 2].getType().equals("POS"))
-			right = siblings[siblingIndex + 2];
+		if(right.getType().equals(",") || right.getType().equals("ADVP") || right.getType().equals("RB"))
+			if(siblingIndex + 2 < siblings.length)
+				right = siblings[siblingIndex + 2];
+			//this exception will generally only come up with bad sentence structure that generates an unusual parse
+			else
+				right = UtilityMethods.getNextNode(UtilityMethods.getNextToken(right, null));
 		
 		String leftType = left.getType(), rightType = right.getType();
 		LogHelper.getLogger(this).debug("Type to left: " + leftType + "\t" + "Type to right: " + rightType);
-		//special case: correlative conjunction e.g. "whether or not" - parsed as IN CC RB
-		if(leftType.equals(rightType) || leftType.equals("IN") && rightType.equals("RB"))
+		if(leftType.equals(rightType))
 			return false;
 		//any noun is considered the same
-		//S and SBAR are considered the same (not looking for sentence structure)
+		//S, SBAR, and NP are considered the same (not looking for sentence structure)
 		//possessive nouns and possessive pronouns are considered the same
+		//VP and any verbs are considered the same
 		for(String[] group : tagGroups)
 			if(UtilityMethods.arrayContains(group, leftType) && UtilityMethods.arrayContains(group, rightType))
 				return false;
+		
+		//special case: CC followed by possessive with intermediary noun - must be checked here because compound subjects which are collectively possessive are marked only on the second noun
+		if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 2].getType().equals("POS") && leftType.equals("PRP$"))
+			return false;
 		
 		return true;
 	}
