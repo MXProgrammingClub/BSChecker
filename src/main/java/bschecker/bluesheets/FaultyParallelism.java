@@ -57,40 +57,83 @@ public class FaultyParallelism extends Bluesheet {
 		//this catches exceptions generally caused by parsing errors - NOTE: these cases may in fact be errors, but with the current implementation they are AMBIGUOUS
 		if(siblingIndex == 0 || siblingIndex == siblings.length - 1)
 			return false;
-		Parse left = siblings[siblingIndex - 1], right = siblings[siblingIndex + 1];
+		ArrayList<Parse> parallels = new ArrayList<Parse>();
+		parallels.add(siblings[siblingIndex - 1]);
+		parallels.add(siblings[siblingIndex + 1]);
 		
 		//special case: correlative conjunction e.g. "whether or not" - parsed as IN CC RB - must be checked here because afterwards RB are ignored
-		if(left.getType().equals("IN") && right.getType().equals("RB"))
+		if(parallels.get(0).getType().equals("IN") && parallels.get(1).getType().equals("RB"))
 			return false;
+		
+		//special case: CC followed by comma separated phrase
+		//special case: CC followed by adverb e.g. "and thus"
+		if(parallels.get(1).getType().equals(",") || parallels.get(1).getType().equals("ADVP") || parallels.get(1).getType().equals("RB"))
+			if(siblingIndex + 2 < siblings.length)
+				parallels.set(1, siblings[siblingIndex + 2]);
+		//this is an exception which will generally only come up with bad sentence structure that generates an unusual parse
+			else
+				parallels.set(1, UtilityMethods.getNextNode(UtilityMethods.getNextToken(parallels.get(1), null)));
 		
 		//special case: CC preceded by comma e.g. 'IC, CC IC' structure
 		//special case: CC preceded by semicolon (not valid sentence structure)
-		if(left.getType().equals(",") || left.getType().equals(":"))
-			left = siblings[siblingIndex - 2];
-		//special case: CC followed by comma separated phrase
-		//special case: CC followed by adverb e.g. "and thus"
-		if(right.getType().equals(",") || right.getType().equals("ADVP") || right.getType().equals("RB"))
-			if(siblingIndex + 2 < siblings.length)
-				right = siblings[siblingIndex + 2];
-			//this exception will generally only come up with bad sentence structure that generates an unusual parse
-			else
-				right = UtilityMethods.getNextNode(UtilityMethods.getNextToken(right, null));
+		if(parallels.get(0).getType().equals(",")  && (siblings[siblingIndex - 2].getType().equals("S") || siblings[siblingIndex - 2].getType().equals("SBAR")) || parallels.get(0).getType().equals(":"))
+			parallels.set(0, siblings[siblingIndex - 2]);
 		
-		String leftType = left.getType(), rightType = right.getType();
-		LogHelper.getLogger(this).debug("Type to left: " + leftType + "\t" + "Type to right: " + rightType);
-		if(leftType.equals(rightType))
-			return false;
+		//list with three or more elements - assumes the use of the Oxford comma
+		if(parallels.get(0).getType().equals(",")) {
+			for(int cursorIndex = UtilityMethods.getSiblingIndex(parallels.get(0)); cursorIndex > 0 && siblings[cursorIndex].getType().equals(","); cursorIndex -= 2) {
+				ArrayList<Parse> temp = new ArrayList<Parse>(), commaParses = UtilityMethods.findParsesWithTag(siblings[cursorIndex - 1], new String[] {","});
+				if(commaParses.size() == 0)
+					temp.add(siblings[cursorIndex - 1]);
+				//comma within what appears to be the previous element - most likely an error (doesn't support complex, semicolon separated lists which contain commas within elements)
+				else
+					for(int i = 0; i < commaParses.size(); i++) {
+						int commaSiblingIndex = UtilityMethods.getSiblingIndex(commaParses.get(i));
+						temp.add(commaParses.get(i).getParent().getChildren()[commaSiblingIndex - 1]);
+						if(i + 1 == commaParses.size())
+							temp.add(commaParses.get(i).getParent().getChildren()[commaSiblingIndex + 1]);
+					}
+				parallels.addAll(1, temp);
+			}
+			//remove original left entry
+			parallels.remove(0);
+		}
+		
+		String[] parallelTypes = new String[parallels.size()];
+		String debug = "left: \"";
+		for(int i = 0; i < parallelTypes.length; i++) {
+			parallelTypes[i] = parallels.get(i).getType();
+			if(i + 1 < parallelTypes.length)
+				debug += parallelTypes[i] + (i + 2 < parallelTypes.length ? "\", \"" : "\" ");
+		}
+		LogHelper.getLogger(this).debug(debug + "right: \"" + parallelTypes[parallelTypes.length - 1] + "\"");
+		
+		for(int i = 0; i < parallelTypes.length; i++) {
+			if(i + 1 == parallelTypes.length)
+				return false;
+			if(!parallelTypes[parallelTypes.length - 1].equals(parallelTypes[i]))
+				break;
+		}
 		//any noun is considered the same
 		//S, SBAR, and NP are considered the same (not looking for sentence structure)
 		//possessive nouns and possessive pronouns are considered the same
 		//VP and any verbs are considered the same
 		for(String[] group : tagGroups)
-			if(UtilityMethods.arrayContains(group, leftType) && UtilityMethods.arrayContains(group, rightType))
-				return false;
-		
-		//special case: CC followed by possessive with intermediary noun - must be checked here because compound subjects which are collectively possessive are marked only on the second noun
-		if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 2].getType().equals("POS") && leftType.equals("PRP$"))
-			return false;
+			if(UtilityMethods.arrayContains(group, parallelTypes[parallelTypes.length - 1]))
+				for(int i = 0; i < parallelTypes.length; i++) {
+					if(i + 1 == parallelTypes.length)
+						return false;
+					if(!UtilityMethods.arrayContains(group, parallelTypes[i]))
+						break;
+				}
+		//special case: CC followed by possessive with intermediary noun - must be checked here because compound nouns which are collectively possessive are marked only on the final noun
+		if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 2].getType().equals("POS"))
+			for(int i = 0; i < parallelTypes.length; i++) {
+				if(i + 1 == parallelTypes.length)
+					return false;
+				if(!parallelTypes[i].equals("PRP$"))
+					break;
+			}
 		
 		return true;
 	}
