@@ -34,7 +34,7 @@ public class FaultyParallelism extends Bluesheet {
 				if(tags[i].equals("CC"))
 					ccParses.add(UtilityMethods.getParseAtToken(parse, i));
 			for(Parse ccParse : ccParses)
-				if(ccIsFaultyParallelism(ccParse))
+				if(!ccIsValid(ccParse))
 					errors.add(new Error(ccParse, tokenOffset));
 			tokenOffset += tags.length;
 		}
@@ -43,10 +43,10 @@ public class FaultyParallelism extends Bluesheet {
 	
 	/**
 	 * tests whether or not a coordinating conjunction is part of a faulty parallelism
-	 * @param parse the parse from the CC
-	 * @return true if there is faulty parallelism, false otherwise
+	 * @param parse the Parse with the CC node
+	 * @return false if there is faulty parallelism, true otherwise
 	 */
-	private boolean ccIsFaultyParallelism(Parse parse) {
+	private boolean ccIsValid(Parse parse) {
 		Parse ccParse = parse.getParent();
 		//special case: CC in CONJP e.g. "but rather"
 		if(ccParse.getParent().getType().equals("CONJP"))
@@ -99,6 +99,16 @@ public class FaultyParallelism extends Bluesheet {
 			parallels.remove(0);
 		}
 		
+		return parallelsAreValid(parallels, siblingIndex + 2 < siblings.length && siblings[siblingIndex + 2].getType().equals("POS"));
+	}
+	
+	/**
+	 * determines whether or not a given ArrayList of parse are valid as parallel structures
+	 * @param parallels an ArrayList of the Parses which are used in parallel
+	 * @param rightIsPosessive true if the word to the right of the CC is a possessive noun
+	 * @return true if the the parallels are valid, false otherwise
+	 */
+	private boolean parallelsAreValid(ArrayList<Parse> parallels, boolean rightIsPossessive) {
 		String[] parallelTypes = new String[parallels.size()];
 		String debug = "left: \"";
 		for(int i = 0; i < parallelTypes.length; i++) {
@@ -110,7 +120,7 @@ public class FaultyParallelism extends Bluesheet {
 		
 		for(int i = 0; i < parallelTypes.length; i++) {
 			if(i + 1 == parallelTypes.length)
-				return false;
+				return true;
 			if(!parallelTypes[parallelTypes.length - 1].equals(parallelTypes[i]))
 				break;
 		}
@@ -122,20 +132,20 @@ public class FaultyParallelism extends Bluesheet {
 			if(UtilityMethods.arrayContains(group, parallelTypes[parallelTypes.length - 1]))
 				for(int i = 0; i < parallelTypes.length; i++) {
 					if(i + 1 == parallelTypes.length)
-						return false;
+						return true;
 					if(!UtilityMethods.arrayContains(group, parallelTypes[i]))
 						break;
 				}
 		//special case: CC followed by possessive with intermediary noun - must be checked here because compound nouns which are collectively possessive are marked only on the final noun
-		if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 2].getType().equals("POS"))
+		if(rightIsPossessive)
 			for(int i = 0; i < parallelTypes.length; i++) {
 				if(i + 1 == parallelTypes.length)
-					return false;
+					return true;
 				if(!parallelTypes[i].equals("PRP$"))
 					break;
 			}
 		
-		return true;
+		return false;
 	}
 	
 }
