@@ -74,24 +74,24 @@ public class FaultyParallelism extends Bluesheet {
 			else
 				parallels.set(1, UtilityMethods.getNextNode(UtilityMethods.getNextToken(parallels.get(1), null)));
 		
-		//special case: CC preceded by comma e.g. 'IC, CC IC' structure
-		//special case: CC preceded by semicolon (not valid sentence structure)
-		if(parallels.get(0).getType().equals(",")  && (siblings[siblingIndex - 2].getType().equals("S") || siblings[siblingIndex - 2].getType().equals("SBAR")) || parallels.get(0).getType().equals(":"))
+		//special case: CC preceded by comma e.g. 'IC, CC IC' structure (not a list of more than two clauses)
+		if(parallels.get(0).getType().equals(",")  && (siblings[siblingIndex - 2].getType().equals("S") || siblings[siblingIndex - 2].getType().equals("SBAR")) && !(siblingIndex > 2 && siblings[siblingIndex - 3].getType().equals(",")))
 			parallels.set(0, siblings[siblingIndex - 2]);
 		
 		//list with three or more elements - assumes the use of the Oxford comma
-		if(parallels.get(0).getType().equals(",")) {
-			for(int cursorIndex = UtilityMethods.getSiblingIndex(parallels.get(0)); cursorIndex > 0 && siblings[cursorIndex].getType().equals(","); cursorIndex -= 2) {
-				ArrayList<Parse> temp = new ArrayList<Parse>(), commaParses = UtilityMethods.findParsesWithTag(siblings[cursorIndex - 1], new String[] {","});
-				if(commaParses.size() == 0)
+		if(parallels.get(0).getType().equals(",") || parallels.get(0).getType().equals(":")) {
+			String separator = parallels.get(0).getType();
+			for(int cursorIndex = UtilityMethods.getSiblingIndex(parallels.get(0)); cursorIndex > 0 && siblings[cursorIndex].getType().equals(separator); cursorIndex -= 2) {
+				ArrayList<Parse> temp = new ArrayList<Parse>(), separatorParses = UtilityMethods.findParsesWithTag(siblings[cursorIndex - 1], new String[] {separator});
+				if(separatorParses.size() == 0)
 					temp.add(siblings[cursorIndex - 1]);
-				//comma within what appears to be the previous element - most likely an error (doesn't support complex, semicolon separated lists which contain commas within elements)
+				//separator within what appears to be the previous element - most likely to be an error
 				else
-					for(int i = 0; i < commaParses.size(); i++) {
-						int commaSiblingIndex = UtilityMethods.getSiblingIndex(commaParses.get(i));
-						temp.add(commaParses.get(i).getParent().getChildren()[commaSiblingIndex - 1]);
-						if(i + 1 == commaParses.size())
-							temp.add(commaParses.get(i).getParent().getChildren()[commaSiblingIndex + 1]);
+					for(int i = 0; i < separatorParses.size(); i++) {
+						int separatorSiblingIndex = UtilityMethods.getSiblingIndex(separatorParses.get(i));
+						temp.add(separatorParses.get(i).getParent().getChildren()[separatorSiblingIndex - 1]);
+						if(i + 1 == separatorParses.size())
+							temp.add(separatorParses.get(i).getParent().getChildren()[separatorSiblingIndex + 1]);
 					}
 				parallels.addAll(1, temp);
 			}
