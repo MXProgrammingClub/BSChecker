@@ -1,4 +1,4 @@
-package bschecker.gui;
+package bschecker.application;
 
 import java.io.File;
 

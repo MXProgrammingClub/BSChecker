@@ -8,8 +8,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import bschecker.application.GUIController;
 import bschecker.bluesheets.Bluesheets;
-import bschecker.gui.GUIController;
 import bschecker.reference.Paths;
 import bschecker.reference.Reference;
 import bschecker.util.LogHelper;
