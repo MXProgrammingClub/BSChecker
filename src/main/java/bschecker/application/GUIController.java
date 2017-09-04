@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
+import com.jfoenix.controls.JFXButton;
+
 import bschecker.bluesheets.Bluesheet;
 import bschecker.bluesheets.Bluesheets;
 import bschecker.reference.Settings;
@@ -12,6 +14,8 @@ import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
 import bschecker.util.TextImport;
 import bschecker.util.UtilityMethods;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -62,32 +66,59 @@ public class GUIController {
 	@FXML
 	private CheckMenuItem menuBluesheet14;
 	
+	@FXML
+	private JFXButton analyzeButton;
+	
+	private int currError = 0;
+	private ErrorList errors = new ErrorList(null, false);
+	private File file;
+	private String clipboard = "";
 	
 	/**
 	 * The method that will be called when the analyze button is clicked
 	 */
 	@FXML
 	private void analyzeButtonClick() {
-		String text = essayBox.getText();
+		analyzeButton.setDisable(true);
 		essayBox.setStyleClass(0, essayBox.getLength(), null);
 		
-		text = UtilityMethods.replaceInvalidChars(text);
-		if(text.charAt(text.length() - 1) != '\n')
-			text += "\n";
+		final String text = UtilityMethods.replaceInvalidChars(essayBox.getText());
 		essayBox.replaceText(text);
 		
-		errors = Bluesheet.findAllErrors(text, false);
+		ProgressDialog dialog = new ProgressDialog();
+		Task<ErrorList> task = new Task<ErrorList>() {
+			@Override
+			public ErrorList call() {
+				final ReadOnlyDoubleWrapper progress = new ReadOnlyDoubleWrapper(this, "progress");
+				progress.getReadOnlyProperty().addListener((obs, oldProgress, newProgress) -> updateProgress((double) oldProgress, (double) newProgress));
+				return Bluesheet.findAllErrors(text, false, progress);
+			}
+		};
 		
-		if(errors.size() == 0)
-			errorBox.replaceText("No Errors Found!");
-		else {
-			currError = 0;
-			//highlight all the errors
-			for(Error error : errors)
-				essayBox.setStyleClass(error.getStartIndex(), error.getEndIndex() + 1, "light-red");
-			//put first error in sentenceBox and corresponding thing in errorBox
-			displayError();
-		}
+		dialog.activateProgressBar(task);
+		
+		task.setOnSucceeded(event -> {
+			LogHelper.getLogger(17).info("Analyze Successful");
+			dialog.close();
+			errors = task.getValue();
+			if(errors.size() == 0)
+				errorBox.replaceText("No Errors Found!");
+			else {
+				for(Error error : errors)
+					essayBox.setStyleClass(error.getStartIndex(), error.getEndIndex() + 1, "light-red");
+				currError = 0;
+				displayError();
+			}
+			analyzeButton.setDisable(false);
+        });
+		
+		task.setOnCancelled(event -> {
+			LogHelper.getLogger(17).warn("Analyze Canceled");
+			analyzeButton.setDisable(false);
+        });
+		
+		Thread thread = new Thread(task, "Analyze");
+		thread.start();
 	}
 	
 	
@@ -324,12 +355,6 @@ public class GUIController {
 	 */
 	@FXML
 	private void menuAboutClick() {/* HELP->ABOUT ACTION */}
-	
-	
-	private int currError = 0;
-	private ErrorList errors;
-	private File file;
-	private String clipboard = "";
 	
 	
 	/**

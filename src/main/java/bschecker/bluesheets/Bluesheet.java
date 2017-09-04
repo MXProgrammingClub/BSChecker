@@ -7,6 +7,7 @@ import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
 import bschecker.util.PerformanceMonitor;
 import bschecker.util.UtilityMethods;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import opennlp.tools.parser.Parse;
 
 /**
@@ -32,15 +33,24 @@ public abstract class Bluesheet {
 	 * @param logParses if true, all Parse trees will be logged to the console - should only be used for debugging
 	 * @return a ErrorList which contains all the errors in the passage, referenced by character indices
 	 */
-	public static ErrorList findAllErrors(String text, boolean logParses) {
+	public static ErrorList findAllErrors(String text, boolean logParses, ReadOnlyDoubleWrapper progress) {
 		PerformanceMonitor.start("analyze");
 		if(!text.endsWith("\n"))
 			text += "\n";
 		ErrorList errors = new ErrorList(text, false);
-		int lineNum = 1, charOffset = 0;
+		int lineNum = 1, charOffset = 0, totalLines = 0;
+		String temp = text;
+		while(temp.contains("\n")) {
+			temp = temp.substring(temp.indexOf('\n') + 1);
+			totalLines++;
+		}
 		String line;
 		while (charOffset < text.length()) {
 			PerformanceMonitor.start("line");
+			if(progress != null) {
+				System.out.println((double) lineNum / totalLines);
+				progress.set((double) lineNum / totalLines);
+			}
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
 			LogHelper.line();
 			LogHelper.getLogger(17).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
@@ -61,10 +71,10 @@ public abstract class Bluesheet {
 				if(Settings.isSetToAnalyze(b.getNumber())) {
 					PerformanceMonitor.start("bluesheet");
 					LogHelper.getLogger(17).info("Looking for: " + b.getName() + "...");
-					ErrorList temp = b.getObject().findErrors(line, parses);
-					temp.setBluesheetNumber(b.getNumber());
-					lineErrors.addAll(temp);
-					LogHelper.getLogger(17).info(temp.size() + " Error" + (temp.size() == 1 ? "" : "s") + " Found (" + PerformanceMonitor.stop("bluesheet") + ")");
+					ErrorList bluesheetErrors = b.getObject().findErrors(line, parses);
+					bluesheetErrors.setBluesheetNumber(b.getNumber());
+					lineErrors.addAll(bluesheetErrors);
+					LogHelper.getLogger(17).info(bluesheetErrors.size() + " Error" + (bluesheetErrors.size() == 1 ? "" : "s") + " Found (" + PerformanceMonitor.stop("bluesheet") + ")");
 				}
 			LogHelper.getLogger(17).info(lineErrors.size() + " Error" + (lineErrors.size() == 1 ? "" : "s") + " Found in line " + lineNum + " (" + PerformanceMonitor.stop("line") + ")");
 			

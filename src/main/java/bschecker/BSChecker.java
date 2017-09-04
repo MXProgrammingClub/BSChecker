@@ -59,7 +59,7 @@ public class BSChecker {
 		Settings.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
 		LogHelper.line();
 		LogHelper.getLogger(15).info("input:\t" + input);
-		ErrorList errors = Bluesheet.findAllErrors(input, true);
+		ErrorList errors = Bluesheet.findAllErrors(input, true, null);
 	}
 	
 	
