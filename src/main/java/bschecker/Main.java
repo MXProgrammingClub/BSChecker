@@ -9,9 +9,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import bschecker.application.GUIController;
-import bschecker.bluesheets.Bluesheets;
 import bschecker.reference.Paths;
 import bschecker.reference.Reference;
+import bschecker.reference.Settings;
 import bschecker.util.LogHelper;
 import bschecker.util.PerformanceMonitor;
 import bschecker.util.Tools;
@@ -62,7 +62,7 @@ public class Main extends Application {
 		LogHelper.line();
 		Tools.initializeOpenNLP();
 		LogHelper.line();
-		Bluesheets.readSettings();
+		Settings.readSettings();
 		LogHelper.line();
 		Reference.importVerbs();
 		LogHelper.line();

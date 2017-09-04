@@ -6,6 +6,7 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 
 import bschecker.bluesheets.Bluesheet;
 import bschecker.bluesheets.Bluesheets;
+import bschecker.reference.Settings;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
@@ -290,7 +291,7 @@ public class GUIController {
 	 */
 	@FXML
 	private void menuDefaultSettingsClick() {
-		Bluesheets.writeDefaultSettings();
+		Settings.writeDefaultSettings();
 		this.loadSettings();
 	}
 	
@@ -345,7 +346,7 @@ public class GUIController {
 	 */
 	public void loadSettings() {
 		LogHelper.getLogger(0).info("Loading settings into the menu");
-		boolean[] settings = Bluesheets.getSettings();
+		boolean[] settings = Settings.getSettings();
 		for(int i = 0; i < 14; i++)
 			getMenuBluesheet(i + 1).setSelected(settings[i]);
 	}
@@ -381,7 +382,7 @@ public class GUIController {
 	 * @param number the number of the bluesheet which was clicked
 	 */
 	private void menuBluesheetClick(int number) {
-		Bluesheets.reverseSetting(number);
+		Settings.reverseSetting(number);
 		if(Bluesheets.getBluesheetFromNumber(number).getAvailabilityWarning() != null && getMenuBluesheet(number).isSelected())
 			alert(AlertType.WARNING, "Warning", Bluesheets.getBluesheetFromNumber(number).getAvailabilityWarning());
 	}

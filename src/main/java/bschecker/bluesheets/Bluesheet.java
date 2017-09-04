@@ -2,6 +2,7 @@ package bschecker.bluesheets;
 
 import java.util.ArrayList;
 
+import bschecker.reference.Settings;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
 import bschecker.util.PerformanceMonitor;
@@ -57,7 +58,7 @@ public abstract class Bluesheet {
 			
 			ErrorList lineErrors = new ErrorList(line, true);
 			for(Bluesheets b : Bluesheets.values())
-				if(Bluesheets.isSetToAnalyze(b.getNumber())) {
+				if(Settings.isSetToAnalyze(b.getNumber())) {
 					PerformanceMonitor.start("bluesheet");
 					LogHelper.getLogger(17).info("Looking for: " + b.getName() + "...");
 					ErrorList temp = b.getObject().findErrors(line, parses);
