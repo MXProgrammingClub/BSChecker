@@ -30,7 +30,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		initialize();
 		LogHelper.getLogger(15).info("Starting the Application");
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/GUI.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(Paths.APPLICATION_FXML));
 		GUIController controller = new GUIController();
 		loader.setController(controller);
 		Parent root;
