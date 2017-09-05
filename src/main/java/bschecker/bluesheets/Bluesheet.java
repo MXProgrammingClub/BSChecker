@@ -47,10 +47,8 @@ public abstract class Bluesheet {
 		String line;
 		while (charOffset < text.length()) {
 			PerformanceMonitor.start("line");
-			if(progress != null) {
-				System.out.println((double) lineNum / totalLines);
+			if(progress != null)
 				progress.set((double) lineNum / totalLines);
-			}
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
 			LogHelper.line();
 			LogHelper.getLogger(17).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
