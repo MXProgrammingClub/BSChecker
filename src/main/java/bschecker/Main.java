@@ -1,15 +1,9 @@
 package bschecker;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 import bschecker.application.GUIController;
-import bschecker.reference.Paths;
 import bschecker.reference.Reference;
 import bschecker.reference.Settings;
 import bschecker.util.LogHelper;
@@ -30,25 +24,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		initialize();
 		LogHelper.getLogger(15).info("Starting the Application");
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(Paths.APPLICATION_FXML));
-		GUIController controller = new GUIController();
-		loader.setController(controller);
-		Parent root;
-		try {root = loader.load();}
-		catch(IOException e) {
-			LogHelper.getLogger(15).fatal("Application failed to load - program terminating.");
-			e.printStackTrace();
-			return;
-		}
-		Scene scene = new Scene(root, 1000, 656);
-		scene.getStylesheets().add(this.getClass().getResource(Paths.APPLICATION_STYLESHEET).toExternalForm());
-		
-		controller.setDefaultText();
-		controller.loadSettings();
-		
-		primaryStage.setTitle("BSChecker");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		new GUIController(primaryStage);
 	}
 	
 	/**

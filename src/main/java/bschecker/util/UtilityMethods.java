@@ -31,6 +31,16 @@ public class UtilityMethods {
 	}
 	
 	/**
+	 * Counts the number of occurrences of a String within another String
+	 * @param text the String to search
+	 * @param target the String to search for
+	 * @return the number of occurrences of target within text
+	 */
+	public static int countOccurences(String text, String target) {
+		return !text.contains(target) ? 0 : 1 + countOccurences(text.substring(text.indexOf(target) + 1), target);
+	}
+	
+	/**
 	 * Replaces unicode characters with their ascii equivalents.
 	 * @param text the text that has characters to be changed
 	 * @return the same text with the appropriate character changes

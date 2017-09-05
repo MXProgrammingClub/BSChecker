@@ -38,17 +38,12 @@ public abstract class Bluesheet {
 		if(!text.endsWith("\n"))
 			text += "\n";
 		ErrorList errors = new ErrorList(text, false);
-		int lineNum = 1, charOffset = 0, totalLines = 0;
-		String temp = text;
-		while(temp.contains("\n")) {
-			temp = temp.substring(temp.indexOf('\n') + 1);
-			totalLines++;
-		}
+		int lineNum = 1, charOffset = 0;
 		String line;
 		while (charOffset < text.length()) {
 			PerformanceMonitor.start("line");
 			if(progress != null)
-				progress.set((double) lineNum / totalLines);
+				progress.set((double) lineNum);
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
 			LogHelper.line();
 			LogHelper.getLogger(17).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");

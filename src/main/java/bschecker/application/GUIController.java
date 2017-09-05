@@ -1,6 +1,7 @@
 package bschecker.application;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
@@ -8,6 +9,7 @@ import com.jfoenix.controls.JFXButton;
 
 import bschecker.bluesheets.Bluesheet;
 import bschecker.bluesheets.Bluesheets;
+import bschecker.reference.Paths;
 import bschecker.reference.Settings;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
@@ -17,9 +19,13 @@ import bschecker.util.UtilityMethods;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckMenuItem;
+import javafx.stage.Stage;
 
 /**
  * This is the class that connects the GUI with the rest of the program.
@@ -74,6 +80,28 @@ public class GUIController {
 	private File file;
 	private String clipboard = "";
 	
+	public GUIController(Stage primaryStage) {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(Paths.APPLICATION_FXML));
+		loader.setController(this);
+		Parent root = null;
+		try {root = loader.load();}
+		catch(IOException e) {
+			LogHelper.getLogger(15).fatal("Application failed to load - program terminating.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		Scene scene = new Scene(root, 1000, 656);
+		scene.getStylesheets().add(getClass().getResource(Paths.APPLICATION_STYLESHEET).toExternalForm());
+		
+		setDefaultText();
+		loadSettings();
+		
+		primaryStage.setTitle("BSChecker");
+		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
+		primaryStage.show();
+	}
+	
 	/**
 	 * The method that will be called when the analyze button is clicked
 	 */
@@ -84,7 +112,6 @@ public class GUIController {
 		essayBox.replaceText(text);
 		runAnalyze(text);
 	}
-	
 	
 	/**
 	 * The method that will be called when the left arrow is clicked
@@ -443,21 +470,20 @@ public class GUIController {
 	 * @param text the text to analyze
 	 */
 	private void runAnalyze(final String text) {
-		ProgressDialog dialog = new ProgressDialog();
+		ProgressDialogController dialog = new ProgressDialogController();
 		Task<ErrorList> task = new Task<ErrorList>() {
 			@Override
 			public ErrorList call() {
+				int numLines = UtilityMethods.countOccurences(text, "\n");
 				final ReadOnlyDoubleWrapper progress = new ReadOnlyDoubleWrapper(this, "progress");
-				progress.getReadOnlyProperty().addListener((obs, oldProgress, newProgress) -> updateProgress((double) oldProgress, (double) newProgress));
+				progress.getReadOnlyProperty().addListener((obs, oldProgress, newProgress) -> updateProgress((double) newProgress, (double) numLines));
 				return Bluesheet.findAllErrors(text, false, progress);
 			}
 		};
 		
 		dialog.activateProgressBar(task);
 		
-		task.setOnRunning(event -> {
-			analyzeButton.setDisable(true);
-        });
+		task.setOnRunning(event -> {analyzeButton.setDisable(true);});
 		
 		task.setOnSucceeded(event -> {
 			LogHelper.getLogger(17).info("Analyze Successful");
@@ -473,12 +499,12 @@ public class GUIController {
 				displayError();
 			}
 			analyzeButton.setDisable(false);
-        });
+		});
 		
 		task.setOnCancelled(event -> {
 			LogHelper.getLogger(17).warn("Analyze Canceled");
 			analyzeButton.setDisable(false);
-        });
+		});
 		
 		Thread thread = new Thread(task, "Analyze");
 		thread.start();

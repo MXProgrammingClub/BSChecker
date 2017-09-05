@@ -6,7 +6,6 @@ package bschecker.reference;
  */
 public class Paths {
 	
-	//opennlp tools models
 	public static final String SENTENCE_DETECTOR = "lib/en-sent.bin";
 	public static final String NAME_FINDER = "lib/en-ner-person.bin";
 	public static final String TOKENIZER = "lib/en-token.bin";
@@ -16,8 +15,9 @@ public class Paths {
 	public static final String SAYING_VERBS = "bin/SayingVerbs.txt";
 	public static final String SETTINGS = "Settings.txt";
 	
-	public static final String APPLICATION_FXML = "application/GUI.fxml";
-	public static final String APPLICATION_STYLESHEET = "application/application.css";
+	public static final String APPLICATION_FXML = "GUI.fxml";
+	public static final String APPLICATION_STYLESHEET = "application.css";
+	public static final String PROGRESS_DIALOG_FXML = "ProgressDialog.fxml";
 	
 	public static final String EMPTY_DOC = "bin/empty.doc";
 	
