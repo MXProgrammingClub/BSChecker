@@ -79,46 +79,10 @@ public class GUIController {
 	 */
 	@FXML
 	private void analyzeButtonClick() {
-		analyzeButton.setDisable(true);
-		essayBox.setStyleClass(0, essayBox.getLength(), null);
-		
-		final String text = UtilityMethods.replaceInvalidChars(essayBox.getText());
+		LogHelper.getLogger(17).info("Analyze Button Clicked");
+		String text = UtilityMethods.replaceInvalidChars(essayBox.getText());
 		essayBox.replaceText(text);
-		
-		ProgressDialog dialog = new ProgressDialog();
-		Task<ErrorList> task = new Task<ErrorList>() {
-			@Override
-			public ErrorList call() {
-				final ReadOnlyDoubleWrapper progress = new ReadOnlyDoubleWrapper(this, "progress");
-				progress.getReadOnlyProperty().addListener((obs, oldProgress, newProgress) -> updateProgress((double) oldProgress, (double) newProgress));
-				return Bluesheet.findAllErrors(text, false, progress);
-			}
-		};
-		
-		dialog.activateProgressBar(task);
-		
-		task.setOnSucceeded(event -> {
-			LogHelper.getLogger(17).info("Analyze Successful");
-			dialog.close();
-			errors = task.getValue();
-			if(errors.size() == 0)
-				errorBox.replaceText("No Errors Found!");
-			else {
-				for(Error error : errors)
-					essayBox.setStyleClass(error.getStartIndex(), error.getEndIndex() + 1, "light-red");
-				currError = 0;
-				displayError();
-			}
-			analyzeButton.setDisable(false);
-        });
-		
-		task.setOnCancelled(event -> {
-			LogHelper.getLogger(17).warn("Analyze Canceled");
-			analyzeButton.setDisable(false);
-        });
-		
-		Thread thread = new Thread(task, "Analyze");
-		thread.start();
+		runAnalyze(text);
 	}
 	
 	
@@ -472,6 +436,52 @@ public class GUIController {
 		a.setHeaderText(null);
 		a.setContentText(content);
 		a.showAndWait();
+	}
+	
+	/**
+	 * runs the analysis of the passed text using a Task on a separate Thread
+	 * @param text the text to analyze
+	 */
+	private void runAnalyze(final String text) {
+		ProgressDialog dialog = new ProgressDialog();
+		Task<ErrorList> task = new Task<ErrorList>() {
+			@Override
+			public ErrorList call() {
+				final ReadOnlyDoubleWrapper progress = new ReadOnlyDoubleWrapper(this, "progress");
+				progress.getReadOnlyProperty().addListener((obs, oldProgress, newProgress) -> updateProgress((double) oldProgress, (double) newProgress));
+				return Bluesheet.findAllErrors(text, false, progress);
+			}
+		};
+		
+		dialog.activateProgressBar(task);
+		
+		task.setOnRunning(event -> {
+			analyzeButton.setDisable(true);
+        });
+		
+		task.setOnSucceeded(event -> {
+			LogHelper.getLogger(17).info("Analyze Successful");
+			essayBox.setStyleClass(0, essayBox.getLength(), null);
+			dialog.close();
+			errors = task.getValue();
+			if(errors.size() == 0)
+				errorBox.replaceText("No Errors Found!");
+			else {
+				for(Error error : errors)
+					essayBox.setStyleClass(error.getStartIndex(), error.getEndIndex() + 1, "light-red");
+				currError = 0;
+				displayError();
+			}
+			analyzeButton.setDisable(false);
+        });
+		
+		task.setOnCancelled(event -> {
+			LogHelper.getLogger(17).warn("Analyze Canceled");
+			analyzeButton.setDisable(false);
+        });
+		
+		Thread thread = new Thread(task, "Analyze");
+		thread.start();
 	}
 	
 }
