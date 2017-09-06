@@ -65,46 +65,46 @@ public enum Bluesheets {
 			"Punctuation goes inside the quotations.\nCitations go outside the quotations.\nUse commas to introduce a quote preceeded by a verb of saying or thinking.",
 			Availability.AVAILABLE);
 	
-	private final int NUMBER;
-	private final Bluesheet OBJECT;
-	private final String NAME;
-	private final String DESCRIPTION;
-	private final String EXAMPLE;
-	private final String AVAILABILITY_WARNING;
+	private final int number;
+	private final Bluesheet object;
+	private final String name;
+	private final String description;
+	private final String example;
+	private final String availibilityWarning;
 	
 	
 	Bluesheets(int number, Bluesheet object, String name, String description, String example, Availability availability) {
-		NUMBER = number;
-		OBJECT = object;
-		NAME = name;
-		DESCRIPTION = description;
-		EXAMPLE = example;
-		AVAILABILITY_WARNING = availability.description == null ? null : availability.description.replace("BluesheetName", name);
+		this.number = number;
+		this.object = object;
+		this.name = name;
+		this.description = description;
+		this.example = example;
+		availibilityWarning = availability.description == null ? null : availability.description.replace("BluesheetName", name);
 	}
 	
 	
 	public int getNumber() {
-		return NUMBER;
+		return number;
 	}
 	
 	public Bluesheet getObject() {
-		return OBJECT;
+		return object;
 	}
 	
 	public String getName() {
-		return NAME;
+		return name;
 	}
 
 	public String getDescription() {
-		return DESCRIPTION;
+		return description;
 	}
 	
 	public String getExample() {
-		return EXAMPLE;
+		return example;
 	}
 
 	public String getAvailabilityWarning() {
-		return AVAILABILITY_WARNING;
+		return availibilityWarning;
 	}
 
 	/**
@@ -116,7 +116,7 @@ public enum Bluesheets {
 	 */
 	public static Bluesheets getBluesheetFromNumber(int number) {
 		for(Bluesheets b: Bluesheets.values())
-			if(b.NUMBER == number)
+			if(b.number == number)
 				return b;
 		throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
 	}
@@ -130,8 +130,8 @@ public enum Bluesheets {
 	 */
 	public static int getNumber(Bluesheet object) {
 		for(Bluesheets b: Bluesheets.values())
-			if(b.OBJECT == object)
-				return b.NUMBER;
+			if(b.object == object)
+				return b.number;
 		throw new IllegalArgumentException("The passed Bluesheet object was not found.");
 	}
 	

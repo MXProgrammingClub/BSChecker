@@ -11,8 +11,8 @@ import java.util.Comparator;
 @SuppressWarnings("serial")
 public class ErrorList extends ArrayList<Error> {
 	
-	private final String TEXT;
-	private final boolean IS_TOKEN_BASED;
+	private final String text;
+	private final boolean isTokenBased;
 	
 	
 	/**
@@ -20,8 +20,8 @@ public class ErrorList extends ArrayList<Error> {
 	 * @param isTokenBased true if the errors in this list are stored based on token indices, false if on character indices
 	 */
 	public ErrorList(String text, boolean isTokenBased) {
-		TEXT = text;
-		IS_TOKEN_BASED = isTokenBased;
+		this.text = text;
+		this.isTokenBased = isTokenBased;
 	}
 	
 	/**
@@ -37,12 +37,12 @@ public class ErrorList extends ArrayList<Error> {
 	 * @return the text in which the errors of this ErrorList occur
 	 */
 	public String getText() {
-		return TEXT;
+		return text;
 	}
 	
 	@Override
 	public boolean add(Error e) {
-		if(this.IS_TOKEN_BASED != e.IS_TOKEN_BASED) {
+		if(this.isTokenBased != e.isTokenBased) {
 			LogHelper.getLogger(17).error("Cannot add errors of different types to same ErrorList!");
 			return false;
 		}
@@ -51,14 +51,14 @@ public class ErrorList extends ArrayList<Error> {
 	
 	@Override
 	public void add(int i, Error e) {
-		if(this.IS_TOKEN_BASED != e.IS_TOKEN_BASED)
+		if(this.isTokenBased != e.isTokenBased)
 			LogHelper.getLogger(17).error("Cannot add errors of different types to same ErrorList!");
 		super.add(i, e);
 	}
 	
 	@Override
 	public Error set(int i, Error e) {
-		if(this.IS_TOKEN_BASED != e.IS_TOKEN_BASED) {
+		if(this.isTokenBased != e.isTokenBased) {
 			LogHelper.getLogger(17).error("Cannot add errors of different types to same ErrorList!");
 			return null;
 		}
@@ -72,12 +72,12 @@ public class ErrorList extends ArrayList<Error> {
 	 * @param offset an offset to be applied to all the indices of all Errors in the added list
 	 */
 	public void addAllWithOffset(ErrorList l, int offset) {
-		if(this.IS_TOKEN_BASED != l.IS_TOKEN_BASED) {
+		if(this.isTokenBased != l.isTokenBased) {
 			LogHelper.getLogger(17).error("Cannot combine ErrorLists of different types");
 			return;
 		}
 		for(Error e : l)
-			this.add(new Error(e.IS_TOKEN_BASED, e.getStartIndex() + offset, e.getEndIndex() + offset, e.getBluesheetNumber(), e.getNote()));
+			this.add(new Error(e.isTokenBased, e.getStartIndex() + offset, e.getEndIndex() + offset, e.getBluesheetNumber(), e.getNote()));
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class ErrorList extends ArrayList<Error> {
 		if(isEmpty())
 			return "No errors found!";
 		String string = "All found errors (" + size() + " total):\n";
-		if(IS_TOKEN_BASED)
+		if(isTokenBased)
 			for(Error error : this) {
 				string += "Tokens " + error.getStartIndex() + "-" + error.getEndIndex() + " (bluesheet " + error.getBluesheetNumber() + ")";
 				if(!error.getNote().equals(""))
@@ -108,7 +108,7 @@ public class ErrorList extends ArrayList<Error> {
 			}
 		else
 			for(Error error : this){
-				string += "Characters " + error.getStartIndex() + "-" + error.getEndIndex() + ": \"" + TEXT.substring(error.getStartIndex(), error.getEndIndex() + 1) + "\" (bluesheet " + error.getBluesheetNumber() + ")";
+				string += "Characters " + error.getStartIndex() + "-" + error.getEndIndex() + ": \"" + text.substring(error.getStartIndex(), error.getEndIndex() + 1) + "\" (bluesheet " + error.getBluesheetNumber() + ")";
 				if(!error.getNote().equals(""))
 					string += " -- " + error.getNote();
 				string += "\n";
@@ -126,14 +126,14 @@ public class ErrorList extends ArrayList<Error> {
 	 * @return an ErrorList which represents the same errors as this ErrorList but is based on characters rather than tokens
 	 */
 	public ErrorList tokensToChars(int startChar, ArrayList<Integer> ignoredChars) {
-		if(!IS_TOKEN_BASED) {
+		if(!isTokenBased) {
 			LogHelper.getLogger(17).error("This ErrorList is already character based!");
 			return this;
 		}
-		String[] tokens = Tools.getTokenizer().tokenize(TEXT);
+		String[] tokens = Tools.getTokenizer().tokenize(text);
 		boolean errorProcessed;
 		int tokenIndex = 0, charIndex = 0, numIgnored = 0, ignoredInside, errorIndex, errorLength;
-		ErrorList charErrorList = new ErrorList(TEXT, false);
+		ErrorList charErrorList = new ErrorList(text, false);
 
 		//loop through each error
 		this.sort();
@@ -145,7 +145,7 @@ public class ErrorList extends ArrayList<Error> {
 				ignoredInside = 0;
 				
 				//find next token
-				while(tokens[tokenIndex].charAt(0) != TEXT.charAt(charIndex)) {
+				while(tokens[tokenIndex].charAt(0) != text.charAt(charIndex)) {
 					charIndex++;
 				}
 				//if token is the start of the error process it
@@ -156,12 +156,12 @@ public class ErrorList extends ArrayList<Error> {
 					//loop through errors that include multiple tokens
 					for(int i = 1; i <= e.getEndIndex() - e.getStartIndex(); i++) {
 						//find next token
-						while(tokens[tokenIndex + i].charAt(0) != TEXT.charAt(errorIndex + errorLength))
+						while(tokens[tokenIndex + i].charAt(0) != text.charAt(errorIndex + errorLength))
 							errorLength++;
 						errorLength += tokens[tokenIndex + i].length();
 					}
 					//don't include quotation marks as the first character of an error
-					if(TEXT.charAt(errorIndex) == '"'){
+					if(text.charAt(errorIndex) == '"'){
 						errorIndex++;
 						errorLength--;
 					}
@@ -192,7 +192,7 @@ public class ErrorList extends ArrayList<Error> {
 		for(int i = 0; i < size(); i++) {
 			Error old = get(i);
 			if(old.getBluesheetNumber() == -1)
-				set(i, new Error(old.IS_TOKEN_BASED, old.getStartIndex(), old.getEndIndex(), bluesheetNumber, old.getNote()));
+				set(i, new Error(old.isTokenBased, old.getStartIndex(), old.getEndIndex(), bluesheetNumber, old.getNote()));
 		}
 	}
 	

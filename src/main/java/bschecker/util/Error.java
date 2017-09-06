@@ -12,11 +12,11 @@ import opennlp.tools.parser.Parse;
  */
 public class Error {
 	
-	protected final boolean IS_TOKEN_BASED;
-	private final int START_INDEX;
-	private final int END_INDEX;
-	private final int BLUSHEET_NUMBER;
-	private final String NOTE;
+	protected final boolean isTokenBased;
+	private final int startIndex;
+	private final int endIndex;
+	private final int bluesheetNumber;
+	private final String note;
 	
 	
 	/**
@@ -30,11 +30,11 @@ public class Error {
 	protected Error(boolean isTokenBased, int startIndex, int endIndex, int bluesheetNumber, String note) {
 		if(startIndex > endIndex)
 			throw new IllegalArgumentException("StartIndex must occur before EndIndex.");
-		IS_TOKEN_BASED = isTokenBased;
-		START_INDEX = startIndex;
-		END_INDEX = endIndex;
-		this.BLUSHEET_NUMBER = bluesheetNumber;
-		NOTE = note;
+		this.isTokenBased = isTokenBased;
+		this.startIndex = startIndex;
+		this.endIndex = endIndex;
+		this.bluesheetNumber = bluesheetNumber;
+		this.note = note;
 	}
 	
 	/**
@@ -112,28 +112,28 @@ public class Error {
 	 * @return the starting index of the error
 	 */
 	public int getStartIndex() {
-		return START_INDEX;
+		return startIndex;
 	}
 	
 	/**
 	 * @return the ending index of the error
 	 */
 	public int getEndIndex() {
-		return END_INDEX;
+		return endIndex;
 	}
 	
 	/**
 	 * @return the bluesheet number
 	 */
 	public int getBluesheetNumber() {
-		return BLUSHEET_NUMBER;
+		return bluesheetNumber;
 	}
 	
 	/**
 	 * @return the note attached to this error
 	 */
 	public String getNote() {
-		return NOTE;
+		return note;
 	}
 	
 }
