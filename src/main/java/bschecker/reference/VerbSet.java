@@ -13,7 +13,7 @@ import bschecker.util.PerformanceMonitor;
  * 
  * @author JeremiahDeGreeff
  */
-public class Reference {
+public class VerbSet {
 	
 	private static HashSet<String> verbSet;
 	

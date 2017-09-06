@@ -2,7 +2,7 @@ package bschecker.bluesheets;
 
 import java.util.ArrayList;
 
-import bschecker.reference.Reference;
+import bschecker.reference.VerbSet;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
@@ -73,7 +73,7 @@ public class PronounCase extends Bluesheet {
 		|| personalParse.getParent().getParent().getType().equals("PP")
 		|| nextToken != null && nextToken.getParent().getType().equals("TO")
 		|| personalParse.getParent().getParent().getParent().getType().equals("VP") && personalParse.getParent().getParent().getParent().getChildren()[UtilityMethods.getSiblingIndex(personalParse.getParent().getParent()) - 1].getType().charAt(0) == 'V'
-		|| !personalParse.getParent().getParent().getParent().getType().equals(AbstractBottomUpParser.TOP_NODE) && personalParse.getParent().getParent().getParent().getParent().getType().equals("VP") && personalParse.getParent().getParent().getParent().getType().equals("SBAR") && personalParse.getParent().getParent().getParent().getSpan().getStart() == personalParse.getSpan().getStart() && !Reference.getVerbSet().contains(personalParse.getParent().getParent().getParent().getParent().getChildren()[0].getCoveredText()))
+		|| !personalParse.getParent().getParent().getParent().getType().equals(AbstractBottomUpParser.TOP_NODE) && personalParse.getParent().getParent().getParent().getParent().getType().equals("VP") && personalParse.getParent().getParent().getParent().getType().equals("SBAR") && personalParse.getParent().getParent().getParent().getSpan().getStart() == personalParse.getSpan().getStart() && !VerbSet.getVerbSet().contains(personalParse.getParent().getParent().getParent().getParent().getChildren()[0].getCoveredText()))
 			return Cases.OBJECTIVE;
 		
 		Parse parent = personalParse.getParent();

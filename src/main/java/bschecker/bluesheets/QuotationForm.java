@@ -1,6 +1,6 @@
 package bschecker.bluesheets;
 
-import bschecker.reference.Reference;
+import bschecker.reference.VerbSet;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
@@ -12,6 +12,7 @@ import opennlp.tools.parser.Parse;
  * 
  * @author Julia
  * @author JeremiahDeGreeff
+ * @see VerbSet
  */
 public class QuotationForm extends Bluesheet {
 	
@@ -58,13 +59,13 @@ public class QuotationForm extends Bluesheet {
 	 */
 	private ErrorTypes findErrorsFront(String[] tokens, int start, int end) {
 		if(start > 0 && tokens[start - 1].equals(":")) {
-			if(start > 1 && Reference.getVerbSet().contains(tokens[start - 2]))
+			if(start > 1 && VerbSet.getVerbSet().contains(tokens[start - 2]))
 				return ErrorTypes.INVALID_COLON; //error if there is a colon before and the word before it is a verb
 		} else if(start > 0 && tokens[start - 1].equals(",")) {
-			if(start > 1 && !Reference.getVerbSet().contains(tokens[start - 2]))
+			if(start > 1 && !VerbSet.getVerbSet().contains(tokens[start - 2]))
 				return ErrorTypes.INVALID_COMMA; //error if there is a comma before and the word before it is not a verb
 		} else
-			if(start > 0 && Reference.getVerbSet().contains(tokens[start - 1]) && start + 1 < tokens.length && !tokens[start + 1].equalsIgnoreCase("that"))
+			if(start > 0 && VerbSet.getVerbSet().contains(tokens[start - 1]) && start + 1 < tokens.length && !tokens[start + 1].equalsIgnoreCase("that"))
 				return ErrorTypes.NEEDS_COMMA; //error if there is not a punctuation before and the word before is a verb unless the first word of the quote is that
 		return ErrorTypes.NO_ERROR;
 	}
