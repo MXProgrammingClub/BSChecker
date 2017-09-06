@@ -11,6 +11,7 @@ import opennlp.tools.parser.Parse;
 
 /**
  * Finds errors in Parallelism. (11)
+ * 
  * @author JeremiahDeGreeff
  */
 public class FaultyParallelism extends Bluesheet {
@@ -19,6 +20,7 @@ public class FaultyParallelism extends Bluesheet {
 	
 	/**
 	 * Finds any instances of faulty parallelism in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
@@ -42,7 +44,8 @@ public class FaultyParallelism extends Bluesheet {
 	}
 	
 	/**
-	 * tests whether or not a coordinating conjunction is part of a faulty parallelism
+	 * Tests whether or not a coordinating conjunction is part of a faulty parallelism.
+	 * 
 	 * @param parse the Parse with the CC node
 	 * @return false if there is faulty parallelism, true otherwise
 	 */
@@ -103,7 +106,8 @@ public class FaultyParallelism extends Bluesheet {
 	}
 	
 	/**
-	 * determines whether or not a given ArrayList of parse are valid as parallel structures
+	 * Determines whether or not a given ArrayList of parse are valid as parallel structures.
+	 * 
 	 * @param parallels an ArrayList of the Parses which are used in parallel
 	 * @param rightIsPosessive true if the word to the right of the CC is a possessive noun
 	 * @return true if the the parallels are valid, false otherwise

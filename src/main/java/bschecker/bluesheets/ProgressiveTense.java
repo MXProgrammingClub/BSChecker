@@ -8,6 +8,7 @@ import opennlp.tools.parser.Parse;
 
 /**
  * Finds verbs in progressive tense. (12)
+ * 
  * @author JeremiahDeGreeff
  */
 public class ProgressiveTense extends Bluesheet {
@@ -17,6 +18,7 @@ public class ProgressiveTense extends Bluesheet {
 	
 	/**
 	 * Finds all instances of progressive tense in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note

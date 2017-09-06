@@ -13,6 +13,7 @@ import opennlp.tools.parser.Parse;
 
 /**
  * Finds errors in pronoun case. (6)
+ * 
  * @author Leo
  * @author JeremiahDeGreeff
  */
@@ -20,6 +21,7 @@ public class PronounCase extends Bluesheet {
 	
 	/**
 	 * Finds all errors in pronoun case in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
@@ -50,9 +52,10 @@ public class PronounCase extends Bluesheet {
 	}
 	
 	/**
-	 * determines which case a pronoun should be based on its Parse
+	 * Determines which case a personal pronoun should be based on its Parse.
+	 * 
 	 * @param personalParse a Parse whose node is the pronoun to check
-	 * @return the element of the Cases enum which corresponds to the correct case of the pronoun
+	 * @return the element of {@link Cases} which corresponds to the correct case of the pronoun
 	 */
 	private static Cases getCorrectPersonalCase(Parse personalParse) {
 		Parse[] siblings = personalParse.getParent().getChildren();
@@ -86,9 +89,10 @@ public class PronounCase extends Bluesheet {
 	}
 	
 	/**
-	 * determines which case a relative pronoun should be based on its Parse
+	 * Determines which case a relative pronoun should be based on its Parse.
+	 * 
 	 * @param relativeParse a Parse whose node is the relative pronoun to check
-	 * @return the element of the Cases enum which corresponds to the correct case of the relative pronoun
+	 * @return the element of {@link Cases} which corresponds to the correct case of the pronoun
 	 */
 	private static Cases getCorrectRelativeCase(Parse relativeParse) {
 		Parse following = relativeParse.getParent().getParent().getChildren()[1].getChildren()[0];
@@ -100,7 +104,8 @@ public class PronounCase extends Bluesheet {
 	}
 	
 	/**
-	 * an enum which represents the different cases of pronouns
+	 * Represents the different cases of pronouns.
+	 * 
 	 * @author JeremiahDeGreeff
 	 */
 	private static enum Cases {
@@ -121,7 +126,8 @@ public class PronounCase extends Bluesheet {
 	}
 	
 	/**
-	 * an enum which represents the different types of pronouns which this class checks for
+	 * Represents the different types of pronouns which this class checks for.
+	 * 
 	 * @author JeremiahDeGreeff
 	 */
 	private static enum Types {

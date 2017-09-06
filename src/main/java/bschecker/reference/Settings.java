@@ -12,8 +12,9 @@ import bschecker.bluesheets.Bluesheets;
 import bschecker.util.LogHelper;
 
 /**
- * This class stores the settings indicating which bluesheets should be checked for and provides static methods to change these settings.
- * The settings are stored externally in the file indicated by {@code Paths.SETTINGS}.
+ * Stores the settings indicating which bluesheets should be checked for and provides static methods to change these settings.
+ * The settings are stored externally in the settings file indicated by {@link bschecker.reference.Paths}.
+ * 
  * @author JeremiahDeGreeff
  */
 public class Settings {
@@ -21,10 +22,18 @@ public class Settings {
 	private static boolean[] defaultSettings;
 	private static boolean[] settings = new boolean[14];
 	
+	/**
+	 * @return the settings array which indicates which bluesheets should be checked when text is annalyzed
+	 */
 	public static boolean[] getSettings() {
 		return settings;
 	}
 	
+	/**
+	 * If the default settings have not already been cached, they will be generated.
+	 * 
+	 * @return the default settings as determined by the stated availability of each element in {@link Bluesheets}
+	 */
 	private static boolean[] getDefaultSettings() {
 		if(defaultSettings == null)
 			generateDefaultSettings();
@@ -32,7 +41,7 @@ public class Settings {
 	}
 	
 	/**
-	 * Generates the default settings based on the stated availability of each element in the Enum and caches them.
+	 * Generates the default settings array based on the stated availability of each element in {@link Bluesheets} and caches it.
 	 */
 	private static void generateDefaultSettings() {
 		LogHelper.getLogger(0).info("Generating default settings");
@@ -42,7 +51,8 @@ public class Settings {
 	}
 	
 	/**
-	 * Based on the number passed in, returns whether or not the bluesheet with that number should be tested.
+	 * Returns whether or not the bluesheet corresponding to the passed number should be tested.
+	 * 
 	 * @param number The number of the bluesheet
 	 * @return true if that bluesheet should be tested, false otherwise
 	 * @throws IllegalArgumentException if number is not [1, 14]
@@ -54,7 +64,7 @@ public class Settings {
 	}
 	
 	/**
-	 * Reads the settings from the file indicated by {@code Paths.SETTINGS} and loads them into the settings array.
+	 * Reads the settings from the file indicated in {@link bschecker.reference.Paths} and loads them into the settings array.
 	 * If the file is longer than 14 lines, only the first 14 will be read.
 	 * If the file is not found or is less than 14 lines, the default settings will be written and loaded.
 	 */
@@ -85,8 +95,8 @@ public class Settings {
 	}
 	
 	/**
-	 * Creates a settings file and writes the default settings into it.
-	 * If the file already exists it will be overwritten.
+	 * Creates a settings file at the location indicated in {@link bschecker.reference.Paths} and writes the default settings into it.
+	 * If the file already exists its contents will be overwritten.
 	 * Once the settings have been written they will be read.
 	 */
 	public static void writeDefaultSettings() {
@@ -96,8 +106,9 @@ public class Settings {
 	}
 	
 	/**
-	 * Creates a settings file and writes the passed boolean[] of settings into it.
-	 * If the file already exists it will be overwritten.
+	 * Creates a settings file at the location indicated in {@link bschecker.reference.Paths} and writes the passed boolean[] of settings into it.
+	 * If the file already exists its contents will be overwritten.
+	 * 
 	 * @param writeSettings a boolean[] which must be length 14 which will be written to the settings file
 	 */
 	private static void writeSettings(boolean[] writeSettings) {
@@ -113,6 +124,8 @@ public class Settings {
 	
 	/**
 	 * Reverses the setting for a given bluesheet.
+	 * Writes the change to the settings file indicated in {@link bschecker.reference.Paths}.
+	 * 
 	 * @param number the number corresponding to the bluesheet whose setting will be reversed [1 - 14]
 	 * @throws IllegalArgumentException if number is not [1, 14]
 	 */
@@ -125,7 +138,8 @@ public class Settings {
 	}
 	
 	/**
-	 * loads settings without altering the settings.txt file
+	 * Loads settings without altering the settings file indicated in {@link bschecker.reference.Paths}.
+	 * 
 	 * @param loadSettings a boolean[] which holds the settings to be loaded
 	 */
 	public static void loadSettings(boolean[] loadSettings) {

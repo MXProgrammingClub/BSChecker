@@ -32,13 +32,13 @@ import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.Span;
 
 /**
- * this class contains examples of how to use openNLP and can be used for testing purposes
- * to use enter your input text in the literal for the input String
- * then uncomment which ever tools you would like to run
+ * <p> This class contains examples of how to use openNLP and can be used for testing purposes.
+ * To use enter your input text in the literal for the input String.
+ * Then uncomment which ever tools you would like to run. </p>
  * 
- * this class can also be used to test bluesheet classes without launching the application
- * to do this first uncomment the lower portion of the main method
- * if the value in the boolean array at index n is true, the (n + 1)th bluesheet will be tested for
+ * <p> This class can also be used to test bluesheet classes without launching the application.
+ * To do this first uncomment the lower portion of the main method.
+ * If the value in the boolean array at index n is {@code true}, the (n + 1)th bluesheet will be tested for. </p>
  * 
  * @author tedpyne
  * @author JeremiahDeGreeff

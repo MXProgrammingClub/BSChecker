@@ -11,14 +11,20 @@ import javafx.beans.property.ReadOnlyDoubleWrapper;
 import opennlp.tools.parser.Parse;
 
 /**
- * Defines abstract class for types of grammatical errors
+ * Defines abstract class for types of grammatical errors.
+ * Provides a static method which finds bluesheet errors of all types referenced in {@link Bluesheets}.
+ * References {@link Settings} to determine which bluesheets to check.
+ * 
  * @author tedpyne
  * @author JeremiahDeGreeff
+ * @see Bluesheets
+ * @see Settings
  */
 public abstract class Bluesheet {
 	
 	/**
 	 * Finds errors of a specific type in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
@@ -27,10 +33,11 @@ public abstract class Bluesheet {
 	
 	/**
 	 * Finds all errors within the given text.
-	 * All types included in {@code ERROR_LIST} which have a {@code CheckedWhenAnalyzed} value of {@code true} will be checked.
-	 * Expects text to end with a new line character.
+	 * All Bluesheets referenced in {@link #Settings} with a value of {@code true} will be checked.
+	 * 
 	 * @param text the text to search
 	 * @param logParses if true, all Parse trees will be logged to the console - should only be used for debugging
+	 * @param progress if provided, this parameter will be updated as each line is processed - it is intended to be bound to a ProgressDialog
 	 * @return a ErrorList which contains all the errors in the passage, referenced by character indices
 	 */
 	public static ErrorList findAllErrors(String text, boolean logParses, ReadOnlyDoubleWrapper progress) {

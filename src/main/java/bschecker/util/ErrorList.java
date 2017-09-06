@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
- * An object which represents a list of errors
+ * An object which represents a list of errors.
+ * 
  * @author JeremiahDeGreeff
  */
 @SuppressWarnings("serial")
@@ -15,7 +16,6 @@ public class ErrorList extends ArrayList<Error> {
 	
 	
 	/**
-	 * constructor
 	 * @param text the text in which the errors of this ErrorList occur
 	 * @param isTokenBased true if the errors in this list are stored based on token indices, false if on character indices
 	 */
@@ -25,8 +25,8 @@ public class ErrorList extends ArrayList<Error> {
 	}
 	
 	/**
-	 * constructor
-	 * assumes that the ErrorList contains Errors which are indexed based on tokens
+	 * Assumes that the ErrorList contains Errors which are indexed based on tokens.
+	 * 
 	 * @param text the text in which the errors of this ErrorList occur
 	 */
 	public ErrorList(String text) {
@@ -66,7 +66,8 @@ public class ErrorList extends ArrayList<Error> {
 	}
 	
 	/**
-	 * adds all items of the passed ErrorList to this ErrorList with an offset
+	 * Adds all items of the passed ErrorList to this ErrorList with an offset.
+	 * 
 	 * @param l the ErrorList whose elements will be added
 	 * @param offset an offset to be applied to all the indices of all Errors in the added list
 	 */
@@ -91,7 +92,7 @@ public class ErrorList extends ArrayList<Error> {
 	}
 	
 	/**
-	 * Returns a String representation of this ErrorList with differing formatting based upon whether it is token based or character based.
+	 * @return a String representation of this ErrorList with differing formatting based upon whether it is token based or character based.
 	 */
 	@Override
 	public String toString() {
@@ -117,8 +118,9 @@ public class ErrorList extends ArrayList<Error> {
 	
 	
 	/**
-	 * Creates a new error list whose errors' indices are based on characters rather than tokens.
+	 * Creates a new ErrorList whose Errors' indices are based on characters rather than tokens.
 	 * Should only be used on ErrorLists which pertain to single paragraphs.
+	 * 
 	 * @param startChar the beginning of this paragraph relative to the entire input
 	 * @param ignoredChars indices of chars which have been removed from {@codeTEXT}
 	 * @return an ErrorList which represents the same errors as this ErrorList but is based on characters rather than tokens
@@ -183,11 +185,15 @@ public class ErrorList extends ArrayList<Error> {
 	
 	/**
 	 * Sets the bluesheet number for all elements of this ErrorList
+	 * 
 	 * @param bluesheetNumber the number to be set
 	 */
 	public void setBluesheetNumber(int bluesheetNumber) {
-		for(Error e : this)
-			e.setBluesheetNumber(bluesheetNumber);
+		for(int i = 0; i < size(); i++) {
+			Error old = get(i);
+			if(old.getBluesheetNumber() == -1)
+				set(i, new Error(old.IS_TOKEN_BASED, old.getStartIndex(), old.getEndIndex(), bluesheetNumber, old.getNote()));
+		}
 	}
 	
 }

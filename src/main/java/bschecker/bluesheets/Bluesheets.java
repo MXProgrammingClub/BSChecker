@@ -1,7 +1,8 @@
 package bschecker.bluesheets;
 
 /**
-* This enum represents the bluesheet errors.
+* Enumerates all of the bluesheet errors.
+* 
 * @author Luke Giacalone
 * @author JeremiahDeGreeff
 */
@@ -107,7 +108,8 @@ public enum Bluesheets {
 	}
 
 	/**
-	 * Based on the number passed in, returns the corresponding element.
+	 * Returns the element corresponding to the passed number.
+	 * 
 	 * @param number The number of the element.
 	 * @return The element with the number number.
 	 * @throws IllegalArgumentException if number is not [1, 14].
@@ -120,7 +122,8 @@ public enum Bluesheets {
 	}
 	
 	/**
-	 * returns the number corresponding to the passed Bluesheet object
+	 * Returns the number corresponding to the passed Bluesheet object.
+	 * 
 	 * @param object the object whose number will be returned
 	 * @return the number of the object [1, 14]
 	 * @throws IllegalArgumentException if object is does not belong to any of the values in this enum
@@ -133,7 +136,8 @@ public enum Bluesheets {
 	}
 	
 	/**
-	 * A simple Enum which represents possible availability states for a bluesheet class.
+	 * Represents possible availability states for a bluesheet class.
+	 * 
 	 * @author JeremiahDeGreeff
 	 */
 	private static enum Availability {

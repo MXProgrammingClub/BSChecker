@@ -7,6 +7,7 @@ import opennlp.tools.parser.Parse;
 
 /**
  * Finds apostrophe errors. (8)
+ * 
  * @author tedpyne
  * @author JeremiahDeGreeff
  */
@@ -14,6 +15,7 @@ public class Apostrophe extends Bluesheet {
 	
 	/**
 	 * Finds omissions and incorrect uses of apostrophes in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note

@@ -3,7 +3,8 @@ package bschecker.util;
 import java.util.HashMap;
 
 /**
- * A class which provides performance monitoring for the project
+ * Provides performance monitoring for the project.
+ * 
  * @author JeremiahDeGreeff
  */
 public class PerformanceMonitor {
@@ -17,8 +18,9 @@ public class PerformanceMonitor {
 	}
 	
 	/**
-	 * creates a new PerformanceMonitor
-	 * does not start the monitor
+	 * Creates a new PerformanceMonitor.
+	 * Does not start the monitor.
+	 * 
 	 * @param id the id to reference the monitor
 	 */
 	public static void addMonitor(String id) {
@@ -26,8 +28,9 @@ public class PerformanceMonitor {
 	}
 	
 	/**
-	 * starts the specified PerformaceMonitor
-	 * if a monitor with this id hasn't been created yet, it will be created
+	 * Starts the specified PerformaceMonitor.
+	 * If a monitor with this id hasn't been created yet, it will be created.
+	 * 
 	 * @param id the id of the desired monitor
 	 */
 	public static void start(String id) {
@@ -37,8 +40,9 @@ public class PerformanceMonitor {
 	}
 	
 	/**
-	 * stops the specified PerformanceMonitor and returns its results
-	 * the monitor is subsequently disposed of
+	 * Stops the specified PerformanceMonitor and returns its results.
+	 * The monitor is subsequently disposed of.
+	 * 
 	 * @param id the id of the desired monitor
 	 * @return a String representing the amount of time during which the monitor has run
 	 */

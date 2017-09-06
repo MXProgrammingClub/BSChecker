@@ -8,6 +8,11 @@ import java.util.Scanner;
 import bschecker.util.LogHelper;
 import bschecker.util.PerformanceMonitor;
 
+/**
+ * Stores the list of verbs of saying or thinking to be used by the project.
+ * 
+ * @author JeremiahDeGreeff
+ */
 public class Reference {
 	
 	private static HashSet<String> verbSet;
@@ -33,7 +38,7 @@ public class Reference {
 	}
 	
 	/**
-	 * @return the set of verbs of saying or thinking
+	 * @return the list of verbs of saying or thinking
 	 */
 	public static HashSet<String> getVerbSet() {
 		return verbSet;

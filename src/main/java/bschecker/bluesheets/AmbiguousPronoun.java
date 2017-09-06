@@ -11,6 +11,7 @@ import opennlp.tools.util.Span;
 
 /**
  * Finds ambiguous pronoun references. (7)
+ * 
  * @author Dalal
  */
 public class AmbiguousPronoun extends Bluesheet {
@@ -20,6 +21,7 @@ public class AmbiguousPronoun extends Bluesheet {
 	
 	/**
 	 * Finds all ambiguous pronoun references in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
@@ -47,7 +49,7 @@ public class AmbiguousPronoun extends Bluesheet {
 	}
 
 	/**
-	 * finds all names in the given array of words as determined by opennlp
+	 * Finds all names in the given array of words as determined by opennlp.
 	 * @param words the words to look through
 	 * @return an ArrayList of all the words which have been recognized as names
 	 */

@@ -13,7 +13,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Creates a progress dialog to be used when analyzing an essay
+ * Creates a progress dialog to be used when analyzing an essay.
+ * 
  * @author JeremiahDeGreeff
  */
 public class ProgressDialogController {
@@ -23,7 +24,7 @@ public class ProgressDialogController {
 	
 	private final Stage stage = new Stage();;
 	
-	public ProgressDialogController() {
+	protected ProgressDialogController() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(Paths.PROGRESS_DIALOG_FXML));
 		loader.setController(this);
 		
@@ -37,19 +38,20 @@ public class ProgressDialogController {
 	}
 	
 	/**
-	 * activates the progress bar 
+	 * Activates the progress bar.
+	 * 
 	 * @param task the Task whose progress will be displayed
 	 */
-	public void activateProgressBar(Task<?> task) {
+	protected void activateProgressBar(Task<?> task) {
 		progressBar.progressProperty().bind(task.progressProperty());
 		stage.setOnCloseRequest(event -> {task.cancel();});
 		stage.show();
 	}
 	
 	/**
-	 * closes the dialog
+	 * Closes the dialog.
 	 */
-	public void close() {
+	protected void close() {
 		stage.close();
 	}
 	

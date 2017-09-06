@@ -11,12 +11,14 @@ import opennlp.tools.parser.Parse;
 
 /**
  * Finds sentence structure errors. (2)
+ * 
  * @author JeremiahDeGreeff
  */
 public class IncompleteSentence extends Bluesheet {
 	
 	/**
 	 * Finds any invalid sentence structure in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
@@ -74,7 +76,8 @@ public class IncompleteSentence extends Bluesheet {
 	}
 	
 	/**
-	 * tests a Parse which has a leading SBAR to see if it is a fragment, run-on, or neither
+	 * Tests a Parse which has a leading SBAR to see if it is a fragment, run-on, or neither.
+	 * 
 	 * @param parse the Parse of the sentence, {@code parse.getChildren[0].getType().equals("SBAR")} should be true
 	 * @return "Fragment", "Run-on", or null based on the structure of the sentence
 	 */

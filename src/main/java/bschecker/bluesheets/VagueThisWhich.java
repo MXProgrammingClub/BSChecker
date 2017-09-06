@@ -7,12 +7,14 @@ import opennlp.tools.parser.Parse;
 
 /**
  * Finds errors with vague use of this or which. (4)
+ * 
  * @author tedpyne
  */
 public class VagueThisWhich extends Bluesheet {
 	
 	/**
 	 * Finds any vague which or this in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
@@ -32,7 +34,8 @@ public class VagueThisWhich extends Bluesheet {
 	}
 
 	/**
-	 * loops through tokens after "this" until a noun or verb is found
+	 * Loops through tokens after "this" until a noun or verb is found.
+	 * 
 	 * @param tokens the tokens to look through
 	 * @param tags the tags of those tokens
 	 * @param index the index to start looking from

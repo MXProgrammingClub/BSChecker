@@ -20,7 +20,8 @@ import bschecker.reference.Paths;
 import javafx.stage.FileChooser;
 
 /**
- * Methods for the user to select an essay and to import the text from that file.
+ * Allows the user to select an essay and to import the text from that file.
+ * 
  * @author Julia
  * @author JeremiahDeGreeff
  */
@@ -28,6 +29,7 @@ public class TextImport {
 	
 	/**
 	 * Creates a file chooser for the user to select which file to open. Must be called from an event handler.
+	 * 
 	 * @return The selected file (null if no file is chosen).
 	 */
 	public static File chooseFile() {
@@ -43,6 +45,7 @@ public class TextImport {
 	
 	/**
 	 * Takes the selected file and returns the extracted text.
+	 * 
 	 * @param file The user selected file.
 	 * @return The text contained in the file, or null if the file is not one of the accepted types.
 	 */
@@ -59,6 +62,7 @@ public class TextImport {
 	
 	/**
 	 * Takes the selected word 2007 document and returns the extracted text.
+	 * 
 	 * @param file The word document selected.
 	 * @return The text in the document.
 	 */
@@ -82,6 +86,7 @@ public class TextImport {
 	
 	/**
 	 * Takes the selected word 97 document and returns the extracted text.
+	 * 
 	 * @param file The word document selected.
 	 * @return The text in the document.
 	 */
@@ -105,6 +110,7 @@ public class TextImport {
 	
 	/**
 	 * Takes the selected text file and returns the extracted text.
+	 * 
 	 * @param file The text file selected.
 	 * @return The text in the text file.
 	 */
@@ -128,6 +134,7 @@ public class TextImport {
 	
 	/**
 	 * Allows the user to create a file to save the text.
+	 * 
 	 * @param text The text to save in the new document.
 	 */
 	public static File saveAs(String text) {
@@ -172,7 +179,8 @@ public class TextImport {
 	}
 	
 	/**
-	 * creates an empty .doc file at the specified file path
+	 * Creates an empty .doc file at the specified file path.
+	 * 
 	 * @param file the location where this file will be created
 	 * @throws IOException if the creation fails for any reason
 	 */
@@ -186,6 +194,7 @@ public class TextImport {
 	
 	/**
 	 * Saves the new text to the file.
+	 * 
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */
@@ -206,6 +215,7 @@ public class TextImport {
 	
 	/**
 	 * Saves the new text to the .docx file.
+	 * 
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */
@@ -233,6 +243,7 @@ public class TextImport {
 	
 	/**
 	 * Saves the new text to the .doc file.
+	 * 
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */
@@ -255,6 +266,7 @@ public class TextImport {
 	
 	/**
 	 * Saves the new text to the txt file.
+	 * 
 	 * @param file The file to save to
 	 * @param text The text to save.
 	 */

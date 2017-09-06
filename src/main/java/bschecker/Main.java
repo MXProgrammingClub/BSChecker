@@ -11,7 +11,7 @@ import bschecker.util.PerformanceMonitor;
 import bschecker.util.Tools;
 
 /**
- * The main class for the BSChecker
+ * The main class for the BSChecker.
  * 
  * @author MX Programming Club 2016-2017
  */
@@ -28,7 +28,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * initializes various static references for the project before the application is launched
+	 * Initializes various static references for the project before the application is launched.
 	 */
 	protected static void initialize() {
 		PerformanceMonitor.start("init");

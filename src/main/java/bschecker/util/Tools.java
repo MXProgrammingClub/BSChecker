@@ -20,7 +20,8 @@ import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.model.BaseModel;
 
 /**
- * A class which holds all the openNLP tools
+ * Manages all the openNLP tools.
+ * 
  * @author JeremiahDeGreeff
  */
 public class Tools {
@@ -33,40 +34,35 @@ public class Tools {
 	
 	
 	/**
-	 * accessor method for the openNLP sentenceDetector
-	 * @return the openNLP sentenceDetector as initialized by the setupOpenNLP() method
+	 * @return the openNLP sentenceDetector
 	 */
 	public static SentenceDetectorME getSentenceDetector() {
 		return sentenceDetector;
 	}
 	
 	/**
-	 * accessor method for the openNLP nameFinder
-	 * @return the openNLP nameFinder as initialized by the setupOpenNLP() method
+	 * @return the openNLP nameFinder
 	 */
 	public static NameFinderME getNameFinder() {
 		return nameFinder;
 	}
 	
 	/**
-	 * accessor method for the openNLP tokenizer
-	 * @return the openNLP tokenizer as initialized by the setupOpenNLP() method
+	 * @return the openNLP tokenizer
 	 */
 	public static Tokenizer getTokenizer() {
 		return tokenizer;
 	}
 	
 	/**
-	 * accessor method for the openNLP posTagger
-	 * @return the openNLP posTagger as initialized by the setupOpenNLP() method
+	 * @return the openNLP posTagger
 	 */
 	public static POSTaggerME getPOSTagger() {
 		return posTagger;
 	}
 	
 	/**
-	 * accessor method for the openNLP parser
-	 * @return the openNLP parser as initialized by the setupOpenNLP() method
+	 * @return the openNLP parser
 	 */
 	public static Parser getParser() {
 		return parser;
@@ -74,7 +70,7 @@ public class Tools {
 	
 	
 	/**
-	 * Initializes all the necessary OpenNLP tools
+	 * Initializes all the necessary OpenNLP tools.
 	 */
 	public static void initializeOpenNLP() {
 		PerformanceMonitor.start("tools");
@@ -90,7 +86,8 @@ public class Tools {
 	}
 	
 	/**
-	 * private helper method for loading individual openNLP tools
+	 * Loads an individual openNLP tool.
+	 * 
 	 * @param tool a character from ['s', 'n', 't', 'o', 'p'] which corresponds to a tool
 	 * @param file the file which contains the model to me loaded
 	 * @return a BaseModel which holds the loaded file

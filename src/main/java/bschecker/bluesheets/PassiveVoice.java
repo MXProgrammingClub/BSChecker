@@ -10,15 +10,16 @@ import opennlp.tools.parser.Parse;
 
 /**
  * Finds verbs in the passive voice. (9)
+ * 
  * @author JeremiahDeGreeff
  */
 public class PassiveVoice extends Bluesheet {
 	
 	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been", "being"};
 	
-	
 	/**
 	 * Finds all instances of passive voice in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note

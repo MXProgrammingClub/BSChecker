@@ -9,6 +9,7 @@ import opennlp.tools.parser.Parse;
 
 /**
  * Finds errors in quotation form. (14)
+ * 
  * @author Julia
  * @author JeremiahDeGreeff
  */
@@ -18,6 +19,7 @@ public class QuotationForm extends Bluesheet {
 
 	/**
 	 * Finds all errors with quotation form in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
@@ -48,6 +50,7 @@ public class QuotationForm extends Bluesheet {
 
 	/**
 	 * Finds errors in running in the quotation.
+	 * 
 	 * @param tokens The tokens from the nlp tokenizer.
 	 * @param start The starting index of the quotation.
 	 * @param end The ending index of the quotation
@@ -68,6 +71,7 @@ public class QuotationForm extends Bluesheet {
 
 	/**
 	 * Finds errors in citing the quotation.
+	 * 
 	 * @param tokens The tokens from the nlp tokenizer.
 	 * @param start The starting index of the quotation.
 	 * @param end The ending index of the quotation
@@ -86,7 +90,8 @@ public class QuotationForm extends Bluesheet {
 	}
 	
 	/**
-	 * an enum which defines possible types of quotation form errors
+	 * Defines possible types of quotation form errors.
+	 * 
 	 * @author JeremiahDeGreeff
 	 */
 	private enum ErrorTypes {

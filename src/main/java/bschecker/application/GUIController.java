@@ -28,20 +28,13 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.stage.Stage;
 
 /**
- * This is the class that connects the GUI with the rest of the program.
+ * Connects the main GUI of the Application with the rest of the program.
  * 
  * @author Luke Giacalone
  * @author JeremiahDeGreeff
  */
 
 public class GUIController {
-	
-	@FXML
-	private StyleClassedTextArea essayBox;
-	@FXML
-	private StyleClassedTextArea errorBox;
-	@FXML
-	private StyleClassedTextArea noteBox;
 	
 	@FXML
 	private CheckMenuItem menuBluesheet1;
@@ -73,10 +66,18 @@ public class GUIController {
 	private CheckMenuItem menuBluesheet14;
 	
 	@FXML
+	private StyleClassedTextArea essayBox;
+	@FXML
+	private StyleClassedTextArea errorBox;
+	@FXML
+	private StyleClassedTextArea noteBox;
+	
+	@FXML
 	private JFXButton analyzeButton;
 	
-	private int currError = 0;
 	private ErrorList errors = new ErrorList(null, false);
+	private int currError = 0;
+	
 	private File file;
 	private String clipboard = "";
 	
@@ -93,7 +94,9 @@ public class GUIController {
 		Scene scene = new Scene(root, 1000, 656);
 		scene.getStylesheets().add(getClass().getResource(Paths.APPLICATION_STYLESHEET).toExternalForm());
 		
-		setDefaultText();
+		essayBox.replaceText("Insert Essay Here");
+		errorBox.replaceText("No Error Selected");
+		noteBox.replaceText("No Error Selected");
 		loadSettings();
 		
 		primaryStage.setTitle("BSChecker");
@@ -347,28 +350,9 @@ public class GUIController {
 	@FXML
 	private void menuAboutClick() {/* HELP->ABOUT ACTION */}
 	
-	
 	/**
-	 * This method sets default "empty" text for the Text Areas
-	 */
-	public void setDefaultText() {
-		essayBox.replaceText("Insert Essay Here");
-		errorBox.replaceText("No Error Selected");
-		noteBox.replaceText("No Error Selected");
-	}
-	
-	/**
-	 * loads the settings into the checkedMenuItems for each bluesheet from the Bluesheets enum
-	 */
-	public void loadSettings() {
-		LogHelper.getLogger(0).info("Loading settings into the menu");
-		boolean[] settings = Settings.getSettings();
-		for(int i = 0; i < 14; i++)
-			getMenuBluesheet(i + 1).setSelected(settings[i]);
-	}
-	
-	/**
-	 * accessor for a bluesheet's CheckMenuItem based on its number
+	 * Accessor for a bluesheet's CheckMenuItem based on its number.
+	 * 
 	 * @param number the number of the bluesheet
 	 * @return the CheckMenuItem for that bluesheet's setting
 	 */
@@ -393,9 +377,10 @@ public class GUIController {
 	}
 	
 	/**
-	 * a method to be called whenever a bluesheet CheckMenuItem is clicked
-	 * it reverses the setting in the bluesheets Enum and gives a warning if the bluesheet is not fully available
-	 * @param number the number of the bluesheet which was clicked
+	 * This method is called whenever a bluesheet's CheckMenuItem is clicked.
+	 * It reverses the corresponding setting in {@link Settings} and gives a warning if the bluesheet is not fully available.
+	 * 
+	 * @param number the number corresponding to the bluesheet which was clicked
 	 */
 	private void menuBluesheetClick(int number) {
 		Settings.reverseSetting(number);
@@ -434,39 +419,8 @@ public class GUIController {
 	}
 	
 	/**
-	 * Displays the current error.
-	 */
-	private void displayError() {
-		essayBox.positionCaret(errors.get(currError).getStartIndex());
-		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "dark-red");
-		Bluesheets b = Bluesheets.getBluesheetFromNumber(errors.get(currError).getBluesheetNumber());
-		errorBox.replaceText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
-		noteBox.replaceText(errors.get(currError).getNote().equals("") ? "No note was found for this error." : errors.get(currError).getNote());
-	}
-	
-	/**
-	 * Resets the color of the current error to the lighter color
-	 */
-	private void resetCurrentColor() {
-		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "light-red");
-	}
-	
-	/**
-	 * creates an alert
-	 * @param type the type of the alert
-	 * @param title the title of the alert
-	 * @param content the body text of the alert
-	 */
-	private void alert(AlertType type, String title, String content) {
-		Alert a = new Alert(type);
-		a.setTitle(title);
-		a.setHeaderText(null);
-		a.setContentText(content);
-		a.showAndWait();
-	}
-	
-	/**
-	 * runs the analysis of the passed text using a Task on a separate Thread
+	 * Runs the analysis of the passed text using a Task on a separate thread.
+	 * 
 	 * @param text the text to analyze
 	 */
 	private void runAnalyze(final String text) {
@@ -508,6 +462,49 @@ public class GUIController {
 		
 		Thread thread = new Thread(task, "Analyze");
 		thread.start();
+	}
+	
+	/**
+	 * Displays the current error.
+	 */
+	private void displayError() {
+		essayBox.positionCaret(errors.get(currError).getStartIndex());
+		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "dark-red");
+		Bluesheets b = Bluesheets.getBluesheetFromNumber(errors.get(currError).getBluesheetNumber());
+		errorBox.replaceText(b.getName() + "\n\n" + b.getDescription() + "\n\n" + b.getExample());
+		noteBox.replaceText(errors.get(currError).getNote().equals("") ? "No note was found for this error." : errors.get(currError).getNote());
+	}
+	
+	/**
+	 * Resets the color of the current error to the lighter color.
+	 */
+	private void resetCurrentColor() {
+		essayBox.setStyleClass(errors.get(currError).getStartIndex(), errors.get(currError).getEndIndex() + 1, "light-red");
+	}
+	
+	/**
+	 * Loads the settings into the checkedMenuItems for each bluesheet from {@link Settings}.
+	 */
+	private void loadSettings() {
+		LogHelper.getLogger(0).info("Loading settings into the menu");
+		boolean[] settings = Settings.getSettings();
+		for(int i = 0; i < 14; i++)
+			getMenuBluesheet(i + 1).setSelected(settings[i]);
+	}
+	
+	/**
+	 * Creates an alert.
+	 * 
+	 * @param type the type of the alert
+	 * @param title the title of the alert
+	 * @param content the body text of the alert
+	 */
+	private void alert(AlertType type, String title, String content) {
+		Alert a = new Alert(type);
+		a.setTitle(title);
+		a.setHeaderText(null);
+		a.setContentText(content);
+		a.showAndWait();
 	}
 	
 }

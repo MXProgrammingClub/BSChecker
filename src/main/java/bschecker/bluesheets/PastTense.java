@@ -8,6 +8,7 @@ import opennlp.tools.parser.Parse;
 
 /**
  * Finds verbs in the past tense. (1)
+ * 
  * @author Leo
  * @author tedpyne
  * @author JeremiahDeGreeff
@@ -19,6 +20,7 @@ public class PastTense extends Bluesheet {
 	
 	/**
 	 * Finds all instances of past tense in a paragraph.
+	 * 
 	 * @param line the paragraph in which to find errors
 	 * @param parses a Parse array of each sentence of the line
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note

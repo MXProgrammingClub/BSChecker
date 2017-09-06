@@ -6,12 +6,17 @@ import org.apache.logging.log4j.Logger;
 import bschecker.bluesheets.Bluesheet;
 import bschecker.bluesheets.Bluesheets;
 
+/**
+ * Manages all loggers used by the project.
+ * 
+ * @author JeremiahDeGreeff
+ */
 public class LogHelper {
 	
 	private static Logger[] loggers = new Logger[19];
 	
 	/**
-	 * initializes all the loggers used by the project
+	 * Initializes all the loggers used by the project.
 	 */
 	public static void init() {
 		loggers[0] = LogManager.getLogger("Init");
@@ -25,7 +30,6 @@ public class LogHelper {
 	}
 	
 	/**
-	 * returns the logger at the passed index
 	 * @param number the number of the desired logger:
 	 * 0 for Init
 	 * 1-14 for each bluesheet
@@ -43,16 +47,15 @@ public class LogHelper {
 	}
 	
 	/**
-	 * returns the logger associated with the passed Bluesheet object
-	 * @param object the Bluesheet object whose logger should be returned
-	 * @return the logger corresponding to this Bluesheet
+	 * @param object the Bluesheet object whose logger is desired
+	 * @return the desired logger
 	 */
 	public static Logger getLogger(Bluesheet object) {
 		return loggers[Bluesheets.getNumber(object)];
 	}
 	
 	/**
-	 * prints a blank line to the log
+	 * prints a blank line to the console
 	 */
 	public static void line() {
 		System.out.println();
