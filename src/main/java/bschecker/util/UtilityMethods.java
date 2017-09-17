@@ -308,6 +308,22 @@ public class UtilityMethods {
 	}
 	
 	/**
+	 * Finds the next node in the Parse that is a sibling of this node.
+	 * Ignores any nodes whose type is included in the passed array.
+	 * 
+	 * @param parse the Parse to traverse
+	 * @param ignore a String[] of types to ignore
+	 * @return the Parse of the next sibling which is not ignored, null if no such node is found
+	 */
+	public static Parse getNextSibling(Parse parse, String[] ignore) {
+		Parse[] siblings = parse.getParent().getChildren();
+		int siblingIndex = getSiblingIndex(parse) + 1;
+		while(siblingIndex < siblings.length && arrayContains(ignore, siblings[siblingIndex].getType()))
+			siblingIndex++;
+		return siblingIndex < siblings.length ? siblings[siblingIndex] : null;
+	}
+	
+	/**
 	 * Removes Errors from an ErrorList which occur inside of quotes.
 	 * 
 	 * @param errors the ErrorList to be examined which covers <em>only one</em> sentence

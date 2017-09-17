@@ -19,6 +19,8 @@ import opennlp.tools.parser.Parse;
  */
 public class PronounCase extends Bluesheet {
 	
+	private static final String[] TO_BE_CONJ = {"is", "are", "was", "were", "will be", "has been", "have been", "had been", "will have been", "is being", "are being", "were being"};
+	
 	/**
 	 * Finds all errors in pronoun case in a paragraph.
 	 * 
@@ -100,7 +102,8 @@ public class PronounCase extends Bluesheet {
 			following = following.getParent().getChildren()[1];
 		else if(following.getType().equals("S"))
 			following = following.getChildren()[0];
-		return following.getType().equals("NP") ? Cases.OBJECTIVE : following.getType().equals("VP") ? Cases.SUBJECTIVE : Cases.UNDETERMINED;
+		Parse next = UtilityMethods.getNextSibling(following, new String[] {"ADVP"});
+		return following.getType().equals("VP") || following.getType().equals("NP") && next != null && next.getType().equals("VP") && UtilityMethods.arrayContains(TO_BE_CONJ, next.getCoveredText()) ? Cases.SUBJECTIVE : following.getType().equals("NP") ? Cases.OBJECTIVE : Cases.UNDETERMINED;
 	}
 	
 	/**
