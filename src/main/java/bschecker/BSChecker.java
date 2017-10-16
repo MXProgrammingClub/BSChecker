@@ -8,8 +8,10 @@ import java.util.ArrayList;
 
 import bschecker.bluesheets.Bluesheet;
 import bschecker.reference.Settings;
+import bschecker.reference.VerbSet;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
+import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.cmdline.postag.POSModelLoader;
@@ -55,8 +57,11 @@ public class BSChecker {
 //		findNames(input);
 //		parse(input);
 		
-		Main.initialize();
+		LogHelper.init();
+		Tools.initializeOpenNLP();
 		Settings.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
+		VerbSet.importVerbs();
+		
 		LogHelper.line();
 		LogHelper.getLogger(15).info("input:\t" + input);
 		ErrorList errors = Bluesheet.findAllErrors(input, true, null);

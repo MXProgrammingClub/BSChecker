@@ -17,20 +17,10 @@ import bschecker.util.Tools;
  */
 public class Main extends Application {
 	
-	public static void main(String[] args) {
-		launch(args);
-	}
-	
-	public void start(Stage primaryStage) {
-		initialize();
-		LogHelper.getLogger(15).info("Starting the Application");
-		new GUIController(primaryStage);
-	}
-	
 	/**
 	 * Initializes various static references for the project before the application is launched.
 	 */
-	protected static void initialize() {
+	public void init() {
 		PerformanceMonitor.start("init");
 		LogHelper.init();
 		LogHelper.line();
@@ -44,6 +34,11 @@ public class Main extends Application {
 		LogHelper.line();
 		LogHelper.getLogger(0).info("Initialization Completed in " + PerformanceMonitor.stop("init"));
 		LogHelper.line();
+	}
+	
+	public void start(Stage primaryStage) {
+		LogHelper.getLogger(15).info("Starting the Application");
+		new GUIController(primaryStage);
 	}
 	
 }
