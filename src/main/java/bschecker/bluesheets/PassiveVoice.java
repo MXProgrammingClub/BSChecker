@@ -34,12 +34,14 @@ public class PassiveVoice extends Bluesheet {
 			ArrayList<Parse> vpParses = UtilityMethods.findParsesWithTag(parse, new String[] {"VP"});
 			for(Parse vpParse : vpParses)
 				if(vpParse.getChildCount() > 1 && UtilityMethods.arrayContains(TO_BE_CONJ, vpParse.getChildren()[0].getCoveredText())) {
-					int i = 1;
-					while(vpParse.getChildren()[i].getType().equals("ADVP"))
+					int i = 1, tokenCount = 1;
+					while(vpParse.getChildren()[i].getType().equals("ADVP")) {
 						i++;
+						tokenCount += vpParse.getChildren()[i].getChildCount();
+					}
 					if(vpParse.getChildren()[i].getType().equals("VP") && vpParse.getChildren()[i].getChildren()[0].getType().equals("VBN")) {
 						int start = UtilityMethods.getIndexOfParse(vpParse.getChildren()[0].getChildren()[0]);
-						sentenceErrors.add(new Error(start, start + i));
+						sentenceErrors.add(new Error(start, start + tokenCount));
 					}
 				}
 			UtilityMethods.removeErrorsInQuotes(sentenceErrors, parse, false);
