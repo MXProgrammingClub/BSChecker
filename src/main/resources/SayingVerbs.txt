@@ -171,7 +171,6 @@ sobbed
 speculated
 sputtered
 stammered
-stated
 stipulated
 stressed
 stuttered
@@ -830,3 +829,15 @@ wish
 wishes
 wishing
 wished
+respond
+responds
+responding
+responded
+ask
+asks
+asking
+asked
+state
+states
+stating
+stated
