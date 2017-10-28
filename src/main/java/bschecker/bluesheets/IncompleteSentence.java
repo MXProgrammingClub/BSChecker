@@ -38,24 +38,31 @@ public class IncompleteSentence extends Bluesheet {
 						sentenceErrors.add(new Error(errorTokens[0], errorTokens[1] - 1, errorType));
 					}
 			}
+			
 			ArrayList<Parse> sParses = UtilityMethods.findParsesWithTag(parse, new String[] {"S"});
 			for(Parse sParse : sParses) {
 				LogHelper.getLogger(this).debug(sParse.getType() + ":\t" + sParse.getCoveredText());
 				Parse[] siblings = sParse.getParent().getChildren();
 				int siblingIndex = UtilityMethods.getSiblingIndex(sParse);
+				
 				//run-on in form IC CC IC
 				if(siblingIndex > 1 && siblings[siblingIndex - 1].getType().equals("CC") && !siblings[siblingIndex - 2].getType().equals(","))
 					//special case: preceding semicolons will be caught as fragments
 					//special case: AMBIGUOUS if follows a quote because the parsing is unreliable
 					if(!siblings[siblingIndex - 2].getType().equals(":") && !siblings[siblingIndex - 2].getCoveredText().endsWith(")") && !siblings[siblingIndex - 2].getCoveredText().endsWith("\""))
 						sentenceErrors.add(new Error(siblings[siblingIndex - 1].getChildren()[0], 0, "Run-on"));
+				
 				//comma-splice
-				if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 1].getType().equals(",") && siblings[siblingIndex + 2].getType().equals("S"))
-					//special case: not a comma splice if first clause is dependent, including the case where the first clause is dependent and contains two coordinated clauses
-					if(siblingIndex == 0 || !(siblingIndex > 0 && siblings[siblingIndex - 1].getType().equals("IN") || siblingIndex > 2 && siblings[siblingIndex - 1].getType().equals("CC") && siblings[siblingIndex - 2].getType().equals(",") && siblings[siblingIndex - 3].getType().equals("SBAR")))
-						//special case: not a comma splice if comma is introducing a quote or participial phrase
-						if(siblings[siblingIndex + 2].getCoveredText().charAt(0) != '\"' && !siblings[siblingIndex + 2].getChildren()[(siblings[siblingIndex + 2].getChildren()[0].getType().equals("ADVP") ? 1 : 0)].getChildren()[0].getType().equals("VBG"))
-							sentenceErrors.add(new Error(siblings[siblingIndex + 1].getChildren()[0], 0, "Comma-Splice"));
+				if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 1].getType().equals(",") && siblings[siblingIndex + 2].getType().equals("S")) {
+					//special case: not a comma splice if first clause ends with a nested dependent clause
+					Parse SBARparent = UtilityMethods.getParentWithTag(UtilityMethods.getPreviousToken(siblings[siblingIndex + 1], null), "SBAR");
+					if(SBARparent == null || UtilityMethods.getSiblingIndex(SBARparent) == 0 || !SBARparent.getParent().getChildren()[UtilityMethods.getSiblingIndex(SBARparent) - 1].getType().equals("IN"))
+						//special case: not a comma splice if first clause is dependent but contains two coordinated clauses
+						if(siblingIndex == 0 || !(siblings[siblingIndex - 1].getType().equals("IN") || siblingIndex > 2 && siblings[siblingIndex - 1].getType().equals("CC") && siblings[siblingIndex - 2].getType().equals(",") && siblings[siblingIndex - 3].getType().equals("SBAR")))
+							//special case: not a comma splice if comma is introducing a quote or participial phrase
+							if(siblings[siblingIndex + 2].getCoveredText().charAt(0) != '\"' && !siblings[siblingIndex + 2].getChildren()[(siblings[siblingIndex + 2].getChildren()[0].getType().equals("ADVP") ? 1 : 0)].getChildren()[0].getType().equals("VBG"))
+								sentenceErrors.add(new Error(siblings[siblingIndex + 1].getChildren()[0], 0, "Comma-Splice"));
+				}
 			}
 			ArrayList<Parse> scParses = UtilityMethods.findParsesWithTag(parse, new String[] {":"});
 			for(Parse scParse : scParses) {

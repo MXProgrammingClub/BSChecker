@@ -226,12 +226,24 @@ public class UtilityMethods {
 	
 	/**
 	 * Returns whether or not the passed Parse is within a particular tag.
+	 * 
 	 * @param parse the Parse to search
 	 * @param tag the tag to search for
 	 * @return true if the passed Parse occurs within the specified tag, false otherwise
 	 */
 	public static boolean parseHasParent(Parse parse, String tag) {
-		return !parse.getType().equals(AbstractBottomUpParser.TOP_NODE) && (parse.getParent().getType().equals(tag) || parseHasParent(parse.getParent(), tag));
+		return parse != null && !parse.getType().equals(AbstractBottomUpParser.TOP_NODE) && (parse.getParent().getType().equals(tag) || parseHasParent(parse.getParent(), tag));
+	}
+	
+	/**
+	 * Returns the nearest ancestor of the passed Parse which has a particular tag.
+	 * 
+	 * @param parse the Parse to search
+	 * @param tag the tag to search for
+	 * @return the nearest ancestor of the passed Parse which has the specified tag, null if no such ancestor exists
+	 */
+	public static Parse getParentWithTag(Parse parse, String tag) {
+		return parse == null || parse.getType().equals(AbstractBottomUpParser.TOP_NODE) ? null : parse.getParent().getType().equals(tag) ? parse.getParent() : getParentWithTag(parse.getParent(), tag);
 	}
 	
 	/**
@@ -266,6 +278,28 @@ public class UtilityMethods {
 	}
 	
 	/**
+	 * Finds the the first token node which occurs before this node.
+	 * Ignores any nodes whose type is included in the passed array.
+	 * 
+	 * @param parse the Parse to traverse
+	 * @param ignore a String[] of types to ignore
+	 * @return the Parse of the first token node which occurs before this node and whose type is not included in the passed array, null if no such node is found
+	 */
+	public static Parse getPreviousToken(Parse parse, String[] ignore) {
+		if(parse.getType().equals(AbstractBottomUpParser.TOP_NODE))
+			return null;
+		int siblingIndex = getSiblingIndex(parse);
+		if(siblingIndex > 0) {
+			Parse cursor = parse.getParent().getChildren()[siblingIndex - 1];
+			do cursor = cursor.getChildren()[cursor.getChildCount() - 1]; while(!cursor.getType().equals(AbstractBottomUpParser.TOK_NODE));
+			if(arrayContains(ignore, cursor.getParent().getType()))
+				return getPreviousToken(cursor, ignore);
+			return cursor;
+		}
+		return getPreviousToken(parse.getParent(), ignore);
+	}
+	
+	/**
 	 * Finds the the first token node which occurs after this node.
 	 * Ignores any nodes whose type is included in the passed array.
 	 * 
@@ -278,12 +312,11 @@ public class UtilityMethods {
 			return null;
 		int siblingIndex = getSiblingIndex(parse);
 		if(siblingIndex + 1 < parse.getParent().getChildCount()) {
-			Parse child = parse.getParent().getChildren()[siblingIndex + 1].getChildren()[0];
-			while(!child.getType().equals(AbstractBottomUpParser.TOK_NODE))
-				child = child.getChildren()[0];
-			if(arrayContains(ignore, child.getParent().getType()))
-				return getNextToken(child, ignore);
-			return child;
+			Parse cursor = parse.getParent().getChildren()[siblingIndex + 1];
+			do cursor = cursor.getChildren()[0]; while(!cursor.getType().equals(AbstractBottomUpParser.TOK_NODE));
+			if(arrayContains(ignore, cursor.getParent().getType()))
+				return getNextToken(cursor, ignore);
+			return cursor;
 		}
 		return getNextToken(parse.getParent(), ignore);
 	}
