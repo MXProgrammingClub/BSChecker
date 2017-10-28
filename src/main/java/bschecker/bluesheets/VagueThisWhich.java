@@ -3,6 +3,7 @@ package bschecker.bluesheets;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
+import bschecker.util.UtilityMethods;
 import opennlp.tools.parser.Parse;
 
 /**
@@ -26,9 +27,9 @@ public class VagueThisWhich extends Bluesheet {
 		
 		ErrorList errors = new ErrorList(line);
 		for(int i = 0; i < tokens.length; i++)
-			if(tokens[i].equalsIgnoreCase("this") && isVagueThis(tokens, tags, i))
+			if(tokens[i].equalsIgnoreCase("this") && isVagueThis(tags, i))
 				errors.add(new Error(i, "Vague this"));
-			else if(tokens[i].equalsIgnoreCase("which") && (i == 0 || (tags[i - 1].charAt(0) != 'N' && tags[i - 1].charAt(0) != 'I')))
+			else if(tokens[i].equalsIgnoreCase("which") && isVagueWhich(tags, i))
 				errors.add(new Error(i, "Vague which"));
 		return errors;
 	}
@@ -36,21 +37,33 @@ public class VagueThisWhich extends Bluesheet {
 	/**
 	 * Loops through tokens after "this" until a noun or verb is found.
 	 * 
-	 * @param tokens the tokens to look through
-	 * @param tags the tags of those tokens
+	 * @param tags the tags of the tokens in the sentence
 	 * @param index the index to start looking from
 	 * @return true if followed by verb and is thus vague, false if followed by noun and is thus not vague
 	 */
-	private boolean isVagueThis(String[] tokens, String[] tags, int index) {
-		if(index == tokens.length - 1)
-			return true;
-		for(int j = index + 1; j < tokens.length; j++){
-			if(tags[j].charAt(0) == 'N')
+	private boolean isVagueThis(String[] tags, int index) {
+		while(index < tags.length) {
+			if(tags[index].charAt(0) == 'N')
 				return false;
-			if(tags[j].charAt(0) == 'V' || tags[j].charAt(0) == '.' || tags[j].charAt(0) == ':')
+			else if(tags[index].charAt(0) == 'V' || tags[index].charAt(0) == '.' || tags[index].charAt(0) == ':')
 				return true;
+			index++;
 		}
 		return true;
+	}
+	
+	/**
+	 * Loops through any ignorable tokens before "which" to find a noun.
+	 * 
+	 * @param tags the tags of the tokens in the sentence
+	 * @param index the index to start looking from
+	 * @return false if preceded by a noun, true otherwise
+	 */
+	private boolean isVagueWhich(String[] tags, int index) {
+		if(index == 0)
+			return true;
+		do index--; while(UtilityMethods.arrayContains(new String[] {"-RRB-", "-LRB-", "''"}, tags[index]));
+		return tags[index].charAt(0) != 'N';
 	}
 	
 }
