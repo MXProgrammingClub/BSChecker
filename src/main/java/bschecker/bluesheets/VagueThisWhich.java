@@ -22,10 +22,9 @@ public class VagueThisWhich extends Bluesheet {
 	 */
 	@Override
 	protected ErrorList findErrors(String line, Parse[] parses) {
+		ErrorList errors = new ErrorList(line);
 		String[] tokens = Tools.getTokenizer().tokenize(line);
 		String[] tags = Tools.getPOSTagger().tag(tokens);
-		
-		ErrorList errors = new ErrorList(line);
 		for(int i = 0; i < tokens.length; i++)
 			if(tokens[i].equalsIgnoreCase("this") && isVagueThis(tags, i))
 				errors.add(new Error(i, "Vague this"));
@@ -39,7 +38,7 @@ public class VagueThisWhich extends Bluesheet {
 	 * 
 	 * @param tags the tags of the tokens in the sentence
 	 * @param index the index to start looking from
-	 * @return true if followed by verb and is thus vague, false if followed by noun and is thus not vague
+	 * @return false if followed by noun and is thus not vague, true if followed by verb and is thus vague
 	 */
 	private boolean isVagueThis(String[] tags, int index) {
 		while(index < tags.length) {
@@ -53,16 +52,15 @@ public class VagueThisWhich extends Bluesheet {
 	}
 	
 	/**
-	 * Loops through any ignorable tokens before "which" to find a noun.
+	 * Loops through any ignorable tokens before "which".
 	 * 
 	 * @param tags the tags of the tokens in the sentence
 	 * @param index the index to start looking from
 	 * @return false if preceded by a noun, true otherwise
 	 */
 	private boolean isVagueWhich(String[] tags, int index) {
-		if(index == 0)
-			return true;
-		do index--; while(UtilityMethods.arrayContains(new String[] {"-RRB-", "-LRB-", "''"}, tags[index]));
+		while(index > 0 && UtilityMethods.arrayContains(new String[] {"-RRB-", "-LRB-", "''"}, tags[index]))
+			index--;
 		return tags[index].charAt(0) != 'N';
 	}
 	

@@ -40,7 +40,7 @@ public class UtilityMethods {
 	 * @return the number of occurrences of target within text
 	 */
 	public static int countOccurences(String text, String target) {
-		return !text.contains(target) ? 0 : 1 + countOccurences(text.substring(text.indexOf(target) + 1), target);
+		return text == null || target == null || !text.contains(target) ? 0 : 1 + countOccurences(text.substring(text.indexOf(target) + 1), target);
 	}
 	
 	/**
@@ -181,10 +181,10 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * Returns the index in the sentence of the token of this parse.
+	 * Returns the index in the sentence of the token a parse.
 	 * 
 	 * @param parse the parse to traverse
-	 * @return the index in the sentence of the token of this parse
+	 * @return the index in the sentence of the token the parse
 	 * @throws IllegalArgumentException if the parse is not a token node
 	 */
 	public static int getIndexOfParse(Parse parse) {
@@ -194,10 +194,10 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * Counts the number of tokens which occur before the node of this parse.
+	 * Counts the number of tokens which occur before the node a parse.
 	 * 
 	 * @param parse the parse to traverse
-	 * @return the number of tokens which occur before the node of this parse
+	 * @return the number of tokens which occur before the node the parse
 	 */
 	private static int countPreceedingTokens(Parse parse) {
 		if(parse.getType().equals(AbstractBottomUpParser.TOP_NODE))

@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import bschecker.application.GUIController;
-import bschecker.reference.VerbSet;
+import bschecker.reference.VerbSets;
 import bschecker.reference.Settings;
 import bschecker.util.LogHelper;
 import bschecker.util.PerformanceMonitor;
@@ -30,7 +30,7 @@ public class Main extends Application {
 		LogHelper.line();
 		Settings.readSettings();
 		LogHelper.line();
-		VerbSet.importVerbs();
+		VerbSets.importSayingVerbs();
 		LogHelper.line();
 		LogHelper.getLogger(0).info("Initialization Completed in " + PerformanceMonitor.stop("init"));
 		LogHelper.line();

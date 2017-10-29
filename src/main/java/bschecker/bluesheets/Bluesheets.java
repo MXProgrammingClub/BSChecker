@@ -35,7 +35,7 @@ public enum Bluesheets {
 	AMBIGUOUS_PRONOUN (7, new AmbiguousPronoun(), "Ambiguous Pronoun",
 			"Avoid ambiguous pronouns.",
 			"(Incorrect) Oedipus and the shepherd argue about whether he should know the truth. \n(Correct) Oedipus and the shepherd argue about whether Oedipus should know the truth.",
-			Availability.INACCURATE),
+			Availability.UNAVAILABLE),
 	APOSTROPHE_ERROR (8, new Apostrophe(), "Apostrophe Error",
 			"Use an apostrophe to indicate possession, not to indicate that a noun is plural. Distinguish properly between its and it's.",
 			"(Incorrect) Longbourn is Elizabeth Bennets home. \n(Correct) Longbourn is Elizabeth Bennet's home.\n\n(Incorrect) The Bennet's are an eccentric family.(Correct) The Bennets are an eccentric family. ",
@@ -71,7 +71,7 @@ public enum Bluesheets {
 	private final String description;
 	private final String example;
 	private final String availibilityWarning;
-	
+	private final boolean isRunnable;
 	
 	Bluesheets(int number, Bluesheet object, String name, String description, String example, Availability availability) {
 		this.number = number;
@@ -80,8 +80,8 @@ public enum Bluesheets {
 		this.description = description;
 		this.example = example;
 		availibilityWarning = availability.description == null ? null : availability.description.replace("BluesheetName", name);
+		isRunnable = availability.isRunnable;
 	}
-	
 	
 	public int getNumber() {
 		return number;
@@ -105,6 +105,10 @@ public enum Bluesheets {
 
 	public String getAvailabilityWarning() {
 		return availibilityWarning;
+	}
+	
+	public boolean isRunnable() {
+		return isRunnable;
 	}
 
 	/**
@@ -142,14 +146,16 @@ public enum Bluesheets {
 	 */
 	private static enum Availability {
 		
-		AVAILABLE(null),
-		INACCURATE("Testing for BluesheetName currently has poor accuracy. Be cautious with trusting results at this time."),
-		UNAVAILABLE("Testing for BluesheetName is currently unavailable. It will not be tested when the text is analyzed.");
+		AVAILABLE(null, true),
+		INACCURATE("Testing for BluesheetName currently has poor accuracy. Be cautious with trusting results at this time.", true),
+		UNAVAILABLE("Testing for BluesheetName is currently unavailable. It cannot be tested at this time.", false);
 		
 		private final String description;
+		private final boolean isRunnable;
 		
-		Availability(String description) {
+		Availability(String description, boolean isRunnable) {
 			this.description = description;
+			this.isRunnable = isRunnable;
 		}
 	}
 	

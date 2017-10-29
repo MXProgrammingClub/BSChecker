@@ -1,7 +1,6 @@
 package bschecker.bluesheets;
 
-import java.util.ArrayList;
-
+import bschecker.reference.VerbSets;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
@@ -15,8 +14,6 @@ import opennlp.tools.parser.Parse;
  */
 public class PassiveVoice extends Bluesheet {
 	
-	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been", "being"};
-	
 	/**
 	 * Finds all instances of passive voice in a paragraph.
 	 * 
@@ -29,11 +26,9 @@ public class PassiveVoice extends Bluesheet {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
 		for(Parse parse : parses) {
-			String sentence = parse.getText();
-			ErrorList sentenceErrors = new ErrorList(sentence);
-			ArrayList<Parse> vpParses = UtilityMethods.findParsesWithTag(parse, new String[] {"VP"});
-			for(Parse vpParse : vpParses)
-				if(vpParse.getChildCount() > 1 && UtilityMethods.arrayContains(TO_BE_CONJ, vpParse.getChildren()[0].getCoveredText())) {
+			ErrorList sentenceErrors = new ErrorList(parse.getText());
+			for(Parse vpParse : UtilityMethods.findParsesWithTag(parse, new String[] {"VP"}))
+				if(vpParse.getChildCount() > 1 && UtilityMethods.arrayContains(VerbSets.TO_BE_CONJ, vpParse.getChildren()[0].getCoveredText())) {
 					int i = 1, tokenCount = 1;
 					while(vpParse.getChildren()[i].getType().equals("ADVP")) {
 						i++;

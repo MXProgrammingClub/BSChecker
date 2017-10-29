@@ -378,14 +378,18 @@ public class GUIController {
 	
 	/**
 	 * This method is called whenever a bluesheet's CheckMenuItem is clicked.
-	 * It reverses the corresponding setting in {@link Settings} and gives a warning if the bluesheet is not fully available.
+	 * It reverses the corresponding setting in {@link Settings} if the bluesheet is available,
+	 * and it gives a warning if the bluesheet has one.
 	 * 
 	 * @param number the number corresponding to the bluesheet which was clicked
 	 */
 	private void menuBluesheetClick(int number) {
-		Settings.reverseSetting(number);
 		if(Bluesheets.getBluesheetFromNumber(number).getAvailabilityWarning() != null && getMenuBluesheet(number).isSelected())
 			alert(AlertType.WARNING, "Warning", Bluesheets.getBluesheetFromNumber(number).getAvailabilityWarning());
+		if(Bluesheets.getBluesheetFromNumber(number).isRunnable())
+			Settings.reverseSetting(number);
+		else
+			getMenuBluesheet(number).setSelected(false);
 	}
 	
 	/**

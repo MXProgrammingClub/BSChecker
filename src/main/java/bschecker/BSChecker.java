@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import bschecker.bluesheets.Bluesheet;
 import bschecker.reference.Settings;
-import bschecker.reference.VerbSet;
+import bschecker.reference.VerbSets;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
 import bschecker.util.Tools;
@@ -49,7 +49,7 @@ import opennlp.tools.util.Span;
 public class BSChecker {
 	
 	public static void main(String[] args) throws InvalidFormatException, IOException {
-		String input = UtilityMethods.replaceInvalidChars("");
+		String input = UtilityMethods.replaceInvalidChars("I am being attacked");
 		
 //		Tokenize(input);
 //		SentenceDetect(input);
@@ -60,7 +60,7 @@ public class BSChecker {
 		LogHelper.init();
 		Tools.initializeOpenNLP();
 		Settings.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
-		VerbSet.importVerbs();
+		VerbSets.importSayingVerbs();
 		
 		LogHelper.line();
 		LogHelper.getLogger(15).info("input:\t" + input);

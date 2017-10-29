@@ -1,8 +1,6 @@
 package bschecker.bluesheets;
 
-import java.util.ArrayList;
-
-import bschecker.reference.VerbSet;
+import bschecker.reference.VerbSets;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
@@ -19,8 +17,6 @@ import opennlp.tools.parser.Parse;
  */
 public class PronounCase extends Bluesheet {
 	
-	private static final String[] TO_BE_CONJ = {"is", "are", "was", "were", "will be", "has been", "have been", "had been", "will have been", "is being", "are being", "were being"};
-	
 	/**
 	 * Finds all errors in pronoun case in a paragraph.
 	 * 
@@ -33,9 +29,8 @@ public class PronounCase extends Bluesheet {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
 		for(Parse parse: parses) {
-			for(Types type : Types.values()) {
-				ArrayList<Parse> pronounParses = UtilityMethods.findParsesWithTag(parse, type.TAGS);
-				for(Parse pronounParse : pronounParses)
+			for(Types type : Types.values())
+				for(Parse pronounParse : UtilityMethods.findParsesWithTag(parse, type.TAGS))
 					if(!UtilityMethods.arrayContains(type.IGNORE, pronounParse.getCoveredText())) {
 						Cases pronounCase = type == Types.PERSONAL ? getCorrectPersonalCase(pronounParse) : getCorrectRelativeCase(pronounParse);
 						if(pronounCase == Cases.UNDETERMINED)
@@ -46,7 +41,6 @@ public class PronounCase extends Bluesheet {
 								errors.add(new Error(pronounParse.getChildren()[0], tokenOffset, "Should be " + pronounCase.toString().toLowerCase() + " pronoun."));
 						}
 					}
-			}
 			tokenOffset += Tools.getTokenizer().tokenize(parse.getText()).length;
 		}
 		
@@ -67,22 +61,22 @@ public class PronounCase extends Bluesheet {
 			tags[i] = siblings[siblingIndex + 1 + i].getCoveredText().equals("\"") ? "" : siblings[siblingIndex + 1 + i].getType().length() > 1 ? siblings[siblingIndex + 1 + i].getType().substring(0, 2) : siblings[siblingIndex + 1 + i].getType();
 		Parse nextTokenIgnoreAdverbs = UtilityMethods.getNextToken(personalParse, new String[]{"RB"});
 		if(UtilityMethods.arrayContains(tags, "NN")
-			|| nextTokenIgnoreAdverbs != null && nextTokenIgnoreAdverbs.getParent().getType().equals("VBG"))
+				|| nextTokenIgnoreAdverbs != null && nextTokenIgnoreAdverbs.getParent().getType().equals("VBG"))
 			return Cases.POSSESSIVE;
 		
 		Parse nextToken = UtilityMethods.getNextToken(personalParse, null);
 		if(personalParse.getParent().getParent().getType().equals("VP")
-		|| personalParse.getParent().getParent().getType().equals("PP")
-		|| nextToken != null && nextToken.getParent().getType().equals("TO")
-		|| personalParse.getParent().getParent().getParent().getType().equals("VP") && personalParse.getParent().getParent().getParent().getChildren()[UtilityMethods.getSiblingIndex(personalParse.getParent().getParent()) - 1].getType().charAt(0) == 'V'
-		|| !personalParse.getParent().getParent().getParent().getType().equals(AbstractBottomUpParser.TOP_NODE) && personalParse.getParent().getParent().getParent().getParent().getType().equals("VP") && personalParse.getParent().getParent().getParent().getType().equals("SBAR") && personalParse.getParent().getParent().getParent().getSpan().getStart() == personalParse.getSpan().getStart() && !VerbSet.getVerbSet().contains(personalParse.getParent().getParent().getParent().getParent().getChildren()[0].getCoveredText()))
+				|| personalParse.getParent().getParent().getType().equals("PP")
+				|| nextToken != null && nextToken.getParent().getType().equals("TO")
+				|| personalParse.getParent().getParent().getParent().getType().equals("VP") && personalParse.getParent().getParent().getParent().getChildren()[UtilityMethods.getSiblingIndex(personalParse.getParent().getParent()) - 1].getType().charAt(0) == 'V'
+				|| !personalParse.getParent().getParent().getParent().getType().equals(AbstractBottomUpParser.TOP_NODE) && personalParse.getParent().getParent().getParent().getParent().getType().equals("VP") && personalParse.getParent().getParent().getParent().getType().equals("SBAR") && personalParse.getParent().getParent().getParent().getSpan().getStart() == personalParse.getSpan().getStart() && !VerbSets.getSayingVerbs().contains(personalParse.getParent().getParent().getParent().getParent().getChildren()[0].getCoveredText()))
 			return Cases.OBJECTIVE;
 		
 		Parse parent = personalParse.getParent();
 		while(parent.getType().equals("NP"))
 			parent = parent.getParent();
 		if(parent.getType().equals("S")
-		|| UtilityMethods.getNextNode(personalParse.getChildren()[0]).getType().equals("VP"))
+				|| UtilityMethods.getNextNode(personalParse.getChildren()[0]).getType().equals("VP"))
 			return Cases.SUBJECTIVE;
 		if(parent.getType().equals("PP"))
 			return Cases.OBJECTIVE;
@@ -103,7 +97,7 @@ public class PronounCase extends Bluesheet {
 		else if(following.getType().equals("S"))
 			following = following.getChildren()[0];
 		Parse next = UtilityMethods.getNextSibling(following, new String[] {"ADVP"});
-		return following.getType().equals("VP") || following.getType().equals("NP") && next != null && next.getType().equals("VP") && UtilityMethods.arrayContains(TO_BE_CONJ, next.getCoveredText()) ? Cases.SUBJECTIVE : following.getType().equals("NP") ? Cases.OBJECTIVE : Cases.UNDETERMINED;
+		return following.getType().equals("VP") || following.getType().equals("NP") && next != null && next.getType().equals("VP") && UtilityMethods.arrayContains(VerbSets.TO_BE_CONJ, next.getCoveredText()) ? Cases.SUBJECTIVE : following.getType().equals("NP") ? Cases.OBJECTIVE : Cases.UNDETERMINED;
 	}
 	
 	/**

@@ -7,7 +7,7 @@ import opennlp.tools.parser.Parse;
  * WIP
  * Finds errors with verbs which don't agree in number with their subjects and pronouns which don't agree in number with their antecedents. (5)
  * 
- * @author
+ * @author JeremiahDeGreeff
  */
 public class NumberDisagreement extends Bluesheet {
 	

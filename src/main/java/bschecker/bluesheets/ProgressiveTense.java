@@ -1,5 +1,6 @@
 package bschecker.bluesheets;
 
+import bschecker.reference.VerbSets;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
@@ -12,9 +13,6 @@ import opennlp.tools.parser.Parse;
  * @author JeremiahDeGreeff
  */
 public class ProgressiveTense extends Bluesheet {
-	
-	private static final String[] TO_BE_CONJ = {"be", "am", "is", "are", "was", "were", "been"};
-	
 	
 	/**
 	 * Finds all instances of progressive tense in a paragraph.
@@ -33,7 +31,7 @@ public class ProgressiveTense extends Bluesheet {
 			String[] tokens = Tools.getTokenizer().tokenize(sentence);
 			String[] tags = Tools.getPOSTagger().tag(tokens);
 			for(int i = 1; i < tokens.length; i++)
-				if(UtilityMethods.arrayContains(TO_BE_CONJ, tokens[i]) && i != tokens.length - 1) {
+				if(UtilityMethods.arrayContains(VerbSets.TO_BE_CONJ, tokens[i]) && i != tokens.length - 1) {
 					int j = i + 1;
 					while(tags[j].equals("RB") && j < tokens.length) j++;
 					if(tags[j].equals("VBG"))

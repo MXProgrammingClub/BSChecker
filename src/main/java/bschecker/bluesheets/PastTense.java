@@ -1,5 +1,6 @@
 package bschecker.bluesheets;
 
+import bschecker.reference.VerbSets;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.Tools;
@@ -14,9 +15,6 @@ import opennlp.tools.parser.Parse;
  * @author JeremiahDeGreeff
  */
 public class PastTense extends Bluesheet {
-	
-	private static final String[] TO_HAVE_CONJ = {"have", "has", "had", "having"};
-	
 	
 	/**
 	 * Finds all instances of past tense in a paragraph.
@@ -41,7 +39,7 @@ public class PastTense extends Bluesheet {
 					int j = i - 1;
 					while(tags[j].equals("RB") && j > 0)
 						j--;
-					if(UtilityMethods.arrayContains(TO_HAVE_CONJ, tokens[j]))
+					if(UtilityMethods.arrayContains(VerbSets.TO_HAVE_CONJ, tokens[j]))
 						sentenceErrors.add(new Error(j, i));
 				}
 			for(int i = 0; i < sentenceErrors.size(); i++)

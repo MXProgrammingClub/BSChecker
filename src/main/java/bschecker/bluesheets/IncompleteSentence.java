@@ -1,7 +1,5 @@
 package bschecker.bluesheets;
 
-import java.util.ArrayList;
-
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
@@ -28,8 +26,7 @@ public class IncompleteSentence extends Bluesheet {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
 		for(Parse parse : parses) {
-			String sentence = parse.getText();
-			ErrorList sentenceErrors = new ErrorList(sentence);
+			ErrorList sentenceErrors = new ErrorList(parse.getText());
 			//either lone dependent clause (Fragment) or run-on in form DC IC
 			if(parse.getChildCount() > 0 && parse.getChildren()[0].getType().equals("SBAR")) {
 				String errorType = testLeadingSBAR(parse);
@@ -39,8 +36,7 @@ public class IncompleteSentence extends Bluesheet {
 					}
 			}
 			
-			ArrayList<Parse> sParses = UtilityMethods.findParsesWithTag(parse, new String[] {"S"});
-			for(Parse sParse : sParses) {
+			for(Parse sParse : UtilityMethods.findParsesWithTag(parse, new String[] {"S"})) {
 				LogHelper.getLogger(this).debug(sParse.getType() + ":\t" + sParse.getCoveredText());
 				Parse[] siblings = sParse.getParent().getChildren();
 				int siblingIndex = UtilityMethods.getSiblingIndex(sParse);
@@ -64,8 +60,8 @@ public class IncompleteSentence extends Bluesheet {
 								sentenceErrors.add(new Error(siblings[siblingIndex + 1].getChildren()[0], 0, "Comma-Splice"));
 				}
 			}
-			ArrayList<Parse> scParses = UtilityMethods.findParsesWithTag(parse, new String[] {":"});
-			for(Parse scParse : scParses) {
+			
+			for(Parse scParse : UtilityMethods.findParsesWithTag(parse, new String[] {":"})) {
 				Parse[] siblings = scParse.getParent().getChildren();
 				int siblingIndex = UtilityMethods.getSiblingIndex(scParse);
 				//fragment in form DC; IC or IC; DC
@@ -75,6 +71,7 @@ public class IncompleteSentence extends Bluesheet {
 				if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 1].getType().equals("CC") && siblings[siblingIndex + 2].getType().equals("S"))
 					sentenceErrors.add(new Error(siblings[siblingIndex + 1].getChildren()[0], 0, "Fragment"));
 			}
+			
 			UtilityMethods.removeErrorsInQuotes(sentenceErrors, parse, false);
 			errors.addAllWithOffset(sentenceErrors, tokenOffset);
 			tokenOffset += Tools.getTokenizer().tokenize(parse.getText()).length;
