@@ -225,22 +225,22 @@ public class UtilityMethods {
 	}
 	
 	/**
-	 * Returns whether or not the passed Parse is within a particular tag.
+	 * Returns whether or not the passed Parse has an ancestor with a particular tag.
 	 * 
 	 * @param parse the Parse to search
 	 * @param tag the tag to search for
-	 * @return true if the passed Parse occurs within the specified tag, false otherwise
+	 * @return true if the passed Parse has an ancestor with a node with the specified tag, false otherwise
 	 */
 	public static boolean parseHasParent(Parse parse, String tag) {
 		return parse != null && !parse.getType().equals(AbstractBottomUpParser.TOP_NODE) && (parse.getParent().getType().equals(tag) || parseHasParent(parse.getParent(), tag));
 	}
 	
 	/**
-	 * Returns the nearest ancestor of the passed Parse which has a particular tag.
+	 * Returns the nearest ancestor of the passed Parse with a particular tag.
 	 * 
 	 * @param parse the Parse to search
 	 * @param tag the tag to search for
-	 * @return the nearest ancestor of the passed Parse which has the specified tag, null if no such ancestor exists
+	 * @return the nearest ancestor of the passed Parse with the specified tag, null if no such ancestor exists
 	 */
 	public static Parse getParentWithTag(Parse parse, String tag) {
 		return parse == null || parse.getType().equals(AbstractBottomUpParser.TOP_NODE) ? null : parse.getParent().getType().equals(tag) ? parse.getParent() : getParentWithTag(parse.getParent(), tag);

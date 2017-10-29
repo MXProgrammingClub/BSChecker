@@ -53,14 +53,14 @@ public class IncompleteSentence extends Bluesheet {
 						sentenceErrors.add(new Error(siblings[siblingIndex - 1].getChildren()[0], 0, "Run-on"));
 				
 				//comma-splice
-				if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 1].getType().equals(",") && siblings[siblingIndex + 2].getType().equals("S")) {
-					//special case: not a comma splice if first clause ends with a nested dependent clause
-					Parse SBARparent = UtilityMethods.getParentWithTag(UtilityMethods.getPreviousToken(siblings[siblingIndex + 1], null), "SBAR");
-					if(SBARparent == null || UtilityMethods.getSiblingIndex(SBARparent) == 0 || !SBARparent.getParent().getChildren()[UtilityMethods.getSiblingIndex(SBARparent) - 1].getType().equals("IN"))
+				if(siblingIndex + 2 < siblings.length && siblings[siblingIndex + 1].getType().equals(",") && siblings[siblingIndex + 2].getType().equals("S"))
+					//special case: not a comma splice if comma is introducing a quote or participial phrase
+					if(siblings[siblingIndex + 2].getCoveredText().charAt(0) != '\"' && !siblings[siblingIndex + 2].getChildren()[(siblings[siblingIndex + 2].getChildren()[0].getType().equals("ADVP") ? 1 : 0)].getChildren()[0].getType().equals("VBG"))
 						//special case: not a comma splice if first clause is dependent but contains two coordinated clauses
-						if(siblingIndex == 0 || !(siblings[siblingIndex - 1].getType().equals("IN") || siblingIndex > 2 && siblings[siblingIndex - 1].getType().equals("CC") && siblings[siblingIndex - 2].getType().equals(",") && siblings[siblingIndex - 3].getType().equals("SBAR")))
-							//special case: not a comma splice if comma is introducing a quote or participial phrase
-							if(siblings[siblingIndex + 2].getCoveredText().charAt(0) != '\"' && !siblings[siblingIndex + 2].getChildren()[(siblings[siblingIndex + 2].getChildren()[0].getType().equals("ADVP") ? 1 : 0)].getChildren()[0].getType().equals("VBG"))
+						if(siblingIndex == 0 || !(siblings[siblingIndex - 1].getType().equals("IN") || siblingIndex > 2 && siblings[siblingIndex - 1].getType().equals("CC") && siblings[siblingIndex - 2].getType().equals(",") && siblings[siblingIndex - 3].getType().equals("SBAR"))) {
+							//special case: not a comma splice if first clause ends with a nested dependent clause
+							Parse SBARparent = UtilityMethods.getParentWithTag(UtilityMethods.getPreviousToken(siblings[siblingIndex + 1], null), "SBAR");
+							if(SBARparent == null || UtilityMethods.getSiblingIndex(SBARparent) == 0 || !SBARparent.getParent().getChildren()[UtilityMethods.getSiblingIndex(SBARparent) - 1].getType().equals("IN"))
 								sentenceErrors.add(new Error(siblings[siblingIndex + 1].getChildren()[0], 0, "Comma-Splice"));
 				}
 			}
