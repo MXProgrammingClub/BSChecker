@@ -49,7 +49,7 @@ import opennlp.tools.util.Span;
 public class BSChecker {
 	
 	public static void main(String[] args) throws InvalidFormatException, IOException {
-		String input = UtilityMethods.replaceInvalidChars("I am being attacked");
+		String input = UtilityMethods.replaceInvalidChars("");
 		
 //		Tokenize(input);
 //		SentenceDetect(input);

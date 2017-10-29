@@ -59,8 +59,9 @@ public class VagueThisWhich extends Bluesheet {
 	 * @return false if preceded by a noun, true otherwise
 	 */
 	private boolean isVagueWhich(String[] tags, int index) {
-		while(index > 0 && UtilityMethods.arrayContains(new String[] {"-RRB-", "-LRB-", "''"}, tags[index]))
-			index--;
+		if(index == 0)
+			return false;
+		do index--; while(index > 0 && UtilityMethods.arrayContains(new String[] {"-RRB-", "-LRB-", "''"}, tags[index]));
 		return tags[index].charAt(0) != 'N';
 	}
 	
