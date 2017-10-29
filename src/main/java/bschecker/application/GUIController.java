@@ -25,6 +25,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 
 /**
@@ -77,9 +79,7 @@ public class GUIController {
 	
 	private ErrorList errors = new ErrorList(null, false);
 	private int currError = 0;
-	
 	private File file;
-	private String clipboard = "";
 	
 	public GUIController(Stage primaryStage) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(Paths.APPLICATION_FXML));
@@ -185,29 +185,19 @@ public class GUIController {
 	 * The method that will be called when the Edit->Cut is clicked
 	 */
 	@FXML
-	private void menuCutClick() {
-		String temp = essayBox.getSelectedText();
-		if(!temp.equals("")) {
-			clipboard = temp;
-			essayBox.deleteText(essayBox.getSelection());
-		}
-	}
+	private void menuCutClick() {if(setSystemClipboard(essayBox.getSelectedText())) essayBox.deleteText(essayBox.getSelection());}
 
 	/**
 	 * The method that will be called when the Edit->Copy is clicked
 	 */
 	@FXML
-	private void menuCopyClick() {
-		String temp = essayBox.getSelectedText();
-		if(!temp.equals(""))
-			clipboard = temp;
-	}
+	private void menuCopyClick() {setSystemClipboard(essayBox.getSelectedText());}
 
 	/**
 	 * The method that will be called when the Edit->Paste is clicked
 	 */
 	@FXML
-	private void menuPasteClick() {essayBox.insertText(essayBox.getSelection().getEnd(), clipboard);}
+	private void menuPasteClick() {essayBox.insertText(essayBox.getSelection().getEnd(), Clipboard.getSystemClipboard().getString());}
 
 	/**
 	 * The method that will be called when the Edit->Select All is clicked
@@ -349,6 +339,23 @@ public class GUIController {
 	 */
 	@FXML
 	private void menuAboutClick() {/* HELP->ABOUT ACTION */}
+	
+	/**
+	 * Sets the text of the System Clipboard.
+	 * Overwrites any existing text.
+	 * Only operates if the input is non-null and not an empty string.
+	 * 
+	 * @param text the String to put on the Clipbaord
+	 * @return true if completed successfully, false otherwise
+	 */
+	private boolean setSystemClipboard(String text) {
+		if(text == null || text.equals(""))
+			return false;
+		ClipboardContent content = new ClipboardContent();
+		content.putString(text);
+		Clipboard.getSystemClipboard().setContent(content);
+		return true;
+	}
 	
 	/**
 	 * Accessor for a bluesheet's CheckMenuItem based on its number.
