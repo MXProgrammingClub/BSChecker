@@ -120,9 +120,10 @@ public class ErrorList extends ArrayList<Error> {
 	/**
 	 * Creates a new ErrorList whose Errors' indices are based on characters rather than tokens.
 	 * Should only be used on ErrorLists which pertain to single paragraphs.
+	 * Assumes the list of indices is sorted.
 	 * 
 	 * @param startChar the beginning of this paragraph relative to the entire input
-	 * @param ignoredChars indices of chars which have been removed from {@codeTEXT}
+	 * @param ignoredChars indices of chars which have been removed from {@code text}
 	 * @return an ErrorList which represents the same errors as this ErrorList but is based on characters rather than tokens
 	 */
 	public ErrorList tokensToChars(int startChar, ArrayList<Integer> ignoredChars) {

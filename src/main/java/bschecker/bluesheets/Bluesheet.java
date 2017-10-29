@@ -54,16 +54,12 @@ public abstract class Bluesheet {
 			line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
 			LogHelper.line();
 			LogHelper.getLogger(17).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
-			ArrayList<Integer> removedChars = new ArrayList<Integer>();
-			line = UtilityMethods.removeExtraPunctuation(line, charOffset, removedChars);
-			LogHelper.getLogger(17).info("Ignoring characters: " + removedChars);
 			
 			PerformanceMonitor.start("parse");
-			LogHelper.getLogger(18).info("Parsing line " + lineNum + "...");
-			String[] sentences = UtilityMethods.separateSentences(line);
-			Parse[] parses = new Parse[sentences.length];
-			for(int i = 0; i < sentences.length; i++)
-				parses[i] = UtilityMethods.parse(sentences[i], logParses);
+			ArrayList<Integer> removedChars = new ArrayList<Integer>();
+			String[] linePointer = new String[] {line};
+			Parse[] parses = UtilityMethods.parseLine(linePointer, logParses, lineNum, charOffset, removedChars);
+			line = linePointer[0];
 			LogHelper.getLogger(18).info("Complete (" + PerformanceMonitor.stop("parse") + ")");
 			
 			ErrorList lineErrors = new ErrorList(line, true);

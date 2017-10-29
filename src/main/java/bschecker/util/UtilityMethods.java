@@ -63,15 +63,55 @@ public class UtilityMethods {
 	}
 	
 	/**
+	 * Parses a paragraph and removes any extra punctuation from it.
+	 * Also handles parsing failures.
+	 * 
+	 * @param linePointer a pointer to the line to parse where linePointer[0] is the line - allows for changes to line to be accessed after method call
+	 * @param logParses if true, all Parse trees will be logged to the console - should only be used for debugging
+	 * @param lineNum the number of this line within the entire passage - used only for reporting parsing failures
+	 * @param charOffset the number of characters in the entire passage before the start of this line
+	 * @param removedChars an Integer ArrayList (probably empty) to which the location of any extra punctuation will be added
+	 * @return an array of the Parses of this line
+	 */
+	public static Parse[] parseLine(String[] linePointer, boolean logParses, int lineNum, int charOffset, ArrayList<Integer> removedChars) {
+		linePointer[0] = removeExtraPunctuation(linePointer[0], charOffset, removedChars);
+		LogHelper.getLogger(18).info("Ignoring characters: " + rangeFormat(removedChars));
+		
+		String[] sentences = separateSentences(linePointer[0]);
+		Parse[] parses = new Parse[sentences.length];
+		ArrayList<int[]> incompleteRanges = new ArrayList<int[]>();
+		for(int i = 0; i < sentences.length; i++) {
+			parses[i] = parse(sentences[i], logParses);
+			if(!parses[i].complete()) {
+				LogHelper.getLogger(18).error("Warning: parsing failure in sentence " + (i + 1) + " of line " + lineNum + " - this sentence will not be analyzed!"); //not zero-indexed
+				int characterOffset = 0;
+				for(int j = 0; j < i; j++)
+					characterOffset += sentences[j] == null ? 0 : sentences[j].length();
+				incompleteRanges.add(new int[] {characterOffset, characterOffset + sentences[i].length()});
+				sentences[i] = null;
+				parses[i] = null;
+			}
+		}
+		
+		if(!incompleteRanges.isEmpty()) {
+			parses = copyParsesWithRemoval(parses, incompleteRanges.size());
+			linePointer[0] = removeAdditionalRanges(linePointer[0], removedChars, incompleteRanges);
+			LogHelper.getLogger(18).info("Now ignoring characters: " + rangeFormat(removedChars));
+		}
+		
+		return parses;
+	}
+	
+	/**
 	 * Removes extra punctuation from the passed text that are found in quotations or parentheses.
-	 * Updates the passed ArrayList to include the indices of any removed characters.
+	 * Updates the passed ArrayList to include the indices of any removed characters in order.
 	 * 
 	 * @param line the text to remove punctuation from
 	 * @param startChar where this line starts relative to an entire passage
 	 * @param indices an ArrayList of Integers which represent the indices of any characters which are removed by the method
 	 * @return a String which is the same line without the extra punctuation
 	 */
-	public static String removeExtraPunctuation(String line, int startChar, ArrayList<Integer> indices) {
+	private static String removeExtraPunctuation(String line, int startChar, ArrayList<Integer> indices) {
 		StringBuffer buffer = new StringBuffer(line);
 		boolean inParentheses = false;
 		for(int i = 0; i < buffer.length(); i++) {
@@ -95,13 +135,68 @@ public class UtilityMethods {
 	}
 	
 	/**
+	 * Removes ranges of characters from a line and adds their indices to an ArrayList.
+	 * Assumes that the ranges are measured with the indices already ignored not being accounted for.
+	 * Expects all ranges to be int[2] where the first number is less than the second.
+	 * Expects the ranges to be sorted and not overlapping
+	 * 
+	 * @param line the line to remove ranges of characters from
+	 * @param indices the existing ArrayList of indices
+	 * @param newRanges the int[2] ranges of indices to add, indexed without account for those already in the ArrayList
+	 * @return line with the specified ranges removed
+	 */
+	private static String removeAdditionalRanges(String line, ArrayList<Integer> indices, ArrayList<int[]> newRanges) {
+		int offset = 0;
+		for(int i = 0; i < newRanges.size(); i++) {
+			line = line.substring(0, newRanges.get(i)[0]) + line.substring(newRanges.get(i)[1] + 1);
+			while(indices.get(offset) <= newRanges.get(i)[0] + offset)
+				offset++;
+			int insideOffset = 0;
+			while(offset + insideOffset < indices.size() && indices.get(offset + insideOffset) <= newRanges.get(i)[1] + offset + insideOffset)
+				insideOffset++;
+			for(int j = offset; j < offset + insideOffset; j++)
+				indices.remove(offset);
+			for(int j = offset; j <= offset + insideOffset + newRanges.get(i)[1] - newRanges.get(i)[0]; j++)
+				indices.add(j, newRanges.get(i)[0] + j);
+			offset += insideOffset + newRanges.get(i)[1] - newRanges.get(i)[0];
+			for(int j = i + 1; j < newRanges.size(); j++) {
+				newRanges.get(j)[0] -= (newRanges.get(i)[1] - newRanges.get(i)[0]);
+				newRanges.get(j)[1] -= (newRanges.get(i)[1] - newRanges.get(i)[0]);
+			}
+		}
+		return line;
+	}
+	
+	/**
+	 * Formats the string representation of an ArrayList of Integers to condense ranges of numbers.
+	 * Expects all elements in the ArrayList to be in order and unique.
+	 * 
+	 * @param indices the ArrayList of Integers to format
+	 * @return a formated string representing this ArrayList
+	 */
+	private static String rangeFormat(ArrayList<Integer> indices) {
+		StringBuffer buffer = new StringBuffer(indices.size() * 2); //arbitrary initial size
+		buffer.append('[');
+		for(int i = 0; i < indices.size(); i++) {
+			buffer.append(indices.get(i));
+			int j = i;
+			while(j + 1 < indices.size() && indices.get(j) + 1 == indices.get(j + 1))
+				j++;
+			String separator = j + 1 == indices.size() ? "]" : ", ";
+			buffer.append(i == j ? separator : "-" + indices.get(j) + separator);
+			i = j;
+		}
+		return buffer.toString();
+	}
+	
+	/**
 	 * Uses the opennlp SentenceDetector to separate a paragraph into sentences.
 	 * Tries to combine sentences which are separated due to having periods within quotes.
 	 * 
 	 * @param line the paragraph to separate
 	 * @return a String[] of the sentences in the paragraph
 	 */
-	public static String[] separateSentences(String line) {
+	private static String[] separateSentences(String line) {
 		ArrayList<String> sentences = new ArrayList<String>();
 		sentences.addAll(Arrays.asList(Tools.getSentenceDetector().sentDetect(line)));
 		boolean previousSentenceOdd = false;
@@ -131,7 +226,8 @@ public class UtilityMethods {
 	 * @param logParse if true, all Parse trees will be logged to the console - should only be used for debugging
 	 * @return the Parse of the input String
 	 */
-	public static Parse parse(String input, boolean logParse) {
+	private static Parse parse(String input, boolean logParse) {
+		LogHelper.getLogger(18).debug(input);
 		Parse p = new Parse(input, new Span(0, input.length()), AbstractBottomUpParser.INC_NODE, 1, 0);
 		Span[] spans = Tools.getTokenizer().tokenizePos(input);
 		for(int i = 0; i < spans.length; i++) {
@@ -142,6 +238,24 @@ public class UtilityMethods {
 		if(logParse)
 			p.showCodeTree();
 		return p;
+	}
+	
+	/**
+	 * Removes null parses from an array
+	 * 
+	 * @param parses the initial array
+	 * @param removeCount the number of Parses to be removed
+	 * @return a Parse[] with all null elements removed
+	 */
+	private static Parse[] copyParsesWithRemoval(Parse[] parses, int removeCount) {
+		Parse[] copyParses = new Parse[parses.length - removeCount];
+		int offset = 0;
+		for(int i = 0; i < copyParses.length; i++) {
+			while(parses[i + offset] == null)
+				offset++;
+			copyParses[i] = parses[i + offset];
+		}
+		return copyParses;
 	}
 	
 	/**
