@@ -56,12 +56,13 @@ public class PronounCase extends Bluesheet {
 	private static Cases getCorrectPersonalCase(Parse personalParse) {
 		Parse[] siblings = personalParse.getParent().getChildren();
 		int siblingIndex = UtilityMethods.getSiblingIndex(personalParse);
+		
 		String[] tags = new String[siblings.length - siblingIndex - 1];
 		for(int i = 0; i < tags.length; i++)
 			tags[i] = siblings[siblingIndex + 1 + i].getCoveredText().equals("\"") ? "" : siblings[siblingIndex + 1 + i].getType().length() > 1 ? siblings[siblingIndex + 1 + i].getType().substring(0, 2) : siblings[siblingIndex + 1 + i].getType();
-		Parse nextTokenIgnoreAdverbs = UtilityMethods.getNextToken(personalParse, new String[]{"RB"});
+		Parse nextTokenIgnoreAdverbsAdjectives = UtilityMethods.getNextToken(personalParse, new String[]{"RB", "JJ"});
 		if(UtilityMethods.arrayContains(tags, "NN")
-				|| nextTokenIgnoreAdverbs != null && nextTokenIgnoreAdverbs.getParent().getType().equals("VBG"))
+				|| nextTokenIgnoreAdverbsAdjectives != null && nextTokenIgnoreAdverbsAdjectives.getParent().getType().equals("VBG"))
 			return Cases.POSSESSIVE;
 		
 		Parse nextToken = UtilityMethods.getNextToken(personalParse, null);
