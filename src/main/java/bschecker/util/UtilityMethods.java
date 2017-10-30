@@ -182,10 +182,11 @@ public class UtilityMethods {
 			int j = i;
 			while(j + 1 < indices.size() && indices.get(j) + 1 == indices.get(j + 1))
 				j++;
-			String separator = j + 1 == indices.size() ? "]" : ", ";
+			String separator = j + 1 == indices.size() ? "" : ", ";
 			buffer.append(i == j ? separator : "-" + indices.get(j) + separator);
 			i = j;
 		}
+		buffer.append(']');
 		return buffer.toString();
 	}
 	

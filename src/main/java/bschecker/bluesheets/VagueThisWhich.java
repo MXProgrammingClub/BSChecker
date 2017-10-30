@@ -61,7 +61,7 @@ public class VagueThisWhich extends Bluesheet {
 	private boolean isVagueWhich(String[] tags, int index) {
 		if(index == 0)
 			return false;
-		do index--; while(index > 0 && UtilityMethods.arrayContains(new String[] {"-RRB-", "-LRB-", "''"}, tags[index]));
+		do index--; while(index > 0 && UtilityMethods.arrayContains(new String[] {"IN", "-RRB-", "-LRB-", "''", ","}, tags[index]));
 		return tags[index].charAt(0) != 'N';
 	}
 	

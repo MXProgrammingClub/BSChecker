@@ -131,7 +131,7 @@ public class PronounCase extends Bluesheet {
 	private static enum Types {
 		
 		PERSONAL(new String[] {"myself", "yourself", "himself", "herself", "itself", "one", "oneself", "ourselves", "themselves", "mine", "yours", "hers", "ours", "theirs"}, new String[] {"PRP", "PRP$", "WP$"}),
-		RELATIVE(new String[] {"what", "\""}, new String[] {"WP"});
+		RELATIVE(new String[] {"what", "that", "\""}, new String[] {"WP"});
 		
 		protected final String[] IGNORE;
 		protected final String[] TAGS;
