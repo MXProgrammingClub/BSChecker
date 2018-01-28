@@ -75,7 +75,7 @@ public class UtilityMethods {
 	 */
 	public static Parse[] parseLine(String[] linePointer, boolean logParses, int lineNum, int charOffset, ArrayList<Integer> removedChars) {
 		linePointer[0] = removeExtraPunctuation(linePointer[0], charOffset, removedChars);
-		LogHelper.getLogger(18).info("Ignoring characters: " + rangeFormat(removedChars));
+		LogHelper.getLogger(LogHelper.PARSE).info("Ignoring characters: " + rangeFormat(removedChars));
 		
 		String[] sentences = separateSentences(linePointer[0]);
 		Parse[] parses = new Parse[sentences.length];
@@ -83,7 +83,7 @@ public class UtilityMethods {
 		for(int i = 0; i < sentences.length; i++) {
 			parses[i] = parse(sentences[i], logParses);
 			if(!parses[i].complete()) {
-				LogHelper.getLogger(18).error("Warning: parsing failure in sentence " + (i + 1) + " of line " + lineNum + " - this sentence will not be analyzed!"); //not zero-indexed
+				LogHelper.getLogger(LogHelper.PARSE).error("Warning: parsing failure in sentence " + (i + 1) + " of line " + lineNum + " - this sentence will not be analyzed!"); //not zero-indexed
 				int characterOffset = 0;
 				for(int j = 0; j < i; j++)
 					characterOffset += sentences[j] == null ? 0 : sentences[j].length();
@@ -96,7 +96,7 @@ public class UtilityMethods {
 		if(!incompleteRanges.isEmpty()) {
 			parses = copyParsesWithRemoval(parses, incompleteRanges.size());
 			linePointer[0] = removeAdditionalRanges(linePointer[0], removedChars, incompleteRanges);
-			LogHelper.getLogger(18).info("Now ignoring characters: " + rangeFormat(removedChars));
+			LogHelper.getLogger(LogHelper.PARSE).info("Now ignoring characters: " + rangeFormat(removedChars));
 		}
 		
 		return parses;
@@ -228,7 +228,7 @@ public class UtilityMethods {
 	 * @return the Parse of the input String
 	 */
 	private static Parse parse(String input, boolean logParse) {
-		LogHelper.getLogger(18).debug(input);
+		LogHelper.getLogger(LogHelper.PARSE).debug(input);
 		Parse p = new Parse(input, new Span(0, input.length()), AbstractBottomUpParser.INC_NODE, 1, 0);
 		Span[] spans = Tools.getTokenizer().tokenizePos(input);
 		for(int i = 0; i < spans.length; i++) {
@@ -480,7 +480,7 @@ public class UtilityMethods {
 	 */
 	public static void removeErrorsInQuotes(ErrorList errors, Parse parse, boolean introducedOnly) {
 		if(!errors.getText().equals(parse.getText()))
-			LogHelper.getLogger(17).warn("ErrorList text and Parse text do not match - results will likely be inaccurate");
+			LogHelper.getLogger(LogHelper.ANALYZE).warn("ErrorList text and Parse text do not match - results will likely be inaccurate");
 		String text = parse.getText();
 		ArrayList<Span> quotes = new ArrayList<Span>();
 		int cursor = 0;

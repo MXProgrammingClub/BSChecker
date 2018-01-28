@@ -2,7 +2,6 @@ package bschecker.bluesheets;
 
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
-import bschecker.util.LogHelper;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.parser.Parse;
@@ -22,7 +21,7 @@ public class IncompleteSentence extends Bluesheet {
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, Parse[] parses) {
+	public ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
 		for(Parse parse : parses) {
@@ -37,7 +36,7 @@ public class IncompleteSentence extends Bluesheet {
 			}
 			
 			for(Parse sParse : UtilityMethods.findParsesWithTag(parse, new String[] {"S"})) {
-				LogHelper.getLogger(this).debug(sParse.getType() + ":\t" + sParse.getCoveredText());
+				getLogger().debug(sParse.getType() + ":\t" + sParse.getCoveredText());
 				Parse[] siblings = sParse.getParent().getChildren();
 				int siblingIndex = UtilityMethods.getSiblingIndex(sParse);
 				

@@ -24,7 +24,7 @@ public class ProgressDialogController {
 	
 	private final Stage stage = new Stage();;
 	
-	protected ProgressDialogController() {
+	public ProgressDialogController() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(Paths.PROGRESS_DIALOG_FXML));
 		loader.setController(this);
 		
@@ -32,7 +32,7 @@ public class ProgressDialogController {
 		stage.setResizable(false);
 		try {stage.setScene(new Scene(loader.load(), 300, 100));}
 		catch (IOException e) {
-			LogHelper.getLogger(17).error("ProgressDialog Failed to load");
+			LogHelper.getLogger(LogHelper.ANALYZE).error("ProgressDialog Failed to load");
 			e.printStackTrace();
 		}
 	}
@@ -42,7 +42,7 @@ public class ProgressDialogController {
 	 * 
 	 * @param task the Task whose progress will be displayed
 	 */
-	protected void activateProgressBar(Task<?> task) {
+	public void activateProgressBar(Task<?> task) {
 		progressBar.progressProperty().bind(task.progressProperty());
 		stage.setOnCloseRequest(event -> {task.cancel();});
 		stage.show();
@@ -51,7 +51,7 @@ public class ProgressDialogController {
 	/**
 	 * Closes the dialog.
 	 */
-	protected void close() {
+	public void close() {
 		stage.close();
 	}
 	

@@ -55,7 +55,7 @@ public class TextImport {
 		case ".doc": return importDoc(file);
 		case ".txt": return importTxt(file);
 		default:
-			LogHelper.getLogger(16).error("Invalid file");
+			LogHelper.getLogger(LogHelper.IO).error("Invalid file");
 			return null;
 		}
 	}
@@ -78,7 +78,7 @@ public class TextImport {
 			return text;
 		}
 		catch (IOException e) {
-			LogHelper.getLogger(16).error("Failed to open file.");
+			LogHelper.getLogger(LogHelper.IO).error("Failed to open file.");
 			e.printStackTrace();
 			return null;
 		}
@@ -102,7 +102,7 @@ public class TextImport {
 			return text;
 		}
 		catch (IOException e) {
-			LogHelper.getLogger(16).error("Failed to open file.");
+			LogHelper.getLogger(LogHelper.IO).error("Failed to open file.");
 			e.printStackTrace();
 			return null;
 		}
@@ -125,7 +125,7 @@ public class TextImport {
 			return text;
 		}
 		catch(FileNotFoundException e) {
-			LogHelper.getLogger(16).error("Failed to open file.");
+			LogHelper.getLogger(LogHelper.IO).error("Failed to open file.");
 			e.printStackTrace();
 			return null;
 		}
@@ -154,9 +154,9 @@ public class TextImport {
 					document.write(f);
 					document.close();
 					if(saveDocx(file, text))
-						LogHelper.getLogger(16).info("text successfully saved as " + file.getName());
+						LogHelper.getLogger(LogHelper.IO).info("text successfully saved as " + file.getName());
 				} catch (IOException e) {
-					LogHelper.getLogger(16).error("Failed to save file.");
+					LogHelper.getLogger(LogHelper.IO).error("Failed to save file.");
 					e.printStackTrace();
 				}
 				break;
@@ -164,15 +164,15 @@ public class TextImport {
 				try {
 					createEmptyDoc(file);
 					if(saveDoc(file, text))
-						LogHelper.getLogger(16).info("text successfully saved as " + file.getName());
+						LogHelper.getLogger(LogHelper.IO).info("text successfully saved as " + file.getName());
 				} catch (IOException e) {
-					LogHelper.getLogger(16).error("Failed to save file.");
+					LogHelper.getLogger(LogHelper.IO).error("Failed to save file.");
 					e.printStackTrace();
 				}	
 				break;
 			case ".txt":
 				if(saveTxt(file, text))
-					LogHelper.getLogger(16).info("text successfully saved as " + file.getName());
+					LogHelper.getLogger(LogHelper.IO).info("text successfully saved as " + file.getName());
 				break;
 			}
 		return file;
@@ -204,7 +204,7 @@ public class TextImport {
 		case ".doc":
 			try {createEmptyDoc(file);}
 			catch (IOException e) {
-				LogHelper.getLogger(16).error("Failed to save file.");
+				LogHelper.getLogger(LogHelper.IO).error("Failed to save file.");
 				e.printStackTrace();
 			}
 			return saveDoc(file, text);
@@ -235,7 +235,7 @@ public class TextImport {
 			return true;
 		}
 		catch (IOException e) {
-			LogHelper.getLogger(16).error("Failed to save file.");
+			LogHelper.getLogger(LogHelper.IO).error("Failed to save file.");
 			e.printStackTrace();
 			return false;
 		}
@@ -258,7 +258,7 @@ public class TextImport {
 			return true;
 		}
 		catch (IOException e) {
-			LogHelper.getLogger(16).error("Failed to save file.");
+			LogHelper.getLogger(LogHelper.IO).error("Failed to save file.");
 			e.printStackTrace();
 			return false;
 		}
@@ -274,7 +274,7 @@ public class TextImport {
 		PrintWriter output = null;
 		try {output = new PrintWriter(file);}
 		catch (FileNotFoundException e) {
-			LogHelper.getLogger(16).error("Failed to save file - the file could not be found.");
+			LogHelper.getLogger(LogHelper.IO).error("Failed to save file - the file could not be found.");
 			e.printStackTrace();
 			return false;
 		}

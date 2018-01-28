@@ -119,10 +119,9 @@ public enum Bluesheets {
 	 * @throws IllegalArgumentException if number is not [1, 14].
 	 */
 	public static Bluesheets getBluesheetFromNumber(int number) {
-		for(Bluesheets b: Bluesheets.values())
-			if(b.number == number)
-				return b;
-		throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
+		if(number < 1 || number > 14)
+			throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
+		return values()[number - 1];
 	}
 	
 	/**
@@ -133,7 +132,7 @@ public enum Bluesheets {
 	 * @throws IllegalArgumentException if object is does not belong to any of the values in this enum
 	 */
 	public static int getNumber(Bluesheet object) {
-		for(Bluesheets b: Bluesheets.values())
+		for(Bluesheets b : values())
 			if(b.object == object)
 				return b.number;
 		throw new IllegalArgumentException("The passed Bluesheet object was not found.");
@@ -157,6 +156,7 @@ public enum Bluesheets {
 			this.description = description;
 			this.isRunnable = isRunnable;
 		}
+		
 	}
 	
 }

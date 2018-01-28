@@ -44,7 +44,7 @@ public class Settings {
 	 * Generates the default settings array based on the stated availability of each element in {@link Bluesheets} and caches it.
 	 */
 	private static void generateDefaultSettings() {
-		LogHelper.getLogger(0).info("Generating default settings");
+		LogHelper.getLogger(LogHelper.INIT).info("Generating default settings");
 		defaultSettings = new boolean[14];
 		for(int i = 0; i < settings.length; i++)
 			defaultSettings[i] = Bluesheets.values()[i].getAvailabilityWarning() == null;
@@ -69,26 +69,26 @@ public class Settings {
 	 * If the file is not found or is less than 14 lines, the default settings will be written and loaded.
 	 */
 	public static void readSettings() {
-		LogHelper.getLogger(16).info("Reading settings from " + Paths.SETTINGS);
+		LogHelper.getLogger(LogHelper.IO).info("Reading settings from " + Paths.SETTINGS);
 		boolean successful = true;
 		try {
 			Scanner scan = new Scanner(new File(Paths.SETTINGS));
-			LogHelper.getLogger(16).info("File found");
+			LogHelper.getLogger(LogHelper.IO).info("File found");
 			for(int i = 0; i < settings.length; i++)
 				if(scan.hasNextBoolean())
 					settings[i] = scan.nextBoolean();
 				else {
-					LogHelper.getLogger(16).warn("File contains less than 14 booleans. Default Settings will be used instead.");
+					LogHelper.getLogger(LogHelper.IO).warn("File contains less than 14 booleans. Default Settings will be used instead.");
 					successful = false;
 					break;
 				}
 			scan.close();
 		} catch (FileNotFoundException e) {
-			LogHelper.getLogger(16).warn("File not found. Default Settings will be used instead.");
+			LogHelper.getLogger(LogHelper.IO).warn("File not found. Default Settings will be used instead.");
 			successful = false;
 		}
 		if(successful)
-			LogHelper.getLogger(16).info("Settings read: " + Arrays.toString(settings));
+			LogHelper.getLogger(LogHelper.IO).info("Settings read: " + Arrays.toString(settings));
 		else {
 			writeDefaultSettings();
 		}
@@ -100,7 +100,7 @@ public class Settings {
 	 * Once the settings have been written they will be read.
 	 */
 	public static void writeDefaultSettings() {
-		LogHelper.getLogger(16).info("Writing default settings");
+		LogHelper.getLogger(LogHelper.IO).info("Writing default settings");
 		writeSettings(getDefaultSettings());
 		readSettings();
 	}
@@ -112,7 +112,7 @@ public class Settings {
 	 * @param writeSettings a boolean[] which must be length 14 which will be written to the settings file
 	 */
 	private static void writeSettings(boolean[] writeSettings) {
-		LogHelper.getLogger(16).info("Writing settings to " + Paths.SETTINGS);
+		LogHelper.getLogger(LogHelper.ANALYZE).info("Writing settings to " + Paths.SETTINGS);
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.SETTINGS));
 			for(boolean setting : writeSettings)
@@ -132,7 +132,7 @@ public class Settings {
 	public static void reverseSetting(int number) {
 		if(number > 14 || number < 1)
 			throw new IllegalArgumentException("The passed number: " + number + " is not in the valid range: [1, 14].");
-		LogHelper.getLogger(15).info("Updating setting for bluesheet #" + number);
+		LogHelper.getLogger(LogHelper.APPLICATION).info("Updating setting for bluesheet #" + number);
 		settings[number - 1] = !settings[number - 1];
 		writeSettings(settings);
 	}
@@ -143,7 +143,7 @@ public class Settings {
 	 * @param loadSettings a boolean[] which holds the settings to be loaded
 	 */
 	public static void loadSettings(boolean[] loadSettings) {
-		LogHelper.getLogger(0).info("Loading settings: " + Arrays.toString(loadSettings));
+		LogHelper.getLogger(LogHelper.INIT).info("Loading settings: " + Arrays.toString(loadSettings));
 		settings = loadSettings;
 	}
 	

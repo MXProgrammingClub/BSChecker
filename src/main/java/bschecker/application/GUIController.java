@@ -7,17 +7,16 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 
 import com.jfoenix.controls.JFXButton;
 
-import bschecker.bluesheets.Bluesheet;
+
 import bschecker.bluesheets.Bluesheets;
 import bschecker.reference.Paths;
 import bschecker.reference.Settings;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
 import bschecker.util.LogHelper;
+import bschecker.util.TaskManager;
 import bschecker.util.TextImport;
 import bschecker.util.UtilityMethods;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,7 +29,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 
 /**
- * Connects the main GUI of the Application with the rest of the program.
+ * Interface between the Application and the rest of the program.
  * 
  * @author Luke Giacalone
  * @author JeremiahDeGreeff
@@ -87,7 +86,7 @@ public class GUIController {
 		Parent root = null;
 		try {root = loader.load();}
 		catch(IOException e) {
-			LogHelper.getLogger(15).fatal("Application failed to load - program terminating.");
+			LogHelper.getLogger(LogHelper.APPLICATION).fatal("Application failed to load - program terminating.");
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -97,7 +96,8 @@ public class GUIController {
 		essayBox.replaceText("Insert Essay Here");
 		errorBox.replaceText("No Error Selected");
 		noteBox.replaceText("No Error Selected");
-		loadSettings();
+		analyzeButton.setDisable(true); // disable analyze button until init task is complete
+		loadSettings(); // settings should have been read by this point
 		
 		primaryStage.setTitle("BSChecker");
 		primaryStage.setScene(scene);
@@ -106,14 +106,20 @@ public class GUIController {
 	}
 	
 	/**
+	 * The method to be called when the init task has succeeded.
+	 */
+	public void onInitSucceeded() {
+		analyzeButton.setDisable(false);
+	}
+	
+	/**
 	 * The method that will be called when the analyze button is clicked
 	 */
 	@FXML
 	private void analyzeButtonClick() {
-		LogHelper.getLogger(17).info("Analyze Button Clicked");
 		String text = UtilityMethods.replaceInvalidChars(essayBox.getText());
 		essayBox.replaceText(text);
-		runAnalyze(text);
+		TaskManager.runAnalyze(this, text, false);
 	}
 	
 	/**
@@ -136,18 +142,18 @@ public class GUIController {
 	private void menuOpenClick() {
 		file = TextImport.chooseFile();
 		if(file == null) {
-			LogHelper.getLogger(16).error("Invalid file selection - aborting.");
+			LogHelper.getLogger(LogHelper.IO).error("Invalid file selection - aborting.");
 			alert(AlertType.ERROR, "Selection Error", "There was an error in the file selection. The file selected is invalid.");
 			return;
 		}
 		String text = TextImport.openFile(file);
 		if(text == null) {
-			LogHelper.getLogger(16).error("Unable to read any text from the file - aborting.");
+			LogHelper.getLogger(LogHelper.IO).error("Unable to read any text from the file - aborting.");
 			alert(AlertType.ERROR, "Selection Error", "There was an error in the file selection. No text was able to be extracted from the file.");
 			return;
 		}
 		essayBox.replaceText(text);
-		LogHelper.getLogger(16).info(file.getName() + " was loaded successfully.");
+		LogHelper.getLogger(LogHelper.IO).info(file.getName() + " was loaded successfully.");
 	}
 
 	/**
@@ -158,7 +164,7 @@ public class GUIController {
 		if(file == null)
 			TextImport.saveAs(essayBox.getText());
 		else if(TextImport.saveText(file, essayBox.getText()))
-			LogHelper.getLogger(16).info(file.getName() + " was saved successfully");
+			LogHelper.getLogger(LogHelper.IO).info(file.getName() + " was saved successfully");
 		else
 			alert(AlertType.ERROR, "Saving Error", "There was an error in saving your file. It may be in use or moved from its original location.");
 	}
@@ -430,52 +436,6 @@ public class GUIController {
 	}
 	
 	/**
-	 * Runs the analysis of the passed text using a Task on a separate thread.
-	 * 
-	 * @param text the text to analyze
-	 */
-	private void runAnalyze(final String text) {
-		ProgressDialogController dialog = new ProgressDialogController();
-		Task<ErrorList> task = new Task<ErrorList>() {
-			@Override
-			public ErrorList call() {
-				int numLines = UtilityMethods.countOccurences(text, "\n");
-				final ReadOnlyDoubleWrapper progress = new ReadOnlyDoubleWrapper(this, "progress");
-				progress.getReadOnlyProperty().addListener((obs, oldProgress, newProgress) -> updateProgress((double) newProgress, (double) numLines));
-				return Bluesheet.findAllErrors(text, false, progress);
-			}
-		};
-		
-		dialog.activateProgressBar(task);
-		
-		task.setOnRunning(event -> {analyzeButton.setDisable(true);});
-		
-		task.setOnSucceeded(event -> {
-			LogHelper.getLogger(17).info("Analyze Successful");
-			essayBox.setStyleClass(0, essayBox.getLength(), null);
-			dialog.close();
-			errors = task.getValue();
-			if(errors.size() == 0)
-				errorBox.replaceText("No Errors Found!");
-			else {
-				for(Error error : errors)
-					essayBox.setStyleClass(error.getStartIndex(), error.getEndIndex() + 1, "light-red");
-				currError = 0;
-				displayError();
-			}
-			analyzeButton.setDisable(false);
-		});
-		
-		task.setOnCancelled(event -> {
-			LogHelper.getLogger(17).warn("Analyze Canceled");
-			analyzeButton.setDisable(false);
-		});
-		
-		Thread thread = new Thread(task, "Analyze");
-		thread.start();
-	}
-	
-	/**
 	 * Displays the current error.
 	 */
 	private void displayError() {
@@ -497,7 +457,7 @@ public class GUIController {
 	 * Loads the settings into the checkedMenuItems for each bluesheet from {@link Settings}.
 	 */
 	private void loadSettings() {
-		LogHelper.getLogger(0).info("Loading settings into the menu");
+		LogHelper.getLogger(LogHelper.INIT).info("Loading settings into the menu");
 		boolean[] settings = Settings.getSettings();
 		for(int i = 0; i < 14; i++)
 			getMenuBluesheet(i + 1).setSelected(settings[i]);
@@ -516,6 +476,39 @@ public class GUIController {
 		a.setHeaderText(null);
 		a.setContentText(content);
 		a.showAndWait();
+	}
+	
+	/**
+	 * The method to be called when the analyze task is running.
+	 */
+	public void onAnalyzeRunning() {
+		analyzeButton.setDisable(true);
+	}
+	
+	/**
+	 * The method to be called when the analyze task has succeeded.
+	 */
+	public void onAnalyzeSucceeded(ErrorList result) {
+		LogHelper.getLogger(LogHelper.ANALYZE).info("Analyze Successful");
+		essayBox.setStyleClass(0, essayBox.getLength(), null);
+		errors = result;
+		if(errors.size() == 0)
+			errorBox.replaceText("No Errors Found!");
+		else {
+			for(Error error : errors)
+				essayBox.setStyleClass(error.getStartIndex(), error.getEndIndex() + 1, "light-red");
+			currError = 0;
+			displayError();
+		}
+		analyzeButton.setDisable(false);
+	}
+	
+	/**
+	 * The method to be called when the analyze task has been cancelled.
+	 */
+	public void onAnalyzeCancelled() {
+		LogHelper.getLogger(LogHelper.ANALYZE).warn("Analyze Cancelled");
+		analyzeButton.setDisable(false);
 	}
 	
 }

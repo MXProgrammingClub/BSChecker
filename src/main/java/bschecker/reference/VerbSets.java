@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 import bschecker.util.LogHelper;
-import bschecker.util.PerformanceMonitor;
 
 /**
  * Stores the list of verbs of saying or thinking to be used by the project.
@@ -33,11 +32,9 @@ public class VerbSets {
 	 */
 	public static void importSayingVerbs() {
 		if(SayingVerbs != null) {
-			LogHelper.getLogger(0).warn("Verb Set has already been initialized - skipping");
+			LogHelper.getLogger(LogHelper.INIT).warn("Verb Set has already been initialized - skipping");
 			return;
 		}
-		PerformanceMonitor.start("verbs");
-		LogHelper.getLogger(0).info("Loading verbs of saying or thinking...");
 		SayingVerbs = new HashSet<String>();
 		Scanner scan = null;
 			try {scan = new Scanner(new File(Paths.SAYING_VERBS));}
@@ -45,7 +42,6 @@ public class VerbSets {
 		while(scan.hasNext()) {
 			SayingVerbs.add(scan.nextLine());
 		}
-		LogHelper.getLogger(0).info("Complete (" + PerformanceMonitor.stop("verbs") + ")");
 	}
 	
 }

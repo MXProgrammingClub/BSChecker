@@ -27,7 +27,7 @@ public class AmbiguousPronoun extends Bluesheet {
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, Parse[] parses) {
+	public ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int prevSentenceNouns, curSentenceNouns = 0, tokenOffset = 0, index;
 		for(int i = 0; i < parses.length; i++) {

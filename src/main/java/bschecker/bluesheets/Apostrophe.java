@@ -21,7 +21,7 @@ public class Apostrophe extends Bluesheet {
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, Parse[] parses) {
+	public ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		String[] tags = Tools.getPOSTagger().tag(Tools.getTokenizer().tokenize(line));
 		for(int i = 0; i < tags.length; i++) {

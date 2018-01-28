@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
-import bschecker.util.LogHelper;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.parser.Parse;
@@ -26,7 +25,7 @@ public class FaultyParallelism extends Bluesheet {
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, Parse[] parses) {
+	public ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
 		for(Parse parse : parses) {
@@ -120,7 +119,7 @@ public class FaultyParallelism extends Bluesheet {
 			if(i + 1 < parallelTypes.length)
 				debug += parallelTypes[i] + (i + 2 < parallelTypes.length ? "\", \"" : "\" ");
 		}
-		LogHelper.getLogger(this).debug(debug + "right: \"" + parallelTypes[parallelTypes.length - 1] + "\"");
+		getLogger().debug(debug + "right: \"" + parallelTypes[parallelTypes.length - 1] + "\"");
 		
 		for(int i = 0; i < parallelTypes.length; i++) {
 			if(i + 1 == parallelTypes.length)

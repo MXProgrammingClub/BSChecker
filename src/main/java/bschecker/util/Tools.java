@@ -3,15 +3,19 @@ package bschecker.util;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 
 import bschecker.reference.Paths;
 import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.TokenNameFinder;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.parser.Parser;
 import opennlp.tools.parser.ParserFactory;
 import opennlp.tools.parser.ParserModel;
 import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTagger;
 import opennlp.tools.postag.POSTaggerME;
+import opennlp.tools.sentdetect.SentenceDetector;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.tokenize.Tokenizer;
@@ -24,96 +28,97 @@ import opennlp.tools.util.model.BaseModel;
  * 
  * @author JeremiahDeGreeff
  */
-public class Tools {
+public enum Tools {
 	
-	private static SentenceDetectorME sentenceDetector;
-	private static NameFinderME nameFinder;
-	private static Tokenizer tokenizer;
-	private static POSTaggerME posTagger;
-	private static Parser parser;
+	SENTENCE_DETECTOR(SentenceDetectorME.class, SentenceModel.class, "Sentence Detector"),
+	NAME_FINDER(NameFinderME.class, TokenNameFinderModel.class, "Name Finder"),
+	TOKENIZER(TokenizerME.class, TokenizerModel.class, "Tokenizer"),
+	POS_TAGGER(POSTaggerME.class, POSModel.class, "Part of Speech Tagger"),
+	PARSER(Parser.class, ParserModel.class, "Parser");
 	
+	private Object tool = null;
+	private final Class<?> toolClass;
+	private final Class<? extends BaseModel> modelClass;
+	private final String description;
+	
+	Tools(Class<?> toolClass, Class<? extends BaseModel> modelClass, String description) {
+		this.toolClass = toolClass;
+		this.modelClass = modelClass;
+		this.description = description;
+	}
 	
 	/**
 	 * @return the openNLP sentenceDetector
 	 */
-	public static SentenceDetectorME getSentenceDetector() {
-		return sentenceDetector;
+	public static SentenceDetector getSentenceDetector() {
+		return (SentenceDetectorME)SENTENCE_DETECTOR.tool;
 	}
 	
 	/**
 	 * @return the openNLP nameFinder
 	 */
-	public static NameFinderME getNameFinder() {
-		return nameFinder;
+	public static TokenNameFinder getNameFinder() {
+		return (NameFinderME)NAME_FINDER.tool;
 	}
 	
 	/**
 	 * @return the openNLP tokenizer
 	 */
 	public static Tokenizer getTokenizer() {
-		return tokenizer;
+		return (TokenizerME)TOKENIZER.tool;
 	}
 	
 	/**
 	 * @return the openNLP posTagger
 	 */
-	public static POSTaggerME getPOSTagger() {
-		return posTagger;
+	public static POSTagger getPOSTagger() {
+		return (POSTaggerME)POS_TAGGER.tool;
 	}
 	
 	/**
 	 * @return the openNLP parser
 	 */
 	public static Parser getParser() {
-		return parser;
+		return (Parser)PARSER.tool;
 	}
-	
 	
 	/**
 	 * Initializes all the necessary OpenNLP tools.
 	 */
 	public static void initializeOpenNLP() {
-		PerformanceMonitor.start("tools");
-		LogHelper.getLogger(0).info("Initializing opennlp tools...");
-		
-		sentenceDetector = new SentenceDetectorME((SentenceModel)loadModel('s', Paths.SENTENCE_DETECTOR));
-		nameFinder = new NameFinderME((TokenNameFinderModel)loadModel('n', Paths.NAME_FINDER));
-		tokenizer = new TokenizerME((TokenizerModel)loadModel('t', Paths.TOKENIZER));
-		posTagger = new POSTaggerME((POSModel)loadModel('o', Paths.POS_TAGGER));
-		parser = ParserFactory.create((ParserModel)loadModel('p', Paths.PARSER));
-		
-		LogHelper.getLogger(0).info("Initialization of opennlp tools completed in " + PerformanceMonitor.stop("tools"));
+		for(int i = 0; i < 4; i++) {
+			Tools toolElement = Tools.values()[i];
+			try {toolElement.tool = toolElement.toolClass.getConstructor(toolElement.modelClass).newInstance(loadModel(i));}
+			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {e.printStackTrace();}
+		}
+		PARSER.tool = ParserFactory.create((ParserModel)loadModel(4));
 	}
 	
 	/**
 	 * Loads an individual openNLP tool.
 	 * 
-	 * @param tool a character from ['s', 'n', 't', 'o', 'p'] which corresponds to a tool
-	 * @param file the file which contains the model to me loaded
+	 * @param index the index of the tool in both the {@code Tools} enum and the array of Tools in {@link Paths}.
 	 * @return a BaseModel which holds the loaded file
 	 */
-	private static BaseModel loadModel(char tool, String file) {
+	private static BaseModel loadModel(int index) {
+		Tools toolElement = Tools.values()[index];
+		LogHelper.getLogger(LogHelper.INIT).info("Initializing the " + toolElement.description + "...");
 		PerformanceMonitor.start("model");
-		LogHelper.getLogger(0).info("Initializing the " +
-				(tool == 's' ? "Sentence Detector" :
-					tool == 'n' ? "Name Finder" :
-						tool == 't' ? "Tokenizer" :
-							tool == 'o' ? "Part of Speech Tagger" :
-								tool == 'p' ? "Parser" :
-						"") + "...");
+		
 		InputStream is = null;
+		try {is = new FileInputStream(Paths.TOOLS[index]);}
+		catch (IOException e) {
+			LogHelper.getLogger(LogHelper.IO).fatal(toolElement.description +  "failed to load - program terminating.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
 		BaseModel model = null;
-		try {
-			is = new FileInputStream(file);
-			model = 
-				tool == 's' ? new SentenceModel(is): 
-					tool == 'n' ? new TokenNameFinderModel(is):
-						tool == 't' ? new TokenizerModel(is):
-							tool == 'o' ? new POSModel(is):
-								tool == 'p' ? new ParserModel(is):
-									null;
-		} catch (IOException e) {e.printStackTrace();}
-		LogHelper.getLogger(0).info("Complete (" + PerformanceMonitor.stop("model") + ")");
+		try {model = toolElement.modelClass.getConstructor(InputStream.class).newInstance(is);}
+		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {e.printStackTrace();}
+		
+		LogHelper.getLogger(LogHelper.INIT).info("Complete (" + PerformanceMonitor.stop("model") + ")");
 		return model;
 	}
+	
 }

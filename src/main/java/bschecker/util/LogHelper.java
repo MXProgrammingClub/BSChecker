@@ -3,7 +3,6 @@ package bschecker.util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import bschecker.bluesheets.Bluesheet;
 import bschecker.bluesheets.Bluesheets;
 
 /**
@@ -15,17 +14,20 @@ public class LogHelper {
 	
 	private static Logger[] loggers = new Logger[19];
 	
+	public static final int INIT = 0, APPLICATION = 15, IO = 16, ANALYZE = 17, PARSE = 18;
+	
 	/**
 	 * Initializes all the loggers used by the project.
 	 */
 	public static void init() {
-		loggers[0] = LogManager.getLogger("Init");
-		for(int i = 0; i < 14; i++)
+		loggers[INIT] = LogManager.getLogger("Init");
+		for(int i = 0; i < Bluesheets.values().length; i++)
 			loggers[i + 1] = LogManager.getLogger(Bluesheets.values()[i].getName());
-		loggers[15] = LogManager.getLogger("Application");
-		loggers[16] = LogManager.getLogger("I/O");
-		loggers[17] = LogManager.getLogger("Analyze");
-		loggers[18] = LogManager.getLogger("Parse");
+		loggers[APPLICATION] = LogManager.getLogger("Application");
+		loggers[IO] = LogManager.getLogger("I/O");
+		loggers[ANALYZE] = LogManager.getLogger("Analyze");
+		loggers[PARSE] = LogManager.getLogger("Parse");
+		
 		loggers[0].info("Loggers initialized");
 	}
 	
@@ -47,15 +49,7 @@ public class LogHelper {
 	}
 	
 	/**
-	 * @param object the Bluesheet object whose logger is desired
-	 * @return the desired logger
-	 */
-	public static Logger getLogger(Bluesheet object) {
-		return loggers[Bluesheets.getNumber(object)];
-	}
-	
-	/**
-	 * prints a blank line to the console
+	 * Prints a blank line to the console.
 	 */
 	public static void line() {
 		System.out.println();

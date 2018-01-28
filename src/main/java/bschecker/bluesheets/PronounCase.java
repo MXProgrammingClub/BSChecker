@@ -3,7 +3,6 @@ package bschecker.bluesheets;
 import bschecker.reference.VerbSets;
 import bschecker.util.Error;
 import bschecker.util.ErrorList;
-import bschecker.util.LogHelper;
 import bschecker.util.Tools;
 import bschecker.util.UtilityMethods;
 import opennlp.tools.parser.AbstractBottomUpParser;
@@ -25,7 +24,7 @@ public class PronounCase extends Bluesheet {
 	 * @return an ErrorList which for each Error references start token, end token, and, optionally, a note
 	 */
 	@Override
-	protected ErrorList findErrors(String line, Parse[] parses) {
+	public ErrorList findErrors(String line, Parse[] parses) {
 		ErrorList errors = new ErrorList(line);
 		int tokenOffset = 0;
 		for(Parse parse: parses) {
@@ -34,7 +33,7 @@ public class PronounCase extends Bluesheet {
 					if(!UtilityMethods.arrayContains(type.IGNORE, pronounParse.getCoveredText())) {
 						Cases pronounCase = type == Types.PERSONAL ? getCorrectPersonalCase(pronounParse) : getCorrectRelativeCase(pronounParse);
 						if(pronounCase == Cases.UNDETERMINED)
-							LogHelper.getLogger(this).warn("Undetermined " + type.toString().toLowerCase() + " pronoun case - token: \"" + pronounParse.getCoveredText() + "\"");
+							getLogger().warn("Undetermined " + type.toString().toLowerCase() + " pronoun case - token: \"" + pronounParse.getCoveredText() + "\"");
 						else {
 							String pronoun = pronounParse.getCoveredText().replaceAll("\"", "");
 							if(type == Types.PERSONAL ? !UtilityMethods.arrayContains(pronounCase.PRONOUNS, pronoun) : !pronoun.equals(pronounCase.RELATIVE))
