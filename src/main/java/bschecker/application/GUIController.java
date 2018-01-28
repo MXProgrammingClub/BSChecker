@@ -489,7 +489,6 @@ public class GUIController {
 	 * The method to be called when the analyze task has succeeded.
 	 */
 	public void onAnalyzeSucceeded(ErrorList result) {
-		LogHelper.getLogger(LogHelper.ANALYZE).info("Analyze Successful");
 		essayBox.setStyleClass(0, essayBox.getLength(), null);
 		errors = result;
 		if(errors.size() == 0)
@@ -500,6 +499,7 @@ public class GUIController {
 			currError = 0;
 			displayError();
 		}
+		LogHelper.getLogger(LogHelper.ANALYZE).info("Analyze successful - essay box updated");
 		analyzeButton.setDisable(false);
 	}
 	
@@ -507,7 +507,7 @@ public class GUIController {
 	 * The method to be called when the analyze task has been cancelled.
 	 */
 	public void onAnalyzeCancelled() {
-		LogHelper.getLogger(LogHelper.ANALYZE).warn("Analyze Cancelled");
+		LogHelper.getLogger(LogHelper.ANALYZE).warn("Analyze cancelled");
 		analyzeButton.setDisable(false);
 	}
 	

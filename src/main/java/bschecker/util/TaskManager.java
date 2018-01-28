@@ -72,71 +72,109 @@ public class TaskManager {
 	 * @param logParses if true, parses will be logged
 	 */
 	public static void runAnalyze(final GUIController source, final String text, final boolean logParses) {
-		Task<ErrorList> analyze = new Task<ErrorList>() {
-			@Override
-			protected ErrorList call() {
-				LogHelper.getLogger(LogHelper.ANALYZE).info("Starting essay analysis task...");
-				PerformanceMonitor.start("analyze");
-				String fullText = text + (text.endsWith("\n") ? "" : "\n");
-				int bluesheets = 0;
-				for(Bluesheets b : Bluesheets.values())
-					if(Settings.isSetToAnalyze(b.getNumber()))
-						bluesheets++;
-				int workDone = 0, totalWork = UtilityMethods.countOccurences(fullText, "\n") * (bluesheets + 1);
-				this.updateProgress(workDone, totalWork);
-				ErrorList errors = new ErrorList(fullText, false);
-				
-				int lineNum = 1, charOffset = 0;
-				while (charOffset < fullText.length()) {
-					PerformanceMonitor.start("line");
-					String line = fullText.substring(charOffset, charOffset + fullText.substring(charOffset).indexOf('\n'));
-					LogHelper.line();
-					LogHelper.getLogger(LogHelper.ANALYZE).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
-					
-					PerformanceMonitor.start("parse");
-					ArrayList<Integer> removedChars = new ArrayList<Integer>();
-					String[] linePointer = new String[] {line};
-					Parse[] parses = UtilityMethods.parseLine(linePointer, logParses, lineNum, charOffset, removedChars);
-					line = linePointer[0];
-					LogHelper.getLogger(LogHelper.PARSE).info("Complete (" + PerformanceMonitor.stop("parse") + ")");
-					this.updateProgress(++workDone, totalWork);
-					
-					ErrorList lineErrors = new ErrorList(line, true);
-					for(Bluesheets b : Bluesheets.values())
-						if(Settings.isSetToAnalyze(b.getNumber())) {
-							PerformanceMonitor.start("bluesheet");
-							LogHelper.getLogger(LogHelper.ANALYZE).info("Looking for: " + b.getName() + "...");
-							ErrorList bluesheetErrors = b.getObject().findErrors(line, parses);
-							bluesheetErrors.setBluesheetNumber(b.getNumber());
-							lineErrors.addAll(bluesheetErrors);
-							LogHelper.getLogger(LogHelper.ANALYZE).info(bluesheetErrors.size() + " Error" + (bluesheetErrors.size() == 1 ? "" : "s") + " Found (" + PerformanceMonitor.stop("bluesheet") + ")");
-							this.updateProgress(++workDone, totalWork);
-						}
-					LogHelper.getLogger(LogHelper.ANALYZE).info(lineErrors.size() + " Error" + (lineErrors.size() == 1 ? "" : "s") + " Found in line " + lineNum + " (" + PerformanceMonitor.stop("line") + ")");
-					
-					errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
-					
-					lineNum++;
-					charOffset += line.length() + removedChars.size() + 1;
-				}
-				LogHelper.line();
-				LogHelper.getLogger(LogHelper.ANALYZE).info("Passage analyzed in " + PerformanceMonitor.stop("analyze") + "\n\n" + errors);
-				
-				return errors;
-			}
-		};
+		Task<ErrorList> analyze = new AnalyzeTask(text);
 		
-		if(source != null) {
-			ProgressDialogController dialog = new ProgressDialogController();
-			dialog.activateProgressBar(analyze);
-
-			analyze.setOnRunning(event -> {source.onAnalyzeRunning();});
-			analyze.setOnSucceeded(event -> {dialog.close(); source.onAnalyzeSucceeded(analyze.getValue());});
-			analyze.setOnCancelled(event -> {source.onAnalyzeCancelled();});
-		}
+		ProgressDialogController dialog = new ProgressDialogController();
+		dialog.activateProgressBar(analyze);
+		
+		analyze.setOnRunning(event -> {source.onAnalyzeRunning();});
+		analyze.setOnSucceeded(event -> {dialog.close(); source.onAnalyzeSucceeded(analyze.getValue());});
+		analyze.setOnCancelled(event -> {source.onAnalyzeCancelled();});
 		
 		Thread thread = new Thread(analyze, "Analyze");
 		thread.start();
+	}
+	
+	/**
+	 * Class for analysis tasks.
+	 * 
+	 * @author JeremiahDeGreeff
+	 */
+	private static class AnalyzeTask extends Task<ErrorList> {
+		private String text;
+		private double workDone = -1, totalWork;
+		
+		private AnalyzeTask(String text) {
+			super();
+			this.text = text;
+		}
+		
+		/**
+		 * Analyzes the text of this AnalyzeTask.
+		 */
+		@Override
+		protected ErrorList call() {
+			LogHelper.getLogger(LogHelper.ANALYZE).info("Starting essay analysis task...");
+			LogHelper.line();
+			PerformanceMonitor.start("analyze");
+			
+			String fullText = text + (text.endsWith("\n") ? "" : "\n");
+			int bluesheets = 0;
+			for(Bluesheets b : Bluesheets.values())
+				if(Settings.isSetToAnalyze(b.getNumber()))
+					bluesheets++;
+			totalWork = UtilityMethods.countOccurences(fullText, "\n") * (bluesheets + 1);
+			IncrementProgress();
+			
+			ErrorList errors = analyze(fullText, this);
+			
+			LogHelper.getLogger(LogHelper.ANALYZE).info("Essay analysis task completed in " + PerformanceMonitor.stop("analyze") + ":");
+			LogHelper.getLogger(LogHelper.ANALYZE).info(errors);
+			return errors;
+		}
+		
+		/**
+		 * Increments the progress bar on this task's dialog.
+		 */
+		private void IncrementProgress() {
+			this.updateProgress(++workDone, totalWork);
+		}
+	}
+	
+	/**
+	 * Analyzes the passed text, finding all errors within it.
+	 * All Bluesheets referenced in {@link #Settings} with a value of {@code true} will be checked.
+	 * 
+	 * @param text the text to analyze
+	 * @param task the AnalyzeTask this analysis is associated with, null if not run from the application
+	 * @return an ErrorList which contains all the errors in the passage, referenced by character indices
+	 */
+	public static ErrorList analyze(String text, AnalyzeTask task) {
+		ErrorList errors = new ErrorList(text, false);
+		int lineNum = 1, charOffset = 0;
+		while (charOffset < text.length()) {
+			PerformanceMonitor.start("line");
+			String line = text.substring(charOffset, charOffset + text.substring(charOffset).indexOf('\n'));
+			LogHelper.getLogger(LogHelper.ANALYZE).info("Analyzing line " + lineNum + " (characters " + charOffset + "-" + (charOffset + line.length()) + "):");
+			
+			PerformanceMonitor.start("parse");
+			ArrayList<Integer> removedChars = new ArrayList<Integer>();
+			String[] linePointer = new String[] {line};
+			Parse[] parses = UtilityMethods.parseLine(linePointer, task == null, lineNum, charOffset, removedChars);
+			line = linePointer[0];
+			LogHelper.getLogger(LogHelper.PARSE).info("Complete (" + PerformanceMonitor.stop("parse") + ")");
+			if(task != null) task.IncrementProgress();
+			
+			ErrorList lineErrors = new ErrorList(line, true);
+			for(Bluesheets b : Bluesheets.values())
+				if(Settings.isSetToAnalyze(b.getNumber())) {
+					PerformanceMonitor.start("bluesheet");
+					LogHelper.getLogger(LogHelper.ANALYZE).info("Looking for: " + b.getName() + "...");
+					ErrorList bluesheetErrors = b.getObject().findErrors(line, parses);
+					bluesheetErrors.setBluesheetNumber(b.getNumber());
+					lineErrors.addAll(bluesheetErrors);
+					LogHelper.getLogger(LogHelper.ANALYZE).info(bluesheetErrors.size() + " Error" + (bluesheetErrors.size() == 1 ? "" : "s") + " Found (" + PerformanceMonitor.stop("bluesheet") + ")");
+					if(task != null) task.IncrementProgress();
+				}
+			LogHelper.getLogger(LogHelper.ANALYZE).info(lineErrors.size() + " Error" + (lineErrors.size() == 1 ? "" : "s") + " Found in line " + lineNum + " (" + PerformanceMonitor.stop("line") + ")");
+			LogHelper.line();
+			
+			errors.addAll(lineErrors.tokensToChars(charOffset, removedChars));
+			
+			lineNum++;
+			charOffset += line.length() + removedChars.size() + 1;
+		}
+		return errors;
 	}
 	
 }

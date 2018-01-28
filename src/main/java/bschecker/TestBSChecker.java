@@ -58,12 +58,14 @@ public class TestBSChecker {
 //		findNames(input);
 //		parse(input);
 		
-//		TaskManager.runInit(null);
-//		Settings.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
-//		
-//		LogHelper.line();
-//		LogHelper.getLogger(LogHelper.APPLICATION).info("input:\t" + input);
-//		TaskManager.runAnalyze(null, input, true);
+		LogHelper.init();
+		Settings.loadSettings(new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false});
+		VerbSets.importSayingVerbs();
+		Tools.initializeOpenNLP();
+		
+		LogHelper.line();
+		LogHelper.getLogger(LogHelper.ANALYZE).info("input:\t" + input);
+		LogHelper.getLogger(LogHelper.ANALYZE).info(TaskManager.analyze(input + (input.endsWith("\n") ? "" : "\n"), null));
 	}
 	
 	
